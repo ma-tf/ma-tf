@@ -20,3 +20,4 @@ peerDependencyRules:
     - vite
   allowedVersions:
     vite: "*"
+trustPolicy: no-downgrade
