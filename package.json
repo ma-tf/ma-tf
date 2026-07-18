@@ -4,10 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vp dev",
-    "build": "tsc && vp build",
-    "preview": "vp preview",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "astro": "^7.1.1"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

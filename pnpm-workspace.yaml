@@ -1,3 +1,5 @@
+allowBuilds:
+  esbuild: true
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.5
   vite-plus: 0.2.5
@@ -13,6 +15,7 @@ minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus-win32-arm64-msvc@0.2.5"
   - "@voidzero-dev/vite-plus-win32-x64-msvc@0.2.5"
   - vite-plus@0.2.5
+onlyBuiltDependencies: ["esbuild"]
 overrides:
   vite: "catalog:"
 peerDependencyRules:

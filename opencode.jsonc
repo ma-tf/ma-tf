@@ -22,4 +22,9 @@
     },
   },
   "plugin": ["opencode-dynamic-context-pruning"],
+  "permission": {
+    "npm": "deny",
+    "pnpm": "deny",
+    "pn": "deny",
+  },
 }
