@@ -24,3 +24,9 @@ peerDependencyRules:
   allowedVersions:
     vite: "*"
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - "@netlify/edge-bundler@14.10.3"
+  - "@netlify/serverless-functions-api@2.16.0"
+  - "@netlify/zip-it-and-ship-it@14.7.1"
+  - "chokidar@4.0.3"
+  - "semver@6.3.1"
