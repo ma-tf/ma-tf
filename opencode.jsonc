@@ -4,15 +4,11 @@
     "Astro docs": {
       "type": "remote",
       "url": "https://mcp.docs.astro.build/mcp",
-      "enabled": true
+      "enabled": true,
     },
     "fallow": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "fallow-mcp"
-      ],
+      "command": ["fallow-mcp"],
       "enabled": true,
     },
     "github": {
@@ -21,11 +17,9 @@
       "enabled": true,
       "oauth": false,
       "headers": {
-        "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+        "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}",
       },
     },
   },
-  "plugin": [
-    "opencode-dynamic-context-pruning"
-  ],
+  "plugin": ["opencode-dynamic-context-pruning"],
 }
