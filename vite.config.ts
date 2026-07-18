@@ -10,4 +10,7 @@ export default defineConfig({
     options: { typeAware: true, typeCheck: true },
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
   },
+  staged: {
+    "*.{js,json,mjs,ts,tsx}": "vp check --fix",
+  },
 });
