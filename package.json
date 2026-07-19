@@ -4,13 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "astro": "astro",
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "astro": "^7.1.1"
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.1",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
@@ -23,7 +26,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.13.1",
+      "version": "11.15.0",
       "onFail": "download"
     }
   }
