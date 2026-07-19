@@ -4,6 +4,8 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "types": ["astro/client"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "allowArbitraryExtensions": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
