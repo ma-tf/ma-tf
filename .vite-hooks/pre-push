@@ -1,1 +1,2 @@
-fallow audit || true
+vpx react-doctor --verbose -y
+fallow audit
