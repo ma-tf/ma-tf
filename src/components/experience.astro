@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from "astro:content";
+import { sortByDate } from "@lib/utils";
+import {
+  Experience,
+  ExperienceHeader,
+  ExperienceCompany,
+  ExperiencePosition,
+  ExperienceLocation,
+  ExperiencePeriod,
+} from "@components/experience";
+
+const experience = await getCollection("experience");
+const rendered = await Promise.all(
+  experience
+    .sort((a, b) => {
+      const finishDiff = sortByDate(a.data.finish, b.data.finish);
+      if (finishDiff !== 0) return finishDiff;
+      return sortByDate(a.data.start, b.data.start);
+    })
+    .map(async (entry) => ({
+      ...entry,
+      rendered: await render(entry),
+    })),
+);
+---
+
+{
+  rendered.map(async (entry) => {
+    const { Content } = entry.rendered;
+    const { company, position, location, start, finish } = entry.data;
+    return (
+      <Experience>
+        <ExperienceHeader>
+          <ExperienceCompany>{company}</ExperienceCompany>
+          <ExperiencePosition>{position}</ExperiencePosition>
+          <ExperienceLocation>{location}</ExperienceLocation>
+          <ExperiencePeriod>
+            {start.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
+            {" – "}
+            {finish
+              ? finish.toLocaleDateString("en-GB", { month: "long", year: "numeric" })
+              : "Present"}
+          </ExperiencePeriod>
+        </ExperienceHeader>
+        <Content />
+      </Experience>
+    );
+  })
+}
