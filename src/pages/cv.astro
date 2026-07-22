@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import ExperienceSection from "@components/experience.astro";
+import EducationSection from "@components/education.astro";
 import profile from "@data/profile.json";
 ---
 
@@ -16,8 +17,9 @@ import profile from "@data/profile.json";
       <section>
         <h2>Projects</h2>
       </section>
-      <section>
+      <section class="flex flex-col gap-4">
         <h2>Education</h2>
+        <EducationSection />
       </section>
     </div>
   </div>

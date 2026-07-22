@@ -24,8 +24,9 @@ const education = defineCollection({
   loader: glob({ base: "./src/content/education", pattern: "**/*.md" }),
   schema: z.object({
     institution: z.string(),
-    degree: z.string(),
-    period: z.string(),
+    location: z.string(),
+    start: z.coerce.date(),
+    finish: z.coerce.date(),
   }),
 });
 

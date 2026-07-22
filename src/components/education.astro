@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from "astro:content";
+import {
+	Education,
+	EducationHeader,
+	EducationInstitution,
+	EducationLocation,
+	EducationPeriod,
+} from "@components/education";
+
+const education = await getCollection("education");
+const rendered = await Promise.all(
+	education.map(async (entry) => ({
+		...entry,
+		rendered: await render(entry),
+	})),
+);
+---
+
+{
+	rendered.map(async (entry) => {
+		const { Content } = entry.rendered;
+		const { institution, location, start, finish } = entry.data;
+		return (
+			<Education>
+				<EducationHeader>
+					<EducationInstitution>{institution}</EducationInstitution>
+					<EducationLocation>{location}</EducationLocation>
+					<EducationPeriod>
+						{start.toLocaleDateString("en-GB", {
+							month: "long",
+							year: "numeric",
+						})}
+						{" – "}
+						{finish.toLocaleDateString("en-GB", {
+							month: "long",
+							year: "numeric",
+						})}
+					</EducationPeriod>
+				</EducationHeader>
+				<Content />
+			</Education>
+		);
+	})
+}
