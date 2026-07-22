@@ -1,23 +1,10 @@
 ---
-import { Home } from "../components/Home";
-import Layout from "../layouts/Layout.astro";
-
-console.log("This runs in your terminal, not the browser!");
+import { Home } from "@components/Home";
+import { ModeToggle } from "@components/ModeToggle";
+import Layout from "@layouts/Layout.astro";
 ---
 
-<head>
-  <title>Under Construction</title>
-  <style>
-    body {
-      font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-      color: #c9d1d9;
-      text-align: center;
-    }
-  </style>
-</head>
-
 <Layout>
+  <ModeToggle client:load />
   <Home />
 </Layout>

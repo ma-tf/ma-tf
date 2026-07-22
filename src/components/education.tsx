@@ -2,7 +2,7 @@ import { cn } from "@lib/cn";
 
 export function Education({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col bg-gray-200", className)} {...props}>
+    <div className={cn("flex flex-col ", className)} {...props}>
       {children}
     </div>
   );
@@ -10,7 +10,7 @@ export function Education({ children, className, ...props }: React.ComponentProp
 
 export function EducationHeader({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col bg-gray-300", className)} {...props}>
+    <div className={cn("flex flex-col", className)} {...props}>
       {children}
     </div>
   );
@@ -30,7 +30,7 @@ export function EducationInstitution({
 
 export function EducationLocation({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-gray-500", className)} {...props}>
+    <div className={cn("text-muted-foreground", className)} {...props}>
       {children}
     </div>
   );
@@ -38,7 +38,7 @@ export function EducationLocation({ children, className, ...props }: React.Compo
 
 export function EducationPeriod({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-gray-500", className)} {...props}>
+    <div className={cn("text-muted-foreground", className)} {...props}>
       {children}
     </div>
   );
