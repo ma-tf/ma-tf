@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from "astro:content";
+import {
+	Experience,
+	ExperienceHeader,
+	ExperienceCompany,
+	ExperiencePosition,
+	ExperienceLocation,
+	ExperiencePeriod,
+} from "@components/experience";
+import Layout from "@layouts/Layout.astro";
+import profile from "@data/profile.json";
+
+const experience = await getCollection("experience");
+const rendered = await Promise.all(
+	experience
+		.sort((a, b) => {
+			if (a.data.finish === undefined) return -1;
+			if (b.data.finish === undefined) return 1;
+			const finishDiff = b.data.finish.valueOf() - a.data.finish.valueOf();
+			if (finishDiff !== 0) return finishDiff;
+			return b.data.start.valueOf() - a.data.start.valueOf();
+		})
+		.map(async (entry) => ({
+			...entry,
+			rendered: await render(entry),
+		})),
+);
+---
+
+<Layout>
+	<div class="min-h-screen bg-gray-100 px-4 py-8 sm:px-6 md:px-8">
+		<div
+			class="mx-auto flex w-full max-w-md flex-col gap-2 sm:max-w-lg md:max-w-2xl lg:max-w-4xl"
+		>
+			<h1>{profile.name}</h1>
+			<h2>{profile.title}</h2>
+			<section class="flex flex-col gap-4">
+				<h2>Experience</h2>
+				{
+					rendered.map(async (entry) => {
+						const { Content } = entry.rendered;
+						const { company, position, location, start, finish } = entry.data;
+						return (
+							<Experience>
+								<ExperienceHeader>
+									<ExperienceCompany>{company}</ExperienceCompany>
+									<ExperiencePosition>{position}</ExperiencePosition>
+									<ExperienceLocation>{location}</ExperienceLocation>
+									<ExperiencePeriod>
+										{start.toLocaleDateString("en-GB", {
+											month: "long",
+											year: "numeric",
+										})}
+										{" – "}
+										{finish
+											? finish.toLocaleDateString("en-GB", {
+													month: "long",
+													year: "numeric",
+												})
+											: "Present"}
+									</ExperiencePeriod>
+								</ExperienceHeader>
+								<Content />
+							</Experience>
+						);
+					})
+				}
+			</section>
+			<section>
+				<h2>Projects</h2>
+			</section>
+			<section>
+				<h2>Education</h2>
+			</section>
+		</div>
+	</div>
+</Layout>

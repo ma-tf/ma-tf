@@ -1,6 +1,13 @@
 {
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@data/*": ["./src/data/*"]
+    },
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "types": ["astro/client"],
