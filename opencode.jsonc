@@ -25,6 +25,7 @@
   "permission": {
     "bash": {
       "npm *": "deny",
+      "npx *": "deny",
       "pnpm *": "deny",
       "pn *": "deny",
     },
