@@ -4,6 +4,7 @@ import ExperienceSection from "@components/experience.astro";
 import EducationSection from "@components/education.astro";
 import profile from "@data/profile.json";
 import { ModeToggle } from "@components/ModeToggle";
+import { CurriculumVitaeSection, CurriculumVitaeTitle } from "@components/cv";
 ---
 
 <Layout>
@@ -14,17 +15,17 @@ import { ModeToggle } from "@components/ModeToggle";
 		>
 			<h1>{profile.name}</h1>
 			<h2>{profile.title}</h2>
-			<section class="flex flex-col gap-4">
-				<h2>Experience</h2>
+			<CurriculumVitaeSection>
+				<CurriculumVitaeTitle>Experience</CurriculumVitaeTitle>
 				<ExperienceSection />
-			</section>
-			<section>
-				<h2>Projects</h2>
-			</section>
-			<section class="flex flex-col gap-4">
-				<h2>Education</h2>
+			</CurriculumVitaeSection>
+			<CurriculumVitaeSection>
+				<CurriculumVitaeTitle>Projects</CurriculumVitaeTitle>
+			</CurriculumVitaeSection>
+			<CurriculumVitaeSection>
+				<CurriculumVitaeTitle>Education</CurriculumVitaeTitle>
 				<EducationSection />
-			</section>
+			</CurriculumVitaeSection>
 		</div>
 	</div>
 </Layout>

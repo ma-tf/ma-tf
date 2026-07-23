@@ -10,7 +10,7 @@ export function Experience({ children, className, ...props }: React.ComponentPro
 
 export function ExperienceHeader({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col", className)} {...props}>
+    <div className={cn("flex flex-col gap-1", className)} {...props}>
       {children}
     </div>
   );
@@ -18,7 +18,7 @@ export function ExperienceHeader({ children, className, ...props }: React.Compon
 
 export function ExperienceCompany({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-2xl", className)} {...props}>
+    <div className={cn("font-semibold flex items-center gap-2", className)} {...props}>
       {children}
     </div>
   );
@@ -26,7 +26,7 @@ export function ExperienceCompany({ children, className, ...props }: React.Compo
 
 export function ExperiencePosition({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("font-semibold", className)} {...props}>
+    <div className={cn("", className)} {...props}>
       {children}
     </div>
   );
@@ -34,7 +34,7 @@ export function ExperiencePosition({ children, className, ...props }: React.Comp
 
 export function ExperienceLocation({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-muted-foreground", className)} {...props}>
+    <div className={cn("text-sm font-normal text-muted-foreground", className)} {...props}>
       {children}
     </div>
   );
@@ -42,7 +42,7 @@ export function ExperienceLocation({ children, className, ...props }: React.Comp
 
 export function ExperiencePeriod({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-muted-foreground", className)} {...props}>
+    <div className={cn("text-xs text-muted-foreground", className)} {...props}>
       {children}
     </div>
   );
@@ -50,7 +50,7 @@ export function ExperiencePeriod({ children, className, ...props }: React.Compon
 
 export function ExperienceContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-sm", className)} {...props}>
+    <div className={cn("text-sm text-muted-foreground", className)} {...props}>
       {children}
     </div>
   );

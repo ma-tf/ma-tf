@@ -5,6 +5,8 @@ import {
 	EducationHeader,
 	EducationInstitution,
 	EducationLocation,
+	EducationCourses,
+	EducationCourse,
 	EducationPeriod,
 } from "@components/education";
 
@@ -20,12 +22,22 @@ const rendered = await Promise.all(
 {
 	rendered.map(async (entry) => {
 		const { Content } = entry.rendered;
-		const { institution, location, start, finish } = entry.data;
+		const { institution, location, start, finish, courses } = entry.data;
 		return (
 			<Education>
 				<EducationHeader>
-					<EducationInstitution>{institution}</EducationInstitution>
-					<EducationLocation>{location}</EducationLocation>
+					<EducationInstitution>
+						{institution}
+						<EducationLocation>{location}</EducationLocation>
+					</EducationInstitution>
+					<EducationCourses>
+						{courses.map((course) => (
+							<EducationCourse>
+								{course.name}
+								{course.grade && ` — ${course.grade}`}
+							</EducationCourse>
+						))}
+					</EducationCourses>
 					<EducationPeriod>
 						{start.toLocaleDateString("en-GB", {
 							month: "long",

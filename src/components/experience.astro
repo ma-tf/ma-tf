@@ -33,22 +33,26 @@ const rendered = await Promise.all(
     return (
       <Experience>
         <ExperienceHeader>
-          <ExperienceCompany>{company}</ExperienceCompany>
-          <ExperiencePosition>{position}</ExperiencePosition>
-          <ExperienceLocation>{location}</ExperienceLocation>
-          <ExperiencePeriod>
-            {start.toLocaleDateString("en-GB", {
-              month: "long",
-              year: "numeric",
-            })}
-            {" – "}
-            {finish
-              ? finish.toLocaleDateString("en-GB", {
-                  month: "long",
-                  year: "numeric",
-                })
-              : "Present"}
-          </ExperiencePeriod>
+          <ExperienceCompany>
+            {company}
+            <ExperienceLocation>{location}</ExperienceLocation>
+          </ExperienceCompany>
+          <ExperiencePosition>
+            {position}
+            <ExperiencePeriod>
+              {start.toLocaleDateString("en-GB", {
+                month: "long",
+                year: "numeric",
+              })}
+              {" – "}
+              {finish
+                ? finish.toLocaleDateString("en-GB", {
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "Present"}
+            </ExperiencePeriod>
+          </ExperiencePosition>
         </ExperienceHeader>
         <ExperienceContent>
           <Content />

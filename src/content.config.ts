@@ -27,6 +27,12 @@ const education = defineCollection({
     location: z.string(),
     start: z.coerce.date(),
     finish: z.coerce.date(),
+    courses: z.array(
+      z.object({
+        name: z.string(),
+        grade: z.string().optional(),
+      }),
+    ),
   }),
 });
 

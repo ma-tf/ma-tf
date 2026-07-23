@@ -3,8 +3,10 @@ institution: "University of Hull"
 location: "Kingston-upon-Hull"
 start: "2015-09"
 finish: "2019-05"
+courses:
+  - name: "Master of Engineering in Computer Science"
+    grade: "First Class"
 ---
 
-- Master of Engineering in Computer Science - First Class
-  - Degree content here
-  - Modules, coursework, etc.
+- Degree content here
+- Modules, coursework, etc.
