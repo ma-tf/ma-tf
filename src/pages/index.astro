@@ -1,5 +1,5 @@
 ---
-import { Home } from "@components/Home";
+import { Blog, Home, Projects, Photography, Filmography, Graphics, Music } from "@components/Home";
 import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
 ---
@@ -7,4 +7,10 @@ import Layout from "@layouts/Layout.astro";
 <Layout>
   <ModeToggle client:load />
   <Home />
+  <Blog />
+  <Projects />
+  <Photography />
+  <Filmography />
+  <Graphics />
+  <Music />
 </Layout>

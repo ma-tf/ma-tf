@@ -1,6 +1,6 @@
-import { defineCollection } from "astro:content";
-import { z } from "astro/zod";
 import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { defineCollection } from "astro:content";
 
 const experience = defineCollection({
   loader: glob({ base: "./src/content/experience", pattern: "**/*.md" }),

@@ -8,6 +8,7 @@ import {
   ExperiencePosition,
   ExperienceLocation,
   ExperiencePeriod,
+  ExperienceContent,
 } from "@components/experience";
 
 const experience = await getCollection("experience");
@@ -36,14 +37,22 @@ const rendered = await Promise.all(
           <ExperiencePosition>{position}</ExperiencePosition>
           <ExperienceLocation>{location}</ExperienceLocation>
           <ExperiencePeriod>
-            {start.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
+            {start.toLocaleDateString("en-GB", {
+              month: "long",
+              year: "numeric",
+            })}
             {" – "}
             {finish
-              ? finish.toLocaleDateString("en-GB", { month: "long", year: "numeric" })
+              ? finish.toLocaleDateString("en-GB", {
+                  month: "long",
+                  year: "numeric",
+                })
               : "Present"}
           </ExperiencePeriod>
         </ExperienceHeader>
-        <Content />
+        <ExperienceContent>
+          <Content />
+        </ExperienceContent>
       </Experience>
     );
   })

@@ -3,24 +3,28 @@ import Layout from "@layouts/Layout.astro";
 import ExperienceSection from "@components/experience.astro";
 import EducationSection from "@components/education.astro";
 import profile from "@data/profile.json";
+import { ModeToggle } from "@components/ModeToggle";
 ---
 
 <Layout>
-  <div class="bg-muted min-h-screen px-4 py-8 sm:px-6 md:px-8">
-    <div class="mx-auto flex w-full max-w-md flex-col gap-2 sm:max-w-lg md:max-w-2xl lg:max-w-4xl">
-      <h1>{profile.name}</h1>
-      <h2>{profile.title}</h2>
-      <section class="flex flex-col gap-4">
-        <h2>Experience</h2>
-        <ExperienceSection />
-      </section>
-      <section>
-        <h2>Projects</h2>
-      </section>
-      <section class="flex flex-col gap-4">
-        <h2>Education</h2>
-        <EducationSection />
-      </section>
-    </div>
-  </div>
+	<ModeToggle client:load />
+	<div class="bg-muted min-h-screen px-4 py-8 sm:px-6 md:px-8">
+		<div
+			class="mx-auto flex w-full max-w-md flex-col gap-2 sm:max-w-lg md:max-w-2xl lg:max-w-4xl"
+		>
+			<h1>{profile.name}</h1>
+			<h2>{profile.title}</h2>
+			<section class="flex flex-col gap-4">
+				<h2>Experience</h2>
+				<ExperienceSection />
+			</section>
+			<section>
+				<h2>Projects</h2>
+			</section>
+			<section class="flex flex-col gap-4">
+				<h2>Education</h2>
+				<EducationSection />
+			</section>
+		</div>
+	</div>
 </Layout>
