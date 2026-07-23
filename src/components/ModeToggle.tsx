@@ -33,6 +33,7 @@ export function ModeToggle() {
       <div className="bg-muted flex gap-1 rounded-lg p-1">
         {(["light", "dark", "system"] as const).map((option) => (
           <button
+            type="button"
             key={option}
             onClick={() => setTheme(option)}
             className={
