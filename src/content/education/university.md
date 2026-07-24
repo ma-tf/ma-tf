@@ -5,8 +5,5 @@ start: "2015-09"
 finish: "2019-05"
 courses:
   - name: "Master of Engineering in Computer Science"
-    grade: "First Class"
+    grade: "First-class honours"
 ---
-
-- Degree content here
-- Modules, coursework, etc.

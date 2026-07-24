@@ -18,7 +18,7 @@ export function CurriculumVitaeTitle({
   ...props
 }: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("", className)} {...props}>
+    <h2 className={cn("flex justify-center", className)} {...props}>
       {children}
     </h2>
   );

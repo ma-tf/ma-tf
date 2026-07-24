@@ -8,6 +8,7 @@ import {
 	EducationCourses,
 	EducationCourse,
 	EducationPeriod,
+	EducationGrade,
 } from "@components/education";
 
 const education = await getCollection("education");
@@ -34,7 +35,9 @@ const rendered = await Promise.all(
 						{courses.map((course) => (
 							<EducationCourse>
 								{course.name}
-								{course.grade && ` — ${course.grade}`}
+								{course.grade && (
+									<EducationGrade>{course.grade}</EducationGrade>
+								)}
 							</EducationCourse>
 						))}
 					</EducationCourses>
