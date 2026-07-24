@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from "astro:content";
+import {
+  Project,
+  ProjectHeader,
+  ProjectTitle,
+  ProjectTopics,
+  ProjectDescription,
+} from "@components/projects";
+
+const projects = await getCollection("projects");
+const rendered = await Promise.all(
+  projects.map(async (entry) => ({
+    ...entry,
+    rendered: await render(entry),
+  })),
+);
+---
+
+{
+  rendered.map(async (project) => {
+    const { Content } = project.rendered;
+    const { title, url, topics } = project.data;
+    return (
+      <Project>
+        <ProjectHeader>
+          <ProjectTitle>
+            <a href={url}>{title}</a>
+          </ProjectTitle>
+          <ProjectTopics>{topics.join(" · ")}</ProjectTopics>
+        </ProjectHeader>
+        <ProjectDescription>
+          <Content />
+        </ProjectDescription>
+      </Project>
+    );
+  })
+}

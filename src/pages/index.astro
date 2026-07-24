@@ -1,5 +1,11 @@
 ---
-import { Blog, Home, Projects, Photography, Filmography, Graphics, Music } from "@components/Home";
+import { Home } from "@components/home";
+import { Blog } from "@components/blog";
+import ProjectsSection from "@components/projects.astro";
+import { Photography } from "@components/photography";
+import { Filmography } from "@components/filmography";
+import { Graphics } from "@components/graphics";
+import { Music } from "@components/music";
 import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
 ---
@@ -8,7 +14,11 @@ import Layout from "@layouts/Layout.astro";
   <ModeToggle client:load />
   <Home />
   <Blog />
-  <Projects />
+  <div class="flex justify-center py-8">
+    <div class="flex-col justify-center">
+      <ProjectsSection />
+    </div>
+  </div>
   <Photography />
   <Filmography />
   <Graphics />
