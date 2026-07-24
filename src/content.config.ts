@@ -16,7 +16,9 @@ const experience = defineCollection({
 const projects = defineCollection({
   loader: glob({ base: "./src/content/projects", pattern: "**/*.md" }),
   schema: z.object({
-    name: z.string(),
+    title: z.string(),
+    url: z.string(),
+    topics: z.array(z.string()),
   }),
 });
 

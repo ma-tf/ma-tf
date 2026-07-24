@@ -2,23 +2,46 @@
 import Layout from "@layouts/Layout.astro";
 import ExperienceSection from "@components/experience.astro";
 import EducationSection from "@components/education.astro";
+import ProjectsSection from "@components/projects.astro";
 import profile from "@data/profile.json";
 import { ModeToggle } from "@components/ModeToggle";
-import { CurriculumVitaeSection, CurriculumVitaeTitle } from "@components/cv";
+import {
+	CurriculumVitaeSection,
+	CurriculumVitaeTitle,
+	CurriculumVitaeName,
+	CurriculumVitaeRole,
+} from "@components/cv";
 ---
 
 <Layout>
 	<ModeToggle client:load />
 	<div class="bg-muted min-h-screen px-4 py-8 md:px-8">
 		<div class="mx-auto flex w-full max-w-md flex-col gap-2 md:max-w-3xl">
-			<h1>{profile.name}</h1>
-			<h2>{profile.title}</h2>
+			<CurriculumVitaeName>{profile.name}</CurriculumVitaeName>
+			<CurriculumVitaeRole>{profile.title}</CurriculumVitaeRole>
+			<div>
+				<p class="prose">
+					I started programming in 2013 for both education and for fun, and I
+					began writing software professionally in 2018. My professional
+					experience is in the sectors of public safety, finance, and
+					intellectual property.
+				</p>
+			</div>
+			<div>
+				<h2>Technical Strengths</h2>
+				<div>TypeScript, React, Angular, XAML</div>
+				<div>C#, Go, SQL</div>
+				<div>Azure, k8s, Helm, OpenTofu, YAML</div>
+				<div>MongoDB, Microsoft SQL Server</div>
+				<div>Bash, LaTeX</div>
+			</div>
 			<CurriculumVitaeSection>
 				<CurriculumVitaeTitle>Experience</CurriculumVitaeTitle>
 				<ExperienceSection />
 			</CurriculumVitaeSection>
 			<CurriculumVitaeSection>
 				<CurriculumVitaeTitle>Projects</CurriculumVitaeTitle>
+				<ProjectsSection />
 			</CurriculumVitaeSection>
 			<CurriculumVitaeSection>
 				<CurriculumVitaeTitle>Education</CurriculumVitaeTitle>
