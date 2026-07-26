@@ -1,9 +1,7 @@
-import { AspectRatio } from "@components/ui/aspect-ratio";
-
 export function PhotographyPreview() {
   return (
     <div className="w-lg md:w-2xl">
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <h2>Photography</h2>
         <a href="/photography">View all photographs</a>
       </div>
@@ -24,7 +22,7 @@ export function PhotographyPreview() {
           <AspectRatio ratio={9 / 16} className="bg-gray-300" />
           <span>Blah blah blah</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
