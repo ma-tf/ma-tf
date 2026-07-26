@@ -4,6 +4,7 @@
     "@base-ui/react",
     "@phosphor-icons/react",
     "@ui/dialog",
+    "@ui/skeleton",
     "class-variance-authority",
     "react-doctor",
     "zod"
