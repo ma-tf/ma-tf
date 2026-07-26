@@ -1,2 +1,3 @@
 vpx react-doctor --verbose -y
 fallow audit
+git lfs pre-push "$@"
