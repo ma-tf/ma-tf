@@ -38,4 +38,14 @@ const education = defineCollection({
   }),
 });
 
-export const collections = { experience, projects, education };
+const photography = defineCollection({
+  loader: glob({ base: "./src/content/photography", pattern: "**/*.md" }),
+  schema: ({ image }) =>
+    z.object({
+      image: image(),
+      column: z.number().min(1).max(3),
+      order: z.number(),
+    }),
+});
+
+export const collections = { experience, projects, education, photography };
