@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { ModeToggle } from "@components/ModeToggle";
+import { Photograph } from "@components/photograph";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 
@@ -15,25 +16,38 @@ const columns = [1, 2, 3].map((col) =>
 <Layout>
 	<ModeToggle client:load />
 	<div class="grid grid-cols-1 lg:grid-cols-6 auto-rows-auto gap-4">
-		<div class="lg:col-span-2">
-			<h2>Look at my photographs</h2>
-			<p>Here I shall talk about my photographs</p>
+		<div class="lg:col-span-2 p-4 flex-col flex gap-4">
+			<h2 class="text-lg">photographs</h2>
+			<p class="text-4xl prose">
+				In my spare time I am an amatuer photographer. The photographs I take
+				are in both digital and film formats.
+				<ul>
+					<li></li>
+				</ul>
+			</p>
 		</div>
-		<div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:col-span-4">
-			{columns.map((col) => (
-				<div class="flex flex-col gap-4">
-					{col.map((photo) => (
-						<Image
-							src={photo.data.image}
-							alt={photo.body || "Photography"}
-							quality={"mid"}
-							width={500}
-							height={500}
-							class="object-cover size-full"
-						/>
-					))}
-				</div>
-			))}
+		<div class="grid grid-cols-1 gap-4 py-4 lg:grid-cols-3 lg:col-span-4">
+			{
+				columns.map((col) => (
+					<div class="flex flex-col gap-4">
+						{col.map((photo) => (
+							<Photograph photo={photo} client:load>
+								<Image
+									src={photo.data.image}
+									alt={photo.body || "Photography"}
+									quality="mid"
+									height={1000}
+									width={1000}
+									class:list={[
+										"size-full object-cover transition-transform duration-200 hover:scale-110",
+										photo.data.column === 2 ? "aspect-2/3" : "aspect-square",
+									]}
+								/>
+							</Photograph>
+						))}
+					</div>
+				))
+			}
 		</div>
 	</div>
 </Layout>
