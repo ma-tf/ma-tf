@@ -1,0 +1,17 @@
+---
+import PhotoColumn from "@components/photo-column.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+const photos = await getCollection("photography");
+const sortByOrder = (
+	a: CollectionEntry<"photography">,
+	b: CollectionEntry<"photography">,
+) => a.data.order - b.data.order;
+const firstCol = photos.filter((p) => p.data.column === 1).sort(sortByOrder);
+const middleCol = photos.filter((p) => p.data.column === 2).sort(sortByOrder);
+const lastCol = photos.filter((p) => p.data.column === 3).sort(sortByOrder);
+---
+
+<div class="grid grid-cols-1 gap-4 py-4 lg:grid-cols-3 lg:col-span-4">
+	{[firstCol, middleCol, lastCol].map((col) => <PhotoColumn col={col} />)}
+</div>

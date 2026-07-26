@@ -1,53 +1,26 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { ModeToggle } from "@components/ModeToggle";
-import { Photograph } from "@components/photograph";
-import { Image } from "astro:assets";
-import { getCollection } from "astro:content";
-
-const photos = await getCollection("photography");
-const columns = [1, 2, 3].map((col) =>
-	photos
-		.filter((p) => p.data.column === col)
-		.sort((a, b) => a.data.order - b.data.order),
-);
+import PhotoGrid from "@components/photo-grid.astro";
+import {
+	PhotographDescriptionContent,
+	PhotographDescriptionHeader,
+} from "@components/photograph";
 ---
 
 <Layout>
 	<ModeToggle client:load />
 	<div class="grid grid-cols-1 lg:grid-cols-6 auto-rows-auto gap-4">
 		<div class="lg:col-span-2 p-4 flex-col flex gap-4">
-			<h2 class="text-lg">photographs</h2>
-			<p class="text-4xl prose">
+			<PhotographDescriptionHeader>photographs</PhotographDescriptionHeader>
+			<PhotographDescriptionContent>
 				In my spare time I am an amatuer photographer. The photographs I take
 				are in both digital and film formats.
 				<ul>
-					<li></li>
+					<li>stuff</li>
 				</ul>
-			</p>
+			</PhotographDescriptionContent>
 		</div>
-		<div class="grid grid-cols-1 gap-4 py-4 lg:grid-cols-3 lg:col-span-4">
-			{
-				columns.map((col) => (
-					<div class="flex flex-col gap-4">
-						{col.map((photo) => (
-							<Photograph photo={photo} client:load>
-								<Image
-									src={photo.data.image}
-									alt={photo.body || "Photography"}
-									quality="mid"
-									height={1000}
-									width={1000}
-									class:list={[
-										"size-full object-cover transition-transform duration-200 hover:scale-110",
-										photo.data.column === 2 ? "aspect-2/3" : "aspect-square",
-									]}
-								/>
-							</Photograph>
-						))}
-					</div>
-				))
-			}
-		</div>
+		<PhotoGrid />
 	</div>
 </Layout>

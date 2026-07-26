@@ -1,5 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
-  "ignoreDependencies": ["react-doctor", "zod"],
+  "ignoreDependencies": [
+    "@base-ui/react",
+    "@phosphor-icons/react",
+    "@ui/dialog",
+    "class-variance-authority",
+    "react-doctor",
+    "zod"
+  ],
   "ignorePatterns": [".opencode/**", "src/components/ui/**"]
 }
