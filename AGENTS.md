@@ -13,3 +13,4 @@ See [docs/vite-plus.md](docs/vite-plus.md) for the Vite+ toolchain docs and revi
 ## Conventions
 
 - Avoid passing props where possible
+- Always run `vpx astro check` after changing astro files

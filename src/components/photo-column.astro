@@ -1,0 +1,29 @@
+---
+import { PhotoDialog } from "@components/photo-dialog";
+
+interface Props {
+	items: {
+		photo: { body?: string | null; data: { order: number } };
+		fullSrc: string;
+		thumbSrc: string;
+	}[];
+	orientation: "portrait" | "square";
+}
+
+const { items, orientation } = Astro.props;
+const rowSpan = orientation === "portrait" ? "lg:row-span-3" : "lg:row-span-2";
+---
+
+<div class="grid grid-cols-1 gap-4">
+	{
+		items.map(({ photo, fullSrc, thumbSrc }) => (
+			<PhotoDialog
+				src={fullSrc}
+				thumbSrc={thumbSrc}
+				alt={photo.body || "Photography"}
+				className={rowSpan}
+				client:load
+			/>
+		))
+	}
+</div>
