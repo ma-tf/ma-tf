@@ -8,11 +8,11 @@ const photos = await getCollection("photography");
 const processed = await Promise.all(
 	photos.map(async (photo) => ({
 		photo,
-		fullSrc: (await getImage({ src: photo.data.image, quality: "low" })).src,
+		fullSrc: (await getImage({ src: photo.data.image, quality: "mid" })).src,
 		thumbSrc: (
 			await getImage({
 				src: photo.data.image,
-				quality: "mid",
+				quality: "low",
 				height: 1000,
 				width: 1000,
 			})
