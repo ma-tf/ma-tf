@@ -27,8 +27,11 @@ export function PhotoDialog({
   return (
     <Dialog>
       <DialogTrigger className={`overflow-hidden cursor-pointer ${className ?? ""}`}>
-        <img src={thumbSrc} alt={alt} className="size-full object-cover" />
-        {children}
+        <img
+          src={thumbSrc}
+          alt={alt}
+          className="size-full object-cover transition-transform duration-150 hover:scale-110"
+        />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[90dvw] w-fit max-w-[90dvw]" showCloseButton>
         <DialogHeader>
@@ -42,7 +45,7 @@ export function PhotoDialog({
           className="max-h-[85dvh] max-w-[85dvw] object-contain"
           style={{ display: loaded ? undefined : "none" }}
         />
-        <DialogFooter></DialogFooter>
+        <DialogFooter>{children}</DialogFooter>
       </DialogContent>
     </Dialog>
   );

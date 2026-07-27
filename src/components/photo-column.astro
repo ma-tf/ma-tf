@@ -1,9 +1,10 @@
 ---
 import { PhotoDialog } from "@components/photo-dialog";
+import { render, type CollectionEntry } from "astro:content";
 
 interface Props {
 	items: {
-		photo: { body?: string | null; data: { order: number } };
+		photo: CollectionEntry<"photography">;
 		fullSrc: string;
 		thumbSrc: string;
 	}[];
@@ -12,18 +13,29 @@ interface Props {
 
 const { items, orientation } = Astro.props;
 const rowSpan = orientation === "portrait" ? "lg:row-span-3" : "lg:row-span-2";
+
+const renderedItems = await Promise.all(
+	items.map(async (item) => ({
+		...item,
+		Content: (await render(item.photo)).Content,
+	})),
+);
 ---
 
 <div class="grid grid-cols-1 gap-4">
 	{
-		items.map(({ photo, fullSrc, thumbSrc }) => (
-			<PhotoDialog
-				src={fullSrc}
-				thumbSrc={thumbSrc}
-				alt={photo.body || "Photography"}
-				className={rowSpan}
-				client:load
-			/>
-		))
+		renderedItems.map(({ photo, fullSrc, thumbSrc, Content }) => {
+			return (
+				<PhotoDialog
+					src={fullSrc}
+					thumbSrc={thumbSrc}
+					alt={photo.body || "Photography"}
+					className={rowSpan}
+					client:load
+				>
+					<Content />
+				</PhotoDialog>
+			);
+		})
 	}
 </div>
