@@ -11,18 +11,25 @@ import { useState } from "react";
 
 export function PhotoDialog({
   src,
+  thumbSrc,
   alt,
+  className,
   children,
 }: {
   src: string;
+  thumbSrc: string;
   alt: string;
-  children: React.ReactNode;
+  className?: string;
+  children?: React.ReactNode;
 }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
     <Dialog>
-      <DialogTrigger className="overflow-hidden cursor-pointer">{children}</DialogTrigger>
+      <DialogTrigger className={`overflow-hidden cursor-pointer ${className ?? ""}`}>
+        <img src={thumbSrc} alt={alt} className="size-full object-cover" />
+        {children}
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[90dvw] w-fit max-w-[90dvw]" showCloseButton>
         <DialogHeader>
           <DialogTitle></DialogTitle>

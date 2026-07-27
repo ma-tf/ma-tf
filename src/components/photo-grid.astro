@@ -1,23 +1,60 @@
 ---
-import PhotoColumn from "@components/photo-column.astro";
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
+import { getCollection } from "astro:content";
+import { PhotoDialog } from "@components/photo-dialog";
 
 const photos = await getCollection("photography");
-const sortByOrder = (
-	a: CollectionEntry<"photography">,
-	b: CollectionEntry<"photography">,
-) => a.data.order - b.data.order;
-const firstCol = photos.filter((p) => p.data.column === 1).sort(sortByOrder);
-const middleCol = photos.filter((p) => p.data.column === 2).sort(sortByOrder);
-const lastCol = photos.filter((p) => p.data.column === 3).sort(sortByOrder);
+
+const processed = await Promise.all(
+	photos.map(async (photo) => ({
+		photo,
+		fullSrc: (await getImage({ src: photo.data.image, quality: "low" })).src,
+		thumbSrc: (
+			await getImage({ src: photo.data.image, quality: "mid", height: 1000, width: 1000 })
+		).src,
+	})),
+);
+
+const sortByOrder = (a: (typeof processed)[number], b: (typeof processed)[number]) =>
+	a.photo.data.order - b.photo.data.order;
+
+const first = processed.filter((p) => p.photo.data.column === 1).sort(sortByOrder);
+const middle = processed.filter((p) => p.photo.data.column === 2).sort(sortByOrder);
+const last = processed.filter((p) => p.photo.data.column === 3).sort(sortByOrder);
 ---
 
 <div class="grid grid-cols-1 gap-4 py-4 lg:grid-cols-3 lg:col-span-4">
-	{
-		[firstCol, middleCol, lastCol].map((col) => (
-			<div class="flex flex-col gap-4">
-				<PhotoColumn col={col} />
-			</div>
-		))
-	}
+	<div class="grid grid-cols-1 gap-4">
+		{first.map(({ photo, fullSrc, thumbSrc }) => (
+			<PhotoDialog
+				src={fullSrc}
+				thumbSrc={thumbSrc}
+				alt={photo.body || "Photography"}
+				className="lg:row-span-2"
+				client:load
+			/>
+		))}
+	</div>
+	<div class="grid grid-cols-1 gap-4">
+		{middle.map(({ photo, fullSrc, thumbSrc }) => (
+			<PhotoDialog
+				src={fullSrc}
+				thumbSrc={thumbSrc}
+				alt={photo.body || "Photography"}
+				className="lg:row-span-3"
+				client:load
+			/>
+		))}
+	</div>
+	<div class="grid grid-cols-1 gap-4">
+		{last.map(({ photo, fullSrc, thumbSrc }) => (
+			<PhotoDialog
+				src={fullSrc}
+				thumbSrc={thumbSrc}
+				alt={photo.body || "Photography"}
+				className="lg:row-span-2"
+				client:load
+			/>
+		))}
+	</div>
 </div>
