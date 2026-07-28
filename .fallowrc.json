@@ -9,5 +9,5 @@
     "react-doctor",
     "zod"
   ],
-  "ignorePatterns": [".opencode/**", "src/components/ui/**"]
+  "ignorePatterns": [".opencode/**", "src/components/ui/**", "doctor.config.ts"]
 }
