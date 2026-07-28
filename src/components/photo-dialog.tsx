@@ -9,14 +9,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@ui/dialog";
-import { Skeleton } from "@ui/skeleton";
 import { useState } from "react";
 
 function LoadableImage({ src, alt, className }: { src: string; alt: string; className: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
     <>
-      {!loaded && <Skeleton className="w-64 aspect-square" />}
+      {!loaded && (
+        <div className="size-64 flex items-center justify-center">
+          <div className="size-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
+        </div>
+      )}
       <img
         src={src}
         alt={alt}
