@@ -1,5 +1,6 @@
 import type { ImageMetadata } from "astro";
 
+import { cn } from "@lib/cn";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,21 @@ import {
 } from "@ui/dialog";
 import { Skeleton } from "@ui/skeleton";
 import { useState } from "react";
+
+function LoadableImage({ src, alt, className }: { src: string; alt: string; className: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && <Skeleton className="w-64 aspect-square" />}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        className={cn(className, !loaded ? "hidden" : "")}
+      />
+    </>
+  );
+}
 
 export function PhotoDialog({
   src,
@@ -32,8 +48,6 @@ export function PhotoDialog({
   className?: string;
   children?: React.ReactNode;
 }) {
-  const [loaded, setLoaded] = useState(false);
-
   return (
     <Dialog>
       <DialogTrigger className={`overflow-hidden cursor-pointer ${className ?? ""}`}>
@@ -50,12 +64,10 @@ export function PhotoDialog({
             Shot by the {data.camera} {data.film ? ` on ${data.film}` : null}
           </DialogDescription>
         </DialogHeader>
-        {!loaded && <Skeleton className="w-64 aspect-square" />}
-        <img
+        <LoadableImage
           src={src}
           alt={alt}
-          onLoad={() => setLoaded(true)}
-          className={`max-h-[85dvh] max-w-[85dvw] object-contain ${!loaded ? "hidden" : ""}`}
+          className={`max-h-[85dvh] max-w-[85dvw] object-contain`}
         />
       </DialogContent>
     </Dialog>
