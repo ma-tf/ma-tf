@@ -30,6 +30,7 @@ const renderedItems = await Promise.all(
 					src={fullSrc}
 					thumbSrc={thumbSrc}
 					alt={photo.body || "Photography"}
+					data={photo.data}
 					className={rowSpan}
 					client:load
 				>

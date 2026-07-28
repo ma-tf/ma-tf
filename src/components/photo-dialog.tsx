@@ -1,7 +1,9 @@
+import type { ImageMetadata } from "astro";
+
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,12 +15,20 @@ export function PhotoDialog({
   src,
   thumbSrc,
   alt,
+  data,
   className,
   children,
 }: {
   src: string;
   thumbSrc: string;
   alt: string;
+  data: {
+    image: ImageMetadata;
+    camera: string;
+    film?: string | undefined;
+    column: number;
+    order: number;
+  };
   className?: string;
   children?: React.ReactNode;
 }) {
@@ -35,17 +45,18 @@ export function PhotoDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[90dvw] w-fit max-w-[90dvw]" showCloseButton>
         <DialogHeader>
-          <DialogTitle></DialogTitle>
+          <DialogTitle>{children}</DialogTitle>
+          <DialogDescription className="prose">
+            Shot by the {data.camera} {data.film ? ` on ${data.film}` : null}
+          </DialogDescription>
         </DialogHeader>
         {!loaded && <Skeleton className="w-64 aspect-square" />}
         <img
           src={src}
           alt={alt}
           onLoad={() => setLoaded(true)}
-          className="max-h-[85dvh] max-w-[85dvw] object-contain"
-          style={{ display: loaded ? undefined : "none" }}
+          className={`max-h-[85dvh] max-w-[85dvw] object-contain ${!loaded ? "hidden" : ""}`}
         />
-        <DialogFooter>{children}</DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -43,9 +43,8 @@ const photography = defineCollection({
   schema: ({ image }) =>
     z.object({
       image: image(),
-      title: z.string(),
       camera: z.string(),
-      // film: z.string().optional(),
+      film: z.string().optional(),
       column: z.number().min(1).max(3),
       order: z.number(),
     }),
