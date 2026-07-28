@@ -16,10 +16,10 @@ export function PhotographDescriptionContent({
   children,
   className,
   ...props
-}: React.ComponentProps<"p">) {
+}: React.ComponentProps<"div">) {
   return (
-    <p className={cn("text-4xl prose", className)} {...props}>
+    <div className={cn("text-4xl prose indent-8", className)} {...props}>
       {children}
-    </p>
+    </div>
   );
 }
