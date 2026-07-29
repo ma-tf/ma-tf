@@ -1,28 +1,19 @@
 export function PhotographyPreview() {
   return (
-    <div className="w-lg md:w-2xl">
-      {/* <div className="flex justify-between">
-        <h2>Photography</h2>
-        <a href="/photography">View all photographs</a>
+    <div className="flex justify-center">
+      <div className="flex items-center gap-3 text-center">
+        <h2 className="text-2xl font-semibold">Photography</h2>
+        <p className="text-muted-foreground max-w-sm prose">
+          In my spare time I am an amateur photographer. The photographs I take are in both digital
+          and film formats.
+        </p>
+        <a
+          href="/photography"
+          className="underline underline-offset-4 transition-colors hover:text-foreground/70"
+        >
+          View gallery
+        </a>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="col-span-3">
-          <AspectRatio ratio={1 / 1} className="bg-gray-300" />
-          <span>Blah blah blah</span>
-        </div>
-        <div className="col-span-2">
-          <AspectRatio ratio={1 / 1} className="bg-gray-300" />
-          <span>Blah blah blah</span>
-        </div>
-        <div className="col-span-3">
-          <AspectRatio ratio={16 / 9} className="bg-gray-300" />
-          <span>Blah blah blah</span>
-        </div>
-        <div className="col-span-2">
-          <AspectRatio ratio={9 / 16} className="bg-gray-300" />
-          <span>Blah blah blah</span>
-        </div>
-      </div> */}
     </div>
   );
 }

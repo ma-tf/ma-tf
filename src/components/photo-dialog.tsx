@@ -53,7 +53,9 @@ export function PhotoDialog({
 }) {
   return (
     <Dialog>
-      <DialogTrigger className={`overflow-hidden cursor-pointer ${className ?? ""}`}>
+      <DialogTrigger
+        className={`overflow-hidden cursor-pointer md:animate-fade-in-scroll ${className ?? ""}`}
+      >
         <img
           src={thumbSrc}
           alt={alt}
