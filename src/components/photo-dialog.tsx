@@ -1,5 +1,3 @@
-import type { ImageMetadata } from "astro";
-
 import { cn } from "@lib/cn";
 import {
   Dialog,
@@ -42,7 +40,7 @@ export function PhotoDialog({
   thumbSrc: string;
   alt: string;
   data: {
-    image: ImageMetadata;
+    image: string;
     camera: string;
     film?: string | undefined;
     column: number;

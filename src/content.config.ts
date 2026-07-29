@@ -40,14 +40,13 @@ const education = defineCollection({
 
 const photography = defineCollection({
   loader: glob({ base: "./src/content/photography", pattern: "**/*.md" }),
-  schema: ({ image }) =>
-    z.object({
-      image: image(),
-      camera: z.string(),
-      film: z.string().optional(),
-      column: z.number().min(1).max(3),
-      order: z.number(),
-    }),
+  schema: z.object({
+    image: z.string(),
+    camera: z.string(),
+    film: z.string().optional(),
+    column: z.number().min(1).max(3),
+    order: z.number(),
+  }),
 });
 
 export const collections = { experience, projects, education, photography };
