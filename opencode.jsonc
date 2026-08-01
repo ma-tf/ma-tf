@@ -9,7 +9,7 @@
     },
     "fallow": {
       "type": "local",
-      "command": ["fallow-mcp"],
+      "command": ["vpx", "fallow-mcp"],
       "enabled": true,
     },
     "github": {

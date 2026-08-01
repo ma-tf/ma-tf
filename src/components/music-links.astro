@@ -1,0 +1,108 @@
+---
+import { getImage } from "astro:assets";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { BandcampEmbed, MixcloudEmbed } from "@components/bandcamp-preview";
+
+const s3 = new S3Client({
+	region: "auto",
+	endpoint: import.meta.env.R2_ENDPOINT,
+	credentials: {
+		accessKeyId: import.meta.env.R2_ACCESS_KEY_ID,
+		secretAccessKey: import.meta.env.R2_SECRET_ACCESS_KEY,
+	},
+});
+
+async function getMusicImage(key: string) {
+	const signedUrl = await getSignedUrl(
+		s3,
+		new GetObjectCommand({
+			Bucket: import.meta.env.R2_BUCKET,
+			Key: key,
+		}),
+		{ expiresIn: 3600 },
+	);
+	return (
+		await getImage({
+			src: signedUrl,
+			width: 1000,
+			height: 1000,
+			quality: "low",
+			inferSize: true,
+		})
+	).src;
+}
+
+const elevatedSpiritImg = await getMusicImage(
+	"music/matt f elevated spirit.jpg",
+);
+const contractsImg = await getMusicImage("music/prcsr contracts.jpg");
+const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
+---
+
+<div class="flex flex-col">
+	<div class="flex flex-row-reverse gap-4 border-b-2 border-gray-800">
+		<div class="w-1/2 overflow-hidden">
+			<img
+				src={elevatedSpiritImg}
+				alt="Elevated Spirit by Matt F"
+				class="w-full scale-105 grayscale transition-all duration-150 hover:scale-100 hover:grayscale-0"
+			/>
+		</div>
+		<div class="flex w-1/2 flex-col gap-2">
+			<p>
+				Lorem ipsum dolor sit amet duo praesent odio sadipscing praesent.
+				Euismod tempor lorem nihil clita nihil voluptua minim diam tempor ipsum
+				facilisis sea no amet erat dolore amet commodo.
+			</p>
+			<BandcampEmbed
+				albumId="3783468820"
+				href="https://mattf.bandcamp.com/album/elevated-spirit"
+				title="Elevated Spirit by Matt F"
+			/>
+		</div>
+	</div>
+
+	<div class="flex flex-row gap-4 border-b-2 border-gray-800">
+		<div class="w-1/2 overflow-hidden">
+			<img
+				src={contractsImg}
+				alt="Contracts by prcsr"
+				class="w-full scale-105 grayscale transition-all duration-150 hover:scale-100 hover:grayscale-0"
+			/>
+		</div>
+		<div class="flex w-1/2 flex-col gap-2">
+			<p>
+				Lorem ipsum dolor sit amet duo praesent odio sadipscing praesent.
+				Euismod tempor lorem nihil clita nihil voluptua minim diam tempor ipsum
+				facilisis sea no amet erat dolore amet commodo. Vero ad diam invidunt
+				diam consequat sit.
+			</p>
+			<BandcampEmbed
+				albumId="2620077534"
+				href="https://dreamcatalogue.bandcamp.com/album/contracts"
+				title="Contracts by prcsr"
+			/>
+		</div>
+	</div>
+
+	<div class="flex flex-row-reverse gap-4 border-b-2 border-gray-800">
+		<div class="w-1/2 overflow-hidden">
+			<img
+				src={asagayaImg}
+				alt="Asagaya Drift 20250905"
+				class="w-full scale-105 grayscale transition-all duration-150 hover:scale-100 hover:grayscale-0"
+			/>
+		</div>
+		<div class="flex w-1/2 flex-col gap-2">
+			<p>
+				Lorem ipsum dolor sit amet duo praesent odio sadipscing praesent.
+				Euismod tempor lorem nihil clita nihil voluptua minim diam tempor ipsum
+				facilisis sea no amet erat dolore amet commodo. Vero ad diam invidunt
+				diam consequat sit. Adipiscing no sit vero ea amet sit duo sed lorem
+				diam ipsum stet diam sit diam dolore duo accumsan.
+			</p>
+			<MixcloudEmbed feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F" />
+		</div>
+	</div>
+</div>

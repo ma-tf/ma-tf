@@ -1,0 +1,14 @@
+---
+import Layout from "@layouts/Layout.astro";
+import MusicLinks from "@components/music-links.astro";
+import { Music } from "@components/music";
+---
+
+<Layout>
+	<div class="flex justify-center">
+		<Music className="bg-slate-100 px-8">
+			<h2 class="my-2">music</h2>
+			<MusicLinks />
+		</Music>
+	</div>
+</Layout>
