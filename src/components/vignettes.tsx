@@ -1,21 +1,18 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
 
-export function PhotographyPreview() {
+export function Vignettes() {
   return (
     <Card className="w-3xl">
       <CardHeader>
-        <CardTitle>Photography</CardTitle>
-        <CardDescription>
-          In my spare time I am an amateur photographer. The photographs I take are in both digital
-          and film formats.
-        </CardDescription>
+        <CardTitle>Vignettes</CardTitle>
+        <CardDescription>Experimental motion work exploring through the lens.</CardDescription>
       </CardHeader>
       <CardFooter>
         <a
-          href="/photography"
+          href="/vignettes"
           className="underline underline-offset-4 transition-colors hover:text-foreground/70"
         >
-          View gallery
+          View vignettes
         </a>
       </CardFooter>
     </Card>

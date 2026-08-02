@@ -1,12 +1,25 @@
+import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
 import { cn } from "@lib/cn";
 
 export function MusicPreview() {
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col justify-center">
-        <span>Preview and link for music content</span>
-      </div>
-    </div>
+    <Card className="w-3xl">
+      <CardHeader>
+        <CardTitle>Music</CardTitle>
+        <CardDescription>
+          Original compositions, remixes, and live recordings spanning electronic and ambient
+          sounds.
+        </CardDescription>
+      </CardHeader>
+      <CardFooter>
+        <a
+          href="/music"
+          className="underline underline-offset-4 transition-colors hover:text-foreground/70"
+        >
+          Listen
+        </a>
+      </CardFooter>
+    </Card>
   );
 }
 

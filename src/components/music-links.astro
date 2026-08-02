@@ -2,7 +2,7 @@
 import { getImage } from "astro:assets";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { BandcampEmbed, MixcloudEmbed } from "@components/bandcamp-preview";
+import { BandcampEmbed, MixcloudEmbed } from "@components/embedded-media";
 
 const s3 = new S3Client({
 	region: "auto",
@@ -51,9 +51,18 @@ const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 		</div>
 		<div class="flex w-1/2 flex-col gap-2">
 			<p>
-				Lorem ipsum dolor sit amet duo praesent odio sadipscing praesent.
-				Euismod tempor lorem nihil clita nihil voluptua minim diam tempor ipsum
-				facilisis sea no amet erat dolore amet commodo.
+				This album is a collection of drum and bass music with an ambient style.
+				I had some a capella samples I wanted to use for a song, as well as the
+				desire to use the Apache instrumental break for the first time. These
+				formed the basis of the track Black Cell. The sound of Cirrostratus was
+				aiming to be a rolling drum and bass track. The long phasing pad is the
+				primary element of this track and I built everything else around it. I
+				also wanted to experiment with chopping different breaks in one track.
+				This was the basis of the track Chopper. The track Information Overload
+				was the result of listening to a lot of music on the label 720 Degrees
+				at the time. Their style of drum and bass has a futuristic sound with
+				heavy usage of E-mu Systems ROMpler synths. To achieve this sound I used
+				a software version of the E-mu synths called Emulator III.
 			</p>
 			<BandcampEmbed
 				albumId="3783468820"
@@ -73,10 +82,11 @@ const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 		</div>
 		<div class="flex w-1/2 flex-col gap-2">
 			<p>
-				Lorem ipsum dolor sit amet duo praesent odio sadipscing praesent.
-				Euismod tempor lorem nihil clita nihil voluptua minim diam tempor ipsum
-				facilisis sea no amet erat dolore amet commodo. Vero ad diam invidunt
-				diam consequat sit.
+				The album Contracts was the result of a collaboration with the artist
+				Wei. We aimed to establish a sinister, ambient soundscape influenced by
+				Jesper Kyd. The primary synth I used for this was a Korg Triton -
+				specifically its percussion and sound effect patches. There is a secret
+				track at the end of the track Contracts.
 			</p>
 			<BandcampEmbed
 				albumId="2620077534"
@@ -96,13 +106,17 @@ const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 		</div>
 		<div class="flex w-1/2 flex-col gap-2">
 			<p>
-				Lorem ipsum dolor sit amet duo praesent odio sadipscing praesent.
-				Euismod tempor lorem nihil clita nihil voluptua minim diam tempor ipsum
-				facilisis sea no amet erat dolore amet commodo. Vero ad diam invidunt
-				diam consequat sit. Adipiscing no sit vero ea amet sit duo sed lorem
-				diam ipsum stet diam sit diam dolore duo accumsan.
+				This is a recording of a DJ set that occured in Asagaya around Autumn
+				2025. I recorded it using a Sony WM-D6C onto RTM C90 Type I cassettes
+				from the DJ deck RCA master output. That tape recorder comes with two
+				settings for noise reduction but I left them disabled for the recording
+				to get a vintage sound on the recording. The first hour of the audio is
+				my own performance.
 			</p>
-			<MixcloudEmbed feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F" />
+			<MixcloudEmbed
+				feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F"
+				title="Asagaya Drift 20250905"
+			/>
 		</div>
 	</div>
 </div>
