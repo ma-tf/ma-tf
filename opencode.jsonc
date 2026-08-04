@@ -21,6 +21,12 @@
         "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}",
       },
     },
+    "mux": {
+      "type": "remote",
+      "url": "https://mcp.mux.com",
+      "enabled": true,
+      "oauth": false,
+    },
   },
   "plugin": ["opencode-dynamic-context-pruning"],
   "permission": {

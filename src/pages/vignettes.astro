@@ -1,14 +1,18 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { ModeToggle } from "@components/ModeToggle";
+import { Vignettes } from "@components/vignettes";
+import { getCollection } from "astro:content";
+
+const videos = await getCollection("vignettes", ({ data }) => data.order);
+videos.sort((a, b) => a.data.order - b.data.order);
+const videoData = videos.map((v) => ({ playbackId: v.data.playbackId, order: v.data.order }));
 ---
 
 <Layout>
-  <ModeToggle client:load />
   <div class="flex justify-center py-8">
-    <div class="max-w-2xl px-8">
-      <h2 class="text-lg">vignettes</h2>
-      <p class="prose text-muted-foreground">Vignettes coming soon.</p>
+    <div class="max-w-2xl px-8 w-full">
+      <h2 class="text-lg mb-6">vignettes</h2>
+      <Vignettes videos={videoData} client:load />
     </div>
   </div>
 </Layout>

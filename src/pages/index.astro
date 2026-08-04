@@ -3,11 +3,12 @@ import { Home } from "@components/home";
 import { Blog } from "@components/blog";
 import ProjectsSection from "@components/projects.astro";
 import { PhotographyPreview } from "@components/photography-preview";
-import { Vignettes } from "@components/vignettes";
+import { VignettesPreview } from "@components/vignettes";
 import { Graphics } from "@components/graphics";
 import { MusicPreview } from "@components/music";
 import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
+import Footer from "@components/footer.astro";
 ---
 
 <Layout>
@@ -25,7 +26,7 @@ import Layout from "@layouts/Layout.astro";
     <PhotographyPreview />
   </div>
   <div class="flex justify-center py-8 bg-cyan-100">
-    <Vignettes />
+    <VignettesPreview />
   </div>
   <div class="flex justify-center py-8 bg-yellow-100">
     <Graphics />
@@ -33,4 +34,5 @@ import Layout from "@layouts/Layout.astro";
   <div class="flex justify-center py-8 bg-mauve-100">
     <MusicPreview />
   </div>
+  <Footer />
 </Layout>

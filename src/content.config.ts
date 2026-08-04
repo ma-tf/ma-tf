@@ -49,4 +49,12 @@ const photography = defineCollection({
   }),
 });
 
-export const collections = { experience, projects, education, photography };
+const vignettes = defineCollection({
+  loader: glob({ base: "./src/content/vignettes", pattern: "**/*.md" }),
+  schema: z.object({
+    playbackId: z.string(),
+    order: z.number(),
+  }),
+});
+
+export const collections = { experience, projects, education, photography, vignettes };
