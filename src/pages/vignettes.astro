@@ -1,18 +1,24 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { Vignettes } from "@components/vignettes";
-import { getCollection } from "astro:content";
+import { VignetteSelector } from "@components/vignette-selector";
 
-const videos = await getCollection("vignettes", ({ data }) => data.order);
-videos.sort((a, b) => a.data.order - b.data.order);
-const videoData = videos.map((v) => ({ playbackId: v.data.playbackId, order: v.data.order }));
+const videos = [
+  { playbackId: "6X3BeDuvZ2BEgJwaaF9700E9Re1WO02FjkiQKMBU43fR8", order: 1, description: "hello world" },
+  { playbackId: "UXGlghx6krtNvopFsJd8kRRGdhejPnwavUNNeoOG4mQ", order: 2, description: "hello world" },
+  { playbackId: "ETJbmGydT6vsk02eO8uCp49fFLieO5BO5DJVGklS4SlI", order: 3, description: "hello world" },
+  { playbackId: "GH3xlI019KRqjGvfHffUGVJxDJvdaQPw00s9Uhv3JGQ7A", order: 4, description: "hello world" },
+  { playbackId: "Ziv01nveEVq5PpPW01SK02TmRolIpsaLdZ8FLqXHWYAmp00", order: 5, description: "hello world" },
+  { playbackId: "2IjjXN1Gd4tGbSzzIZ5Pe01Tzn9I2Azx401PqBxAgh025s", order: 6, description: "hello world" },
+  { playbackId: "na96OKmxoqf7GXO7Sx9UFON00ie00gXpcqueRPM3LZhyU", order: 7, description: "hello world" },
+  { playbackId: "jzJORoDli001swYL1MYFoVkGmlHZhKp01TNnrQKZ01u8oI", order: 8, description: "hello world" },
+];
 ---
 
 <Layout>
-  <div class="flex justify-center py-8">
-    <div class="max-w-2xl px-8 w-full">
+  <div class="flex justify-center h-dvh py-8">
+    <div class="max-w-2xl px-8 w-full flex flex-col">
       <h2 class="text-lg mb-6">vignettes</h2>
-      <Vignettes videos={videoData} client:load />
+      <VignetteSelector videos={videos} client:load />
     </div>
   </div>
 </Layout>

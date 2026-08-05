@@ -1,5 +1,4 @@
 import { VideoPlayer } from "@components/mux-player";
-import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
 import { Spinner } from "@components/ui/spinner";
 import { cn } from "@lib/cn";
@@ -25,40 +24,24 @@ export function VignettesPreview() {
 }
 
 export function Vignettes({
-  videos,
+  activeVideo,
   className,
   ...props
-}: { videos: { playbackId: string; order: number }[] } & React.ComponentProps<"div">) {
-  const [activeIndex, setActiveIndex] = useState(0);
+}: {
+  activeVideo: { playbackId: string; order: number };
+} & React.ComponentProps<"div">) {
   const [loading, setLoading] = useState(true);
-  const activeVideo = videos[activeIndex];
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="flex gap-2">
-        {videos.map((video, i) => (
-          <Button
-            key={video.order}
-            variant={i === activeIndex ? "default" : "outline"}
-            size="xs"
-            onClick={() => setActiveIndex(i)}
-          >
-            {video.order}
-          </Button>
-        ))}
-      </div>
-      {activeVideo && (
-        <div className="relative">
-          <VideoPlayer
-            playbackId={activeVideo.playbackId}
-            onLoadStart={() => setLoading(true)}
-            onCanPlay={() => setLoading(false)}
-          />
-          {loading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Spinner className="size-8" />
-            </div>
-          )}
+    <div className={cn("relative flex-1 min-h-0", className)} {...props}>
+      <VideoPlayer
+        playbackId={activeVideo.playbackId}
+        onLoadStart={() => setLoading(true)}
+        onCanPlay={() => setLoading(false)}
+      />
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Spinner className="size-8" />
         </div>
       )}
     </div>
