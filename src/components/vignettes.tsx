@@ -1,6 +1,7 @@
 import { VideoPlayer } from "@components/mux-player";
 import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
+import { Spinner } from "@components/ui/spinner";
 import { cn } from "@lib/cn";
 import { useState } from "react";
 
@@ -29,6 +30,8 @@ export function Vignettes({
   ...props
 }: { videos: { playbackId: string; order: number }[] } & React.ComponentProps<"div">) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const activeVideo = videos[activeIndex];
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -40,11 +43,24 @@ export function Vignettes({
             size="xs"
             onClick={() => setActiveIndex(i)}
           >
-            {String(video.order).padStart(2, "0")}
+            {video.order}
           </Button>
         ))}
       </div>
-      {videos[activeIndex] && <VideoPlayer playbackId={videos[activeIndex].playbackId} />}
+      {activeVideo && (
+        <div className="relative">
+          <VideoPlayer
+            playbackId={activeVideo.playbackId}
+            onLoadStart={() => setLoading(true)}
+            onCanPlay={() => setLoading(false)}
+          />
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Spinner className="size-8" />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

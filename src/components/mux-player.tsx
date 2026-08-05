@@ -1,6 +1,11 @@
-import MuxPlayer from "@mux/mux-player-react";
+import { cn } from "@lib/cn";
+import MuxPlayer, { type MuxPlayerProps } from "@mux/mux-player-react";
 
-export function VideoPlayer({ playbackId }: { playbackId: string }) {
+export function VideoPlayer({
+  playbackId,
+  className,
+  ...props
+}: { playbackId: string; className?: string } & Omit<MuxPlayerProps, "playbackId">) {
   return (
     <MuxPlayer
       playbackId={playbackId}
@@ -8,7 +13,11 @@ export function VideoPlayer({ playbackId }: { playbackId: string }) {
       nohotkeys
       autoPlay={true}
       loop={true}
-      className="block aspect-4/3 bg-black w-full [--controls:none] [--loading-indicator:none] [--dialog:none]"
+      {...props}
+      className={cn(
+        "block aspect-4/3 bg-black w-full [--controls:none] [--loading-indicator:none] [--dialog:none]",
+        className,
+      )}
     />
   );
 }
