@@ -2,12 +2,16 @@
 import Layout from "@layouts/Layout.astro";
 import MusicLinks from "@components/music-links.astro";
 import { Music } from "@components/music";
+import { ModeToggle } from "@components/ModeToggle";
 ---
 
 <Layout>
+	<ModeToggle client:load />
 	<div class="flex justify-center">
 		<Music className="bg-slate-100 px-8">
-			<h2 class="my-2">music</h2>
+			<div class="flex justify-end">
+				<h2 class="text-9xl mb-4 mt-12">music</h2>
+			</div>
 			<MusicLinks />
 		</Music>
 	</div>
