@@ -9,7 +9,7 @@ export function BandcampEmbed({
 }) {
   return (
     <iframe
-      className="w-full aspect-square grayscale hover:grayscale-0 transition-all duration-150"
+      className="w-full aspect-square grayscale hover:grayscale-0 transition-[filter] duration-150"
       src={`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`}
       allow="encrypted-media; fullscreen; autoplay; idle-detection; speaker-selection; web-share;"
       title={title}
@@ -30,7 +30,7 @@ export function MixcloudEmbed({
   artworkSrc: string;
 }) {
   return (
-    <div className="group relative w-full aspect-square grayscale hover:grayscale-0 transition-all duration-150">
+    <div className="group relative w-full aspect-square grayscale hover:grayscale-0 transition-[filter] duration-150">
       <img src={artworkSrc} alt="" className="absolute w-full aspect-square object-cover" />
       <iframe
         className="absolute w-full aspect-square opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"
