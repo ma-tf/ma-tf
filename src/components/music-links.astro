@@ -33,114 +33,90 @@ async function getMusicImage(key: string) {
 	).src;
 }
 
-const elevatedSpiritImg = await getMusicImage(
-	"music/matt f elevated spirit.jpg",
-);
-const contractsImg = await getMusicImage("music/prcsr contracts.jpg");
+// const elevatedSpiritImg = await getMusicImage(
+// 	"music/matt f elevated spirit.jpg",
+// );
+// const contractsImg = await getMusicImage("music/prcsr contracts.jpg");
 const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 ---
 
-<div class="flex flex-col">
-	<div class="flex flex-row-reverse gap-4 border-b-2 border-gray-800">
-		<div class="w-1/2 overflow-hidden">
-			<img
-				src={elevatedSpiritImg}
-				alt="Elevated Spirit by Matt F"
-				class="w-full scale-105 grayscale transition-all duration-150 hover:scale-100 hover:grayscale-0"
-			/>
-		</div>
-		<div class="flex w-1/4 flex-col gap-2">
-			<p class="text-2xl indent-8">
-				This album is a collection of drum and bass music with an ambient style.
-			</p>
-			<p class="text-2xl indent-8">
-				I had some a capella samples I wanted to use for a song, as well as the
-				desire to use the Apache instrumental break for the first time. These
-				formed the basis of the track Black Cell.
-			</p>
-			<p class="text-2xl indent-8">
-				The sound of Cirrostratus was aiming to be a rolling drum and bass
-				track. The long phasing pad is the primary element of this track and I
-				built everything else around it. I also wanted to experiment with
-				chopping different breaks in one track.
-			</p>
-			<p class="text-2xl indent-8">This was the basis of the track Chopper.</p>
-			<p class="text-2xl indent-8">
-				The track Information Overload was the result of listening to a lot of
-				music on the label 720 Degrees at the time. Their style of drum and bass
-				has a futuristic sound with heavy usage of E-mu Systems ROMpler synths.
-				To achieve this sound I used a software version of the E-mu synths
-				called Emulator III.
-			</p>
-			<BandcampEmbed
-				albumId="3783468820"
-				href="https://mattf.bandcamp.com/album/elevated-spirit"
-				title="Elevated Spirit by Matt F"
-			/>
-		</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+	<h2 class="md:col-span-3 text-9xl md:text-[240px] text-right">
+		music
+	</h2>
+	<div class="flex flex-col gap-4 md:mt-80">
+		<MixcloudEmbed
+			feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F"
+			title="Asagaya Drift 20250905"
+			artworkSrc={asagayaImg}
+		/>
+		<p class="text-2xl indent-8">
+			This is a recording of a DJ set that occured in Asagaya around Autumn
+			2025. I recorded it using a Sony WM-D6C onto RTM C90 Type I cassettes from
+			the DJ deck RCA master output.
+		</p>
+		<p class="text-2xl indent-8">
+			That tape recorder comes with two settings for noise reduction but I left
+			them disabled for the recording to get a vintage sound on the recording.
+			The result is some nice sounding compression as the signal was slightly
+			overdriven. Overall the audio profile of the recording is quite dark due
+			to the tape cutting out many of the bright sounds.
+		</p>
+		<p class="text-2xl indent-8">
+			The first hour of the audio is my own performance, and the first three
+			tracks that play are my own.
+		</p>
 	</div>
 
-	<div class="flex flex-row gap-4 border-b-2 border-gray-800">
-		<div class="w-1/2 overflow-hidden">
-			<img
-				src={contractsImg}
-				alt="Contracts by prcsr"
-				class="w-full scale-105 grayscale transition-all duration-150 hover:scale-100 hover:grayscale-0"
-			/>
-		</div>
-		<div class="flex w-1/2 flex-col gap-2">
-			<p class="text-2xl indent-8">
-				The album Contracts was the result of a collaboration with the artist
-				Wei.
-			</p>
-			<p class="text-2xl indent-8">
-				We aimed to establish a sinister, ambient soundscape influenced by
-				Jesper Kyd.
-			</p>
-			<p class="text-2xl indent-8">
-				The primary synth I used for this was a Korg Triton - specifically its
-				percussion and sound effect patches.
-			</p>
-			<p class="text-2xl indent-8">
-				There is a secret track at the end of the track Contracts.
-			</p>
-			<BandcampEmbed
-				albumId="2620077534"
-				href="https://dreamcatalogue.bandcamp.com/album/contracts"
-				title="Contracts by prcsr"
-			/>
-		</div>
+	<div class="flex flex-col gap-4 md:mt-40">
+		<BandcampEmbed
+			albumId="2620077534"
+			href="https://dreamcatalogue.bandcamp.com/album/contracts"
+			title="Contracts by prcsr"
+		/>
+		<p class="text-2xl indent-8">
+			The album Contracts was the result of a collaboration with the artist Wei.
+		</p>
+		<p class="text-2xl indent-8">
+			We aimed to establish a sinister, ambient soundscape influenced by Jesper
+			Kyd.
+		</p>
+		<p class="text-2xl indent-8">
+			The primary synth I used for this was a Korg Triton - specifically its
+			percussion and sound effect patches.
+		</p>
+		<p class="text-2xl indent-8">
+			There is a secret track at the end of the track Contracts.
+		</p>
 	</div>
 
-	<div class="flex flex-row-reverse gap-4 border-b-2 border-gray-800">
-		<div class="w-1/2 overflow-hidden">
-			<img
-				src={asagayaImg}
-				alt="Asagaya Drift 20250905"
-				class="w-full scale-105 grayscale transition-all duration-150 hover:scale-100 hover:grayscale-0"
-			/>
-		</div>
-		<div class="flex w-1/2 flex-col gap-2">
-			<p class="text-2xl indent-8">
-				This is a recording of a DJ set that occured in Asagaya around Autumn
-				2025. I recorded it using a Sony WM-D6C onto RTM C90 Type I cassettes
-				from the DJ deck RCA master output.
-			</p>
-			<p class="text-2xl indent-8">
-				That tape recorder comes with two settings for noise reduction but I
-				left them disabled for the recording to get a vintage sound on the
-				recording. The result is some nice sounding compression as the signal
-				was slightly overdriven. Overall the audio profile of the recording is
-				quite dark due to the tape cutting out many of the bright sounds.
-			</p>
-			<p class="text-2xl indent-8">
-				The first hour of the audio is my own performance, and the first three
-				tracks that play are my own.
-			</p>
-			<MixcloudEmbed
-				feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F"
-				title="Asagaya Drift 20250905"
-			/>
-		</div>
+	<div class="flex flex-col gap-4">
+		<BandcampEmbed
+			albumId="3783468820"
+			href="https://mattf.bandcamp.com/album/elevated-spirit"
+			title="Elevated Spirit by Matt F"
+		/>
+		<p class="text-2xl indent-8">
+			This album is a collection of drum and bass music with an ambient style.
+		</p>
+		<p class="text-2xl indent-8">
+			I had some a capella samples I wanted to use for a song, as well as the
+			desire to use the Apache instrumental break for the first time. These
+			formed the basis of the track Black Cell.
+		</p>
+		<p class="text-2xl indent-8">
+			The sound of Cirrostratus was aiming to be a rolling drum and bass track.
+			The long phasing pad is the primary element of this track and I built
+			everything else around it. I also wanted to experiment with chopping
+			different breaks in one track.
+		</p>
+		<p class="text-2xl indent-8">This was the basis of the track Chopper.</p>
+		<p class="text-2xl indent-8">
+			The track Information Overload was the result of listening to a lot of
+			music on the label 720 Degrees at the time. Their style of drum and bass
+			has a futuristic sound with heavy usage of E-mu Systems ROMpler synths. To
+			achieve this sound I used a software version of the E-mu synths called
+			Emulator III.
+		</p>
 	</div>
 </div>
