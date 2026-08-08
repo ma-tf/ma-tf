@@ -30,3 +30,35 @@ export function Music({ children, className, ...props }: React.ComponentProps<"d
     </div>
   );
 }
+
+export function MusicGrid({ children, className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-6", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function MusicTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
+  return (
+    <h2 className={cn("md:col-span-3 text-9xl md:text-[240px] text-right", className)} {...props}>
+      {children}
+    </h2>
+  );
+}
+
+export function MusicSection({ children, className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("flex flex-col gap-4", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function MusicDescription({ children, className, ...props }: React.ComponentProps<"p">) {
+  return (
+    <p className={cn("text-2xl indent-8", className)} {...props}>
+      {children}
+    </p>
+  );
+}

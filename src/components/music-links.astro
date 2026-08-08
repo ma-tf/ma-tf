@@ -3,6 +3,12 @@ import { getImage } from "astro:assets";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { BandcampEmbed, MixcloudEmbed } from "@components/embedded-media";
+import {
+	MusicGrid,
+	MusicTitle,
+	MusicSection,
+	MusicDescription,
+} from "@components/music";
 
 const s3 = new S3Client({
 	region: "auto",
@@ -40,85 +46,85 @@ async function getMusicImage(key: string) {
 const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-	<h2 class="md:col-span-3 text-9xl md:text-[240px] text-right">music</h2>
-	<div class="flex flex-col gap-4 md:mt-80">
+<MusicGrid>
+	<MusicTitle>music</MusicTitle>
+	<MusicSection className="md:mt-80">
 		<MixcloudEmbed
 			feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F"
 			title="Asagaya Drift 20250905"
 			artworkSrc={asagayaImg}
 		/>
-		<p class="text-2xl indent-8">
+		<MusicDescription>
 			This is a recording of a DJ set that occured in Asagaya around Autumn
 			2025. I recorded it using a Sony WM-D6C onto RTM C90 Type I cassettes from
 			the DJ deck RCA master output.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			That tape recorder comes with two settings for noise reduction but I left
 			them disabled for the recording to get a vintage sound on the recording.
 			The result is some nice sounding compression as the signal was slightly
 			overdriven. Overall the audio profile of the recording is quite dark due
 			to the tape cutting out many of the bright sounds.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			The first hour of the audio is my own performance, and the first three
 			tracks that play are my own.
-		</p>
-	</div>
+		</MusicDescription>
+	</MusicSection>
 
-	<div class="flex flex-col gap-4 md:mt-40">
+	<MusicSection className="md:mt-40">
 		<BandcampEmbed
 			albumId="2620077534"
 			href="https://dreamcatalogue.bandcamp.com/album/contracts"
 			title="Contracts by prcsr"
 		/>
-		<p class="text-2xl indent-8">
+		<MusicDescription>
 			The album Contracts was the result of a collaboration with the artist Wei.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			We aimed to establish a sinister, ambient soundscape.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			The primary synth I used for this was a Korg Triton - specifically its
 			percussion and sound effect patches.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			There is a secret track at the end of the track Contracts.
-		</p>
-	</div>
+		</MusicDescription>
+	</MusicSection>
 
-	<div class="flex flex-col gap-4">
+	<MusicSection>
 		<BandcampEmbed
 			albumId="3783468820"
 			href="https://mattf.bandcamp.com/album/elevated-spirit"
 			title="Elevated Spirit by Matt F"
 		/>
-		<p class="text-2xl indent-8">
+		<MusicDescription>
 			This album is a collection of drum and bass music with an ambient style.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			I had some a capella samples I wanted to use for a song, as well as the
 			desire to use the Apache instrumental break for the first time. These
 			formed the basis of the track Black Cell.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			The sound of Cirrostratus was aiming to be a rolling drum and bass track.
 			The long phasing pad is the primary element of this track and I built
 			everything else around it. I also wanted to experiment with chopping
 			different breaks in one track.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			The basis of the track Chopper was as a study of cutting up multiple
 			breaks while maintaining tension and groove. The sparser elements and lack
 			of a pad give the drum breaks greater presence in the song. On top of
 			these, percussion is used to keep the song interesting for the listener.
-		</p>
-		<p class="text-2xl indent-8">
+		</MusicDescription>
+		<MusicDescription>
 			The track Information Overload was the result of listening to a lot of
 			music on the label 720 Degrees at the time. Their style of drum and bass
 			has a futuristic sound with heavy usage of E-mu Systems ROMpler synths. To
 			achieve this sound I used a software version of the E-mu synths called
 			Emulator III.
-		</p>
-	</div>
-</div>
+		</MusicDescription>
+	</MusicSection>
+</MusicGrid>

@@ -1,5 +1,17 @@
 import { cn } from "@lib/cn";
 
+export function PhotographDescription({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("lg:col-span-2 p-4 flex-col flex gap-4", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
 export function PhotographDescriptionHeader({
   children,
   className,
