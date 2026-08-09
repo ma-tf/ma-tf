@@ -3,18 +3,20 @@ import Layout from "@layouts/Layout.astro";
 import { ModeToggle } from "@components/ModeToggle";
 import PhotoGrid from "@components/photo-grid.astro";
 import {
-	PhotographDescription,
-	PhotographDescriptionContent,
-	PhotographDescriptionHeader,
-} from "@components/photograph";
+	Photos,
+	PhotosHeader,
+	PhotosTitle,
+	PhotosDescription,
+	PhotosContent,
+} from "@components/photos";
 ---
 
 <Layout>
 	<ModeToggle client:load />
-	<div class="grid grid-cols-1 lg:grid-cols-6 auto-rows-auto gap-4">
-		<PhotographDescription>
-			<PhotographDescriptionHeader>photographs</PhotographDescriptionHeader>
-			<PhotographDescriptionContent>
+	<Photos>
+		<PhotosHeader>
+			<PhotosTitle>photographs</PhotosTitle>
+			<PhotosDescription>
 				In my spare time I am an amatuer photographer. The photographs I take
 				are in both digital and film formats. I have collected many cameras over
 				the last few years. The cameras I use include:
@@ -33,8 +35,10 @@ import {
 					</li>
 				</ul>
 				Each one covers a use case of mine, and they have served me well so far.
-			</PhotographDescriptionContent>
-		</PhotographDescription>
-		<PhotoGrid />
-	</div>
+			</PhotosDescription>
+		</PhotosHeader>
+		<PhotosContent>
+			<PhotoGrid />
+		</PhotosContent>
+	</Photos>
 </Layout>

@@ -8,7 +8,7 @@ export function PostList({ posts }: Props) {
   return (
     <ul>
       {posts.map((post) => (
-        <li>
+        <li key={post.data.slug}>
           <a href={`/posts/${post.data.slug}`}>
             <h2>{post.data.title}</h2>
           </a>

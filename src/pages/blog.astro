@@ -2,7 +2,8 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
-import { PostList } from "@components/post-list.tsx";
+import { BlogHeader, BlogTitle, BlogDescription, BlogContent } from "@components/blog";
+import { PostList } from "@components/post-list";
 
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
@@ -11,6 +12,13 @@ const posts = (await getCollection("blog"))
 
 <Layout>
   <ModeToggle client:load />
-  <h1>Blog</h1>
-  <PostList posts={posts} />
+  <BlogHeader>
+    <BlogTitle>Blog</BlogTitle>
+    <BlogDescription>
+      I write about web development, creative coding, and things I learn along the way.
+    </BlogDescription>
+  </BlogHeader>
+  <BlogContent>
+    <PostList posts={posts} />
+  </BlogContent>
 </Layout>
