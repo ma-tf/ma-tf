@@ -1,0 +1,32 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { ModeToggle } from "@components/ModeToggle";
+import { PostList } from "@components/post-list.tsx";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<Layout>
+  <ModeToggle client:load />
+  <main>
+    <h1>Tag: {tag}</h1>
+    <a href="/tags">← All tags</a>
+    <PostList posts={posts} />
+  </main>
+</Layout>

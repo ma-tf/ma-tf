@@ -1,0 +1,34 @@
+---
+title: "Fractal renders on JWildfire"
+slug: "20260623-1-fractal-renders-on-jwildfire"
+pubDate: 2026-06-23
+description: "JWildfire, a free tool for making generative art."
+author: "Matt F"
+image: "./ice-hd.webp"
+imageAlt: "A fractal render of green lights and white snowflake shaped objects."
+tags: ["art", "tools"]
+---
+
+Nowadays when you hear generative art, the mind goes to generative AI and the controvery around it - but it has not always been this way. JWildfire is a free, open-source fractal flame editor. Fractal flames are those organic, swirling images that look like a cross between a nebula and a bundle of flowers.
+
+You have probably seen them on wallpaper sites and assumed they took hours in Photoshop. They did not. Most were made in JWildfire.
+
+## How it works
+
+Open the app, hit the random flame button, and something beautiful appears. You tweak a few sliders, adjust the colours, and iterate. It feels more like sculpting than programming. There are countless variations which are different mathematical formulas that shape the fractal. Each one produces a completely different aesthetic. You do not need to understand the maths to use them.
+
+## What it can do
+
+Almost every parameter can be animated over time too.
+
+<div>
+  <mux-video playback-id="TY5qhzq4FrsdlDVh6vXFe3roAczfFh2p3eGERBW6UiQ" controls autoplay loop></mux-video>
+</div>
+
+If the interface is still overwhelming there is a dice roll button to generate images with random parameters, and there is always something that looks good that comes from it.
+
+## The catch
+
+It runs on Java, so it is not the fastest thing around - especially without full GPU rendering support. Rendering a high-resolution image on the CPU takes patience.
+
+You can download it from [jwildfire.overwhale.com](https://jwildfire.overwhale.com) and use it however you like.

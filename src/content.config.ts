@@ -2,6 +2,21 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { defineCollection } from "astro:content";
 
+const blog = defineCollection({
+  loader: glob({ base: "./src/content/blog", pattern: "**/*.md" }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    pubDate: z.coerce.date(),
+    description: z.string(),
+    author: z.string(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    tags: z.array(z.string()),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const experience = defineCollection({
   loader: glob({ base: "./src/content/experience", pattern: "**/*.md" }),
   schema: z.object({
@@ -49,4 +64,4 @@ const photography = defineCollection({
   }),
 });
 
-export const collections = { experience, projects, education, photography };
+export const collections = { blog, experience, projects, education, photography };

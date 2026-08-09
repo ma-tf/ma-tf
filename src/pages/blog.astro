@@ -1,14 +1,16 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
+import { PostList } from "@components/post-list.tsx";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <Layout>
   <ModeToggle client:load />
-  <div class="flex justify-center py-8">
-    <div class="max-w-2xl px-8">
-      <h2 class="text-lg">blog</h2>
-      <p class="prose text-muted-foreground">Blog posts coming soon.</p>
-    </div>
-  </div>
+  <h1>Blog</h1>
+  <PostList posts={posts} />
 </Layout>
