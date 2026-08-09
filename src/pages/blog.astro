@@ -2,7 +2,13 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
-import { BlogHeader, BlogTitle, BlogDescription, BlogContent } from "@components/blog";
+import {
+  Blog,
+  BlogHeader,
+  BlogTitle,
+  BlogDescription,
+  BlogContent,
+} from "@components/blog";
 import { PostList } from "@components/post-list";
 
 const posts = (await getCollection("blog"))
@@ -12,13 +18,18 @@ const posts = (await getCollection("blog"))
 
 <Layout>
   <ModeToggle client:load />
-  <BlogHeader>
-    <BlogTitle>Blog</BlogTitle>
-    <BlogDescription>
-      I write about web development, creative coding, and things I learn along the way.
-    </BlogDescription>
-  </BlogHeader>
-  <BlogContent>
-    <PostList posts={posts} />
-  </BlogContent>
+  <div class="flex justify-center h-dvh">
+    <Blog>
+      <BlogHeader>
+        <BlogTitle>blog</BlogTitle>
+        <BlogDescription>
+          I write about web development, creative coding, and things I learn
+          along the way.
+        </BlogDescription>
+      </BlogHeader>
+      <BlogContent>
+        <PostList posts={posts} />
+      </BlogContent>
+    </Blog>
+  </div>
 </Layout>

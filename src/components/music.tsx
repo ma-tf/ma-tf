@@ -25,7 +25,7 @@ export function MusicPreview() {
 
 export function Music({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col justify-center bg-background", className)} {...props}>
+    <div className={cn("flex flex-col justify-center", className)} {...props}>
       {children}
     </div>
   );
