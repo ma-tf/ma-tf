@@ -1,8 +1,7 @@
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@components/blog";
+import { useParallax } from "@hooks/use-parallax";
 import { cn } from "@lib/cn";
 import { useState } from "react";
-
-import { useParallax } from "../hooks/use-parallax";
 
 type PlainPost = { slug: string; title: string; description: string; pubDate: string };
 

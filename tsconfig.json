@@ -9,6 +9,7 @@
       "@data/*": ["./src/data/*"],
       "@layouts/*": ["./src/layouts/*"],
       "@lib/*": ["./src/lib/*"],
+      "@hooks/*": ["./src/hooks/*"],
       "@pages/*": ["./src/pages/*"]
     },
     "target": "es2023",
