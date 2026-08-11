@@ -9,6 +9,7 @@ This project uses Astro for development and Vite+ for tooling.
 - **`vp test`** — Run all tests
 
 See [docs/vite-plus.md](docs/vite-plus.md) for the Vite+ toolchain docs and review checklist.
+See [docs/](docs/) for project documentation and ADRs.
 
 ## Conventions
 

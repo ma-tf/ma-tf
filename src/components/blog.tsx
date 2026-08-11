@@ -24,7 +24,7 @@ export function BlogPreview() {
 
 export function Blog({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex gap-2", className)} {...props}>
+    <div className={cn("flex flex-col md:flex-row px-8 gap-2", className)} {...props}>
       {children}
     </div>
   );
@@ -33,7 +33,7 @@ export function Blog({ children, className, ...props }: React.ComponentProps<"di
 export function BlogHeader({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("w-2/5 flex flex-col gap-4 justify-center text-right", className)}
+      className={cn("w-full md:w-2/5 flex flex-col gap-4 md:justify-center text-right", className)}
       {...props}
     >
       {children}
@@ -43,7 +43,7 @@ export function BlogHeader({ children, className, ...props }: React.ComponentPro
 
 export function BlogTitle({ children, className, ...props }: React.ComponentProps<"h1">) {
   return (
-    <h1 className={cn("text-8xl", className)} {...props}>
+    <h1 className={cn("text-4xl md:text-8xl", className)} {...props}>
       {children}
     </h1>
   );
@@ -59,7 +59,7 @@ export function BlogDescription({ children, className, ...props }: React.Compone
 
 export function BlogContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("w-3/5 flex flex-col justify-center", className)} {...props}>
+    <div className={cn("w-full md:w-3/5 flex flex-col md:justify-center", className)} {...props}>
       {children}
     </div>
   );

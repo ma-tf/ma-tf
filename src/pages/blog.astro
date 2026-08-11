@@ -2,34 +2,26 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
-import {
-  Blog,
-  BlogHeader,
-  BlogTitle,
-  BlogDescription,
-  BlogContent,
-} from "@components/blog";
-import { PostList } from "@components/post-list";
+import { BlogPage } from "@components/blog-page";
 
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const plainPosts = posts.map((p) => ({
+  slug: p.data.slug,
+  title: p.data.title,
+  description: p.data.description,
+  pubDate: p.data.pubDate.toISOString(),
+}));
 ---
 
 <Layout>
   <ModeToggle client:load />
-  <div class="flex justify-center h-dvh">
-    <Blog>
-      <BlogHeader>
-        <BlogTitle>blog</BlogTitle>
-        <BlogDescription>
-          I write about web development, creative coding, and things I learn
-          along the way.
-        </BlogDescription>
-      </BlogHeader>
-      <BlogContent>
-        <PostList posts={posts} />
-      </BlogContent>
-    </Blog>
-  </div>
+  <BlogPage
+    client:load
+    title="blog"
+    description="I write about web development, creative coding, and things I learn along the way."
+    posts={plainPosts}
+  />
 </Layout>
