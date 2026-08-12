@@ -1,12 +1,12 @@
 ---
 import { getCollection, render } from "astro:content";
 import {
-  Project,
-  ProjectHeader,
-  ProjectTitle,
-  ProjectTopics,
-  ProjectDescription,
-} from "@components/projects";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@components/ui/card";
 
 const projects = await getCollection("projects");
 const rendered = await Promise.all(
@@ -17,22 +17,27 @@ const rendered = await Promise.all(
 );
 ---
 
-{
-  rendered.map(async (project) => {
-    const { Content } = project.rendered;
-    const { title, url, topics } = project.data;
-    return (
-      <Project>
-        <ProjectHeader>
-          <ProjectTitle>
-            <a href={url}>{title}</a>
-          </ProjectTitle>
-          <ProjectTopics>{topics.join(" · ")}</ProjectTopics>
-        </ProjectHeader>
-        <ProjectDescription>
-          <Content />
-        </ProjectDescription>
-      </Project>
-    );
-  })
-}
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+  {
+    rendered.map(async (project, _index) => {
+      const { Content } = project.rendered;
+      const { title, url, topics } = project.data;
+      return (
+        <Card>
+          <CardHeader>
+            {/* <span class="text-8xl text-muted-foreground origin-left rotate-90">
+              {String(index + 1).padStart(2, "0")}.
+            </span> */}
+            <CardTitle>
+              <a href={url}>{title}</a>
+            </CardTitle>
+            <CardDescription>{topics.join(" · ")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Content />
+          </CardContent>
+        </Card>
+      );
+    })
+  }
+</div>
