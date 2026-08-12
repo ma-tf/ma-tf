@@ -24,7 +24,10 @@ export function BlogPreview() {
 
 export function Blog({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex w-full flex-col gap-2 md:flex-row md:px-8", className)} {...props}>
+    <div
+      className={cn("flex w-full flex-col gap-2 md:h-full md:flex-row md:px-8", className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -62,8 +65,11 @@ export function BlogDescription({ children, className, ...props }: React.Compone
 
 export function BlogContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex w-full flex-col md:w-3/5 md:justify-center", className)} {...props}>
-      {children}
+    <div
+      className={cn("w-full md:h-full md:w-3/5 md:scrollbar-hidden md:overflow-y-auto", className)}
+      {...props}
+    >
+      <div className="flex flex-col md:min-h-full md:justify-center">{children}</div>
     </div>
   );
 }
