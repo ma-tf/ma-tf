@@ -12,6 +12,7 @@ import {
 	MusicDescription,
 } from "@components/music";
 import { ModeToggle } from "@components/ModeToggle";
+import Footer from "@components/footer.astro";
 
 const s3 = new S3Client({
 	region: "auto",
@@ -137,4 +138,5 @@ const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 			</div>
 		</MusicContent>
 	</Music>
+	<Footer />
 </Layout>
