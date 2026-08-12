@@ -3,7 +3,7 @@ import { cn } from "@lib/cn";
 export function Post({ children, className, ...props }: React.ComponentProps<"article">) {
   return (
     <article
-      className={cn("prose dark:prose-invert mx-auto max-w-3xl px-8 py-12", className)}
+      className={cn("mx-auto prose max-w-3xl px-8 py-12 dark:prose-invert", className)}
       {...props}
     >
       {children}
@@ -15,7 +15,7 @@ export function PostBackLink({ children, className, ...props }: React.ComponentP
   return (
     <a
       className={cn(
-        "not-prose text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground",
+        "text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground",
         className,
       )}
       {...props}
@@ -27,7 +27,7 @@ export function PostBackLink({ children, className, ...props }: React.ComponentP
 
 export function PostHeader({ children, className, ...props }: React.ComponentProps<"header">) {
   return (
-    <header className={cn("not-prose mb-8", className)} {...props}>
+    <header className={cn("mb-8", className)} {...props}>
       {children}
     </header>
   );
@@ -69,7 +69,7 @@ export function PostTag({ children, className, ...props }: React.ComponentProps<
 
 export function PostContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("not-prose", className)} {...props}>
+    <div className={cn("", className)} {...props}>
       {children}
     </div>
   );
