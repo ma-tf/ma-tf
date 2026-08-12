@@ -33,7 +33,7 @@ export function Music({ children, className, ...props }: React.ComponentProps<"d
 
 export function MusicContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-6", className)} {...props}>
+    <div className={cn("grid grid-cols-1 gap-6 md:grid-cols-3", className)} {...props}>
       {children}
     </div>
   );
@@ -41,7 +41,7 @@ export function MusicContent({ children, className, ...props }: React.ComponentP
 
 export function MusicTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("text-9xl md:text-[240px] text-right", className)} {...props}>
+    <h2 className={cn("text-right text-9xl md:text-[240px]", className)} {...props}>
       {children}
     </h2>
   );
@@ -57,7 +57,7 @@ export function MusicHeader({ children, className, ...props }: React.ComponentPr
 
 export function MusicDescription({ children, className, ...props }: React.ComponentProps<"p">) {
   return (
-    <p className={cn("text-2xl indent-8", className)} {...props}>
+    <p className={cn("indent-8 text-2xl", className)} {...props}>
       {children}
     </p>
   );

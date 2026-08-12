@@ -26,7 +26,7 @@ export function PhotosPreview() {
 export function Photos({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("grid grid-cols-1 lg:grid-cols-6 auto-rows-auto gap-4", className)}
+      className={cn("grid auto-rows-auto grid-cols-1 gap-4 lg:grid-cols-6", className)}
       {...props}
     >
       {children}
@@ -36,7 +36,7 @@ export function Photos({ children, className, ...props }: React.ComponentProps<"
 
 export function PhotosHeader({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("lg:col-span-2 p-4 flex-col flex gap-4", className)} {...props}>
+    <div className={cn("flex flex-col gap-4 p-4 lg:col-span-2", className)} {...props}>
       {children}
     </div>
   );
@@ -52,7 +52,7 @@ export function PhotosTitle({ children, className, ...props }: React.ComponentPr
 
 export function PhotosDescription({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-4xl indent-8", className)} {...props}>
+    <div className={cn("indent-8 text-4xl", className)} {...props}>
       {children}
     </div>
   );

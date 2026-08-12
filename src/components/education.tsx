@@ -22,7 +22,7 @@ export function EducationInstitution({
   ...props
 }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("font-semibold flex items-center gap-2", className)} {...props}>
+    <div className={cn("flex items-center gap-2 font-semibold", className)} {...props}>
       {children}
     </div>
   );
@@ -46,7 +46,7 @@ export function EducationCourses({ children, className, ...props }: React.Compon
 
 export function EducationCourse({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-sm flex gap-2", className)} {...props}>
+    <div className={cn("flex gap-2 text-sm", className)} {...props}>
       {children}
     </div>
   );

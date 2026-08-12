@@ -2,7 +2,7 @@ import { cn } from "@lib/cn";
 
 export function Experience({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn(className, "flex-col flex gap-2")} {...props}>
+    <div className={cn(className, "flex flex-col gap-2")} {...props}>
       {children}
     </div>
   );
@@ -18,7 +18,7 @@ export function ExperienceHeader({ children, className, ...props }: React.Compon
 
 export function ExperienceCompany({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("font-semibold flex items-center gap-2", className)} {...props}>
+    <div className={cn("flex items-center gap-2 font-semibold", className)} {...props}>
       {children}
     </div>
   );

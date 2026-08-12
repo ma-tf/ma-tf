@@ -15,7 +15,7 @@ export function VideoPlayer({
       loop={true}
       {...props}
       className={cn(
-        "block bg-black w-full aspect-4/3 max-h-full [--controls:none] [--loading-indicator:none] [--dialog:none]",
+        "block aspect-4/3 max-h-full w-full bg-black [--controls:none] [--dialog:none] [--loading-indicator:none]",
         className,
       )}
     />

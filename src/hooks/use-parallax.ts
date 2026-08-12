@@ -1,9 +1,11 @@
+import { useIsMobile } from "@hooks/use-mobile";
 import { useEffect, useRef, useState } from "react";
 
 export function useParallax(): {
   x: number;
   y: number;
 } {
+  const isMobile = useIsMobile();
   const intensity = 40;
   const easing = 0.05;
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -12,6 +14,8 @@ export function useParallax(): {
   const raf = useRef(0);
 
   useEffect(() => {
+    if (isMobile) return;
+
     const onMouseMove = (e: MouseEvent) => {
       const nx = -(e.clientX / window.innerWidth - 0.5) * 2;
       const ny = -(e.clientY / window.innerHeight - 0.5) * 2;
@@ -38,7 +42,7 @@ export function useParallax(): {
       window.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(raf.current);
     };
-  }, []);
+  }, [isMobile]);
 
   return offset;
 }

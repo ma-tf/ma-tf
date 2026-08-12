@@ -33,7 +33,7 @@ export function Vignettes({
   const [loading, setLoading] = useState(true);
 
   return (
-    <div className={cn("relative flex-1 min-h-0", className)} {...props}>
+    <div className={cn("relative min-h-0 flex-1", className)} {...props}>
       <VideoPlayer
         playbackId={activeVideo.playbackId}
         onLoadStart={() => setLoading(true)}

@@ -30,7 +30,7 @@ export function ModeToggle() {
 
   return (
     <div className="fixed top-4 right-4 z-50">
-      <div className="bg-muted flex gap-1 rounded-lg p-1">
+      <div className="flex gap-1 rounded-lg bg-muted p-1">
         {(["light", "dark", "system"] as const).map((option) => (
           <button
             type="button"
@@ -38,8 +38,8 @@ export function ModeToggle() {
             onClick={() => setTheme(option)}
             className={
               theme === option
-                ? "bg-background text-foreground rounded-md px-3 py-1 text-sm font-medium"
-                : "text-muted-foreground hover:text-foreground rounded-md px-3 py-1 text-sm"
+                ? "rounded-md bg-background px-3 py-1 text-sm font-medium text-foreground"
+                : "rounded-md px-3 py-1 text-sm text-muted-foreground hover:text-foreground"
             }
           >
             {option.charAt(0).toUpperCase() + option.slice(1)}

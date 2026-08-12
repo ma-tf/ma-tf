@@ -14,7 +14,7 @@ function LoadableImage({ src, alt, className }: { src: string; alt: string; clas
   return (
     <>
       {!loaded && (
-        <div className="size-64 flex items-center justify-center">
+        <div className="flex size-64 items-center justify-center">
           <div className="size-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
         </div>
       )}
@@ -52,7 +52,7 @@ export function PhotoDialog({
   return (
     <Dialog>
       <DialogTrigger
-        className={`overflow-hidden cursor-pointer md:animate-fade-in-scroll ${className ?? ""}`}
+        className={`cursor-pointer overflow-hidden md:animate-fade-in-scroll ${className ?? ""}`}
       >
         <img
           src={thumbSrc}
@@ -60,7 +60,7 @@ export function PhotoDialog({
           className="size-full object-cover transition-transform duration-150 hover:scale-110"
         />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[90dvw] w-fit max-w-[90dvw]" showCloseButton>
+      <DialogContent className="w-fit max-w-[90dvw] sm:max-w-[90dvw]" showCloseButton>
         <DialogHeader>
           <DialogTitle>{children}</DialogTitle>
           <DialogDescription className="prose">

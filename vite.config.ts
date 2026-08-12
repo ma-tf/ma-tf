@@ -6,7 +6,7 @@ export default defineConfig({
     sortTailwindcss: {
       functions: ["clsx", "cn"],
       preserveWhitespace: false,
-      stylesheet: "./styles/global.css",
+      stylesheet: "./src/styles/global.css",
     },
     sortImports: {
       groups: [

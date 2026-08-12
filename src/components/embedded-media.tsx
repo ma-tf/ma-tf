@@ -9,7 +9,7 @@ export function BandcampEmbed({
 }) {
   return (
     <iframe
-      className="w-full aspect-square grayscale hover:grayscale-0 transition-[filter] duration-150"
+      className="aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0"
       src={`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`}
       allow="encrypted-media; fullscreen; autoplay; idle-detection; speaker-selection; web-share;"
       title={title}
@@ -30,10 +30,10 @@ export function MixcloudEmbed({
   artworkSrc: string;
 }) {
   return (
-    <div className="group relative w-full aspect-square grayscale hover:grayscale-0 transition-[filter] duration-150">
-      <img src={artworkSrc} alt="" className="absolute w-full aspect-square object-cover" />
+    <div className="group relative aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0">
+      <img src={artworkSrc} alt="" className="absolute aspect-square w-full object-cover" />
       <iframe
-        className="absolute w-full aspect-square opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"
+        className="pointer-events-none absolute aspect-square w-full opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
         src={`https://player-widget.mixcloud.com/widget/iframe/?mini=false&hide_cover=false&hide_artwork=true&feed=${feed}`}
         title={title}
         allow="encrypted-media; fullscreen; autoplay; idle-detection; speaker-selection; web-share;"

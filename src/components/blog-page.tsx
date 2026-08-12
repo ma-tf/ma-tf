@@ -19,7 +19,7 @@ export function BlogPage({
   const offset = useParallax();
 
   return (
-    <div className="flex h-dvh overflow-hidden relative">
+    <div className="relative flex md:h-dvh md:overflow-hidden">
       <Blog>
         <BlogHeader>
           <BlogTitle
@@ -59,19 +59,22 @@ function PostList({ posts }: { posts: PlainPost[] }) {
           key={post.slug}
           onMouseEnter={() => setHovered(i)}
           onMouseLeave={() => setHovered(null)}
-          className={cn("py-2 transition-all duration-150", hovered === i && "translate-x-2")}
+          className={cn(
+            "my-2 transition-all duration-150 md:py-2",
+            hovered === i && "md:translate-x-2",
+          )}
         >
           <button
-            className="w-full text-left text-2xl cursor-pointer flex flex-col"
+            className="flex w-full cursor-pointer flex-col text-left text-2xl"
             onClick={() => (window.location.href = `/posts/${post.slug}`)}
           >
             <div className="flex flex-col md:flex-row md:gap-2">
-              <span className="font-semibold truncate">{post.title}</span>
+              <span className="truncate font-semibold">{post.title}</span>
               <time className="shrink-0" dateTime={post.pubDate}>
                 {post.pubDate.split("T")[0]}
               </time>
             </div>
-            <p className="text-sm truncate">{post.description}</p>
+            <p className="truncate text-sm">{post.description}</p>
           </button>
         </li>
       ))}

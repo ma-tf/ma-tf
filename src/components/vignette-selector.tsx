@@ -10,7 +10,7 @@ export function VignetteSelector({ videos }: { videos: Video[] }) {
 
   return (
     <>
-      <div className="flex gap-2 mb-6">
+      <div className="mb-6 flex gap-2">
         {videos.map((video, i) => (
           <Button
             key={video.order}
