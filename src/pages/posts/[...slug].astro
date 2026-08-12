@@ -2,6 +2,16 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
+import {
+  Post,
+  PostBackLink,
+  PostContent,
+  PostDate,
+  PostHeader,
+  PostTag,
+  PostTags,
+  PostTitle,
+} from "@components/post";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -17,31 +27,27 @@ const { Content } = await render(post);
 
 <Layout>
   <ModeToggle client:load />
-  <a href="/blog">← Back to blog</a>
-  <article>
-    <h1>{post.data.title}</h1>
-    <time datetime={post.data.pubDate.toISOString()}>
+  <Post>
+    <PostBackLink href="/blog">← Back to blog</PostBackLink>
+    <PostHeader>
+      <PostTitle>{post.data.title}</PostTitle>
+      <PostDate dateTime={post.data.pubDate.toISOString()}>
+        {post.data.pubDate.toISOString().split("T")[0]}
+      </PostDate>
       {
-        post.data.pubDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
+        post.data.tags.length > 0 && (
+          <PostTags>
+            {post.data.tags.map((tag) => (
+              <PostTag href={`/tags/${tag}`}>{tag}</PostTag>
+            ))}
+          </PostTags>
+        )
       }
-    </time>
-    {
-      post.data.tags.length > 0 && (
-        <ul>
-          {post.data.tags.map((tag) => (
-            <li>
-              <a href={`/tags/${tag}`}>{tag}</a>
-            </li>
-          ))}
-        </ul>
-      )
-    }
-    <Content />
-  </article>
+    </PostHeader>
+    <PostContent>
+      <Content />
+    </PostContent>
+  </Post>
 </Layout>
 
 <script>
