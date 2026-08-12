@@ -1,21 +1,43 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@components/ui/card";
 import { cn } from "@lib/cn";
 
-export function BlogPreview() {
+type PreviewPost = { slug: string; title: string; pubDate: string };
+
+export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
   return (
     <Card className="w-3xl">
       <CardHeader>
-        <CardTitle>Blog</CardTitle>
-        <CardDescription>
-          I write about web development, creative coding, and things I learn along the way.
-        </CardDescription>
+        <CardTitle>
+          <a
+            href="/blog"
+            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
+          >
+            Blog
+          </a>
+        </CardTitle>
       </CardHeader>
+      <CardContent>
+        <ul className="flex flex-col gap-2">
+          {posts.map((post) => (
+            <li key={post.slug}>
+              <a href={`/posts/${post.slug}`} className="group flex gap-2 hover:underline">
+                <span className="font-medium transition-colors group-hover:text-foreground/70">
+                  {post.title}
+                </span>
+                <time dateTime={post.pubDate} className="shrink-0 text-sm text-muted-foreground">
+                  {post.pubDate.split("T")[0]}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
       <CardFooter>
         <a
-          href="/blog"
-          className="underline underline-offset-4 transition-colors hover:text-foreground/70"
+          href="/rss.xml"
+          className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
         >
-          Read posts
+          RSS feed
         </a>
       </CardFooter>
     </Card>
