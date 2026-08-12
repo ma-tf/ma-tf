@@ -37,7 +37,7 @@
     "@commitlint/config-conventional": "^21.2.0",
     "@commitlint/types": "^21.2.0",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.2.0",
+    "astro": "^7.2.1",
     "fallow": "^3.14.0",
     "react-doctor": "^0.9.11",
     "sharp": "^0.35.3",
