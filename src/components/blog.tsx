@@ -1,5 +1,6 @@
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
 import { cn } from "@lib/cn";
+import { RssIcon } from "@phosphor-icons/react";
 
 type PreviewPost = { slug: string; title: string; pubDate: string };
 
@@ -7,12 +8,19 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
   return (
     <Card className="w-3xl">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="flex items-center gap-2">
           <a
             href="/blog"
             className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
           >
             Blog
+          </a>
+          <a
+            href="/rss.xml"
+            aria-label="RSS feed"
+            className="transition-colors hover:text-foreground/70"
+          >
+            <RssIcon className="size-4" aria-hidden="true" />
           </a>
         </CardTitle>
       </CardHeader>
@@ -32,14 +40,6 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
           ))}
         </ul>
       </CardContent>
-      <CardFooter>
-        <a
-          href="/rss.xml"
-          className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-        >
-          RSS feed
-        </a>
-      </CardFooter>
     </Card>
   );
 }

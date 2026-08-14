@@ -1,5 +1,5 @@
 import { VideoPlayer } from "@components/mux-player";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "@components/ui/card";
 import { Spinner } from "@components/ui/spinner";
 import { cn } from "@lib/cn";
 import { useState } from "react";
@@ -8,17 +8,16 @@ export function VignettesPreview() {
   return (
     <Card className="w-3xl">
       <CardHeader>
-        <CardTitle>Vignettes</CardTitle>
+        <CardTitle>
+          <a
+            href="/vignettes"
+            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
+          >
+            Vignettes
+          </a>
+        </CardTitle>
         <CardDescription>Experimental motion work exploring through the lens.</CardDescription>
       </CardHeader>
-      <CardFooter>
-        <a
-          href="/vignettes"
-          className="underline underline-offset-4 transition-colors hover:text-foreground/70"
-        >
-          View vignettes
-        </a>
-      </CardFooter>
     </Card>
   );
 }

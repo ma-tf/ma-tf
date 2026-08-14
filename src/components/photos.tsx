@@ -1,24 +1,23 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "@components/ui/card";
 import { cn } from "@lib/cn";
 
 export function PhotosPreview() {
   return (
     <Card className="w-3xl">
       <CardHeader>
-        <CardTitle>Photography</CardTitle>
+        <CardTitle>
+          <a
+            href="/photos"
+            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
+          >
+            Photography
+          </a>
+        </CardTitle>
         <CardDescription>
           In my spare time I am an amateur photographer. The photographs I take are in both digital
           and film formats.
         </CardDescription>
       </CardHeader>
-      <CardFooter>
-        <a
-          href="/photos"
-          className="underline underline-offset-4 transition-colors hover:text-foreground/70"
-        >
-          View gallery
-        </a>
-      </CardFooter>
     </Card>
   );
 }

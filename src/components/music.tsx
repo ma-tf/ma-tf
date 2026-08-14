@@ -1,24 +1,23 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "@components/ui/card";
 import { cn } from "@lib/cn";
 
 export function MusicPreview() {
   return (
     <Card className="w-3xl">
       <CardHeader>
-        <CardTitle>Music</CardTitle>
+        <CardTitle>
+          <a
+            href="/music"
+            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
+          >
+            Music
+          </a>
+        </CardTitle>
         <CardDescription>
           Original compositions, remixes, and live recordings spanning electronic and ambient
           sounds.
         </CardDescription>
       </CardHeader>
-      <CardFooter>
-        <a
-          href="/music"
-          className="underline underline-offset-4 transition-colors hover:text-foreground/70"
-        >
-          Listen
-        </a>
-      </CardFooter>
     </Card>
   );
 }
