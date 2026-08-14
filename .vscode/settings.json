@@ -7,6 +7,12 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
   "[typescript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
@@ -21,5 +27,6 @@
   },
   "[astro]": {
     "editor.defaultFormatter": "astro-build.astro-vscode"
-  }
+  },
+  "oxc.fmt.disableNestedConfig": true
 }

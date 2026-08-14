@@ -8,7 +8,7 @@ import { Graphics } from "@components/graphics";
 import { MusicPreview } from "@components/music";
 import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
-import Footer from "@components/footer.astro";
+import Footer from "@layouts/footer.astro";
 import { getCollection } from "astro:content";
 
 const recentPosts = (await getCollection("blog"))
@@ -39,7 +39,7 @@ const recentPosts = (await getCollection("blog"))
   <div class="flex justify-center py-8 bg-cyan-100">
     <VignettesPreview />
   </div>
-  <div class="flex justify-center py-8 bg-yellow-100">
+  <div class="flex justify-center py-8 bg-yellow-100 hidden">
     <Graphics />
   </div>
   <div class="flex justify-center py-8 bg-mauve-100">

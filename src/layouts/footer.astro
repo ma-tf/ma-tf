@@ -2,7 +2,6 @@
 const links = [
   { href: "/blog", label: "Blog" },
   { href: "/cv", label: "CV" },
-  { href: "/graphics", label: "Graphics" },
   { href: "/music", label: "Music" },
   { href: "/photography", label: "Photography" },
   { href: "/vignettes", label: "Vignettes" },
@@ -11,10 +10,15 @@ const links = [
 
 <footer class="border-t border-border py-8">
   <nav class="flex justify-center gap-6">
-    {links.map(({ href, label }) => (
-      <a href={href} class="text-muted-foreground hover:text-foreground transition-colors">
-        {label}
-      </a>
-    ))}
+    {
+      links.map(({ href, label }) => (
+        <a
+          href={href}
+          class="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {label}
+        </a>
+      ))
+    }
   </nav>
 </footer>
