@@ -22,7 +22,7 @@ export function BlogPage({
     <div className="h-vh relative isolate flex px-4 md:h-dvh md:overflow-hidden">
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100"
+        className="absolute inset-0 -z-10 bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
         style={{
           backgroundImage: `url("${backgrounds.back}")`,
           transform: `translate(${offset.x * PARALLAX.bg}px, ${offset.y * PARALLAX.bg}px)`,
@@ -30,7 +30,7 @@ export function BlogPage({
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100"
+        className="absolute inset-0 -z-10 bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
         style={{
           backgroundImage: `url("${backgrounds.front}")`,
           transform: `translate(${offset.x * PARALLAX.bg2}px, ${offset.y * PARALLAX.bg2}px)`,
@@ -71,7 +71,7 @@ function PostList({ posts }: { posts: PlainPost[] }) {
       {posts.map((post) => (
         <li
           key={post.slug}
-          className="my-2 transition-all duration-150 md:my-0 md:py-2 focus-within:md:translate-x-2 hover:md:translate-x-2"
+          className="my-2 transition-transform duration-150 md:my-0 md:py-2 focus-within:md:translate-x-2 hover:md:translate-x-2"
         >
           <button
             className="flex w-full cursor-pointer flex-col text-left text-2xl outline-none"

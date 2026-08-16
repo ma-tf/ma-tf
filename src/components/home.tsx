@@ -1,6 +1,6 @@
 export function Home() {
   return (
-    <div className="flex h-dvh justify-center bg-background text-foreground">
+    <div className="flex h-screen justify-center bg-background text-foreground">
       <div className="flex flex-col justify-center">
         <h1 className="mb-2 text-4xl font-semibold text-foreground">Under Construction</h1>
         <p className="mb-8 text-lg text-muted-foreground">Something is on its way.</p>
