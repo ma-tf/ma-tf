@@ -1,5 +1,8 @@
 allowBuilds:
   esbuild: true
+  netlify: true
+  sharp: true
+  unix-dgram: true
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.9
   vite-plus: 0.2.9
@@ -23,8 +26,6 @@ peerDependencyRules:
     vite: "*"
 trustPolicy: no-downgrade
 trustPolicyExclude:
-  - "@netlify/edge-bundler@14.10.3"
-  - "@netlify/serverless-functions-api@2.16.0"
-  - "@netlify/zip-it-and-ship-it@14.7.1"
+  - "@netlify/serverless-functions-api@2.18.0"
   - "chokidar@4.0.3"
   - "semver@6.3.1"
