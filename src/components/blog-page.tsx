@@ -1,25 +1,41 @@
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@components/blog";
 import { useParallax } from "@hooks/use-parallax";
-import { cn } from "@lib/cn";
-import { useState } from "react";
 
 type PlainPost = { slug: string; title: string; description: string; pubDate: string };
 
-const PARALLAX = { bg: 0.15, title: 0.3, description: 0.6, posts: 1.0 } as const;
+const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
 
 export function BlogPage({
   title,
   description,
   posts,
+  backgrounds,
 }: {
   title: string;
   description: string;
   posts: PlainPost[];
+  backgrounds: { back: string; front: string };
 }) {
   const offset = useParallax();
 
   return (
-    <div className="relative flex px-4 md:h-dvh md:overflow-hidden">
+    <div className="h-vh relative isolate flex px-4 md:h-dvh md:overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100"
+        style={{
+          backgroundImage: `url("${backgrounds.back}")`,
+          transform: `translate(${offset.x * PARALLAX.bg}px, ${offset.y * PARALLAX.bg}px)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100"
+        style={{
+          backgroundImage: `url("${backgrounds.front}")`,
+          transform: `translate(${offset.x * PARALLAX.bg2}px, ${offset.y * PARALLAX.bg2}px)`,
+        }}
+      />
       <Blog>
         <BlogHeader>
           <BlogTitle
@@ -50,22 +66,15 @@ export function BlogPage({
 }
 
 function PostList({ posts }: { posts: PlainPost[] }) {
-  const [hovered, setHovered] = useState<number | null>(null);
-
   return (
     <ul className="flex flex-col">
-      {posts.map((post, i) => (
+      {posts.map((post) => (
         <li
           key={post.slug}
-          onMouseEnter={() => setHovered(i)}
-          onMouseLeave={() => setHovered(null)}
-          className={cn(
-            "my-2 transition-all duration-150 md:my-0 md:py-2",
-            hovered === i && "md:translate-x-2",
-          )}
+          className="my-2 transition-all duration-150 md:my-0 md:py-2 focus-within:md:translate-x-2 hover:md:translate-x-2"
         >
           <button
-            className="flex w-full cursor-pointer flex-col text-left text-2xl"
+            className="flex w-full cursor-pointer flex-col text-left text-2xl outline-none"
             onClick={() => (window.location.href = `/posts/${post.slug}`)}
           >
             <div className="flex flex-col">
