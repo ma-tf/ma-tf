@@ -6,6 +6,7 @@
     "@ui/dialog",
     "@ui/skeleton",
     "class-variance-authority",
+    "netlify",
     "react-doctor",
     "zod"
   ],
