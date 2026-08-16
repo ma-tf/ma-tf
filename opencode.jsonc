@@ -27,6 +27,16 @@
       "enabled": true,
       "oauth": false,
     },
+    "cloudflare-docs": {
+      "type": "remote",
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "enabled": true,
+    },
+    "netlify": {
+      "type": "local",
+      "command": ["vpx", "-y", "@netlify/mcp"],
+      "enabled": true,
+    },
   },
   "plugin": ["opencode-dynamic-context-pruning"],
   "permission": {
