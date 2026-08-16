@@ -19,6 +19,7 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}
           PUBLIC_PREVIEW_BLOG: ${{ vars.PUBLIC_PREVIEW_BLOG }}
           PUBLIC_PREVIEW_PROJECTS: ${{ vars.PUBLIC_PREVIEW_PROJECTS }}
           PUBLIC_PREVIEW_PHOTOS: ${{ vars.PUBLIC_PREVIEW_PHOTOS }}
