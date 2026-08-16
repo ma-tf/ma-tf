@@ -1,24 +1,27 @@
 ---
+import { previews } from "@lib/feature-flags";
+
 const links = [
-  { href: "/blog", label: "Blog" },
-  { href: "/cv", label: "CV" },
-  { href: "/music", label: "Music" },
-  { href: "/photography", label: "Photography" },
-  { href: "/vignettes", label: "Vignettes" },
-];
+  { href: "/blog", label: "Blog", enabled: previews.blog },
+  { href: "/music", label: "Music", enabled: previews.music },
+  { href: "/photos", label: "Photography", enabled: previews.photos },
+  { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+].filter(({ enabled }) => enabled);
 ---
 
-<footer class="border-t border-border py-8">
-  <nav class="flex justify-center gap-6">
-    {
-      links.map(({ href, label }) => (
-        <a
-          href={href}
-          class="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {label}
-        </a>
-      ))
-    }
-  </nav>
-</footer>
+{
+  links.length && (
+    <footer class="border-t border-border py-8">
+      <nav class="flex justify-center gap-6">
+        {links.map(({ href, label }) => (
+          <a
+            href={href}
+            class="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+    </footer>
+  )
+}

@@ -10,40 +10,55 @@ import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
 import Footer from "@layouts/footer.astro";
 import { getCollection } from "astro:content";
+import { previews } from "@lib/feature-flags";
 
-const recentPosts = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 4)
-  .map((post) => ({
-    slug: post.data.slug,
-    title: post.data.title,
-    pubDate: post.data.pubDate.toISOString(),
-  }));
+const recentPosts = previews.blog
+  ? (await getCollection("blog"))
+      .filter((post) => !post.data.draft)
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+      .slice(0, 4)
+      .map((post) => ({
+        slug: post.data.slug,
+        title: post.data.title,
+        pubDate: post.data.pubDate.toISOString(),
+      }))
+  : [];
 ---
 
 <Layout>
   <ModeToggle client:load />
   <Home />
-  <div class="flex justify-center py-8 bg-red-100">
-    <BlogPreview posts={recentPosts} />
-  </div>
-  <div class="flex justify-center py-8 bg-blue-100">
-    <div class="w-full max-w-7xl px-4">
-      <ProjectsSection />
+  {previews.blog && (
+    <div class="flex justify-center py-8 bg-red-100">
+      <BlogPreview posts={recentPosts} />
     </div>
-  </div>
-  <div class="flex justify-center py-8 bg-green-100">
-    <PhotosPreview />
-  </div>
-  <div class="flex justify-center py-8 bg-cyan-100">
-    <VignettesPreview />
-  </div>
-  <div class="flex justify-center py-8 bg-yellow-100 hidden">
-    <Graphics />
-  </div>
-  <div class="flex justify-center py-8 bg-mauve-100">
-    <MusicPreview />
-  </div>
+  )}
+  {previews.projects && (
+    <div class="flex justify-center py-8 bg-blue-100">
+      <div class="w-full max-w-7xl px-4">
+        <ProjectsSection />
+      </div>
+    </div>
+  )}
+  {previews.photos && (
+    <div class="flex justify-center py-8 bg-green-100">
+      <PhotosPreview />
+    </div>
+  )}
+  {previews.vignettes && (
+    <div class="flex justify-center py-8 bg-cyan-100">
+      <VignettesPreview />
+    </div>
+  )}
+  {previews.graphics && (
+    <div class="flex justify-center py-8 bg-yellow-100">
+      <Graphics />
+    </div>
+  )}
+  {previews.music && (
+    <div class="flex justify-center py-8 bg-mauve-100">
+      <MusicPreview />
+    </div>
+  )}
   <Footer />
 </Layout>
