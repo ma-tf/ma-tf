@@ -63,7 +63,7 @@ export function PhotoDialog({
       <DialogContent className="w-fit max-w-[90dvw] sm:max-w-[90dvw]" showCloseButton>
         <DialogHeader>
           <DialogTitle>{children}</DialogTitle>
-          <DialogDescription className="prose">
+          <DialogDescription>
             Shot by the {data.camera} {data.film ? ` on ${data.film}` : null}
           </DialogDescription>
         </DialogHeader>

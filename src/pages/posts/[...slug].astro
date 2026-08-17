@@ -12,6 +12,7 @@ import {
   PostTags,
   PostTitle,
 } from "@components/post";
+import { postComponents } from "@components/post-content";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -45,7 +46,7 @@ const { Content } = await render(post);
       }
     </PostHeader>
     <PostContent>
-      <Content />
+      <Content components={postComponents} />
     </PostContent>
   </Post>
 </Layout>

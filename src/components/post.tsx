@@ -2,10 +2,7 @@ import { cn } from "@lib/cn";
 
 export function Post({ children, className, ...props }: React.ComponentProps<"article">) {
   return (
-    <article
-      className={cn("mx-auto prose max-w-3xl px-8 py-12 dark:prose-invert", className)}
-      {...props}
-    >
+    <article className={cn("mx-auto max-w-3xl px-8 py-12", className)} {...props}>
       {children}
     </article>
   );
@@ -69,7 +66,7 @@ export function PostTag({ children, className, ...props }: React.ComponentProps<
 
 export function PostContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("", className)} {...props}>
+    <div className={cn("flex flex-col gap-5", className)} {...props}>
       {children}
     </div>
   );

@@ -19,7 +19,6 @@
     "@mux/mux-player-react": "^3.13.2",
     "@mux/mux-video": "^0.31.2",
     "@phosphor-icons/react": "^2.1.10",
-    "@tailwindcss/typography": "^0.5.20",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "class-variance-authority": "^0.7.1",
@@ -33,6 +32,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/mdx": "^7.0.5",
     "@astrojs/react": "^6.0.2",
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
