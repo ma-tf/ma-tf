@@ -27,8 +27,13 @@ peerDependencyRules:
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - "@netlify/edge-bundler@14.10.3"
-  - "@netlify/serverless-functions-api@2.18.0"
-  - "@netlify/serverless-functions-api@2.16.0"
+  - "@netlify/serverless-functions-api@2.16.0 || 2.18.0"
   - "@netlify/zip-it-and-ship-it@14.7.1"
+  - "@smithy/core@3.33.1 || 3.33.2"
+  - "@smithy/credential-provider-imds@4.5.1 || 4.5.2"
+  - "@smithy/fetch-http-handler@5.7.1 || 5.7.2"
+  - "@smithy/node-http-handler@4.11.1 || 4.11.2"
+  - "@smithy/signature-v4@5.7.1 || 5.7.2"
+  - "@smithy/types@4.17.1 || 4.17.2"
   - "chokidar@4.0.3"
   - "semver@6.3.1"
