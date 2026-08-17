@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
 import { PostList } from "@components/post-list.tsx";
+import { Tags, TagsTitle, TagsBackLink } from "@components/tags";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -24,9 +25,9 @@ const { tag, posts } = Astro.props;
 
 <Layout>
   <ModeToggle client:load />
-  <main>
-    <h1>Tag: {tag}</h1>
-    <a href="/tags">← All tags</a>
+  <Tags>
+    <TagsTitle>Tag: {tag}</TagsTitle>
+    <TagsBackLink href="/tags">← All tags</TagsBackLink>
     <PostList posts={posts} />
-  </main>
+  </Tags>
 </Layout>

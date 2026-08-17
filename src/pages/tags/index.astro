@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
+import { TagOrbitPrototype } from "@components/tag-orbit-prototype";
 
 const posts = await getCollection("blog");
 const tagCounts = new Map<string, number>();
@@ -17,14 +18,8 @@ const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 
 <Layout>
   <ModeToggle client:load />
-  <main>
-    <h1>Tags</h1>
-    <ul>
-      {sortedTags.map(([tag, count]) => (
-        <li>
-          <a href={`/tags/${tag}`}>{tag}</a> ({count})
-        </li>
-      ))}
-    </ul>
-  </main>
+  <TagOrbitPrototype
+    tags={sortedTags.map(([tag, count]) => ({ tag, count }))}
+    client:load
+  />
 </Layout>
