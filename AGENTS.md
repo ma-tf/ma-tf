@@ -15,3 +15,4 @@ See [docs/adr/](docs/adr/) for Architecture Decision Records.
 
 - Avoid passing props where possible
 - Always run `vpx astro check` after changing astro files
+- When writing CSS, check [docs/conventions.md](docs/conventions.md).
