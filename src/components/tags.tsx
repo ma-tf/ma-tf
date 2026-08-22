@@ -19,22 +19,6 @@ export function TagsTitle({ children, className, ...props }: React.ComponentProp
   );
 }
 
-export function TagsList({ children, className, ...props }: React.ComponentProps<"ul">) {
-  return (
-    <ul className={cn("flex flex-wrap gap-2", className)} {...props}>
-      {children}
-    </ul>
-  );
-}
-
-export function TagsItem({ children, className, ...props }: React.ComponentProps<"li">) {
-  return (
-    <li className={cn("", className)} {...props}>
-      {children}
-    </li>
-  );
-}
-
 export function TagLink({ children, className, ...props }: React.ComponentProps<"a">) {
   return (
     <a
