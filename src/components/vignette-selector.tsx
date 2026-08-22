@@ -4,11 +4,8 @@ import { useState } from "react";
 
 type Video = { playbackId: string; order: number; description: string };
 
-const selectedOutline =
-  "[filter:drop-shadow(0_1px_1px_rgb(0_0_0/0.05))_drop-shadow(2px_0_0_var(--foreground))_drop-shadow(-2px_0_0_var(--foreground))_drop-shadow(0_2px_0_var(--foreground))_drop-shadow(0_-2px_0_var(--foreground))]";
-
-const focusOutline =
-  "[filter:drop-shadow(0_1px_1px_rgb(0_0_0/0.05))_drop-shadow(2px_0_0_var(--ring))_drop-shadow(-2px_0_0_var(--ring))_drop-shadow(0_2px_0_var(--ring))_drop-shadow(0_-2px_0_var(--ring))]";
+const outline =
+  "[filter:drop-shadow(0_1px_1px_rgb(0_0_0/0.05))_drop-shadow(2px_0_0_var(--thumb-outline))_drop-shadow(-2px_0_0_var(--thumb-outline))_drop-shadow(0_2px_0_var(--thumb-outline))_drop-shadow(0_-2px_0_var(--thumb-outline))]";
 
 export function VignetteSelector({ videos }: { videos: Video[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -24,14 +21,17 @@ export function VignetteSelector({ videos }: { videos: Video[] }) {
             <div
               key={video.order}
               className={cn(
-                "drop-shadow-sm",
-                isActive ? selectedOutline : `focus-within:${focusOutline}`,
+                outline,
+                "[--thumb-outline:transparent]",
+                "hover:[--thumb-outline:var(--muted-foreground)]",
+                "focus-within:[--thumb-outline:var(--muted-foreground)]",
+                isActive && "[--thumb-outline:var(--foreground)]",
               )}
             >
               <button
                 onClick={() => setActiveIndex(i)}
                 className={cn(
-                  "group block cursor-pointer overflow-hidden transition-colors",
+                  "group block cursor-pointer overflow-hidden",
                   "[clip-path:polygon(0_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%)]",
                 )}
               >
