@@ -47,20 +47,25 @@ function useOrbitInput() {
     if (!loopRef.current) loopRef.current = requestAnimationFrame(tick);
   };
 
-  const tick = () => {
-    if (!reducedRef.current) {
-      rotationRef.current += velocityRef.current;
-      velocityRef.current *= 0.94;
-      if (Math.abs(velocityRef.current) < 0.0005) velocityRef.current = 0;
-    } else {
+  const advanceRotation = () => {
+    if (reducedRef.current) {
       velocityRef.current = 0;
+      return;
     }
+    rotationRef.current += velocityRef.current;
+    velocityRef.current *= 0.94;
+    if (Math.abs(velocityRef.current) < 0.0005) velocityRef.current = 0;
+  };
+
+  const scheduleFrame = () => {
+    const active = velocityRef.current !== 0 || draggingRef.current;
+    loopRef.current = active ? requestAnimationFrame(tick) : 0;
+  };
+
+  const tick = () => {
+    advanceRotation();
     placeRef.current(rotationRef.current);
-    if (velocityRef.current !== 0 || draggingRef.current) {
-      loopRef.current = requestAnimationFrame(tick);
-    } else {
-      loopRef.current = 0;
-    }
+    scheduleFrame();
   };
 
   useEffect(() => {
@@ -135,6 +140,103 @@ function OrbitChrome() {
   );
 }
 
+function createPlacer({
+  n,
+  radius,
+  itemRefs,
+}: {
+  n: number;
+  radius: number;
+  itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>;
+}): PlaceFn {
+  const base = -Math.PI / 2;
+  const flat = 0.62;
+  if (radius <= 0) return () => {};
+  return (angle) => {
+    itemRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const a = base + (i / n) * Math.PI * 2 + angle;
+      const x = radius * Math.cos(a);
+      const y = radius * flat * Math.sin(a);
+      const depth = (Math.sin(a) + 1) / 2;
+      const scale = 0.6 + 0.6 * depth;
+      el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+      el.style.opacity = String(0.35 + 0.65 * depth);
+      el.style.zIndex = String(Math.round(depth * 10));
+    });
+  };
+}
+
+const setItemRef =
+  (itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>, i: number) =>
+  (el: HTMLAnchorElement | null) => {
+    itemRefs.current[i] = el;
+  };
+
+function orbitData(
+  selected: Tag | null,
+  postsByTag: Record<string, PlainPost[]>,
+  tags: Tag[],
+): { posts: PlainPost[]; n: number } {
+  if (!selected) return { posts: [], n: tags.length };
+  const posts = postsByTag[selected.tag] ?? [];
+  return { posts, n: posts.length };
+}
+
+function SelectedOverlay({ selected, onBack }: { selected: Tag; onBack: () => void }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+      <button type="button" onClick={onBack} className="pointer-events-auto text-center">
+        <span className="block text-5xl font-bold">{selected.tag}</span>
+        <span className="block text-sm text-muted-foreground">
+          {selected.count} posts — click to go back
+        </span>
+      </button>
+    </div>
+  );
+}
+
+function renderItems({
+  selected,
+  posts,
+  tags,
+  itemRefs,
+  onSelectTag,
+}: {
+  selected: Tag | null;
+  posts: PlainPost[];
+  tags: Tag[];
+  itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>;
+  onSelectTag: (t: Tag) => void;
+}) {
+  if (!selected) {
+    return tags.map((t, i) => (
+      <TagLink
+        key={t.tag}
+        ref={setItemRef(itemRefs, i)}
+        href={`/tags/${t.tag}`}
+        className="absolute top-0 left-0"
+        onClick={(e) => {
+          e.preventDefault();
+          onSelectTag(t);
+        }}
+      >
+        {t.tag} ({t.count})
+      </TagLink>
+    ));
+  }
+  return posts.map((post, i) => (
+    <a
+      key={post.slug}
+      ref={setItemRef(itemRefs, i)}
+      href={`/posts/${post.slug}`}
+      className="absolute top-0 left-0 max-w-56 truncate rounded bg-secondary px-2 py-1 text-sm"
+    >
+      {post.title}
+    </a>
+  ));
+}
+
 export function TagOrbit({
   tags,
   postsByTag,
@@ -146,75 +248,18 @@ export function TagOrbit({
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [selected, setSelected] = useState<Tag | null>(null);
 
-  const posts = selected ? (postsByTag[selected.tag] ?? []) : [];
-  const n = selected ? posts.length : tags.length;
+  const { posts, n } = orbitData(selected, postsByTag, tags);
 
   useLayoutEffect(() => {
-    if (radius <= 0) return;
-    const base = -Math.PI / 2;
-    const flat = 0.62;
-    placeRef.current = (angle) => {
-      itemRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const a = base + (i / n) * Math.PI * 2 + angle;
-        const x = radius * Math.cos(a);
-        const y = radius * flat * Math.sin(a);
-        const depth = (Math.sin(a) + 1) / 2;
-        const scale = 0.6 + 0.6 * depth;
-        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
-        el.style.opacity = String(0.35 + 0.65 * depth);
-        el.style.zIndex = String(Math.round(depth * 10));
-      });
-    };
+    placeRef.current = createPlacer({ n, radius, itemRefs });
     placeRef.current(rotationRef.current);
-  }, [radius, n, selected, placeRef, rotationRef]);
+  }, [radius, n, placeRef, rotationRef]);
 
   return (
     <div className="relative h-dvh w-full overflow-hidden" {...stageProps}>
       <OrbitChrome />
-      {selected && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-          <button
-            type="button"
-            onClick={() => setSelected(null)}
-            className="pointer-events-auto text-center"
-          >
-            <span className="block text-5xl font-bold">{selected.tag}</span>
-            <span className="block text-sm text-muted-foreground">
-              {selected.count} posts — click to go back
-            </span>
-          </button>
-        </div>
-      )}
-      {selected
-        ? posts.map((post, i) => (
-            <a
-              key={post.slug}
-              ref={(el) => {
-                itemRefs.current[i] = el;
-              }}
-              href={`/posts/${post.slug}`}
-              className="absolute top-0 left-0 max-w-56 truncate rounded bg-secondary px-2 py-1 text-sm"
-            >
-              {post.title}
-            </a>
-          ))
-        : tags.map((t, i) => (
-            <TagLink
-              key={t.tag}
-              ref={(el) => {
-                itemRefs.current[i] = el;
-              }}
-              href={`/tags/${t.tag}`}
-              className="absolute top-0 left-0"
-              onClick={(e) => {
-                e.preventDefault();
-                setSelected(t);
-              }}
-            >
-              {t.tag} ({t.count})
-            </TagLink>
-          ))}
+      {selected && <SelectedOverlay selected={selected} onBack={() => setSelected(null)} />}
+      {renderItems({ selected, posts, tags, itemRefs, onSelectTag: setSelected })}
     </div>
   );
 }
