@@ -1,24 +1,28 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@components/ui/card";
+import {
+  Section,
+  SectionContent,
+  SectionHeader,
+  SectionNumber,
+  SectionSubtitle,
+  SectionTitle,
+} from "@components/section";
 import { cn } from "@lib/cn";
 
 export function PhotosPreview() {
   return (
-    <Card className="w-3xl">
-      <CardHeader>
-        <CardTitle>
-          <a
-            href="/photos"
-            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-          >
-            Photography
-          </a>
-        </CardTitle>
-        <CardDescription>
-          In my spare time I am an amateur photographer. The photographs I take are in both digital
-          and film formats.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <Section>
+      <SectionHeader>
+        <SectionNumber>01</SectionNumber>
+        <SectionTitle href="/photos">Photography</SectionTitle>
+      </SectionHeader>
+      <SectionSubtitle>Photographs in digital and film.</SectionSubtitle>
+      <SectionContent>
+        <p className="max-w-md indent-8 text-lg text-foreground">
+          In my spare time I am an amateur photographer. I shoot on both digital and film, and have
+          collected a small family of cameras over the years, each covering a different use case.
+        </p>
+      </SectionContent>
+    </Section>
   );
 }
 

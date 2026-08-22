@@ -1,24 +1,28 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@components/ui/card";
+import {
+  Section,
+  SectionContent,
+  SectionHeader,
+  SectionNumber,
+  SectionSubtitle,
+  SectionTitle,
+} from "@components/section";
 import { cn } from "@lib/cn";
 
 export function MusicPreview() {
   return (
-    <Card className="w-3xl">
-      <CardHeader>
-        <CardTitle>
-          <a
-            href="/music"
-            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-          >
-            Music
-          </a>
-        </CardTitle>
-        <CardDescription>
-          Original compositions, remixes, and live recordings spanning electronic and ambient
-          sounds.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <Section>
+      <SectionHeader>
+        <SectionNumber>04</SectionNumber>
+        <SectionTitle href="/music">Music</SectionTitle>
+      </SectionHeader>
+      <SectionSubtitle>Original compositions, remixes, and live recordings.</SectionSubtitle>
+      <SectionContent>
+        <p className="max-w-md indent-8 text-lg text-foreground">
+          Music made and recorded in the gaps. Drum and bass, ambient, and DJ sets, captured on tape
+          and pressed to the internet.
+        </p>
+      </SectionContent>
+    </Section>
   );
 }
 

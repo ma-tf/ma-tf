@@ -1,5 +1,12 @@
 import { VideoPlayer } from "@components/mux-player";
-import { Card, CardHeader, CardTitle, CardDescription } from "@components/ui/card";
+import {
+  Section,
+  SectionContent,
+  SectionHeader,
+  SectionNumber,
+  SectionSubtitle,
+  SectionTitle,
+} from "@components/section";
 import { Separator } from "@components/ui/separator";
 import { Spinner } from "@components/ui/spinner";
 import { cn } from "@lib/cn";
@@ -7,19 +14,19 @@ import { useState } from "react";
 
 export function VignettesPreview() {
   return (
-    <Card className="w-3xl">
-      <CardHeader>
-        <CardTitle>
-          <a
-            href="/vignettes"
-            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-          >
-            Vignettes
-          </a>
-        </CardTitle>
-        <CardDescription>Experimental motion work exploring through the lens.</CardDescription>
-      </CardHeader>
-    </Card>
+    <Section>
+      <SectionHeader>
+        <SectionNumber>02</SectionNumber>
+        <SectionTitle href="/vignettes">Vignettes</SectionTitle>
+      </SectionHeader>
+      <SectionSubtitle>Experimental motion work exploring through the lens.</SectionSubtitle>
+      <SectionContent>
+        <p className="max-w-md indent-8 text-lg text-foreground">
+          A series of short motion studies, shot on location in the quiet hours. Small observations
+          of a place and the details that give it character.
+        </p>
+      </SectionContent>
+    </Section>
   );
 }
 
