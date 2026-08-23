@@ -3,7 +3,7 @@ import { cn } from "@lib/cn";
 export function Section({ children, className, ...props }: React.ComponentProps<"section">) {
   return (
     <section
-      className={cn("grid min-h-dvh grid-cols-3 content-start gap-8 px-6 py-8", className)}
+      className={cn("grid min-h-dvh grid-cols-3 content-start gap-12 p-8", className)}
       {...props}
     >
       {children}
@@ -14,7 +14,10 @@ export function Section({ children, className, ...props }: React.ComponentProps<
 export function SectionHeader({ children, className, ...props }: React.ComponentProps<"header">) {
   return (
     <header
-      className={cn("col-start-1 flex items-baseline gap-4 font-heading text-xl", className)}
+      className={cn(
+        "col-start-1 flex items-baseline gap-4 font-heading text-lg uppercase",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -24,7 +27,13 @@ export function SectionHeader({ children, className, ...props }: React.Component
 
 export function SectionNumber({ children, className, ...props }: React.ComponentProps<"span">) {
   return (
-    <span className={cn("", className)} {...props}>
+    <span
+      className={cn(
+        "inline-flex size-10 items-center justify-center border border-foreground",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </span>
   );
@@ -46,9 +55,9 @@ export function SectionTitle({ children, className, ...props }: React.ComponentP
 
 export function SectionSubtitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <p className={cn("col-start-1 text-4xl text-muted-foreground", className)} {...props}>
+    <h2 className={cn("col-start-1 font-heading text-5xl", className)} {...props}>
       {children}
-    </p>
+    </h2>
   );
 }
 

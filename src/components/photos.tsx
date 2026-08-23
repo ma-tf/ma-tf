@@ -6,7 +6,9 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from "@components/section";
+import { Button } from "@components/ui/button";
 import { cn } from "@lib/cn";
+import { CameraIcon, FilmStripIcon } from "@phosphor-icons/react";
 
 export function PhotosPreview() {
   return (
@@ -15,12 +17,53 @@ export function PhotosPreview() {
         <SectionNumber>01</SectionNumber>
         <SectionTitle href="/photos">Photography</SectionTitle>
       </SectionHeader>
-      <SectionSubtitle>Photographs in digital and film.</SectionSubtitle>
+      <SectionSubtitle>Digital and analogue photographs.</SectionSubtitle>
       <SectionContent>
-        <p className="max-w-md indent-8 text-lg text-foreground">
-          In my spare time I am an amateur photographer. I shoot on both digital and film, and have
-          collected a small family of cameras over the years, each covering a different use case.
-        </p>
+        <div className="grid grid-cols-3 items-start gap-4">
+          <div className="max-w-md indent-8 text-lg">
+            <p>
+              In my spare time I am an amateur photographer. I shoot on both digital and film, and
+              have collected a small family of cameras over the years, each covering a different use
+              case.
+            </p>
+            <p>
+              The cameras I use include: a Canon EOS-1V as my primary camera with swappable lenses;
+              an Olympus mju mini Digital for when I want retro digital shots; a Ricoh Mirai when I
+              need an all rounder bridge camera. They have served me well so far.
+            </p>
+            <Button
+              variant="outline"
+              render={<a href="/photos" />}
+              className="mt-6 rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              size="lg"
+            >
+              View photographs
+            </Button>
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col border border-foreground px-3 py-2">
+              <span className="text-2xl">EOS-1V</span>
+              <span className="text-xs uppercase">Canon</span>
+              <div className="mt-auto pt-4">
+                <FilmStripIcon className="size-5" aria-hidden="true" />
+              </div>
+            </div>
+            <div className="flex flex-col border border-foreground px-3 py-2">
+              <span className="text-2xl">Mirai</span>
+              <span className="text-xs uppercase">Ricoh</span>
+              <div className="mt-auto pt-4">
+                <FilmStripIcon className="size-5" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col border border-foreground px-3 py-2">
+            <span className="text-2xl">mju mini Digital</span>
+            <span className="text-xs uppercase">Olympus</span>
+            <div className="mt-auto pt-4">
+              <CameraIcon className="size-5" aria-hidden="true" />
+            </div>
+          </div>
+        </div>
       </SectionContent>
     </Section>
   );

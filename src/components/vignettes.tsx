@@ -7,6 +7,7 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from "@components/section";
+import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
 import { Spinner } from "@components/ui/spinner";
 import { cn } from "@lib/cn";
@@ -19,12 +20,50 @@ export function VignettesPreview() {
         <SectionNumber>02</SectionNumber>
         <SectionTitle href="/vignettes">Vignettes</SectionTitle>
       </SectionHeader>
-      <SectionSubtitle>Experimental motion work exploring through the lens.</SectionSubtitle>
-      <SectionContent>
-        <p className="max-w-md indent-8 text-lg text-foreground">
-          A series of short motion studies, shot on location in the quiet hours. Small observations
-          of a place and the details that give it character.
-        </p>
+      <SectionSubtitle className="col-span-2">
+        Experimental motion work; exploring through the lens.
+      </SectionSubtitle>
+      <SectionContent className="grid grid-cols-3 gap-4">
+        <div className="border border-foreground" />
+        <div className="col-span-1 indent-8 text-lg text-foreground">
+          <p>
+            A series of short motion studies, shot on location in the quiet hours. Small
+            observations of a place and the details that give it character.
+          </p>
+          <p>
+            The <span className="italic">Bolex H-16 SBM</span> offers a portable way to create true
+            filmic experiences without electricity as a hard requirement. Using 30 metre film reels
+            and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
+            approximately 2 minutes and 45 seconds of footage per reel.
+          </p>
+          <p>
+            For my own convenience, I use a battery powered Kern Vario-Switar 16-100mm lens. The
+            battery powers the auto exposure and the in-built electric motor for zooming.
+          </p>
+          <p>
+            Shooting on film is an exercise in economy. Each scene is a single take with no chance
+            to delete or reshoot without paying for the footage again, so every second has to be
+            deliberate. That constraint is part of what makes the format so rewarding.
+          </p>
+          <p>
+            Everything is shot on 16mm film. Its grain and tonal latitude give the footage a texture
+            that digital struggles to match, and the format's soft, rounded frame corners come
+            straight from the lens and gate rather than any filter.
+          </p>
+          <p>
+            Photographs freeze a single instant, but some places only come alive in motion. The
+            speed of a moving train, the swing of shoes on a wire, the rolling waves on a beach
+            during sunset. These studies are an attempt to hold on to those moving moments.
+          </p>
+          <Button
+            variant="outline"
+            render={<a href="/vignettes" />}
+            className="mt-6 rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+            size="lg"
+          >
+            View vignettes
+          </Button>
+        </div>
       </SectionContent>
     </Section>
   );
