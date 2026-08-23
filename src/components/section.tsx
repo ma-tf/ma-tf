@@ -3,7 +3,7 @@ import { cn } from "@lib/cn";
 export function Section({ children, className, ...props }: React.ComponentProps<"section">) {
   return (
     <section
-      className={cn("grid min-h-dvh grid-cols-3 content-start gap-12 p-8", className)}
+      className={cn("section grid min-h-dvh grid-cols-3 content-start gap-12 p-8", className)}
       {...props}
     >
       {children}
@@ -25,17 +25,15 @@ export function SectionHeader({ children, className, ...props }: React.Component
   );
 }
 
-export function SectionNumber({ children, className, ...props }: React.ComponentProps<"span">) {
+export function SectionNumber({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       className={cn(
-        "inline-flex size-10 items-center justify-center border border-foreground",
+        "section-number inline-flex size-10 items-center justify-center border border-foreground",
         className,
       )}
       {...props}
-    >
-      {children}
-    </span>
+    />
   );
 }
 

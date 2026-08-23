@@ -11,7 +11,7 @@ export function Graphics() {
   return (
     <Section>
       <SectionHeader>
-        <SectionNumber>03</SectionNumber>
+        <SectionNumber />
         <SectionTitle href="/graphics">Graphics</SectionTitle>
       </SectionHeader>
       <SectionSubtitle>Digital illustrations and visual experiments.</SectionSubtitle>

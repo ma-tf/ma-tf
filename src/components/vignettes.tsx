@@ -17,7 +17,7 @@ export function VignettesPreview() {
   return (
     <Section>
       <SectionHeader>
-        <SectionNumber>02</SectionNumber>
+        <SectionNumber />
         <SectionTitle href="/vignettes">Vignettes</SectionTitle>
       </SectionHeader>
       <SectionSubtitle className="col-span-2">

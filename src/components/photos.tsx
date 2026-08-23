@@ -14,7 +14,7 @@ export function PhotosPreview() {
   return (
     <Section>
       <SectionHeader>
-        <SectionNumber>01</SectionNumber>
+        <SectionNumber />
         <SectionTitle href="/photos">Photography</SectionTitle>
       </SectionHeader>
       <SectionSubtitle>Digital and analogue photographs.</SectionSubtitle>
@@ -30,6 +30,11 @@ export function PhotosPreview() {
               The cameras I use include: a Canon EOS-1V as my primary camera with swappable lenses;
               an Olympus mju mini Digital for when I want retro digital shots; a Ricoh Mirai when I
               need an all rounder bridge camera. They have served me well so far.
+            </p>
+            <p>
+              I scan every roll myself on a Nikon CoolScan V ED using SilverFast, and colour correct
+              the frames in SilverFast HDR. It's a slow, hands-on part of the process, but it's
+              become as much a part of the craft as the shooting itself.
             </p>
             <Button
               variant="outline"
