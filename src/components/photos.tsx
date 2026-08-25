@@ -20,7 +20,7 @@ export function PhotosPreview() {
       <SectionSubtitle>Digital and analogue photographs.</SectionSubtitle>
       <SectionContent>
         <div className="grid grid-cols-3 items-start gap-4">
-          <div className="max-w-md indent-8 text-lg">
+          <div className="flex flex-col gap-4 indent-8 text-lg">
             <p>
               In my spare time I am an amateur photographer. I shoot on both digital and film, and
               have collected a small family of cameras over the years, each covering a different use
@@ -39,7 +39,7 @@ export function PhotosPreview() {
             <Button
               variant="outline"
               render={<a href="/photos" />}
-              className="mt-6 rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
               size="lg"
             >
               View photographs

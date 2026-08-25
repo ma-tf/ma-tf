@@ -1,3 +1,5 @@
+import type { ImageMap } from "@lib/images";
+
 import { VideoPlayer } from "@components/mux-player";
 import {
   Section,
@@ -11,9 +13,12 @@ import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
 import { Spinner } from "@components/ui/spinner";
 import { cn } from "@lib/cn";
+import { ApertureIcon, FilmReelIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 
-export function VignettesPreview() {
+export function VignettesPreview({ images }: { images: ImageMap }) {
+  const bgDitherSrc = images["vignettes/bolex-bg-dither.png"];
+  const fgDitherSrc = images["vignettes/bolex-fg-dither.png"];
   return (
     <Section>
       <SectionHeader>
@@ -24,8 +29,19 @@ export function VignettesPreview() {
         Experimental motion work; exploring through the lens.
       </SectionSubtitle>
       <SectionContent className="grid grid-cols-3 gap-4">
-        <div className="border border-foreground" />
-        <div className="col-span-1 indent-8 text-lg text-foreground">
+        <div className="relative col-start-1 h-[80%] self-center overflow-hidden border border-foreground">
+          <img
+            src={bgDitherSrc}
+            alt=""
+            className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
+          />
+          <img
+            src={fgDitherSrc}
+            alt=""
+            className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
+          />
+        </div>
+        <div className="col-span-1 col-start-2 indent-8 text-lg text-foreground">
           <p>
             A series of short motion studies, shot on location in the quiet hours. Small
             observations of a place and the details that give it character.
@@ -63,6 +79,32 @@ export function VignettesPreview() {
           >
             View vignettes
           </Button>
+          <div className="col-start-3"></div>
+        </div>
+        <div className="col-span-1 flex items-end justify-end gap-4">
+          <div className="flex size-48 flex-col border border-foreground px-3 py-2">
+            <span className="text-2xl">Vision3 Color Negative</span>
+            <span className="text-xs uppercase">KODAK</span>
+            <div className="mt-auto pt-4">
+              <FilmReelIcon className="size-5" aria-hidden="true" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="flex size-48 flex-col border border-foreground px-3 py-2">
+              <span className="text-2xl">Vario-Switar 16-100mm</span>
+              <span className="text-xs uppercase">Kern-Paillard</span>
+              <div className="mt-auto pt-4">
+                <ApertureIcon className="size-5" aria-hidden="true" />
+              </div>
+            </div>
+            <div className="flex size-48 flex-col border border-foreground px-3 py-2">
+              <span className="text-2xl">4mm f/2.8 Fisheye</span>
+              <span className="text-xs uppercase">LAOWA</span>
+              <div className="mt-auto pt-4">
+                <ApertureIcon className="size-5" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
         </div>
       </SectionContent>
     </Section>

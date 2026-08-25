@@ -1,16 +1,18 @@
 ---
 import { Home } from "@components/home";
 import { BlogPreview } from "@components/blog";
-import ProjectsSection from "@components/projects.astro";
+import { ProjectsPreview } from "@components/projects";
 import { PhotosPreview } from "@components/photos";
 import { VignettesPreview } from "@components/vignettes";
-import { Graphics } from "@components/graphics";
+import { GraphicsPreview } from "@components/graphics";
 import { MusicPreview } from "@components/music";
 import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
 import Footer from "@layouts/footer.astro";
 import { getCollection } from "astro:content";
 import { previews } from "@lib/feature-flags";
+import { getImage } from "astro:assets";
+import type { ImageMap } from "@lib/images";
 
 const recentPosts = previews.blog
   ? (await getCollection("blog"))
@@ -23,42 +25,48 @@ const recentPosts = previews.blog
         pubDate: post.data.pubDate.toISOString(),
       }))
   : [];
+
+const r2 = import.meta.env.R2_PUBLIC_URL;
+
+const [oldHouseSrc, japanSrc] = await Promise.all([
+  getImage({
+    src: `${r2}/graphics/old house.png`,
+    quality: "mid",
+    inferSize: true,
+  }).then((i) => i.src),
+  getImage({
+    src: `${r2}/music/20251014_Japan 6_19.jpg`,
+    quality: "low",
+    inferSize: true,
+  }).then((i) => i.src),
+]);
+
+const images: ImageMap = {
+  "vignettes/bolex-bg-dither.png": `${r2}/vignettes/bolex-bg-dither.png`,
+  "vignettes/bolex-fg-dither.png": `${r2}/vignettes/bolex-fg-dither.png`,
+  "graphics/old house.png": oldHouseSrc,
+  "music/20251014_Japan 6_19.jpg": japanSrc,
+};
 ---
 
 <Layout>
   <ModeToggle client:load />
   <Home />
-  {previews.blog && (
-    <div class="flex justify-center py-8 bg-red-100">
-      <BlogPreview posts={recentPosts} />
-    </div>
-  )}
-  {previews.projects && (
-    <div class="flex justify-center py-8 bg-blue-100">
-      <div class="w-full max-w-7xl px-4">
-        <ProjectsSection />
+  {
+    previews.blog && (
+      <div class="flex justify-center py-8 0">
+        <BlogPreview posts={recentPosts} />
       </div>
-    </div>
-  )}
-  {previews.photos && (
-    <div class="bg-green-100">
-      <PhotosPreview />
-    </div>
-  )}
-  {previews.vignettes && (
-    <div class="bg-cyan-100">
-      <VignettesPreview />
-    </div>
-  )}
-  {previews.graphics && (
-    <div class="bg-yellow-100">
-      <Graphics />
-    </div>
-  )}
-  {previews.music && (
-    <div class="bg-mauve-100">
-      <MusicPreview />
-    </div>
-  )}
+    )
+  }
+  {previews.projects && <ProjectsPreview />}
+  {previews.photos && <PhotosPreview />}
+  {
+    previews.vignettes && (
+      <VignettesPreview images={images} />
+    )
+  }
+  {previews.graphics && <GraphicsPreview images={images} />}
+  {previews.music && <MusicPreview images={images} />}
   <Footer />
 </Layout>
