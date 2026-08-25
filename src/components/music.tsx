@@ -20,7 +20,7 @@ import {
 export function MusicPreview({ images }: { images: ImageMap }) {
   const japanSrc = images["music/20251014_Japan 6_19.jpg"];
   return (
-    <Section>
+    <Section className="bg-slate-200 py-24 dark:bg-slate-800">
       <SectionHeader>
         <SectionNumber />
         <SectionTitle href="/music">Music</SectionTitle>
@@ -75,6 +75,16 @@ export function MusicPreview({ images }: { images: ImageMap }) {
             </div>
           </div>
         </div>
+        {/* <p className="max-w-md indent-8 text-lg text-foreground">
+          Everything is made inside FL Studio, my DAW of choice. Sounds come from sample CDs by
+          E-Lab, Zero-G, and Spectrasonics, loaded through Amigo Sampler - a hardware sampler
+          emulator that gives the discs the crunch of a 90s rack unit. For synths I lean on software
+          emulations of Korg, Roland, and E-mu synths, alongside Omnisphere. For effects I use the
+          Airwindows suite of plugins, and Alesis QuadraVerb impulses run through a convolver. When
+          a track needs more character, I might pass it through my Sony WM-D6C for tape effects, a
+          little compression, and warmth. It is all an imitation of rooms full of gear, but it takes
+          up no space and still gets close enough the sound I am after.
+        </p> */}
       </SectionContent>
     </Section>
   );

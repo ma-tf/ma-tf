@@ -49,7 +49,7 @@ const projects: Project[] = [
 
 export function ProjectsPreview() {
   return (
-    <Section>
+    <Section className="bg-slate-200 py-24 dark:bg-slate-800">
       <SectionHeader>
         <SectionNumber />
         <SectionTitle href="https://github.com/ma-tf">Projects</SectionTitle>

@@ -3,7 +3,7 @@ import { cn } from "@lib/cn";
 export function Section({ children, className, ...props }: React.ComponentProps<"section">) {
   return (
     <section
-      className={cn("section grid min-h-dvh grid-cols-3 content-start gap-12 p-8", className)}
+      className={cn("section grid grid-cols-3 content-start gap-12 p-8", className)}
       {...props}
     >
       {children}

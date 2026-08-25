@@ -12,7 +12,7 @@ import { CameraIcon, FilmStripIcon } from "@phosphor-icons/react";
 
 export function PhotosPreview() {
   return (
-    <Section>
+    <Section className="py-24">
       <SectionHeader>
         <SectionNumber />
         <SectionTitle href="/photos">Photography</SectionTitle>

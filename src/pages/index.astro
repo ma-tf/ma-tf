@@ -61,11 +61,7 @@ const images: ImageMap = {
   }
   {previews.projects && <ProjectsPreview />}
   {previews.photos && <PhotosPreview />}
-  {
-    previews.vignettes && (
-      <VignettesPreview images={images} />
-    )
-  }
+  {previews.vignettes && <VignettesPreview images={images} />}
   {previews.graphics && <GraphicsPreview images={images} />}
   {previews.music && <MusicPreview images={images} />}
   <Footer />
