@@ -54,8 +54,8 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
             filmic experiences without electricity as a hard requirement. Using 30 metre film reels
             and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
             approximately 2 minutes and 45 seconds of footage per reel. For my own convenience, I
-            use a battery powered Kern Vario-Switar 16-100mm lens. The battery powers the auto
-            exposure and the in-built electric motor for zooming.
+            use a battery powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
+            The battery powers the auto exposure and the in-built electric motor for zooming.
           </p>
           <p>
             Everything is shot on 16mm film. Its grain and tonal latitude give the footage a texture
