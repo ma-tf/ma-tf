@@ -18,7 +18,7 @@ import { useState } from "react";
 
 export function VignettesPreview({ images }: { images: ImageMap }) {
   const bgDitherSrc = images["vignettes/bolex-bg-dither.png"];
-  const fgDitherSrc = images["vignettes/bolex-fg-dither.png"];
+  const fgDitherSrc = images["vignettes/bolex-fg-dither-anon.png"];
   return (
     <div className="bg-slate-100 dark:bg-slate-900">
       <Section className="mx-auto max-w-480 py-24">
@@ -70,7 +70,7 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
             <Button
               variant="outline"
               render={<a href="/vignettes">View vignettes</a>}
-              className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              className="mt-6 w-full rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground md:w-fit dark:bg-foreground dark:hover:bg-muted-foreground/80"
               size="lg"
             />
           </div>
@@ -120,22 +120,24 @@ export function Vignettes({
     <div className={cn("relative min-h-0 flex-1", className)} {...props}>
       <Separator />
       <div className="flex items-center gap-4">
-        <VideoPlayer
-          className="ml-[20vw] w-[35vw] shrink-0"
-          playbackId={activeVideo.playbackId}
-          onLoadStart={() => setLoading(true)}
-          onCanPlay={() => setLoading(false)}
-        />
+        <div className="relative ml-[20vw] w-[35vw] shrink-0">
+          <VideoPlayer
+            className="w-full"
+            playbackId={activeVideo.playbackId}
+            onLoadStart={() => setLoading(true)}
+            onCanPlay={() => setLoading(false)}
+          />
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Spinner className="size-8" />
+            </div>
+          )}
+        </div>
         <p className="max-h-[calc(35vw*3/4)] max-w-md self-center overflow-clip text-4xl">
           {description}
         </p>
       </div>
       <Separator />
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
+import { Button } from "@components/ui/button";
 import { cn } from "@lib/cn";
 import { RssIcon } from "@phosphor-icons/react";
 
@@ -6,41 +6,38 @@ type PreviewPost = { slug: string; title: string; pubDate: string };
 
 export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
   return (
-    <Card className="w-3xl">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <a
-            href="/blog"
-            className="underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-          >
-            Blog
-          </a>
-          <a
-            href="/rss.xml"
-            aria-label="RSS feed"
-            className="transition-colors hover:text-foreground/70"
-          >
-            <RssIcon className="size-4" aria-hidden="true" />
-          </a>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ul className="flex flex-col gap-2">
-          {posts.map((post) => (
-            <li key={post.slug}>
-              <a href={`/posts/${post.slug}`} className="group flex gap-2 hover:underline">
-                <span className="font-medium transition-colors group-hover:text-foreground/70">
-                  {post.title}
-                </span>
-                <time dateTime={post.pubDate} className="shrink-0 text-sm text-muted-foreground">
-                  {post.pubDate.split("T")[0]}
-                </time>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
+    <div className="mx-auto max-w-6xl py-24">
+      <div className="flex items-center gap-2">
+        <h2 className="text-lg uppercase">Latest posts</h2>
+        <a
+          href="/rss.xml"
+          aria-label="RSS feed"
+          className="transition-colors hover:text-foreground/70"
+        >
+          <RssIcon className="size-6" aria-hidden="true" />
+        </a>
+      </div>
+      <ul className="flex flex-col">
+        {posts.map((post) => (
+          <li key={post.slug} className="py-6">
+            <a href={`/posts/${post.slug}`} className="group flex gap-2 hover:underline">
+              <span className="text-xl font-medium transition-colors group-hover:text-foreground/70">
+                {post.title}
+              </span>
+              <time dateTime={post.pubDate} className="shrink-0 text-lg text-muted-foreground">
+                {post.pubDate.split("T")[0]}
+              </time>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <Button
+        variant="outline"
+        render={<a href="/blog">View all posts</a>}
+        className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+        size="lg"
+      />
+    </div>
   );
 }
 

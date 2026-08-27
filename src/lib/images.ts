@@ -1,6 +1,6 @@
 const IMAGE_KEYS = [
   "vignettes/bolex-bg-dither.png",
-  "vignettes/bolex-fg-dither.png",
+  "vignettes/bolex-fg-dither-anon.png",
   "graphics/old house.png",
   "music/20251014_Japan 6_19.jpg",
 ] as const;

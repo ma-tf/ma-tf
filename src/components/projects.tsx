@@ -6,7 +6,7 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from "@components/section";
-import { CodeIcon, GitBranchIcon } from "@phosphor-icons/react";
+import { ArrowSquareOut, CodeIcon, GitBranchIcon } from "@phosphor-icons/react";
 
 type Project = {
   name: string;
@@ -18,8 +18,15 @@ type Project = {
 
 const projects: Project[] = [
   {
+    name: "ma-tf",
+    url: "https://m4t.tf",
+    topics: "Astro · React · TypeScript",
+    description: "Personal website built with Astro, React, and Tailwind CSS.",
+    icon: <GitBranchIcon className="size-5" aria-hidden="true" />,
+  },
+  {
     name: "135ify",
-    url: "https://github.com/ma-tf/135ify",
+    url: "https://135ify.m4t.tf",
     topics: "React · TypeScript · Image Processing",
     description: "Give digital images an analogue look with real 135 film grain scans.",
     icon: <CodeIcon className="size-5" aria-hidden="true" />,
@@ -37,13 +44,6 @@ const projects: Project[] = [
     topics: "Go · Docker · TUI",
     description: "TUI for monitoring Docker Compose projects.",
     icon: <CodeIcon className="size-5" aria-hidden="true" />,
-  },
-  {
-    name: "ma-tf",
-    url: "https://github.com/ma-tf/ma-tf",
-    topics: "Astro · React · TypeScript",
-    description: "Personal website built with Astro, React, and Tailwind CSS.",
-    icon: <GitBranchIcon className="size-5" aria-hidden="true" />,
   },
 ];
 
@@ -65,16 +65,17 @@ export function ProjectsPreview() {
             {projects.map((project) => (
               <div key={project.name} className="relative mx-auto max-w-100 md:max-w-none">
                 <img
-                  src="/project-container.png"
+                  src={`${import.meta.env.R2_PUBLIC_URL}/projects/project-container.png`}
                   alt=""
                   className="block h-auto w-full md:scale-100"
                 />
                 <div className="absolute inset-0 flex flex-col justify-center px-12 md:p-14 xl:p-10">
                   <a
                     href={project.url}
-                    className="text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
+                    className="inline-flex items-center gap-1 text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
                   >
                     {project.name}
+                    <ArrowSquareOut className="size-4" aria-hidden="true" />
                   </a>
                   <span className="text-xs uppercase">{project.topics}</span>
                   <span className="mt-2 text-sm text-muted-foreground">{project.description}</span>

@@ -43,7 +43,7 @@ const [oldHouseSrc, japanSrc] = await Promise.all([
 
 const images: ImageMap = {
   "vignettes/bolex-bg-dither.png": `${r2}/vignettes/bolex-bg-dither.png`,
-  "vignettes/bolex-fg-dither.png": `${r2}/vignettes/bolex-fg-dither.png`,
+  "vignettes/bolex-fg-dither-anon.png": `${r2}/vignettes/bolex-fg-dither-anon.png`,
   "graphics/old house.png": oldHouseSrc,
   "music/20251014_Japan 6_19.jpg": japanSrc,
 };
@@ -52,13 +52,7 @@ const images: ImageMap = {
 <Layout>
   <ModeToggle client:load />
   <Home />
-  {
-    previews.blog && (
-      <div class="flex justify-center py-8 0">
-        <BlogPreview posts={recentPosts} />
-      </div>
-    )
-  }
+  {previews.blog && <BlogPreview posts={recentPosts} />}
   {previews.projects && <ProjectsPreview />}
   {previews.photos && <PhotosPreview />}
   {previews.vignettes && <VignettesPreview images={images} />}
