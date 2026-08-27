@@ -63,9 +63,13 @@ export function ProjectsPreview() {
           </p>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
             {projects.map((project) => (
-              <div key={project.name} className="relative">
-                <img src="/project-container.png" alt="" className="block h-auto w-full" />
-                <div className="absolute inset-0 flex flex-col justify-center p-16 md:p-14 xl:p-10">
+              <div key={project.name} className="relative mx-auto max-w-100 md:max-w-none">
+                <img
+                  src="/project-container.png"
+                  alt=""
+                  className="block h-auto w-full md:scale-100"
+                />
+                <div className="absolute inset-0 flex flex-col justify-center px-12 md:p-14 xl:p-10">
                   <a
                     href={project.url}
                     className="text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"

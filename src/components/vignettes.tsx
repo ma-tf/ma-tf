@@ -29,8 +29,8 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
         <SectionSubtitle className="col-span-2">
           Experimental motion work; exploring through the lens.
         </SectionSubtitle>
-        <SectionContent className="grid grid-cols-9 gap-24">
-          <div className="relative col-span-3 aspect-4/3 self-center overflow-hidden border border-foreground">
+        <SectionContent className="grid grid-cols-1 gap-12 md:grid-cols-9 md:gap-24">
+          <div className="relative aspect-4/3 self-center overflow-hidden border border-foreground md:col-span-3">
             <img
               src={bgDitherSrc}
               alt=""
@@ -42,7 +42,7 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
               className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
             />
           </div>
-          <div className="col-span-3 flex flex-col gap-4 indent-8 text-lg text-foreground">
+          <div className="flex flex-col gap-4 indent-8 text-lg text-foreground md:col-span-3">
             <p>
               A series of short motion studies, shot on location in the quiet hours. Small
               observations of a place and the details that give it character. Photographs freeze a
@@ -74,23 +74,23 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
               size="lg"
             />
           </div>
-          <div className="col-span-3 flex items-end justify-center gap-4">
-            <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
+          <div className="flex flex-col gap-4 md:col-span-3 md:items-end md:justify-center">
+            <div className="flex shrink-0 flex-col border border-foreground px-3 py-2 md:size-48">
               <span className="text-2xl">Vision3 Color Negative</span>
               <span className="text-xs uppercase">KODAK</span>
               <div className="mt-auto pt-4">
                 <FilmReelIcon className="size-5" aria-hidden="true" />
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="flex shrink-0 flex-col border border-foreground px-3 py-2 md:size-48">
                 <span className="text-2xl">Vario-Switar 16-100mm</span>
                 <span className="text-xs uppercase">Kern-Paillard</span>
                 <div className="mt-auto pt-4">
                   <ApertureIcon className="size-5" aria-hidden="true" />
                 </div>
               </div>
-              <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
+              <div className="flex shrink-0 flex-col border border-foreground px-3 py-2 md:size-48">
                 <span className="text-2xl">4mm f/2.8 Fisheye</span>
                 <span className="text-xs uppercase">LAOWA</span>
                 <div className="mt-auto pt-4">

@@ -8,6 +8,7 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from "@components/section";
+import { Button } from "@components/ui/button";
 import { cn } from "@lib/cn";
 import {
   CassetteTapeIcon,
@@ -29,7 +30,7 @@ export function MusicPreview({ images }: { images: ImageMap }) {
         <SectionSubtitle className="border border-foreground p-4 pt-40">
           Original compositions, remixes, and live recordings.
         </SectionSubtitle>
-        <div className="col-start-2 row-span-2">
+        <div className="col-start-2 row-span-2 hidden md:block">
           <img src={japanSrc} alt="" className="border border-foreground" />
         </div>
         <SectionContent>
@@ -42,7 +43,10 @@ export function MusicPreview({ images }: { images: ImageMap }) {
               forward. The ambient work moves slower, toward darker, more sinister soundscapes.
               Drone and texture over melody, made to fill a room rather than hold a hook.
             </p>
-            <div className="grid grid-cols-3 items-start gap-4">
+            <div className="row-span-2 block md:hidden">
+              <img src={japanSrc} alt="" className="border border-foreground" />
+            </div>
+            <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
               <div className="flex flex-col border border-foreground px-3 py-2">
                 <span className="text-2xl">WM-D6C Walkman Professional</span>
                 <span className="text-xs uppercase">Sony</span>
@@ -75,6 +79,12 @@ export function MusicPreview({ images }: { images: ImageMap }) {
                 </div>
               </div>
             </div>
+            <Button
+              variant="outline"
+              render={<a href="/music">Go to Music</a>}
+              className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              size="lg"
+            />
           </div>
           {/* <p className="max-w-md indent-8 text-lg text-foreground">
           Everything is made inside FL Studio, my DAW of choice. Sounds come from sample CDs by

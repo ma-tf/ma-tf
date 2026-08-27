@@ -19,7 +19,7 @@ export function PhotosPreview() {
       </SectionHeader>
       <SectionSubtitle>Digital and analogue photographs.</SectionSubtitle>
       <SectionContent>
-        <div className="grid grid-cols-3 items-start gap-4">
+        <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
           <div className="flex flex-col gap-4 indent-8 text-lg">
             <p>
               In my spare time I am an amateur photographer. I shoot on both digital and film, and
