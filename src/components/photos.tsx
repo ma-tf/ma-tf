@@ -12,7 +12,7 @@ import { CameraIcon, FilmStripIcon } from "@phosphor-icons/react";
 
 export function PhotosPreview() {
   return (
-    <Section className="py-24">
+    <Section className="mx-auto max-w-480 py-24">
       <SectionHeader>
         <SectionNumber />
         <SectionTitle href="/photos">Photography</SectionTitle>
@@ -38,12 +38,10 @@ export function PhotosPreview() {
             </p>
             <Button
               variant="outline"
-              render={<a href="/photos" />}
+              render={<a href="/photos">View photographs</a>}
               className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
               size="lg"
-            >
-              View photographs
-            </Button>
+            />
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col border border-foreground px-3 py-2">

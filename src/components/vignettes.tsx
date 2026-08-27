@@ -20,88 +20,88 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
   const bgDitherSrc = images["vignettes/bolex-bg-dither.png"];
   const fgDitherSrc = images["vignettes/bolex-fg-dither.png"];
   return (
-    <Section className="bg-slate-100 py-24 dark:bg-slate-900">
-      <SectionHeader>
-        <SectionNumber />
-        <SectionTitle href="/vignettes">Vignettes</SectionTitle>
-      </SectionHeader>
-      <SectionSubtitle className="col-span-2">
-        Experimental motion work; exploring through the lens.
-      </SectionSubtitle>
-      <SectionContent className="grid grid-cols-9 gap-24">
-        <div className="relative col-span-3 aspect-4/3 self-center overflow-hidden border border-foreground">
-          <img
-            src={bgDitherSrc}
-            alt=""
-            className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
-          />
-          <img
-            src={fgDitherSrc}
-            alt=""
-            className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
-          />
-        </div>
-        <div className="col-span-3 flex flex-col gap-4 indent-8 text-lg text-foreground">
-          <p>
-            A series of short motion studies, shot on location in the quiet hours. Small
-            observations of a place and the details that give it character. Photographs freeze a
-            single instant, but some places only come alive in motion. The speed of a moving train,
-            the swing of shoes on a wire, the rolling waves on a beach during sunset. These studies
-            are an attempt to hold on to those moving moments.
-          </p>
-          <p>
-            The <span className="italic">Bolex H-16 SBM</span> offers a portable way to create true
-            filmic experiences without electricity as a hard requirement. Using 30 metre film reels
-            and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
-            approximately 2 minutes and 45 seconds of footage per reel. For my own convenience, I
-            use a battery powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
-            The battery powers the auto exposure and the in-built electric motor for zooming.
-          </p>
-          <p>
-            Everything is shot on 16mm film. Its grain and tonal latitude give the footage a texture
-            that digital struggles to match, and the format's soft, rounded frame corners come
-            straight from the lens and gate rather than any filter. Shooting on film is an exercise
-            in economy. Each scene is a single take with no chance to delete or reshoot without
-            paying for the footage again, so every second has to be deliberate. That constraint is
-            part of what makes the format so rewarding.
-          </p>
-          <p></p>
-          <Button
-            variant="outline"
-            render={<a href="/vignettes" />}
-            className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
-            size="lg"
-          >
-            View vignettes
-          </Button>
-        </div>
-        <div className="col-span-3 flex items-end justify-center gap-4">
-          <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
-            <span className="text-2xl">Vision3 Color Negative</span>
-            <span className="text-xs uppercase">KODAK</span>
-            <div className="mt-auto pt-4">
-              <FilmReelIcon className="size-5" aria-hidden="true" />
-            </div>
+    <div className="bg-slate-100 dark:bg-slate-900">
+      <Section className="mx-auto max-w-480 py-24">
+        <SectionHeader>
+          <SectionNumber />
+          <SectionTitle href="/vignettes">Vignettes</SectionTitle>
+        </SectionHeader>
+        <SectionSubtitle className="col-span-2">
+          Experimental motion work; exploring through the lens.
+        </SectionSubtitle>
+        <SectionContent className="grid grid-cols-9 gap-24">
+          <div className="relative col-span-3 aspect-4/3 self-center overflow-hidden border border-foreground">
+            <img
+              src={bgDitherSrc}
+              alt=""
+              className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
+            />
+            <img
+              src={fgDitherSrc}
+              alt=""
+              className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
+            />
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="col-span-3 flex flex-col gap-4 indent-8 text-lg text-foreground">
+            <p>
+              A series of short motion studies, shot on location in the quiet hours. Small
+              observations of a place and the details that give it character. Photographs freeze a
+              single instant, but some places only come alive in motion. The speed of a moving
+              train, the swing of shoes on a wire, the rolling waves on a beach during sunset. These
+              studies are an attempt to hold on to those moving moments.
+            </p>
+            <p>
+              The <span className="italic">Bolex H-16 SBM</span> offers a portable way to create
+              true filmic experiences without electricity as a hard requirement. Using 30 metre film
+              reels and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
+              approximately 2 minutes and 45 seconds of footage per reel. For my own convenience, I
+              use a battery powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
+              The battery powers the auto exposure and the in-built electric motor for zooming.
+            </p>
+            <p>
+              Everything is shot on 16mm film. Its grain and tonal latitude give the footage a
+              texture that digital struggles to match, and the format's soft, rounded frame corners
+              come straight from the lens and gate rather than any filter. Shooting on film is an
+              exercise in economy. Each scene is a single take with no chance to delete or reshoot
+              without paying for the footage again, so every second has to be deliberate. That
+              constraint is part of what makes the format so rewarding.
+            </p>
+            <p></p>
+            <Button
+              variant="outline"
+              render={<a href="/vignettes">View vignettes</a>}
+              className="mt-6 w-fit rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              size="lg"
+            />
+          </div>
+          <div className="col-span-3 flex items-end justify-center gap-4">
             <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
-              <span className="text-2xl">Vario-Switar 16-100mm</span>
-              <span className="text-xs uppercase">Kern-Paillard</span>
+              <span className="text-2xl">Vision3 Color Negative</span>
+              <span className="text-xs uppercase">KODAK</span>
               <div className="mt-auto pt-4">
-                <ApertureIcon className="size-5" aria-hidden="true" />
+                <FilmReelIcon className="size-5" aria-hidden="true" />
               </div>
             </div>
-            <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
-              <span className="text-2xl">4mm f/2.8 Fisheye</span>
-              <span className="text-xs uppercase">LAOWA</span>
-              <div className="mt-auto pt-4">
-                <ApertureIcon className="size-5" aria-hidden="true" />
+            <div className="flex flex-col gap-4">
+              <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
+                <span className="text-2xl">Vario-Switar 16-100mm</span>
+                <span className="text-xs uppercase">Kern-Paillard</span>
+                <div className="mt-auto pt-4">
+                  <ApertureIcon className="size-5" aria-hidden="true" />
+                </div>
+              </div>
+              <div className="flex size-48 shrink-0 flex-col border border-foreground px-3 py-2">
+                <span className="text-2xl">4mm f/2.8 Fisheye</span>
+                <span className="text-xs uppercase">LAOWA</span>
+                <div className="mt-auto pt-4">
+                  <ApertureIcon className="size-5" aria-hidden="true" />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </SectionContent>
-    </Section>
+        </SectionContent>
+      </Section>
+    </div>
   );
 }
 

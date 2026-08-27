@@ -12,7 +12,7 @@ import {
 export function GraphicsPreview({ images }: { images: ImageMap }) {
   const oldHouseSrc = images["graphics/old house.png"];
   return (
-    <Section className="py-24">
+    <Section className="mx-auto max-w-480 py-24">
       <SectionHeader>
         <SectionNumber />
         <SectionTitle href="/graphics">Graphics</SectionTitle>

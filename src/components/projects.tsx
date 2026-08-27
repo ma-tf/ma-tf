@@ -49,33 +49,38 @@ const projects: Project[] = [
 
 export function ProjectsPreview() {
   return (
-    <Section className="bg-slate-200 py-24 dark:bg-slate-800">
-      <SectionHeader>
-        <SectionNumber />
-        <SectionTitle href="https://github.com/ma-tf">Projects</SectionTitle>
-      </SectionHeader>
-      <SectionSubtitle>Things I build and ship.</SectionSubtitle>
-      <SectionContent>
-        <p className="max-w-md indent-8 text-lg text-foreground">
-          A selection of projects I have built in my spare time, spanning film photography tools,
-          terminal interfaces, and this very site.
-        </p>
-        <div className="grid grid-cols-4 gap-4">
-          {projects.map((project) => (
-            <div key={project.name} className="flex flex-col border border-foreground px-3 py-2">
-              <a
-                href={project.url}
-                className="text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-              >
-                {project.name}
-              </a>
-              <span className="text-xs uppercase">{project.topics}</span>
-              <span className="mt-2 text-sm text-muted-foreground">{project.description}</span>
-              <div className="mt-auto pt-4">{project.icon}</div>
-            </div>
-          ))}
-        </div>
-      </SectionContent>
-    </Section>
+    <div className="bg-slate-200 dark:bg-slate-800">
+      <Section className="mx-auto max-w-480 py-24">
+        <SectionHeader>
+          <SectionNumber />
+          <SectionTitle href="https://github.com/ma-tf">Projects</SectionTitle>
+        </SectionHeader>
+        <SectionSubtitle>Things I build and ship.</SectionSubtitle>
+        <SectionContent>
+          <p className="max-w-md indent-8 text-lg text-foreground">
+            A selection of projects I have built in my spare time, spanning film photography tools,
+            terminal interfaces, and this very site.
+          </p>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {projects.map((project) => (
+              <div key={project.name} className="relative">
+                <img src="/project-container.png" alt="" className="block h-auto w-full" />
+                <div className="absolute inset-0 flex flex-col justify-center p-16 md:p-14 xl:p-10">
+                  <a
+                    href={project.url}
+                    className="text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
+                  >
+                    {project.name}
+                  </a>
+                  <span className="text-xs uppercase">{project.topics}</span>
+                  <span className="mt-2 text-sm text-muted-foreground">{project.description}</span>
+                  <div className="pt-4">{project.icon}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionContent>
+      </Section>
+    </div>
   );
 }
