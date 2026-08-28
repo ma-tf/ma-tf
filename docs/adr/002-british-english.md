@@ -1,9 +1,5 @@
 # ADR 002: British English
 
-## Status
-
-Accepted
-
 ## Decision
 
 Use British English for all documentation, UI copy, and code comments.

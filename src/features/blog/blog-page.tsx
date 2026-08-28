@@ -1,4 +1,4 @@
-import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@components/blog";
+import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
 import { useParallax } from "@hooks/use-parallax";
 
 type PlainPost = { slug: string; title: string; description: string; pubDate: string };

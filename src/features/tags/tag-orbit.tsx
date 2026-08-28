@@ -1,4 +1,4 @@
-import { TagLink } from "@components/tags";
+import { TagLink } from "@features/tags/tags";
 import { useReducedMotion } from "@hooks/use-reduced-motion";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
@@ -20,6 +20,7 @@ const OPACITY_RANGE = 0.65;
 const EDGE_PADDING = 96;
 const BASE_ANGLE = -Math.PI / 2;
 const SNAP_DURATION = 400;
+const DEG_TO_RAD = Math.PI / 180;
 
 // --- sizing ---
 
@@ -50,6 +51,8 @@ function useOrbitInput(
   stageRef: React.RefObject<HTMLDivElement | null>,
   reduced: boolean,
   n: number,
+  arcSize: number,
+  startAngle: number,
 ) {
   const rotationRef = useRef(0);
   const velocityRef = useRef(0);
@@ -58,11 +61,12 @@ function useOrbitInput(
   const targetRotationRef = useRef<number | null>(null);
   const snapStartRef = useRef<number | null>(null);
 
-  const step = (Math.PI * 2) / n;
+  const step = arcSize / n;
 
   const snapToNearest = useCallback(() => {
     const current = rotationRef.current;
-    const nearest = Math.round((current + BASE_ANGLE) / step) * step - BASE_ANGLE;
+    const nearest =
+      Math.round((current + BASE_ANGLE - startAngle) / step) * step - BASE_ANGLE + startAngle;
     if (Math.abs(nearest - current) < 0.001) return;
     if (reduced) {
       rotationRef.current = nearest;
@@ -165,17 +169,23 @@ function createPlacer({
   n,
   radius,
   itemRefs,
+  arcSize,
+  startAngle,
 }: {
   n: number;
   radius: number;
   itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>;
+  arcSize: number;
+  startAngle: number;
 }): PlaceFn {
   if (radius <= 0) return () => {};
   return (angle) => {
     for (let i = 0; i < n; i++) {
       const el = itemRefs.current[i];
       if (!el) continue;
-      const a = BASE_ANGLE + (i / n) * Math.PI * 2 + angle;
+      const raw = (i / n) * arcSize + angle;
+      const wrapped = ((raw % arcSize) + arcSize) % arcSize;
+      const a = BASE_ANGLE + startAngle + wrapped;
       const x = radius * Math.cos(a);
       const y = radius * ELLIPSE_FLATNESS * Math.sin(a);
       const depth = (Math.sin(a) + 1) / 2;
@@ -276,9 +286,13 @@ function OrbitItems({
 export function TagOrbit({
   tags,
   postsByTag,
+  startDeg = 0,
+  endDeg = 360,
 }: {
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
+  startDeg?: number;
+  endDeg?: number;
 }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -287,26 +301,27 @@ export function TagOrbit({
   const radius = useStageRadius(stageRef);
   const items = selected ? (postsByTag[selected.tag] ?? []) : tags;
   const n = items.length;
-  const { rotationRef, placeRef, nudge } = useOrbitInput(stageRef, reduced, n);
+  const startAngle = startDeg * DEG_TO_RAD;
+  const arcSize = (endDeg - startDeg) * DEG_TO_RAD;
+  const { rotationRef, placeRef, nudge } = useOrbitInput(stageRef, reduced, n, arcSize, startAngle);
 
   useLayoutEffect(() => {
     itemRefs.current.length = n;
-    const place = createPlacer({ n, radius, itemRefs });
+    const place = createPlacer({ n, radius, itemRefs, arcSize, startAngle });
     placeRef.current = place;
     placeRef.current(rotationRef.current);
-  }, [n, radius, placeRef, rotationRef]);
+  }, [n, radius, placeRef, rotationRef, arcSize, startAngle]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
-      nudge(-(Math.PI * 2) / n);
+      nudge(-arcSize / n);
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
-      nudge((Math.PI * 2) / n);
+      nudge(arcSize / n);
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      const step = (Math.PI * 2) / n;
-      const frontIndex = Math.round((-BASE_ANGLE - rotationRef.current) / step);
+      const frontIndex = Math.round((Math.PI - startAngle - rotationRef.current) / (arcSize / n));
       const idx = ((frontIndex % n) + n) % n;
       const item = items[idx];
       if (!item) return;

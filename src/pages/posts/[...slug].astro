@@ -11,8 +11,8 @@ import {
   PostTag,
   PostTags,
   PostTitle,
-} from "@components/post";
-import { postComponents } from "@components/post-content";
+} from "@features/posts/post";
+import { postComponents } from "@features/posts/post-content";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");

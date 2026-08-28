@@ -1,9 +1,5 @@
 # ADR 003: No `transition: all`
 
-## Status
-
-Accepted
-
 ## Context
 
 `transition: all` (Tailwind `transition-all`) animates every property that

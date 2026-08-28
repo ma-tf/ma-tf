@@ -1,8 +1,8 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import ExperienceSection from "@components/experience.astro";
-import EducationSection from "@components/education.astro";
-import ProjectsSection from "@components/projects.astro";
+import ExperienceSection from "@features/cv/experience.astro";
+import EducationSection from "@features/cv/education.astro";
+import ProjectsSection from "@features/cv/projects.astro";
 import profile from "@content/profile.json";
 import { ModeToggle } from "@components/ModeToggle";
 import {
@@ -10,7 +10,7 @@ import {
 	CurriculumVitaeTitle,
 	CurriculumVitaeName,
 	CurriculumVitaeRole,
-} from "@components/cv";
+} from "@features/cv/cv";
 ---
 
 <Layout>

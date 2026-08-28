@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
-import { TagOrbit } from "@components/tag-orbit";
+import { TagOrbit } from "@features/tags/tag-orbit";
 
 const posts = await getCollection("blog");
 const tagCounts = new Map<string, number>();

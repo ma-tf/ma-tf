@@ -1,4 +1,4 @@
-import { Vignettes } from "@components/vignettes";
+import { Vignettes } from "@features/vignettes/vignettes";
 import { cn } from "@lib/cn";
 import { useState } from "react";
 

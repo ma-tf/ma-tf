@@ -3,7 +3,7 @@ import { getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import PhotoColumn from "@components/photo-column.astro";
+import PhotoColumn from "@features/photos/photo-column.astro";
 
 const s3 = new S3Client({
   region: "auto",

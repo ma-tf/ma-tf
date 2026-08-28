@@ -1,9 +1,5 @@
 # ADR 001: Page Component Structure
 
-## Status
-
-Accepted
-
 ## Context
 
 The project has multiple Astro pages that each have corresponding React components. The component naming and structure was inconsistent across pages:

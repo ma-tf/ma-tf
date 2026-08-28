@@ -4,13 +4,14 @@
     "paths": {
       "@/*": ["./*"],
       "@components/*": ["./src/components/*"],
-      "@ui/*": ["./src/components/ui/*"],
       "@content/*": ["./src/content/*"],
       "@data/*": ["./src/data/*"],
+      "@features/*": ["./src/features/*"],
+      "@hooks/*": ["./src/hooks/*"],
       "@layouts/*": ["./src/layouts/*"],
       "@lib/*": ["./src/lib/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@pages/*": ["./src/pages/*"]
+      "@pages/*": ["./src/pages/*"],
+      "@ui/*": ["./src/components/ui/*"]
     },
     "target": "es2023",
     "lib": ["ES2023", "DOM"],

@@ -3,14 +3,14 @@ import Layout from "@layouts/Layout.astro";
 import { getImage } from "astro:assets";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { BandcampEmbed, MixcloudEmbed } from "@components/embedded-media";
+import { BandcampEmbed, MixcloudEmbed } from "@features/music/embedded-media";
 import {
 	Music,
 	MusicContent,
 	MusicHeader,
 	MusicTitle,
 	MusicDescription,
-} from "@components/music";
+} from "@features/music/music";
 import { ModeToggle } from "@components/ModeToggle";
 import Footer from "@layouts/footer.astro";
 

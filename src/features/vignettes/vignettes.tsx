@@ -1,6 +1,5 @@
 import type { ImageMap } from "@lib/images";
 
-import { VideoPlayer } from "@components/mux-player";
 import {
   Section,
   SectionContent,
@@ -12,6 +11,7 @@ import {
 import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
 import { Spinner } from "@components/ui/spinner";
+import { VideoPlayer } from "@features/vignettes/mux-player";
 import { cn } from "@lib/cn";
 import { ApertureIcon, FilmReelIcon } from "@phosphor-icons/react";
 import { useState } from "react";

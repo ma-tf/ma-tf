@@ -2,8 +2,8 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
-import { PostList } from "@components/post-list.tsx";
-import { Tags, TagsTitle, TagsBackLink } from "@components/tags";
+import { PostList } from "@features/tags/post-list.tsx";
+import { Tags, TagsTitle, TagsBackLink } from "@features/tags/tags";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
