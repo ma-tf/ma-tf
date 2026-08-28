@@ -6,7 +6,7 @@ type PreviewPost = { slug: string; title: string; pubDate: string };
 
 export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
   return (
-    <div className="mx-auto max-w-6xl py-24">
+    <div className="mx-auto max-w-6xl px-8 py-24">
       <div className="flex items-center gap-2">
         <h2 className="text-lg uppercase">Latest posts</h2>
         <a
@@ -19,12 +19,12 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
       </div>
       <ul className="flex flex-col">
         {posts.map((post) => (
-          <li key={post.slug} className="py-6">
-            <a href={`/posts/${post.slug}`} className="group flex gap-2 hover:underline">
-              <span className="text-xl font-medium transition-colors group-hover:text-foreground/70">
+          <li key={post.slug} className="py-2">
+            <a href={`/posts/${post.slug}`} className="group flex flex-col hover:underline">
+              <span className="truncate text-xl font-semibold transition-colors group-hover:text-foreground/70 md:text-clip">
                 {post.title}
               </span>
-              <time dateTime={post.pubDate} className="shrink-0 text-lg text-muted-foreground">
+              <time dateTime={post.pubDate} className="shrink-0 text-lg text-foreground">
                 {post.pubDate.split("T")[0]}
               </time>
             </a>
