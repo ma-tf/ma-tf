@@ -1,4 +1,3 @@
-import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
 import { computePositions } from "@features/tags/orbit-layout";
@@ -38,16 +37,29 @@ function useStageRadius(ref: React.RefObject<HTMLDivElement | null>): number {
 // --- subcomponents ---
 
 function SelectedOverlay() {
-  const { selected, back } = usePosts();
+  const { selected, postsByTag, back } = usePosts();
   if (!selected) return null;
+  const posts = postsByTag[selected.tag] ?? [];
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-      <button type="button" onClick={back} className="pointer-events-auto text-center">
+      <div className="pointer-events-auto max-h-[80vh] w-full max-w-2xl overflow-y-auto px-8 text-center">
         <span className="block text-5xl font-bold">{selected.tag}</span>
-        <span className="block text-sm text-muted-foreground">
-          {selected.count} posts — click to go back
-        </span>
-      </button>
+        <ul className="mt-6 flex flex-col gap-3">
+          {posts.map((post) => (
+            <li key={post.slug}>
+              <a
+                href={`/posts/${post.slug}`}
+                className="block text-2xl font-semibold underline-offset-4 hover:underline"
+              >
+                {post.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <button type="button" onClick={back} className="mt-6 text-muted-foreground">
+          ← back
+        </button>
+      </div>
     </div>
   );
 }
@@ -71,21 +83,6 @@ const OrbitTagLink = forwardRef(function OrbitTagLink(
   );
 });
 
-const OrbitPostLink = forwardRef(function OrbitPostLink(
-  { item }: { item: PlainPost },
-  ref: React.Ref<HTMLAnchorElement>,
-) {
-  return (
-    <a
-      ref={ref}
-      href={`/posts/${item.slug}`}
-      className="absolute top-0 left-0 max-w-56 truncate rounded bg-secondary px-2 py-1 text-sm"
-    >
-      {item.title}
-    </a>
-  );
-});
-
 function OrbitItems({ itemRefs }: { itemRefs: React.RefObject<(HTMLAnchorElement | null)[]> }) {
   const { items, select } = usePosts();
 
@@ -98,13 +95,9 @@ function OrbitItems({ itemRefs }: { itemRefs: React.RefObject<(HTMLAnchorElement
 
   return (
     <>
-      {items.map((item, i) =>
-        "tag" in item ? (
-          <OrbitTagLink key={item.tag} item={item} ref={setRef(i)} onSelectTag={select} />
-        ) : (
-          <OrbitPostLink key={item.slug} item={item} ref={setRef(i)} />
-        ),
-      )}
+      {items.map((item, i) => (
+        <OrbitTagLink key={item.tag} item={item} ref={setRef(i)} onSelectTag={select} />
+      ))}
     </>
   );
 }
@@ -112,7 +105,7 @@ function OrbitItems({ itemRefs }: { itemRefs: React.RefObject<(HTMLAnchorElement
 // --- main component ---
 
 function OrbitScene() {
-  const { n, startAngle, arcSize } = usePosts();
+  const { items, startAngle, arcSize } = usePosts();
   const stageRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const radius = useStageRadius(stageRef);
@@ -120,10 +113,10 @@ function OrbitScene() {
   const { getRotation, onKeyDown } = useOrbitInteraction({ stageRef, itemRefs, radius });
 
   useEffect(() => {
-    itemRefs.current.length = n;
-    const positions = computePositions(n, radius, arcSize, startAngle, getRotation());
+    itemRefs.current.length = items.length;
+    const positions = computePositions(items.length, radius, arcSize, startAngle, getRotation());
     applyPositions(itemRefs, positions);
-  }, [n, radius, arcSize, startAngle, itemRefs, getRotation]);
+  }, [items.length, radius, arcSize, startAngle, itemRefs, getRotation]);
 
   return (
     <div

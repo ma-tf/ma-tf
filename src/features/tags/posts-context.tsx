@@ -9,8 +9,7 @@ export type PostsContextValue = {
   selected: Tag | null;
   select: (tag: Tag) => void;
   back: () => void;
-  items: (Tag | PlainPost)[];
-  n: number;
+  items: Tag[];
   startAngle: number;
   arcSize: number;
 };
@@ -31,7 +30,6 @@ export function PostsProvider({
   children: React.ReactNode;
 }) {
   const [selected, setSelected] = useState<Tag | null>(null);
-  const items = selected ? (postsByTag[selected.tag] ?? []) : tags;
   const startAngle = startDeg * (Math.PI / 180);
   const arcSize = (endDeg - startDeg) * (Math.PI / 180);
 
@@ -43,8 +41,7 @@ export function PostsProvider({
         selected,
         select: setSelected,
         back: () => setSelected(null),
-        items,
-        n: items.length,
+        items: tags,
         startAngle,
         arcSize,
       }}

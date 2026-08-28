@@ -18,19 +18,19 @@ export function useOrbitInteraction(config: {
   radius: number;
 }): OrbitInteraction {
   const { stageRef, itemRefs, radius } = config;
-  const { selected, select, back, items, n, startAngle, arcSize } = usePosts();
+  const { selected, select, back, items, startAngle, arcSize } = usePosts();
   const reduced = useReducedMotion();
 
   const render = useCallback(
     (angle: number) => {
-      const positions = computePositions(n, radius, arcSize, startAngle, angle);
+      const positions = computePositions(items.length, radius, arcSize, startAngle, angle);
       applyPositions(itemRefs, positions);
     },
-    [itemRefs, n, radius, arcSize, startAngle],
+    [itemRefs, items.length, radius, arcSize, startAngle],
   );
 
   const { nudge, applyWheel, getRotation } = useOrbitEngine(
-    n,
+    items.length,
     arcSize,
     startAngle,
     reduced,
@@ -54,21 +54,16 @@ export function useOrbitInteraction(config: {
       if (intent.type === "none") return;
       e.preventDefault();
       if (intent.type === "nudge") {
-        nudge(intent.delta * (arcSize / n));
+        nudge(intent.delta * (arcSize / items.length));
       } else if (intent.type === "activate") {
         const rotation = getRotation();
-        const item = getActivatedItem(rotation, items, n, arcSize, startAngle);
-        if (!item) return;
-        if (selected && "slug" in item) {
-          window.location.href = `/posts/${item.slug}`;
-        } else if (!selected && "tag" in item) {
-          select(item);
-        }
+        const tag = getActivatedItem(rotation, items, items.length, arcSize, startAngle);
+        if (tag) select(tag);
       } else if (intent.type === "back") {
         back();
       }
     },
-    [nudge, getRotation, arcSize, n, items, startAngle, selected, select, back],
+    [nudge, getRotation, arcSize, items.length, startAngle, selected, select, back],
   );
 
   return { nudge, getRotation, onKeyDown };

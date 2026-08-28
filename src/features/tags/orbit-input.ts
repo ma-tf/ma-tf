@@ -1,6 +1,6 @@
 import { frontIndexFor } from "@features/tags/orbit-engine";
 
-export type OrbitIntent =
+type OrbitIntent =
   | { type: "nudge"; delta: number }
   | { type: "activate" }
   | { type: "back" }
