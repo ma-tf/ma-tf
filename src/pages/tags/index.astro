@@ -1,47 +1,18 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { getCollection } from "astro:content";
 import { ModeToggle } from "@components/ModeToggle";
 import { TagOrbit } from "@features/tags/tag-orbit";
+import { getBlogData } from "@features/tags/tag-data";
 
-const posts = await getCollection("blog");
-const tagCounts = new Map<string, number>();
-const postsByTag = new Map<
-  string,
-  { slug: string; title: string; description: string; pubDate: string }[]
->();
-
-for (const post of posts) {
-  if (post.data.draft) continue;
-  for (const tag of post.data.tags) {
-    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-    const entry = {
-      slug: post.data.slug,
-      title: post.data.title,
-      description: post.data.description,
-      pubDate: post.data.pubDate.toISOString(),
-    };
-    const list = postsByTag.get(tag) ?? [];
-    list.push(entry);
-    postsByTag.set(tag, list);
-  }
-}
-
-for (const list of postsByTag.values()) {
-  list.sort((a, b) => b.pubDate.localeCompare(a.pubDate));
-}
-
-const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
-const postsByTagRecord = Object.fromEntries(postsByTag);
+const { posts, tags, postsByTag } = await getBlogData();
 ---
 
 <Layout>
   <ModeToggle client:load />
   <TagOrbit
-    tags={sortedTags.map(([tag, count]) => ({ tag, count }))}
-    postsByTag={postsByTagRecord}
-    startDeg={100}
-    endDeg={170}
+    posts={posts}
+    tags={tags}
+    postsByTag={postsByTag}
     client:load
   />
 </Layout>

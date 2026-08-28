@@ -1,7 +1,7 @@
+import type { PlainPost } from "@features/blog/post-data";
+
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
 import { useParallax } from "@hooks/use-parallax";
-
-type PlainPost = { slug: string; title: string; description: string; pubDate: string };
 
 const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
 

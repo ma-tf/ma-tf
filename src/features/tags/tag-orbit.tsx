@@ -1,17 +1,17 @@
+import type { PlainPost } from "@features/blog/post-data";
+import type { Tag } from "@features/tags/tag-data";
+
 import {
   BASE_ANGLE,
   createOrbitEngine,
   frontIndexFor,
   type OrbitEngine,
 } from "@features/tags/orbit-engine";
+import { PostsProvider, usePosts, type PostsContextValue } from "@features/tags/posts-context";
 import { TagLink } from "@features/tags/tags";
 import { useReducedMotion } from "@hooks/use-reduced-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// --- types ---
-
-export type Tag = { tag: string; count: number };
-export type PlainPost = { slug: string; title: string; description: string; pubDate: string };
 type OrbitItem = Tag | PlainPost;
 
 // --- constants ---
@@ -23,6 +23,8 @@ const OPACITY_BACK = 0.35;
 const OPACITY_RANGE = 0.65;
 const EDGE_PADDING = 96;
 const DEG_TO_RAD = Math.PI / 180;
+const START_DEG = 100;
+const END_DEG = 170;
 
 // --- sizing ---
 
@@ -217,22 +219,13 @@ function OrbitItems({
 
 // --- main component ---
 
-export function TagOrbit({
-  tags,
-  postsByTag,
-  startDeg = 0,
-  endDeg = 360,
-}: {
-  tags: Tag[];
-  postsByTag: Record<string, PlainPost[]>;
-  startDeg?: number;
-  endDeg?: number;
-}) {
+function OrbitStage({ startDeg, endDeg }: { startDeg: number; endDeg: number }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [selected, setSelected] = useState<Tag | null>(null);
   const reduced = useReducedMotion();
   const radius = useStageRadius(stageRef);
+  const { tags, postsByTag } = usePosts();
   const items = selected ? (postsByTag[selected.tag] ?? []) : tags;
   const n = items.length;
   const startAngle = startDeg * DEG_TO_RAD;
@@ -280,5 +273,13 @@ export function TagOrbit({
       {selected && <SelectedOverlay selected={selected} onBack={() => setSelected(null)} />}
       <OrbitItems items={items} itemRefs={itemRefs} onSelectTag={setSelected} />
     </div>
+  );
+}
+
+export function TagOrbit({ posts, tags, postsByTag }: PostsContextValue) {
+  return (
+    <PostsProvider posts={posts} tags={tags} postsByTag={postsByTag}>
+      <OrbitStage startDeg={START_DEG} endDeg={END_DEG} />
+    </PostsProvider>
   );
 }

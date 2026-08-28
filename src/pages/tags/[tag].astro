@@ -1,12 +1,12 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { getCollection } from "astro:content";
+import { getRawPosts } from "@features/blog/post-data";
 import { ModeToggle } from "@components/ModeToggle";
 import { PostList } from "@features/tags/post-list.tsx";
 import { Tags, TagsTitle, TagsBackLink } from "@features/tags/tags";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
+  const posts = await getRawPosts();
   const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
 
   return tags.map((tag) => ({

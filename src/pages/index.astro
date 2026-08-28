@@ -9,22 +9,13 @@ import { MusicPreview } from "@features/music/music-preview";
 import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
 import Footer from "@layouts/footer.astro";
-import { getCollection } from "astro:content";
+import { getPosts } from "@features/blog/post-data";
 import { previews } from "@lib/feature-flags";
 import { getImage } from "astro:assets";
 import type { ImageMap } from "@lib/images";
 
-const recentPosts = previews.blog
-  ? (await getCollection("blog"))
-      .filter((post) => !post.data.draft)
-      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-      .slice(0, 4)
-      .map((post) => ({
-        slug: post.data.slug,
-        title: post.data.title,
-        pubDate: post.data.pubDate.toISOString(),
-      }))
-  : [];
+const allPosts = await getPosts();
+const recentPosts = previews.blog ? allPosts.slice(0, 4) : [];
 
 const r2 = import.meta.env.R2_PUBLIC_URL;
 

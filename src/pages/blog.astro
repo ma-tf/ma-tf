@@ -1,22 +1,13 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { getCollection } from "astro:content";
+import { getPosts } from "@features/blog/post-data";
 import { ModeToggle } from "@components/ModeToggle";
 import { BlogPage } from "@features/blog/blog-page";
 
 const backBg = `${import.meta.env.R2_PUBLIC_URL}/blog/blog-bg-back.webp`;
 const frontBg = `${import.meta.env.R2_PUBLIC_URL}/blog/blog-bg-front.webp`;
 
-const posts = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-const plainPosts = posts.map((p) => ({
-  slug: p.data.slug,
-  title: p.data.title,
-  description: p.data.description,
-  pubDate: p.data.pubDate.toISOString(),
-}));
+const plainPosts = await getPosts();
 ---
 
 <Layout>

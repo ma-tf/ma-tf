@@ -1,17 +1,15 @@
 import type { APIContext } from "astro";
 
 import rss from "@astrojs/rss";
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getRawPosts } from "@features/blog/post-data";
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection("blog")).filter(
-    (post: CollectionEntry<"blog">) => !post.data.draft,
-  );
+  const posts = await getRawPosts();
   return rss({
     title: "Matt F | Blog",
     description: "Blog posts by Matt F",
     site: context.site!,
-    items: posts.map((post: CollectionEntry<"blog">) => ({
+    items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
