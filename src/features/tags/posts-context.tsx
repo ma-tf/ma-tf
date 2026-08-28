@@ -1,11 +1,18 @@
 import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 export type PostsContextValue = {
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
+  selected: Tag | null;
+  select: (tag: Tag) => void;
+  back: () => void;
+  items: (Tag | PlainPost)[];
+  n: number;
+  startAngle: number;
+  arcSize: number;
 };
 
 const PostsContext = createContext<PostsContextValue | null>(null);
@@ -13,9 +20,38 @@ const PostsContext = createContext<PostsContextValue | null>(null);
 export function PostsProvider({
   tags,
   postsByTag,
+  startDeg,
+  endDeg,
   children,
-}: PostsContextValue & { children: React.ReactNode }) {
-  return <PostsContext.Provider value={{ tags, postsByTag }}>{children}</PostsContext.Provider>;
+}: {
+  tags: Tag[];
+  postsByTag: Record<string, PlainPost[]>;
+  startDeg: number;
+  endDeg: number;
+  children: React.ReactNode;
+}) {
+  const [selected, setSelected] = useState<Tag | null>(null);
+  const items = selected ? (postsByTag[selected.tag] ?? []) : tags;
+  const startAngle = startDeg * (Math.PI / 180);
+  const arcSize = (endDeg - startDeg) * (Math.PI / 180);
+
+  return (
+    <PostsContext.Provider
+      value={{
+        tags,
+        postsByTag,
+        selected,
+        select: setSelected,
+        back: () => setSelected(null),
+        items,
+        n: items.length,
+        startAngle,
+        arcSize,
+      }}
+    >
+      {children}
+    </PostsContext.Provider>
+  );
 }
 
 export function usePosts(): PostsContextValue {
