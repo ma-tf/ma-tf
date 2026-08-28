@@ -6,7 +6,7 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from "@components/section";
-import { ArrowSquareOut, CodeIcon, GitBranchIcon } from "@phosphor-icons/react";
+import { ArrowSquareOutIcon, CodeIcon, GitBranchIcon } from "@phosphor-icons/react";
 
 type Project = {
   name: string;
@@ -75,7 +75,7 @@ export function ProjectsPreview() {
                     className="inline-flex items-center gap-1 text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
                   >
                     {project.name}
-                    <ArrowSquareOut className="size-4" aria-hidden="true" />
+                    <ArrowSquareOutIcon className="size-4" aria-hidden="true" />
                   </a>
                   <span className="text-xs uppercase">{project.topics}</span>
                   <span className="mt-2 text-sm text-muted-foreground">{project.description}</span>

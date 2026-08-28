@@ -77,12 +77,3 @@ import { Music, MusicHeader, MusicTitle, MusicDescription, MusicContent } from "
 
 - Requires updating existing pages to follow the new pattern
 - Some pages may not need all components (e.g., no `Header` for simple pages)
-
-## Applied To
-
-- `music.tsx` - Added `MusicHeader`
-- `photography.astro` → `photos.astro` - Renamed and restructured
-- `photograph.tsx` → `photos.tsx` - Renamed with new components
-- `blog.tsx` - Added `BlogHeader`, `BlogTitle`, `BlogDescription`, `BlogContent`
-- `blog.astro` - Updated to use new components
-- `index.astro` - Updated imports and links
