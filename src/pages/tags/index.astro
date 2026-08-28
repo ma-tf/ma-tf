@@ -6,7 +6,10 @@ import { TagOrbit } from "@features/tags/tag-orbit";
 
 const posts = await getCollection("blog");
 const tagCounts = new Map<string, number>();
-const postsByTag = new Map<string, { slug: string; title: string; description: string; pubDate: string }[]>();
+const postsByTag = new Map<
+  string,
+  { slug: string; title: string; description: string; pubDate: string }[]
+>();
 
 for (const post of posts) {
   if (post.data.draft) continue;
@@ -37,6 +40,8 @@ const postsByTagRecord = Object.fromEntries(postsByTag);
   <TagOrbit
     tags={sortedTags.map(([tag, count]) => ({ tag, count }))}
     postsByTag={postsByTagRecord}
+    startDeg={100}
+    endDeg={170}
     client:load
   />
 </Layout>

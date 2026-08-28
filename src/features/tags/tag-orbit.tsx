@@ -1,25 +1,27 @@
+import {
+  BASE_ANGLE,
+  createOrbitEngine,
+  frontIndexFor,
+  type OrbitEngine,
+} from "@features/tags/orbit-engine";
 import { TagLink } from "@features/tags/tags";
 import { useReducedMotion } from "@hooks/use-reduced-motion";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // --- types ---
 
 export type Tag = { tag: string; count: number };
 export type PlainPost = { slug: string; title: string; description: string; pubDate: string };
+type OrbitItem = Tag | PlainPost;
 
 // --- constants ---
 
-const WHEEL_SENSITIVITY = 0.00003;
-const FRICTION = 0.94;
-const STOP_THRESHOLD = 0.0005;
 const ELLIPSE_FLATNESS = 0.62;
 const SCALE_BACK = 0.6;
 const SCALE_RANGE = 0.6;
 const OPACITY_BACK = 0.35;
 const OPACITY_RANGE = 0.65;
 const EDGE_PADDING = 96;
-const BASE_ANGLE = -Math.PI / 2;
-const SNAP_DURATION = 400;
 const DEG_TO_RAD = Math.PI / 180;
 
 // --- sizing ---
@@ -43,173 +45,112 @@ function useStageRadius(ref: React.RefObject<HTMLDivElement | null>): number {
   return radius;
 }
 
-// --- orbit input: physics + pointer/wheel ---
+// --- placement (immutable render boundary: engine calls this each frame) ---
 
-type PlaceFn = (angle: number) => void;
+function placeItems(
+  itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>,
+  n: number,
+  radius: number,
+  arcSize: number,
+  startAngle: number,
+  angle: number,
+) {
+  for (let i = 0; i < n; i++) {
+    const el = itemRefs.current[i];
+    if (!el) continue;
+    const raw = (i / n) * arcSize + angle;
+    const wrapped = ((raw % arcSize) + arcSize) % arcSize;
+    const a = BASE_ANGLE + startAngle + wrapped;
+    const x = radius * Math.cos(a);
+    const y = radius * ELLIPSE_FLATNESS * Math.sin(a);
+    const depth = (Math.sin(a) + 1) / 2;
+    const scale = SCALE_BACK + SCALE_RANGE * depth;
+    const opacity = OPACITY_BACK + OPACITY_RANGE * depth;
+    el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+    el.style.opacity = String(opacity);
+    el.style.zIndex = String(Math.round(depth * 10));
+  }
+}
+
+// --- thin React glue over the engine ---
 
 function useOrbitInput(
   stageRef: React.RefObject<HTMLDivElement | null>,
-  reduced: boolean,
-  n: number,
-  arcSize: number,
-  startAngle: number,
+  config: {
+    n: number;
+    arcSize: number;
+    startAngle: number;
+    reduced: boolean;
+    render: (angle: number) => void;
+  },
 ) {
-  const rotationRef = useRef(0);
-  const velocityRef = useRef(0);
-  const placeRef = useRef<PlaceFn>(() => {});
-  const loopRef = useRef(0);
-  const targetRotationRef = useRef<number | null>(null);
-  const snapStartRef = useRef<number | null>(null);
+  const engineRef = useRef<OrbitEngine>(null);
 
-  const step = arcSize / n;
-
-  const snapToNearest = useCallback(() => {
-    const current = rotationRef.current;
-    const nearest =
-      Math.round((current + BASE_ANGLE - startAngle) / step) * step - BASE_ANGLE + startAngle;
-    if (Math.abs(nearest - current) < 0.001) return;
-    if (reduced) {
-      rotationRef.current = nearest;
-      placeRef.current(nearest);
-      return;
-    }
-    snapStartRef.current = current;
-    targetRotationRef.current = nearest;
-  }, [step, reduced]);
-
-  const stopLoop = () => {
-    if (loopRef.current) {
-      cancelAnimationFrame(loopRef.current);
-      loopRef.current = 0;
-    }
-  };
-
-  const applyRotation = useCallback(() => {
-    placeRef.current(rotationRef.current);
-  }, []);
-
-  const tick = useCallback(() => {
-    if (targetRotationRef.current !== null) {
-      const start = snapStartRef.current!;
-      const elapsed = performance.now() - start;
-      const t = Math.min(1, elapsed / SNAP_DURATION);
-      const eased = 1 - Math.pow(1 - t, 3);
-      rotationRef.current = start + (targetRotationRef.current - start) * eased;
-      applyRotation();
-      if (t >= 1 || Math.abs(rotationRef.current - targetRotationRef.current) < 0.001) {
-        rotationRef.current = targetRotationRef.current;
-        targetRotationRef.current = null;
-        snapStartRef.current = null;
-        applyRotation();
-        loopRef.current = 0;
-        return;
-      }
-      loopRef.current = requestAnimationFrame(tick);
-      return;
-    }
-
-    rotationRef.current += velocityRef.current;
-    velocityRef.current *= FRICTION;
-    if (Math.abs(velocityRef.current) < STOP_THRESHOLD) {
-      velocityRef.current = 0;
-    }
-
-    applyRotation();
-
-    if (velocityRef.current === 0) {
-      snapToNearest();
-      loopRef.current = 0;
-      return;
-    }
-
-    loopRef.current = requestAnimationFrame(tick);
-  }, [applyRotation, snapToNearest]);
-
-  const ensureLoop = useCallback(() => {
-    if (!loopRef.current) {
-      loopRef.current = requestAnimationFrame(tick);
-    }
-  }, [tick]);
+  useEffect(() => {
+    engineRef.current = createOrbitEngine(config);
+    return () => engineRef.current?.destroy();
+  }, [config.n, config.arcSize, config.startAngle, config.reduced, config.render]);
 
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (reduced) return;
-      velocityRef.current += e.deltaY * WHEEL_SENSITIVITY;
-      targetRotationRef.current = null;
-      ensureLoop();
+      engineRef.current?.applyWheel(e.deltaY);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [stageRef, reduced, ensureLoop]);
-
-  const nudge = useCallback(
-    (delta: number) => {
-      targetRotationRef.current = null;
-      rotationRef.current += delta;
-      applyRotation();
-    },
-    [applyRotation],
-  );
-
-  useEffect(() => stopLoop, []);
+  }, [stageRef, config.reduced]);
 
   return {
-    rotationRef,
-    placeRef,
-    nudge,
+    nudge: (d: number) => engineRef.current?.nudge(d),
+    getRotation: () => engineRef.current?.rotation ?? 0,
   };
 }
 
-// --- placement ---
+// --- keyboard handling ---
 
-function createPlacer({
-  n,
-  radius,
-  itemRefs,
-  arcSize,
-  startAngle,
-}: {
-  n: number;
-  radius: number;
-  itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>;
+function useOrbitKeyboard(config: {
+  nudge: (d: number) => void;
+  getRotation: () => number;
+  items: OrbitItem[];
+  selected: Tag | null;
+  onSelect: (t: Tag) => void;
+  onBack: () => void;
   arcSize: number;
+  n: number;
   startAngle: number;
-}): PlaceFn {
-  if (radius <= 0) return () => {};
-  return (angle) => {
-    for (let i = 0; i < n; i++) {
-      const el = itemRefs.current[i];
-      if (!el) continue;
-      const raw = (i / n) * arcSize + angle;
-      const wrapped = ((raw % arcSize) + arcSize) % arcSize;
-      const a = BASE_ANGLE + startAngle + wrapped;
-      const x = radius * Math.cos(a);
-      const y = radius * ELLIPSE_FLATNESS * Math.sin(a);
-      const depth = (Math.sin(a) + 1) / 2;
-      const scale = SCALE_BACK + SCALE_RANGE * depth;
-      const opacity = OPACITY_BACK + OPACITY_RANGE * depth;
-      el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
-      el.style.opacity = String(opacity);
-      el.style.zIndex = String(Math.round(depth * 10));
-    }
-  };
+}) {
+  const { nudge, getRotation, items, selected, onSelect, onBack, arcSize, n, startAngle } = config;
+
+  return useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        nudge(-arcSize / n);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nudge(arcSize / n);
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const idx = ((frontIndexFor(getRotation(), n, arcSize, startAngle) % n) + n) % n;
+        const item = items[idx];
+        if (!item) return;
+        if (selected && "slug" in item) {
+          window.location.href = `/posts/${item.slug}`;
+        } else if (!selected && "tag" in item) {
+          onSelect(item);
+        }
+      } else if (e.key === "Escape" && selected) {
+        e.preventDefault();
+        onBack();
+      }
+    },
+    [nudge, getRotation, items, selected, onSelect, onBack, arcSize, n, startAngle],
+  );
 }
 
 // --- subcomponents ---
-
-function OrbitChrome() {
-  return (
-    <>
-      <h1 className="absolute top-6 left-8 z-20 text-4xl font-bold">Tags</h1>
-      <p className="absolute bottom-6 left-8 z-20 text-xs text-muted-foreground">
-        scroll to rotate — use arrow keys when focused — click a tag to focus it
-      </p>
-    </>
-  );
-}
 
 function SelectedOverlay({ selected, onBack }: { selected: Tag; onBack: () => void }) {
   return (
@@ -225,15 +166,11 @@ function SelectedOverlay({ selected, onBack }: { selected: Tag; onBack: () => vo
 }
 
 function OrbitItems({
-  selected,
-  posts,
-  tags,
+  items,
   itemRefs,
   onSelectTag,
 }: {
-  selected: Tag | null;
-  posts: PlainPost[];
-  tags: Tag[];
+  items: OrbitItem[];
   itemRefs: React.RefObject<(HTMLAnchorElement | null)[]>;
   onSelectTag: (t: Tag) => void;
 }) {
@@ -244,39 +181,36 @@ function OrbitItems({
     [itemRefs],
   );
 
-  if (!selected) {
-    return (
-      <>
-        {tags.map((t, i) => (
-          <TagLink
-            key={t.tag}
-            ref={setRef(i)}
-            href={`/tags/${t.tag}`}
-            className="absolute top-0 left-0"
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectTag(t);
-            }}
-          >
-            {t.tag} ({t.count})
-          </TagLink>
-        ))}
-      </>
-    );
-  }
-
   return (
     <>
-      {posts.map((post, i) => (
-        <a
-          key={post.slug}
-          ref={setRef(i)}
-          href={`/posts/${post.slug}`}
-          className="absolute top-0 left-0 max-w-56 truncate rounded bg-secondary px-2 py-1 text-sm"
-        >
-          {post.title}
-        </a>
-      ))}
+      {items.map((item, i) => {
+        if ("tag" in item) {
+          return (
+            <TagLink
+              key={item.tag}
+              ref={setRef(i)}
+              href={`/tags/${item.tag}`}
+              className="absolute top-0 left-0"
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectTag(item);
+              }}
+            >
+              {item.tag} ({item.count})
+            </TagLink>
+          );
+        }
+        return (
+          <a
+            key={item.slug}
+            ref={setRef(i)}
+            href={`/posts/${item.slug}`}
+            className="absolute top-0 left-0 max-w-56 truncate rounded bg-secondary px-2 py-1 text-sm"
+          >
+            {item.title}
+          </a>
+        );
+      })}
     </>
   );
 }
@@ -303,38 +237,36 @@ export function TagOrbit({
   const n = items.length;
   const startAngle = startDeg * DEG_TO_RAD;
   const arcSize = (endDeg - startDeg) * DEG_TO_RAD;
-  const { rotationRef, placeRef, nudge } = useOrbitInput(stageRef, reduced, n, arcSize, startAngle);
 
-  useLayoutEffect(() => {
+  const render = useCallback(
+    (angle: number) => placeItems(itemRefs, n, radius, arcSize, startAngle, angle),
+    [itemRefs, n, radius, arcSize, startAngle],
+  );
+
+  const { nudge, getRotation } = useOrbitInput(stageRef, {
+    n,
+    arcSize,
+    startAngle,
+    reduced,
+    render,
+  });
+
+  const onKeyDown = useOrbitKeyboard({
+    nudge,
+    getRotation,
+    items,
+    selected,
+    onSelect: setSelected,
+    onBack: () => setSelected(null),
+    arcSize,
+    n,
+    startAngle,
+  });
+
+  useEffect(() => {
     itemRefs.current.length = n;
-    const place = createPlacer({ n, radius, itemRefs, arcSize, startAngle });
-    placeRef.current = place;
-    placeRef.current(rotationRef.current);
-  }, [n, radius, placeRef, rotationRef, arcSize, startAngle]);
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      nudge(-arcSize / n);
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      nudge(arcSize / n);
-    } else if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      const frontIndex = Math.round((Math.PI - startAngle - rotationRef.current) / (arcSize / n));
-      const idx = ((frontIndex % n) + n) % n;
-      const item = items[idx];
-      if (!item) return;
-      if (selected && "slug" in item) {
-        window.location.href = `/posts/${item.slug}`;
-      } else if (!selected && "tag" in item) {
-        setSelected(item);
-      }
-    } else if (e.key === "Escape" && selected) {
-      e.preventDefault();
-      setSelected(null);
-    }
-  };
+    placeItems(itemRefs, n, radius, arcSize, startAngle, getRotation());
+  }, [n, radius, arcSize, startAngle, itemRefs, getRotation]);
 
   return (
     <div
@@ -345,15 +277,8 @@ export function TagOrbit({
       aria-label="Tag orbit. Use left and right arrow keys to rotate, Enter to select, Escape to go back."
       onKeyDown={onKeyDown}
     >
-      <OrbitChrome />
       {selected && <SelectedOverlay selected={selected} onBack={() => setSelected(null)} />}
-      <OrbitItems
-        selected={selected}
-        posts={postsByTag[selected?.tag ?? ""] ?? []}
-        tags={tags}
-        itemRefs={itemRefs}
-        onSelectTag={setSelected}
-      />
+      <OrbitItems items={items} itemRefs={itemRefs} onSelectTag={setSelected} />
     </div>
   );
 }
