@@ -1,14 +1,14 @@
 // --- physics constants ---
 
-export const WHEEL_SENSITIVITY = 0.00003;
-export const FRICTION = 0.94;
-export const STOP_THRESHOLD = 0.0005;
+const WHEEL_SENSITIVITY = 0.00003;
+const FRICTION = 0.94;
+const STOP_THRESHOLD = 0.0005;
 export const BASE_ANGLE = -Math.PI / 2;
-export const SNAP_DURATION = 400;
+const SNAP_DURATION = 400;
 
 // --- types ---
 
-export type OrbitState = {
+type OrbitState = {
   rotation: number;
   velocity: number;
   snapTarget: number | null;
@@ -34,7 +34,7 @@ export type OrbitEngine = {
 
 // --- pure helpers ---
 
-export function snapTargetFor(
+function snapTargetFor(
   rotation: number,
   n: number,
   arcSize: number,
@@ -76,51 +76,48 @@ export function createOrbitEngine(config: OrbitEngineConfig): OrbitEngine {
     render(state.rotation);
   }
 
-  function tick() {
-    if (disposed) return;
+  function runSnapFrame(): boolean {
+    const t = Math.min(1, (now() - state.snapStartTime) / SNAP_DURATION);
+    const eased = 1 - Math.pow(1 - t, 3);
+    state.rotation = state.snapFrom + (state.snapTarget! - state.snapFrom) * eased;
+    place();
 
-    if (state.snapTarget !== null) {
-      const t = Math.min(1, (now() - state.snapStartTime) / SNAP_DURATION);
-      const eased = 1 - Math.pow(1 - t, 3);
-      state.rotation = state.snapFrom + (state.snapTarget - state.snapFrom) * eased;
+    if (t >= 1 || Math.abs(state.rotation - state.snapTarget!) < 0.001) {
+      state.rotation = state.snapTarget!;
+      state.snapTarget = null;
       place();
-
-      if (t >= 1 || Math.abs(state.rotation - state.snapTarget) < 0.001) {
-        state.rotation = state.snapTarget;
-        state.snapTarget = null;
-        place();
-        raf = 0;
-        return;
-      }
-      raf = requestAnimationFrame(tick);
-      return;
+      return false;
     }
+    return true;
+  }
 
+  function applyFrictionAndSnap(): boolean {
     state.rotation += state.velocity;
     state.velocity *= FRICTION;
     if (Math.abs(state.velocity) < STOP_THRESHOLD) state.velocity = 0;
-
     place();
 
-    if (state.velocity === 0) {
-      const target = snapTargetFor(state.rotation, n, arcSize, startAngle);
-      if (target !== null) {
-        if (reduced) {
-          state.rotation = target;
-          place();
-        } else {
-          state.snapFrom = state.rotation;
-          state.snapStartTime = now();
-          state.snapTarget = target;
-          raf = requestAnimationFrame(tick);
-          return;
-        }
-      }
-      raf = 0;
-      return;
+    if (state.velocity !== 0) return true;
+
+    const target = snapTargetFor(state.rotation, n, arcSize, startAngle);
+    if (target === null) return false;
+
+    if (reduced) {
+      state.rotation = target;
+      place();
+      return false;
     }
 
-    raf = requestAnimationFrame(tick);
+    state.snapFrom = state.rotation;
+    state.snapStartTime = now();
+    state.snapTarget = target;
+    return true;
+  }
+
+  function tick() {
+    if (disposed) return;
+    const continueAnimating = state.snapTarget !== null ? runSnapFrame() : applyFrictionAndSnap();
+    if (continueAnimating) raf = requestAnimationFrame(tick);
   }
 
   function ensureLoop() {

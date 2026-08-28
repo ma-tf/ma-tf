@@ -2,15 +2,14 @@
 import Layout from "@layouts/Layout.astro";
 import { ModeToggle } from "@components/ModeToggle";
 import { TagOrbit } from "@features/tags/tag-orbit";
-import { getBlogData } from "@features/tags/tag-data";
+import { getTagIndex } from "@features/tags/tag-data";
 
-const { posts, tags, postsByTag } = await getBlogData();
+const { tags, postsByTag } = await getTagIndex();
 ---
 
 <Layout>
   <ModeToggle client:load />
   <TagOrbit
-    posts={posts}
     tags={tags}
     postsByTag={postsByTag}
     client:load

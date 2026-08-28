@@ -4,7 +4,6 @@ import type { Tag } from "@features/tags/tag-data";
 import { createContext, useContext } from "react";
 
 export type PostsContextValue = {
-  posts: PlainPost[];
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
 };
@@ -12,14 +11,11 @@ export type PostsContextValue = {
 const PostsContext = createContext<PostsContextValue | null>(null);
 
 export function PostsProvider({
-  posts,
   tags,
   postsByTag,
   children,
 }: PostsContextValue & { children: React.ReactNode }) {
-  return (
-    <PostsContext.Provider value={{ posts, tags, postsByTag }}>{children}</PostsContext.Provider>
-  );
+  return <PostsContext.Provider value={{ tags, postsByTag }}>{children}</PostsContext.Provider>;
 }
 
 export function usePosts(): PostsContextValue {

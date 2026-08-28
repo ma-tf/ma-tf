@@ -1,20 +1,20 @@
-import { getPosts, getRawPosts, type PlainPost } from "@features/blog/post-data";
+import { getRawPosts, type PlainPost } from "@features/blog/post-data";
 
 export type Tag = {
   tag: string;
   count: number;
 };
 
-export async function getTagData(): Promise<{
+export async function getTagIndex(): Promise<{
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
 }> {
-  const posts = await getRawPosts();
+  const rawPosts = await getRawPosts();
 
   const tagCounts = new Map<string, number>();
   const postsByTag = new Map<string, PlainPost[]>();
 
-  for (const post of posts) {
+  for (const post of rawPosts) {
     const plain = {
       slug: post.data.slug,
       title: post.data.title,
@@ -38,13 +38,4 @@ export async function getTagData(): Promise<{
     .sort((a, b) => b.count - a.count);
 
   return { tags, postsByTag: Object.fromEntries(postsByTag) };
-}
-
-export async function getBlogData(): Promise<{
-  posts: PlainPost[];
-  tags: Tag[];
-  postsByTag: Record<string, PlainPost[]>;
-}> {
-  const [posts, { tags, postsByTag }] = await Promise.all([getPosts(), getTagData()]);
-  return { posts, tags, postsByTag };
 }
