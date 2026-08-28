@@ -8,19 +8,25 @@ const SNAP_DURATION = 400;
 
 // --- types ---
 
+type Mode = "idle" | "coasting" | "snapping";
+
 type OrbitState = {
   rotation: number;
   velocity: number;
-  snapTarget: number | null;
+  mode: Mode;
   snapFrom: number;
+  snapTo: number;
   snapStartTime: number;
 };
 
-export type OrbitEngineConfig = {
+export type OrbitConfig = {
   n: number;
   arcSize: number;
   startAngle: number;
   reduced: boolean;
+};
+
+export type OrbitEngineConfig = OrbitConfig & {
   render: (angle: number) => void;
   now?: () => number;
 };
@@ -32,7 +38,22 @@ export type OrbitEngine = {
   destroy(): void;
 };
 
-// --- pure helpers ---
+// --- pure functions ---
+
+export function createInitialState(): OrbitState {
+  return {
+    rotation: 0,
+    velocity: 0,
+    mode: "idle",
+    snapFrom: 0,
+    snapTo: 0,
+    snapStartTime: 0,
+  };
+}
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
 
 function snapTargetFor(
   rotation: number,
@@ -55,91 +76,85 @@ export function frontIndexFor(
   return Math.round((Math.PI - startAngle - rotation) / (arcSize / n));
 }
 
-// --- engine ---
+function stepSimulation(state: OrbitState, config: OrbitConfig, now: number): OrbitState {
+  switch (state.mode) {
+    case "snapping": {
+      const t = Math.min(1, (now - state.snapStartTime) / SNAP_DURATION);
+      const eased = easeOutCubic(t);
+      const rotation = state.snapFrom + (state.snapTo - state.snapFrom) * eased;
+      if (t >= 1 || Math.abs(rotation - state.snapTo) < 0.001) {
+        return { ...state, rotation: state.snapTo, mode: "idle", velocity: 0 };
+      }
+      return { ...state, rotation };
+    }
+
+    case "coasting": {
+      const rotation = state.rotation + state.velocity;
+      let velocity = state.velocity * FRICTION;
+      if (Math.abs(velocity) < STOP_THRESHOLD) velocity = 0;
+
+      if (velocity !== 0) {
+        return { ...state, rotation, velocity };
+      }
+
+      const target = snapTargetFor(rotation, config.n, config.arcSize, config.startAngle);
+      if (target === null) {
+        return { ...state, rotation, velocity: 0, mode: "idle" };
+      }
+
+      if (config.reduced) {
+        return { ...state, rotation: target, velocity: 0, mode: "idle" };
+      }
+
+      return {
+        ...state,
+        mode: "snapping",
+        snapFrom: rotation,
+        snapTo: target,
+        snapStartTime: now,
+      };
+    }
+
+    case "idle":
+      return state;
+  }
+}
+
+// --- engine (loop driver) ---
 
 export function createOrbitEngine(config: OrbitEngineConfig): OrbitEngine {
-  const { n, arcSize, startAngle, reduced, render } = config;
-  const now = config.now ?? (() => performance.now());
+  const { render, n, arcSize, startAngle, reduced } = config;
+  const getTime = config.now ?? (() => performance.now());
 
-  let disposed = false;
+  let state = createInitialState();
   let raf = 0;
-
-  const state: OrbitState = {
-    rotation: 0,
-    velocity: 0,
-    snapTarget: null,
-    snapFrom: 0,
-    snapStartTime: 0,
-  };
-
-  function place() {
-    render(state.rotation);
-  }
-
-  function runSnapFrame(): boolean {
-    const t = Math.min(1, (now() - state.snapStartTime) / SNAP_DURATION);
-    const eased = 1 - Math.pow(1 - t, 3);
-    state.rotation = state.snapFrom + (state.snapTarget! - state.snapFrom) * eased;
-    place();
-
-    if (t >= 1 || Math.abs(state.rotation - state.snapTarget!) < 0.001) {
-      state.rotation = state.snapTarget!;
-      state.snapTarget = null;
-      place();
-      return false;
-    }
-    return true;
-  }
-
-  function applyFrictionAndSnap(): boolean {
-    state.rotation += state.velocity;
-    state.velocity *= FRICTION;
-    if (Math.abs(state.velocity) < STOP_THRESHOLD) state.velocity = 0;
-    place();
-
-    if (state.velocity !== 0) return true;
-
-    const target = snapTargetFor(state.rotation, n, arcSize, startAngle);
-    if (target === null) return false;
-
-    if (reduced) {
-      state.rotation = target;
-      place();
-      return false;
-    }
-
-    state.snapFrom = state.rotation;
-    state.snapStartTime = now();
-    state.snapTarget = target;
-    return true;
-  }
+  let disposed = false;
 
   function tick() {
     if (disposed) return;
-    const continueAnimating = state.snapTarget !== null ? runSnapFrame() : applyFrictionAndSnap();
-    if (continueAnimating) {
+    state = stepSimulation(state, { n, arcSize, startAngle, reduced }, getTime());
+    render(state.rotation);
+    if (state.mode !== "idle") {
       raf = requestAnimationFrame(tick);
     } else {
       raf = 0;
     }
   }
 
-  function ensureLoop() {
-    if (!raf) raf = requestAnimationFrame(tick);
-  }
-
   return {
     nudge(delta: number) {
-      state.snapTarget = null;
-      state.rotation += delta;
-      place();
+      state = { ...state, rotation: state.rotation + delta, mode: "coasting" };
+      render(state.rotation);
     },
 
     applyWheel(deltaY: number) {
       if (reduced) return;
-      state.velocity += deltaY * WHEEL_SENSITIVITY;
-      state.snapTarget = null;
-      ensureLoop();
+      state = {
+        ...state,
+        mode: "coasting",
+        velocity: state.velocity + deltaY * WHEEL_SENSITIVITY,
+      };
+      if (!raf) raf = requestAnimationFrame(tick);
     },
 
     get rotation() {
