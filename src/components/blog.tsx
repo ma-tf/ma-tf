@@ -19,7 +19,10 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
       </div>
       <ul className="flex flex-col">
         {posts.map((post) => (
-          <li key={post.slug} className="py-2">
+          <li
+            key={post.slug}
+            className="py-2 transition-transform duration-150 focus-within:md:translate-x-2 hover:md:translate-x-2"
+          >
             <a href={`/posts/${post.slug}`} className="group flex flex-col hover:underline">
               <span className="truncate text-xl font-semibold transition-colors group-hover:text-foreground/70 md:text-clip">
                 {post.title}
