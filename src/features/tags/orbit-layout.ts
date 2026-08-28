@@ -42,7 +42,8 @@ export function computePositions(
     const depth = (Math.sin(a) + 1) / 2;
     const scale = config.scaleBack + config.scaleRange * depth;
     const opacity = config.opacityBack + config.opacityRange * depth;
-    positions.push({ x, y, scale, opacity, zIndex: Math.round(depth * 10) });
+    const wraps = Math.floor(raw / arcSize);
+    positions.push({ x, y, scale, opacity, zIndex: Math.round((depth - wraps) * 10) });
   }
   return positions;
 }

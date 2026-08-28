@@ -117,7 +117,11 @@ export function createOrbitEngine(config: OrbitEngineConfig): OrbitEngine {
   function tick() {
     if (disposed) return;
     const continueAnimating = state.snapTarget !== null ? runSnapFrame() : applyFrictionAndSnap();
-    if (continueAnimating) raf = requestAnimationFrame(tick);
+    if (continueAnimating) {
+      raf = requestAnimationFrame(tick);
+    } else {
+      raf = 0;
+    }
   }
 
   function ensureLoop() {
