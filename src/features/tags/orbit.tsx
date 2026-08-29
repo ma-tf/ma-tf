@@ -57,7 +57,7 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
         const wrapped = ((raw % arcSize) + arcSize) % arcSize;
         const angle = -Math.PI / 2 + startRad + wrapped;
         const depth = (Math.sin(angle) + 1) / 2;
-        el.style.zIndex = String(Math.round(depth * 10));
+        el.style.zIndex = String(Math.round(depth * items.length));
       });
     },
     [items.length, arcSize, startRad],

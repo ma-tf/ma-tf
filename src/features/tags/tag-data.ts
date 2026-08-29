@@ -1,4 +1,5 @@
 import { getRawPosts, type PlainPost } from "@features/blog/post-data";
+import { getOrInit } from "@lib/utils";
 
 export type Tag = {
   tag: string;
@@ -11,9 +12,7 @@ export async function getTagIndex(): Promise<{
 }> {
   const rawPosts = await getRawPosts();
 
-  const tagCounts = new Map<string, number>();
   const postsByTag = new Map<string, PlainPost[]>();
-
   for (const post of rawPosts) {
     const plain = {
       slug: post.data.slug,
@@ -22,20 +21,16 @@ export async function getTagIndex(): Promise<{
       pubDate: post.data.pubDate.toISOString(),
     };
     for (const tag of post.data.tags) {
-      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-      const list = postsByTag.get(tag) ?? [];
-      list.push(plain);
-      postsByTag.set(tag, list);
+      getOrInit(postsByTag, tag, () => []).push(plain);
     }
   }
 
-  for (const list of postsByTag.values()) {
+  const tags: Tag[] = [];
+  for (const [tag, list] of postsByTag.entries()) {
     list.sort((a, b) => b.pubDate.localeCompare(a.pubDate));
+    tags.push({ tag, count: list.length });
   }
-
-  const tags = [...tagCounts.entries()]
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count);
+  tags.sort((a, b) => b.count - a.count);
 
   return { tags, postsByTag: Object.fromEntries(postsByTag) };
 }

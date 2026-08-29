@@ -1,7 +1,14 @@
+import { cn } from "@lib/cn";
 import { SunIcon, MoonIcon, MonitorIcon } from "@phosphor-icons/react";
 import { useState, useEffect } from "react";
 
 type Theme = "light" | "dark" | "system";
+
+const ICONS = {
+  light: SunIcon,
+  dark: MoonIcon,
+  system: MonitorIcon,
+} as const;
 
 export function ModeToggle() {
   const [theme, setTheme] = useState<Theme>("system");
@@ -32,23 +39,25 @@ export function ModeToggle() {
   return (
     <div className="fixed top-4 right-4 z-50">
       <div className="flex gap-1 rounded-lg bg-muted p-1">
-        {(["light", "dark", "system"] as const).map((option) => (
-          <button
-            type="button"
-            key={option}
-            onClick={() => setTheme(option)}
-            aria-label={option}
-            className={
-              theme === option
-                ? "rounded-md bg-background p-2 text-foreground"
-                : "rounded-md p-2 text-muted-foreground hover:text-foreground"
-            }
-          >
-            {option === "light" && <SunIcon size={16} weight="bold" />}
-            {option === "dark" && <MoonIcon size={16} weight="bold" />}
-            {option === "system" && <MonitorIcon size={16} weight="bold" />}
-          </button>
-        ))}
+        {(["light", "dark", "system"] as const).map((option) => {
+          const Icon = ICONS[option];
+          return (
+            <button
+              type="button"
+              key={option}
+              onClick={() => setTheme(option)}
+              aria-label={option}
+              className={cn(
+                "rounded-md p-2",
+                theme === option
+                  ? "bg-background text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Icon size={16} weight="bold" />
+            </button>
+          );
+        })}
       </div>
     </div>
   );

@@ -77,6 +77,14 @@ function transitionSnapping(
   return { ...state, rotation };
 }
 
+function finalizeCoast(rotation: number, config: OrbitConfig, now: number): OrbitState {
+  const target = snapTargetFor(rotation, config.n, config.arcSize, config.startAngle);
+  if (target === null || config.reduced) {
+    return { mode: "idle", rotation: target ?? rotation };
+  }
+  return { mode: "snapping", rotation, snapFrom: rotation, snapTo: target, snapStartTime: now };
+}
+
 function transitionCoasting(
   state: Extract<OrbitState, { mode: "coasting" }>,
   config: OrbitConfig,
@@ -87,17 +95,7 @@ function transitionCoasting(
   if (velocity !== 0) {
     return { mode: "coasting", rotation, velocity };
   }
-  const target = snapTargetFor(rotation, config.n, config.arcSize, config.startAngle);
-  if (target === null || config.reduced) {
-    return { mode: "idle", rotation: target ?? rotation };
-  }
-  return {
-    mode: "snapping",
-    rotation,
-    snapFrom: rotation,
-    snapTo: target,
-    snapStartTime: now,
-  };
+  return finalizeCoast(rotation, config, now);
 }
 
 function transitionIdle(state: Extract<OrbitState, { mode: "idle" }>): OrbitState {
