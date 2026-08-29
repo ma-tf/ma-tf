@@ -1,7 +1,8 @@
 import { activateAtFront } from "@features/tags/orbit-input";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
+import { useItemRefs, useStageRef } from "@hooks/use-orbit";
 import { useReducedMotion } from "@hooks/use-reduced-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import "@features/tags/orbit-layout.css";
 
 const DEG = Math.PI / 180;
@@ -16,52 +17,25 @@ type OrbitProps<T> = {
 
 export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: OrbitProps<T>) {
   const stageRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const { itemRefs, setRef } = useItemRefs(items.length);
   const reduced = useReducedMotion();
 
   const startRad = startAngle * DEG;
   const endRad = endAngle * DEG;
   const arcSize = endRad - startRad;
 
-  const [radius, setRadius] = useState(0);
-
-  // Measure stage size and re-measure on resize to compute orbit radius.
-  useEffect(() => {
-    const el = stageRef.current;
-    if (!el) return;
-    const measure = () => {
-      const { width, height } = el.getBoundingClientRect();
-      const padding = parseFloat(getComputedStyle(el).getPropertyValue("--edge-padding")) || 96;
-      setRadius(Math.max(0, Math.min(width, height) / 2 - padding));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const setRef = useCallback(
-    (i: number) => (el: HTMLDivElement | null) => {
-      itemRefs.current[i] = el;
-    },
-    [],
-  );
-
-  const render = useCallback(
-    (rotation: number) => {
-      stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
-      const step = arcSize / items.length;
-      itemRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const raw = i * step + rotation;
-        const wrapped = ((raw % arcSize) + arcSize) % arcSize;
-        const angle = -Math.PI / 2 + startRad + wrapped;
-        const depth = (Math.sin(angle) + 1) / 2;
-        el.style.zIndex = String(Math.round(depth * items.length));
-      });
-    },
-    [items.length, arcSize, startRad],
-  );
+  const render = (rotation: number) => {
+    stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
+    const step = arcSize / items.length;
+    itemRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const raw = i * step + rotation;
+      const wrapped = ((raw % arcSize) + arcSize) % arcSize;
+      const angle = -Math.PI / 2 + startRad + wrapped;
+      const depth = (Math.sin(angle) + 1) / 2;
+      el.style.zIndex = String(Math.round(depth * items.length));
+    });
+  };
 
   const { nudge, applyWheel, getRotation } = useOrbitEngine(
     items.length,
@@ -71,17 +45,7 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
     render,
   );
 
-  // Attach wheel listener for scroll-wheel rotation.
-  useEffect(() => {
-    const el = stageRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      applyWheel(e.deltaY);
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, [applyWheel]);
+  useStageRef(stageRef, applyWheel, arcSize, items.length, startRad);
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -97,27 +61,12 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
         case "Enter":
         case " ":
           e.preventDefault();
-          activateAtFront(getRotation(), items, items.length, arcSize, startRad, onSelect);
+          activateAtFront(getRotation(), items, arcSize, startRad, onSelect);
           break;
       }
     },
     [nudge, getRotation, arcSize, items.length, startRad, items, onSelect],
   );
-
-  // Keep itemRefs in sync with items (shrink on removal).
-  useEffect(() => {
-    itemRefs.current.length = items.length;
-  }, [items.length]);
-
-  // Push measured radius and orbit config into CSS.
-  useEffect(() => {
-    const el = stageRef.current;
-    if (!el) return;
-    el.style.setProperty("--radius", `${radius}px`);
-    el.style.setProperty("--step", `${arcSize / items.length}rad`);
-    el.style.setProperty("--arc-size", `${arcSize}rad`);
-    el.style.setProperty("--start-angle", `${startRad}rad`);
-  }, [radius, arcSize, items.length, startRad]);
 
   return (
     <div
