@@ -57,7 +57,13 @@ export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
         endAngle={END_DEG}
         onSelect={setSelected}
         renderItem={(tag) => (
-          <TagLink href={`/tags/${tag.tag}`}>
+          <TagLink
+            href={`/tags/${tag.tag}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setSelected(tag);
+            }}
+          >
             {tag.tag} ({tag.count})
           </TagLink>
         )}

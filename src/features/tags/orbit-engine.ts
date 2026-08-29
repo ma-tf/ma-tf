@@ -64,15 +64,6 @@ function snapTargetFor(
   return Math.abs(nearest - rotation) >= 0.001 ? nearest : null;
 }
 
-export function frontIndexFor(
-  rotation: number,
-  n: number,
-  arcSize: number,
-  startAngle: number,
-): number {
-  return Math.round((Math.PI - startAngle - rotation) / (arcSize / n));
-}
-
 function transitionSnapping(
   state: Extract<OrbitState, { mode: "snapping" }>,
   now: number,

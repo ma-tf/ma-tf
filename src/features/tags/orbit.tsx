@@ -1,4 +1,4 @@
-import { activateAtFront, decideKeyIntent } from "@features/tags/orbit-input";
+import { activateAtFront } from "@features/tags/orbit-input";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useReducedMotion } from "@hooks/use-reduced-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -6,7 +6,7 @@ import "@features/tags/orbit-layout.css";
 
 const DEG = Math.PI / 180;
 
-export type OrbitProps<T> = {
+type OrbitProps<T> = {
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
   onSelect: (item: T) => void;
@@ -24,6 +24,8 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
   const arcSize = endRad - startRad;
 
   const [radius, setRadius] = useState(0);
+
+  // Measure stage size and re-measure on resize to compute orbit radius.
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
@@ -47,6 +49,7 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
 
   const render = useCallback(
     (rotation: number) => {
+      stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
       const step = arcSize / items.length;
       itemRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -54,9 +57,7 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
         const wrapped = ((raw % arcSize) + arcSize) % arcSize;
         const angle = -Math.PI / 2 + startRad + wrapped;
         const depth = (Math.sin(angle) + 1) / 2;
-        const wraps = Math.floor(raw / arcSize);
-        el.style.setProperty("--angle", `${angle}rad`);
-        el.style.zIndex = String(Math.round((depth - wraps) * 10));
+        el.style.zIndex = String(Math.round(depth * 10));
       });
     },
     [items.length, arcSize, startRad],
@@ -70,10 +71,7 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
     render,
   );
 
-  useEffect(() => {
-    render(0);
-  }, [render]);
-
+  // Attach wheel listener for scroll-wheel rotation.
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
@@ -87,25 +85,39 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      const intent = decideKeyIntent(e.key);
-      if (intent.type === "none") return;
-      e.preventDefault();
-      if (intent.type === "nudge") {
-        nudge(intent.delta * (arcSize / items.length));
-      } else if (intent.type === "activate") {
-        activateAtFront(getRotation, items, items.length, arcSize, startRad, onSelect);
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault();
+          nudge(-arcSize / items.length);
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          nudge(arcSize / items.length);
+          break;
+        case "Enter":
+        case " ":
+          e.preventDefault();
+          activateAtFront(getRotation(), items, items.length, arcSize, startRad, onSelect);
+          break;
       }
     },
     [nudge, getRotation, arcSize, items.length, startRad, items, onSelect],
   );
 
+  // Keep itemRefs in sync with items (shrink on removal).
   useEffect(() => {
     itemRefs.current.length = items.length;
   }, [items.length]);
 
+  // Push measured radius and orbit config into CSS.
   useEffect(() => {
-    stageRef.current?.style.setProperty("--radius", `${radius}px`);
-  }, [radius]);
+    const el = stageRef.current;
+    if (!el) return;
+    el.style.setProperty("--radius", `${radius}px`);
+    el.style.setProperty("--step", `${arcSize / items.length}rad`);
+    el.style.setProperty("--arc-size", `${arcSize}rad`);
+    el.style.setProperty("--start-angle", `${startRad}rad`);
+  }, [radius, arcSize, items.length, startRad]);
 
   return (
     <div
@@ -117,7 +129,12 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
       onKeyDown={onKeyDown}
     >
       {items.map((item, i) => (
-        <div key={i} ref={setRef(i)} className="orbit-item absolute top-0 left-0">
+        <div
+          key={i}
+          ref={setRef(i)}
+          style={{ "--index": i } as React.CSSProperties}
+          className="orbit-item absolute top-0 left-0"
+        >
           {renderItem(item, i)}
         </div>
       ))}
