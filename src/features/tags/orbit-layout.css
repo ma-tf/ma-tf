@@ -1,0 +1,18 @@
+.orbit-stage {
+  --base-angle: -1.5708rad;
+  --flatness: 0.62;
+  --scale-back: 0.6;
+  --scale-range: 0.6;
+  --opacity-back: 0.35;
+  --opacity-range: 0.65;
+  --edge-padding: 96px;
+}
+
+.orbit-item {
+  --x: calc(cos(var(--angle)) * var(--radius));
+  --y: calc(sin(var(--angle)) * var(--radius) * var(--flatness));
+  --depth: calc((sin(var(--angle)) + 1) / 2);
+  --scale: calc(var(--scale-back) + var(--scale-range) * var(--depth));
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(var(--scale));
+  opacity: calc(var(--opacity-back) + var(--opacity-range) * var(--depth));
+}

@@ -6,12 +6,28 @@ type OrbitIntent =
   | { type: "back" }
   | { type: "none" };
 
-export function decideKeyIntent(key: string, selected: boolean): OrbitIntent {
-  if (key === "ArrowLeft") return { type: "nudge", delta: -1 };
-  if (key === "ArrowRight") return { type: "nudge", delta: 1 };
-  if (key === "Enter" || key === " ") return { type: "activate" };
-  if (key === "Escape" && selected) return { type: "back" };
-  return { type: "none" };
+const KEY_INTENTS: Record<string, OrbitIntent> = {
+  ArrowLeft: { type: "nudge", delta: -1 },
+  ArrowRight: { type: "nudge", delta: 1 },
+  Enter: { type: "activate" },
+  " ": { type: "activate" },
+};
+
+export function decideKeyIntent(key: string): OrbitIntent {
+  return KEY_INTENTS[key] ?? { type: "none" };
+}
+
+export function activateAtFront<T>(
+  getRotation: () => number,
+  items: T[],
+  n: number,
+  arcSize: number,
+  startAngle: number,
+  onActivate: (item: T) => void,
+): void {
+  const rotation = getRotation();
+  const tag = getActivatedItem(rotation, items, n, arcSize, startAngle);
+  if (tag) onActivate(tag);
 }
 
 export function getActivatedItem<T>(

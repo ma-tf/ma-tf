@@ -1,3 +1,4 @@
+import { SunIcon, MoonIcon, MonitorIcon } from "@phosphor-icons/react";
 import { useState, useEffect } from "react";
 
 type Theme = "light" | "dark" | "system";
@@ -36,13 +37,16 @@ export function ModeToggle() {
             type="button"
             key={option}
             onClick={() => setTheme(option)}
+            aria-label={option}
             className={
               theme === option
-                ? "rounded-md bg-background px-3 py-1 text-sm font-medium text-foreground"
-                : "rounded-md px-3 py-1 text-sm text-muted-foreground hover:text-foreground"
+                ? "rounded-md bg-background p-2 text-foreground"
+                : "rounded-md p-2 text-muted-foreground hover:text-foreground"
             }
           >
-            {option.charAt(0).toUpperCase() + option.slice(1)}
+            {option === "light" && <SunIcon size={16} weight="bold" />}
+            {option === "dark" && <MoonIcon size={16} weight="bold" />}
+            {option === "system" && <MonitorIcon size={16} weight="bold" />}
           </button>
         ))}
       </div>

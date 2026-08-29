@@ -3,21 +3,21 @@
 const WHEEL_SENSITIVITY = 0.00003;
 const FRICTION = 0.94;
 const STOP_THRESHOLD = 0.0005;
-export const BASE_ANGLE = -Math.PI / 2;
+const BASE_ANGLE = -Math.PI / 2;
 const SNAP_DURATION = 400;
 
 // --- types ---
 
-type Mode = "idle" | "coasting" | "snapping";
-
-type OrbitState = {
-  rotation: number;
-  velocity: number;
-  mode: Mode;
-  snapFrom: number;
-  snapTo: number;
-  snapStartTime: number;
-};
+type OrbitState =
+  | { mode: "idle"; rotation: number }
+  | { mode: "coasting"; rotation: number; velocity: number }
+  | {
+      mode: "snapping";
+      rotation: number;
+      snapFrom: number;
+      snapTo: number;
+      snapStartTime: number;
+    };
 
 export type OrbitConfig = {
   n: number;
@@ -40,19 +40,16 @@ export type OrbitEngine = {
 
 // --- pure functions ---
 
-export function createInitialState(): OrbitState {
-  return {
-    rotation: 0,
-    velocity: 0,
-    mode: "idle",
-    snapFrom: 0,
-    snapTo: 0,
-    snapStartTime: 0,
-  };
+function createInitialState(): OrbitState {
+  return { mode: "idle", rotation: 0 };
 }
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
+}
+
+function coerceZero(velocity: number): number {
+  return Math.abs(velocity) < STOP_THRESHOLD ? 0 : velocity;
 }
 
 function snapTargetFor(
@@ -76,47 +73,54 @@ export function frontIndexFor(
   return Math.round((Math.PI - startAngle - rotation) / (arcSize / n));
 }
 
+function transitionSnapping(
+  state: Extract<OrbitState, { mode: "snapping" }>,
+  now: number,
+): OrbitState {
+  const t = Math.min(1, (now - state.snapStartTime) / SNAP_DURATION);
+  const eased = easeOutCubic(t);
+  const rotation = state.snapFrom + (state.snapTo - state.snapFrom) * eased;
+  if (t >= 1 || Math.abs(rotation - state.snapTo) < 0.001) {
+    return { mode: "idle", rotation: state.snapTo };
+  }
+  return { ...state, rotation };
+}
+
+function transitionCoasting(
+  state: Extract<OrbitState, { mode: "coasting" }>,
+  config: OrbitConfig,
+  now: number,
+): OrbitState {
+  const rotation = state.rotation + state.velocity;
+  const velocity = coerceZero(state.velocity * FRICTION);
+  if (velocity !== 0) {
+    return { mode: "coasting", rotation, velocity };
+  }
+  const target = snapTargetFor(rotation, config.n, config.arcSize, config.startAngle);
+  if (target === null || config.reduced) {
+    return { mode: "idle", rotation: target ?? rotation };
+  }
+  return {
+    mode: "snapping",
+    rotation,
+    snapFrom: rotation,
+    snapTo: target,
+    snapStartTime: now,
+  };
+}
+
+function transitionIdle(state: Extract<OrbitState, { mode: "idle" }>): OrbitState {
+  return state;
+}
+
 function stepSimulation(state: OrbitState, config: OrbitConfig, now: number): OrbitState {
   switch (state.mode) {
-    case "snapping": {
-      const t = Math.min(1, (now - state.snapStartTime) / SNAP_DURATION);
-      const eased = easeOutCubic(t);
-      const rotation = state.snapFrom + (state.snapTo - state.snapFrom) * eased;
-      if (t >= 1 || Math.abs(rotation - state.snapTo) < 0.001) {
-        return { ...state, rotation: state.snapTo, mode: "idle", velocity: 0 };
-      }
-      return { ...state, rotation };
-    }
-
-    case "coasting": {
-      const rotation = state.rotation + state.velocity;
-      let velocity = state.velocity * FRICTION;
-      if (Math.abs(velocity) < STOP_THRESHOLD) velocity = 0;
-
-      if (velocity !== 0) {
-        return { ...state, rotation, velocity };
-      }
-
-      const target = snapTargetFor(rotation, config.n, config.arcSize, config.startAngle);
-      if (target === null) {
-        return { ...state, rotation, velocity: 0, mode: "idle" };
-      }
-
-      if (config.reduced) {
-        return { ...state, rotation: target, velocity: 0, mode: "idle" };
-      }
-
-      return {
-        ...state,
-        mode: "snapping",
-        snapFrom: rotation,
-        snapTo: target,
-        snapStartTime: now,
-      };
-    }
-
+    case "snapping":
+      return transitionSnapping(state, now);
+    case "coasting":
+      return transitionCoasting(state, config, now);
     case "idle":
-      return state;
+      return transitionIdle(state);
   }
 }
 
@@ -143,16 +147,17 @@ export function createOrbitEngine(config: OrbitEngineConfig): OrbitEngine {
 
   return {
     nudge(delta: number) {
-      state = { ...state, rotation: state.rotation + delta, mode: "coasting" };
+      state = { mode: "coasting", rotation: state.rotation + delta, velocity: 0 };
       render(state.rotation);
     },
 
     applyWheel(deltaY: number) {
       if (reduced) return;
+      const velocity = state.mode === "coasting" ? state.velocity : 0;
       state = {
-        ...state,
         mode: "coasting",
-        velocity: state.velocity + deltaY * WHEEL_SENSITIVITY,
+        rotation: state.rotation,
+        velocity: velocity + deltaY * WHEEL_SENSITIVITY,
       };
       if (!raf) raf = requestAnimationFrame(tick);
     },
