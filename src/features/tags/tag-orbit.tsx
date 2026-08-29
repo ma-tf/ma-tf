@@ -133,7 +133,7 @@ function OrbitScene() {
   );
 }
 
-export function TagOrbit({ tags, postsByTag }: PostsContextValue) {
+export function TagOrbit({ tags, postsByTag }: Pick<PostsContextValue, "tags" | "postsByTag">) {
   return (
     <PostsProvider tags={tags} postsByTag={postsByTag} startDeg={START_DEG} endDeg={END_DEG}>
       <OrbitScene />

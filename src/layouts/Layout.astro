@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Navbar from "@components/Navbar.astro";
 ---
 
 <script is:inline>
@@ -38,7 +39,8 @@ import "../styles/global.css";
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 	</head>
-	<body class="bg-background text-foreground">
+	<body class="bg-background text-foreground pt-12">
+		<Navbar />
 		<slot />
 	</body>
 </html>
