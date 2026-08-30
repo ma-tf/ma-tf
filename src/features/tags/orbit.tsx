@@ -31,18 +31,20 @@ export function Orbit<T>({
   const startRad = startAngle * DEG;
   const arcSize = endAngle * DEG - startRad;
   const step = stepDeg * DEG;
+  const totalSpan = items.length * step;
 
-  const stageRef = useStageRef(arcSize, step, startRad);
+  const stageRef = useStageRef(arcSize, totalSpan, step, startRad);
 
   const render = (rotation: number) => {
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
     itemRefs.current.forEach((el, i) => {
       if (!el) return;
       const raw = i * step + rotation;
-      const angle = -Math.PI / 2 + startRad + raw;
+      const wrapped = ((raw % totalSpan) + totalSpan) % totalSpan;
+      const angle = -Math.PI / 2 + startRad + wrapped;
       const depth = (Math.sin(angle) + 1) / 2;
       el.style.zIndex = String(Math.round(depth * items.length));
-      el.style.visibility = raw >= 0 && raw < arcSize ? "visible" : "hidden";
+      el.style.visibility = wrapped < arcSize ? "visible" : "hidden";
     });
   };
 
@@ -60,9 +62,10 @@ export function Orbit<T>({
   });
 
   useEffect(() => {
-    stageRef.current?.addEventListener("wheel", onWheelEvent, { passive: false });
-    return () => stageRef.current?.removeEventListener("wheel", onWheelEvent);
-  }, []);
+    const el = stageRef.current;
+    el?.addEventListener("wheel", onWheelEvent, { passive: false });
+    return () => el?.removeEventListener("wheel", onWheelEvent);
+  }, [stageRef]);
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {

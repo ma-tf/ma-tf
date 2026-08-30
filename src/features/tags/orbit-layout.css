@@ -9,12 +9,14 @@
   --rotation: 0rad;
   --step: 0rad;
   --arc-size: 0rad;
+  --total-span: 0rad;
   --start-angle: 0rad;
 }
 
 .orbit-item {
   --angle: calc(
-    var(--base-angle) + var(--start-angle) + var(--index) * var(--step) + var(--rotation)
+    var(--base-angle) + var(--start-angle) +
+      mod(var(--index) * var(--step) + var(--rotation), var(--total-span))
   );
   --x: calc(cos(var(--angle)) * var(--radius));
   --y: calc(sin(var(--angle)) * var(--radius) * var(--flatness));
