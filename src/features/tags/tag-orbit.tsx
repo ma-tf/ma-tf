@@ -5,9 +5,6 @@ import { Orbit } from "@features/tags/orbit";
 import { TagLink } from "@features/tags/tags";
 import { useState } from "react";
 
-const START_DEG = 100;
-const END_DEG = 170;
-
 type TagOrbitProps = {
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
@@ -20,9 +17,9 @@ export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
     <Orbit
       items={tags}
       getKey={(tag) => tag.tag}
-      startAngle={START_DEG}
-      endAngle={END_DEG}
-      stepDeg={10}
+      startAngle={95}
+      endAngle={175}
+      stepDeg={12.5}
       onSelect={setSelected}
       renderItem={(tag) => (
         <TagLink
