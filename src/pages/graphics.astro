@@ -1,10 +1,10 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { ModeToggle } from "@components/ModeToggle";
+import Navbar from "@components/Navbar.astro";
 ---
 
 <Layout>
-  <ModeToggle client:only="react" />
+  <Navbar />
   <div class="flex justify-center py-8">
     <div class="max-w-2xl px-8">
       <h2 class="text-lg">graphics</h2>

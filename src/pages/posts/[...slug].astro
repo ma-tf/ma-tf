@@ -1,7 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
-import { ModeToggle } from "@components/ModeToggle";
+import Navbar from "@components/Navbar.astro";
 import {
   Post,
   PostBackLink,
@@ -27,7 +27,7 @@ const { Content } = await render(post);
 ---
 
 <Layout>
-  <ModeToggle client:only="react" />
+  <Navbar />
   <Post>
     <PostBackLink href="/blog">← Back to blog</PostBackLink>
     <PostHeader>

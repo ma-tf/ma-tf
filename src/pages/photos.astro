@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { ModeToggle } from "@components/ModeToggle";
+import Navbar from "@components/Navbar.astro";
 import PhotoGrid from "@features/photos/photo-grid.astro";
 import {
 	Photos,
@@ -13,7 +13,7 @@ import Footer from "@layouts/footer.astro";
 ---
 
 <Layout>
-	<ModeToggle client:only="react" />
+	<Navbar />
 	<Photos>
 		<PhotosHeader>
 			<PhotosTitle>photographs</PhotosTitle>

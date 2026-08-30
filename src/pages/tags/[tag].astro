@@ -1,7 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getRawPosts } from "@features/blog/post-data";
-import { ModeToggle } from "@components/ModeToggle";
+import Navbar from "@components/Navbar.astro";
 import { PostList } from "@features/tags/post-list.tsx";
 import { Tags, TagsTitle, TagsBackLink } from "@features/tags/tags";
 
@@ -24,7 +24,7 @@ const { tag, posts } = Astro.props;
 ---
 
 <Layout>
-  <ModeToggle client:only="react" />
+  <Navbar />
   <Tags>
     <TagsTitle>Tag: {tag}</TagsTitle>
     <TagsBackLink href="/tags">← All tags</TagsBackLink>

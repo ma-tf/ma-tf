@@ -4,7 +4,7 @@ import ExperienceSection from "@features/cv/experience.astro";
 import EducationSection from "@features/cv/education.astro";
 import ProjectsSection from "@features/cv/projects.astro";
 import profile from "@content/profile.json";
-import { ModeToggle } from "@components/ModeToggle";
+import Navbar from "@components/Navbar.astro";
 import {
 	CurriculumVitaeSection,
 	CurriculumVitaeTitle,
@@ -14,7 +14,7 @@ import {
 ---
 
 <Layout>
-	<ModeToggle client:only="react" />
+	<Navbar />
 	<div class="bg-muted min-h-screen px-4 py-8 md:px-8">
 		<div class="mx-auto flex w-full max-w-md flex-col gap-2 md:max-w-3xl">
 			<CurriculumVitaeName>{profile.name}</CurriculumVitaeName>

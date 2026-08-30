@@ -11,7 +11,7 @@ import {
 	MusicTitle,
 	MusicDescription,
 } from "@features/music/music";
-import { ModeToggle } from "@components/ModeToggle";
+import Navbar from "@components/Navbar.astro";
 import Footer from "@layouts/footer.astro";
 
 const s3 = new S3Client({
@@ -51,7 +51,7 @@ const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
 ---
 
 <Layout>
-	<ModeToggle client:only="react" />
+	<Navbar />
 	<Music>
 		<MusicHeader>
 			<MusicTitle>music</MusicTitle>

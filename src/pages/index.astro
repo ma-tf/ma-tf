@@ -6,8 +6,8 @@ import { PhotosPreview } from "@features/photos/photos-preview";
 import { VignettesPreview } from "@features/vignettes/vignettes-preview";
 import { GraphicsPreview } from "@features/graphics/graphics-preview";
 import { MusicPreview } from "@features/music/music-preview";
-import { ModeToggle } from "@components/ModeToggle";
 import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
 import Footer from "@layouts/footer.astro";
 import { getPosts } from "@features/blog/post-data";
 import { previews } from "@lib/feature-flags";
@@ -41,7 +41,7 @@ const images: ImageMap = {
 ---
 
 <Layout>
-  <ModeToggle client:only="react" />
+  <Navbar />
   <Home />
   {previews.blog && <BlogPreview posts={recentPosts} />}
   {previews.projects && <ProjectsPreview />}
