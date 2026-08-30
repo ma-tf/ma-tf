@@ -68,7 +68,13 @@ export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
             {tag.tag} ({tag.count})
           </TagLink>
         )}
-      />
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-1/2 h-dvh w-40 -translate-x-1/2 bg-muted-foreground"
+        />
+      </Orbit>
+
       {selected && (
         <SelectedOverlay
           tag={selected}

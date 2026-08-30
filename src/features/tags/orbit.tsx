@@ -12,6 +12,7 @@ type OrbitProps<T> = {
   startAngle: number;
   endAngle: number;
   getKey: (item: T, index: number) => string | number;
+  children?: React.ReactNode;
 };
 
 export function Orbit<T>({
@@ -21,6 +22,7 @@ export function Orbit<T>({
   startAngle,
   endAngle,
   getKey,
+  children,
 }: OrbitProps<T>) {
   const { itemRefs, setRef } = useItemRefs(items.length);
 
@@ -90,6 +92,7 @@ export function Orbit<T>({
       aria-label="Orbit. Use arrow keys to rotate, Enter to select."
       onKeyDown={onKeyDown}
     >
+      {children}
       {items.map((item, i) => (
         <div
           key={getKey(item, i)}
