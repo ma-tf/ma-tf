@@ -66,6 +66,12 @@ export function createOrbitEngine(config: {
     return { mode: "snapping", rotation, snapFrom: rotation, snapTo: nearest, snapStartTime: now };
   }
 
+  const transitions = {
+    snapping: transitionSnapping,
+    coasting: transitionCoasting,
+    idle: (s: OrbitState): OrbitState => s,
+  } as Record<OrbitState["mode"], (state: OrbitState, now: number) => OrbitState>;
+
   let state: OrbitState = { mode: "idle", rotation: 0 };
   let raf = 0;
   let disposed = false;
@@ -73,11 +79,7 @@ export function createOrbitEngine(config: {
   function tick() {
     if (disposed) return;
     const now = getTime();
-    if (state.mode === "snapping") {
-      state = transitionSnapping(state, now);
-    } else if (state.mode === "coasting") {
-      state = transitionCoasting(state, now);
-    }
+    state = transitions[state.mode](state, now);
     render(state.rotation);
     if (state.mode === "idle") {
       raf = 0;
