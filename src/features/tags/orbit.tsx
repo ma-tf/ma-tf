@@ -1,6 +1,6 @@
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useItemRefs, useStageRef } from "@hooks/use-orbit";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useEffectEvent } from "react";
 import "@features/tags/orbit-layout.css";
 
 const DEG = Math.PI / 180;
@@ -11,14 +11,23 @@ type OrbitProps<T> = {
   onSelect: (item: T) => void;
   startAngle: number;
   endAngle: number;
+  getKey: (item: T, index: number) => string | number;
 };
 
-export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: OrbitProps<T>) {
-  const stageRef = useRef<HTMLDivElement>(null);
+export function Orbit<T>({
+  items,
+  renderItem,
+  onSelect,
+  startAngle,
+  endAngle,
+  getKey,
+}: OrbitProps<T>) {
   const { itemRefs, setRef } = useItemRefs(items.length);
 
   const startRad = startAngle * DEG;
   const arcSize = endAngle * DEG - startRad;
+
+  const stageRef = useStageRef(arcSize, items.length, startRad);
 
   const render = (rotation: number) => {
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
@@ -40,7 +49,15 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
     render,
   );
 
-  useStageRef(stageRef, applyWheel, arcSize, items.length, startRad);
+  const onWheelEvent = useEffectEvent((e: WheelEvent) => {
+    e.preventDefault();
+    applyWheel(e.deltaY);
+  });
+
+  useEffect(() => {
+    stageRef.current?.addEventListener("wheel", onWheelEvent, { passive: false });
+    return () => stageRef.current?.removeEventListener("wheel", onWheelEvent);
+  }, []);
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -75,7 +92,7 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
     >
       {items.map((item, i) => (
         <div
-          key={i}
+          key={getKey(item, i)}
           ref={setRef(i)}
           style={{ "--index": i } as React.CSSProperties}
           className="orbit-item absolute top-0 left-0"

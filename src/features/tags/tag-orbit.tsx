@@ -53,6 +53,7 @@ export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
     <>
       <Orbit
         items={tags}
+        getKey={(tag) => tag.tag}
         startAngle={START_DEG}
         endAngle={END_DEG}
         onSelect={setSelected}

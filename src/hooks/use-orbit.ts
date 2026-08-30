@@ -1,20 +1,10 @@
-import { useState, useEffect, useRef, useCallback, useEffectEvent, type RefObject } from "react";
+import { useState, useEffect, useRef, useCallback, useEffectEvent } from "react";
 
-export function useStageRef(
-  stageRef: RefObject<HTMLDivElement | null>,
-  applyWheel: (deltaY: number) => void,
-  arcSize: number,
-  itemsLength: number,
-  startAngle: number,
-) {
+export function useStageRef(arcSize: number, itemsLength: number, startAngle: number) {
   const [radius, setRadius] = useState(0);
+  const stageRef = useRef<HTMLDivElement>(null);
 
-  const onWheelEvent = useEffectEvent((e: WheelEvent) => {
-    e.preventDefault();
-    applyWheel(e.deltaY);
-  });
-
-  // Measure radius + attach wheel listener on mount.
+  // Measure radius on mount.
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
@@ -26,11 +16,7 @@ export function useStageRef(
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    el.addEventListener("wheel", onWheelEvent, { passive: false });
-    return () => {
-      ro.disconnect();
-      el.removeEventListener("wheel", onWheelEvent);
-    };
+    return () => ro.disconnect();
   }, []);
 
   const configEvent = useEffectEvent(() => {
@@ -45,6 +31,8 @@ export function useStageRef(
     stageRef.current?.style.setProperty("--radius", `${radius}px`);
     configEvent();
   }, [radius]);
+
+  return stageRef;
 }
 
 export function useItemRefs(itemsLength: number) {

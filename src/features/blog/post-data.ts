@@ -8,7 +8,7 @@ export type PlainPost = {
 };
 
 export async function getRawPosts(): Promise<CollectionEntry<"blog">[]> {
-  return (await getCollection("blog")).filter((p) => !p.data.draft);
+  return (await getCollection("blog")).filter((p: CollectionEntry<"blog">) => !p.data.draft);
 }
 
 export async function getPosts(): Promise<PlainPost[]> {
