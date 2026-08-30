@@ -39,3 +39,4 @@ trustPolicyExclude:
   - "semver@6.3.1"
 overrides:
   vite@*: "catalog:"
+  fastq: "1.20.1"
