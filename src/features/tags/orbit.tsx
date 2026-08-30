@@ -1,7 +1,5 @@
-import { activateAtFront } from "@features/tags/orbit-input";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useItemRefs, useStageRef } from "@hooks/use-orbit";
-import { useReducedMotion } from "@hooks/use-reduced-motion";
 import { useCallback, useRef } from "react";
 import "@features/tags/orbit-layout.css";
 
@@ -18,11 +16,9 @@ type OrbitProps<T> = {
 export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: OrbitProps<T>) {
   const stageRef = useRef<HTMLDivElement>(null);
   const { itemRefs, setRef } = useItemRefs(items.length);
-  const reduced = useReducedMotion();
 
   const startRad = startAngle * DEG;
-  const endRad = endAngle * DEG;
-  const arcSize = endRad - startRad;
+  const arcSize = endAngle * DEG - startRad;
 
   const render = (rotation: number) => {
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
@@ -37,11 +33,10 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
     });
   };
 
-  const { nudge, applyWheel, getRotation } = useOrbitEngine(
+  const { nudge, applyWheel, getFrontIndex } = useOrbitEngine(
     items.length,
     arcSize,
     startRad,
-    reduced,
     render,
   );
 
@@ -49,23 +44,24 @@ export function Orbit<T>({ items, renderItem, onSelect, startAngle, endAngle }: 
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      switch (e.key) {
-        case "ArrowLeft":
-          e.preventDefault();
-          nudge(-arcSize / items.length);
-          break;
-        case "ArrowRight":
-          e.preventDefault();
-          nudge(arcSize / items.length);
-          break;
-        case "Enter":
-        case " ":
-          e.preventDefault();
-          activateAtFront(getRotation(), items, arcSize, startRad, onSelect);
-          break;
+      const step = arcSize / items.length;
+      const activateFront = () => {
+        const tag = items[getFrontIndex()];
+        if (tag) onSelect(tag);
+      };
+      const handlers: Record<string, () => void> = {
+        ArrowLeft: () => nudge(-step),
+        ArrowRight: () => nudge(step),
+        Enter: activateFront,
+        " ": activateFront,
+      };
+      const handler = handlers[e.key];
+      if (handler) {
+        e.preventDefault();
+        handler();
       }
     },
-    [nudge, getRotation, arcSize, items.length, startRad, items, onSelect],
+    [nudge, getFrontIndex, items, arcSize, onSelect],
   );
 
   return (
