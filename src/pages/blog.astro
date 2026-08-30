@@ -11,7 +11,7 @@ const plainPosts = await getPosts();
 ---
 
 <Layout>
-  <ModeToggle client:load />
+  <ModeToggle client:only="react" />
   <BlogPage
     client:load
     title="blog"

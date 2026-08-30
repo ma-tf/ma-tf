@@ -237,6 +237,9 @@ importers:
       '@mux/mux-video':
         specifier: ^0.31.2
         version: 0.31.2
+      '@nanostores/react':
+        specifier: ^1.1.0
+        version: 1.1.0(nanostores@1.5.2)(react@19.2.8)
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -252,6 +255,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      nanostores:
+        specifier: ^1.5.2
+        version: 1.5.2
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -1800,6 +1806,13 @@ packages:
 
   '@mux/playback-core@0.35.2':
     resolution: {integrity: sha512-AsMV0LMwJm9T1ig6BBYSddeMlkzz+2RGcd6dkOgYk+L5Hx477ovbTxJZJ/vTW+rZjNWHcG3BvgNbSLgiubyZhw==}
+
+  '@nanostores/react@1.1.0':
+    resolution: {integrity: sha512-MbH35fjhcf7LAubYX5vhOChYUfTLzNLqH/mBGLVsHkcvjy0F8crO1WQwdmQ2xKbAmtpalDa2zBt3Hlg5kqr8iw==}
+    engines: {node: ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      nanostores: ^1.2.0
+      react: '>=18.0.0'
 
   '@napi-rs/wasm-runtime@1.2.3':
     resolution: {integrity: sha512-UMduMbqO5s5zF2NkNacMT/yK5Y5QiKvWr2+50bzIIxFDwVJ2h49b+oyjaCGPhJxd2/gC2x39EHv/gHVuu36x2Q==}
@@ -6652,6 +6665,10 @@ packages:
   nanospinner@1.2.2:
     resolution: {integrity: sha512-Zt/AmG6qRU3e+WnzGGLuMCEAO/dAu45stNbHY223tUxldaDAeE+FxSPsd9Q+j+paejmm0ZbrNVs5Sraqy3dRxA==}
 
+  nanostores@1.5.2:
+    resolution: {integrity: sha512-B0UbxzK1s0CN8Xht6r+7iT5+xV8PTaRERR1nATeplRv1Rw5YLWfVAid0hkqY3EceqpG4RjTk8GAwIxQY39Rnwg==}
+    engines: {node: ^20.0.0 || >=22.0.0}
+
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -10359,6 +10376,11 @@ snapshots:
     dependencies:
       hls.js: 1.6.19
       mux-embed: 5.18.1
+
+  '@nanostores/react@1.1.0(nanostores@1.5.2)(react@19.2.8)':
+    dependencies:
+      nanostores: 1.5.2
+      react: 19.2.8
 
   '@napi-rs/wasm-runtime@1.2.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
@@ -15561,6 +15583,8 @@ snapshots:
   nanospinner@1.2.2:
     dependencies:
       picocolors: 1.1.1
+
+  nanostores@1.5.2: {}
 
   natural-compare@1.4.0: {}
 

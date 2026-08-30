@@ -14,7 +14,7 @@ import {
 ---
 
 <Layout>
-	<ModeToggle client:load />
+	<ModeToggle client:only="react" />
 	<div class="bg-muted min-h-screen px-4 py-8 md:px-8">
 		<div class="mx-auto flex w-full max-w-md flex-col gap-2 md:max-w-3xl">
 			<CurriculumVitaeName>{profile.name}</CurriculumVitaeName>

@@ -13,7 +13,7 @@ import Footer from "@layouts/footer.astro";
 ---
 
 <Layout>
-	<ModeToggle client:load />
+	<ModeToggle client:only="react" />
 	<Photos>
 		<PhotosHeader>
 			<PhotosTitle>photographs</PhotosTitle>

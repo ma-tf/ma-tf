@@ -11,6 +11,7 @@
       "@layouts/*": ["./src/layouts/*"],
       "@lib/*": ["./src/lib/*"],
       "@pages/*": ["./src/pages/*"],
+      "@stores/*": ["./src/stores/*"],
       "@ui/*": ["./src/components/ui/*"]
     },
     "target": "es2023",

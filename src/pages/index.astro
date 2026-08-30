@@ -41,7 +41,7 @@ const images: ImageMap = {
 ---
 
 <Layout>
-  <ModeToggle client:load />
+  <ModeToggle client:only="react" />
   <Home />
   {previews.blog && <BlogPreview posts={recentPosts} />}
   {previews.projects && <ProjectsPreview />}

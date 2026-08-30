@@ -27,7 +27,7 @@ const { Content } = await render(post);
 ---
 
 <Layout>
-  <ModeToggle client:load />
+  <ModeToggle client:only="react" />
   <Post>
     <PostBackLink href="/blog">← Back to blog</PostBackLink>
     <PostHeader>

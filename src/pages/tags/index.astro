@@ -8,6 +8,6 @@ const { tags, postsByTag } = await getTagIndex();
 ---
 
 <Layout>
-  <ModeToggle client:load />
+  <ModeToggle client:only="react" />
   <TagOrbit tags={tags} postsByTag={postsByTag} client:load />
 </Layout>

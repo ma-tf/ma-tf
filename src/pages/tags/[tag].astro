@@ -24,7 +24,7 @@ const { tag, posts } = Astro.props;
 ---
 
 <Layout>
-  <ModeToggle client:load />
+  <ModeToggle client:only="react" />
   <Tags>
     <TagsTitle>Tag: {tag}</TagsTitle>
     <TagsBackLink href="/tags">← All tags</TagsBackLink>
