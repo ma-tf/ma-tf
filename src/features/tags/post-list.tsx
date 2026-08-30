@@ -12,7 +12,7 @@ export function PostList({ posts }: Props) {
         return (
           <li key={post.data.slug}>
             <button
-              className="flex w-full cursor-pointer flex-col text-left text-2xl"
+              className="flex w-full cursor-pointer flex-col text-left text-lg"
               onClick={() => (window.location.href = `/posts/${post.data.slug}`)}
             >
               <div className="flex gap-2">

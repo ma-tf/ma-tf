@@ -8,39 +8,6 @@ import { useState } from "react";
 const START_DEG = 100;
 const END_DEG = 170;
 
-function SelectedOverlay({
-  tag,
-  posts,
-  onBack,
-}: {
-  tag: Tag;
-  posts: PlainPost[];
-  onBack: () => void;
-}) {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-      <div className="pointer-events-auto max-h-[80vh] w-full max-w-2xl overflow-y-auto px-8 text-center">
-        <span className="block text-5xl font-bold">{tag.tag}</span>
-        <ul className="mt-6 flex flex-col gap-3">
-          {posts.map((post) => (
-            <li key={post.slug}>
-              <a
-                href={`/posts/${post.slug}`}
-                className="block text-2xl font-semibold underline-offset-4 hover:underline"
-              >
-                {post.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <button type="button" onClick={onBack} className="mt-6 text-muted-foreground">
-          ← back
-        </button>
-      </div>
-    </div>
-  );
-}
-
 type TagOrbitProps = {
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
@@ -50,38 +17,47 @@ export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
   const [selected, setSelected] = useState<Tag | null>(null);
 
   return (
-    <>
-      <Orbit
-        items={tags}
-        getKey={(tag) => tag.tag}
-        startAngle={START_DEG}
-        endAngle={END_DEG}
-        onSelect={setSelected}
-        renderItem={(tag) => (
-          <TagLink
-            href={`/tags/${tag.tag}`}
-            onClick={(e) => {
-              e.preventDefault();
-              setSelected(tag);
-            }}
-          >
-            {tag.tag} ({tag.count})
-          </TagLink>
-        )}
-      >
+    <Orbit
+      items={tags}
+      getKey={(tag) => tag.tag}
+      startAngle={START_DEG}
+      endAngle={END_DEG}
+      stepDeg={10}
+      onSelect={setSelected}
+      renderItem={(tag) => (
+        <TagLink
+          href={`/tags/${tag.tag}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setSelected((prev) => (prev?.tag === tag.tag ? null : tag));
+          }}
+        >
+          {tag.tag} ({tag.count})
+        </TagLink>
+      )}
+    >
+      {selected ? (
+        <div className="absolute top-0 left-1/2 z-10 flex h-dvh w-sm -translate-x-1/2 flex-col items-center justify-center gap-4 bg-muted px-8 py-12">
+          <span className="text-3xl font-bold">{selected.tag}</span>
+          <ul className="flex w-full flex-col gap-2 overflow-y-auto">
+            {(postsByTag[selected.tag] ?? []).map((post) => (
+              <li key={post.slug}>
+                <a
+                  href={`/posts/${post.slug}`}
+                  className="block text-lg font-semibold underline-offset-4 hover:underline"
+                >
+                  {post.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
         <div
           aria-hidden
-          className="pointer-events-none absolute top-0 left-1/2 h-dvh w-40 -translate-x-1/2 bg-muted-foreground"
-        />
-      </Orbit>
-
-      {selected && (
-        <SelectedOverlay
-          tag={selected}
-          posts={postsByTag[selected.tag] ?? []}
-          onBack={() => setSelected(null)}
+          className="pointer-events-none absolute top-0 left-1/2 h-dvh w-sm -translate-x-1/2 bg-muted-foreground"
         />
       )}
-    </>
+    </Orbit>
   );
 }

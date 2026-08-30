@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useEffectEvent } from "react";
 
-export function useStageRef(arcSize: number, itemsLength: number, startAngle: number) {
+export function useStageRef(arcSize: number, step: number, startAngle: number) {
   const [radius, setRadius] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +22,7 @@ export function useStageRef(arcSize: number, itemsLength: number, startAngle: nu
   const configEvent = useEffectEvent(() => {
     const el = stageRef.current;
     if (!el) return;
-    el.style.setProperty("--step", `${arcSize / itemsLength}rad`);
+    el.style.setProperty("--step", `${step}rad`);
     el.style.setProperty("--arc-size", `${arcSize}rad`);
     el.style.setProperty("--start-angle", `${startAngle}rad`);
   });

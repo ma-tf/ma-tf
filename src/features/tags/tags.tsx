@@ -13,7 +13,7 @@ export function Tags({ children, className, ...props }: React.ComponentProps<"ma
 
 export function TagsTitle({ children, className, ...props }: React.ComponentProps<"h1">) {
   return (
-    <h1 className={cn("text-4xl font-bold", className)} {...props}>
+    <h1 className={cn("text-lg font-bold", className)} {...props}>
       {children}
     </h1>
   );

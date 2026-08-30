@@ -11,6 +11,7 @@ type OrbitProps<T> = {
   onSelect: (item: T) => void;
   startAngle: number;
   endAngle: number;
+  stepDeg: number;
   getKey: (item: T, index: number) => string | number;
   children?: React.ReactNode;
 };
@@ -21,6 +22,7 @@ export function Orbit<T>({
   onSelect,
   startAngle,
   endAngle,
+  stepDeg,
   getKey,
   children,
 }: OrbitProps<T>) {
@@ -28,19 +30,19 @@ export function Orbit<T>({
 
   const startRad = startAngle * DEG;
   const arcSize = endAngle * DEG - startRad;
+  const step = stepDeg * DEG;
 
-  const stageRef = useStageRef(arcSize, items.length, startRad);
+  const stageRef = useStageRef(arcSize, step, startRad);
 
   const render = (rotation: number) => {
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
-    const step = arcSize / items.length;
     itemRefs.current.forEach((el, i) => {
       if (!el) return;
       const raw = i * step + rotation;
-      const wrapped = ((raw % arcSize) + arcSize) % arcSize;
-      const angle = -Math.PI / 2 + startRad + wrapped;
+      const angle = -Math.PI / 2 + startRad + raw;
       const depth = (Math.sin(angle) + 1) / 2;
       el.style.zIndex = String(Math.round(depth * items.length));
+      el.style.visibility = raw >= 0 && raw < arcSize ? "visible" : "hidden";
     });
   };
 
@@ -48,6 +50,7 @@ export function Orbit<T>({
     items.length,
     arcSize,
     startRad,
+    step,
     render,
   );
 
@@ -63,7 +66,6 @@ export function Orbit<T>({
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      const step = arcSize / items.length;
       const activateFront = () => {
         const tag = items[getFrontIndex()];
         if (tag) onSelect(tag);
@@ -80,7 +82,7 @@ export function Orbit<T>({
         handler();
       }
     },
-    [nudge, getFrontIndex, items, arcSize, onSelect],
+    [nudge, getFrontIndex, items, step, onSelect],
   );
 
   return (

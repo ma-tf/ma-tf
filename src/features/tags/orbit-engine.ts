@@ -26,13 +26,13 @@ export function createOrbitEngine(config: {
   n: number;
   arcSize: number;
   startAngle: number;
+  step: number;
   reduced: boolean;
   render: (angle: number) => void;
   now?: () => number;
 }): OrbitEngine {
-  const { render, n, arcSize, startAngle, reduced } = config;
+  const { render, n, step, startAngle, reduced } = config;
   const getTime = config.now ?? (() => performance.now());
-  const step = arcSize / n;
 
   function transitionSnapping(
     state: Extract<OrbitState, { mode: "snapping" }>,
