@@ -13,6 +13,8 @@ type OrbitProps<T> = {
   endAngle: number;
   stepDeg: number;
   getKey: (item: T, index: number) => string | number;
+  onRotate?: (rotation: number) => void;
+  initialRotation?: number;
   children?: React.ReactNode;
 };
 
@@ -24,6 +26,8 @@ export function Orbit<T>({
   endAngle,
   stepDeg,
   getKey,
+  onRotate,
+  initialRotation,
   children,
 }: OrbitProps<T>) {
   const { itemRefs, setRef } = useItemRefs(items.length);
@@ -37,6 +41,7 @@ export function Orbit<T>({
 
   const render = (rotation: number) => {
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
+    onRotate?.(rotation);
     itemRefs.current.forEach((el, i) => {
       if (!el) return;
       const raw = i * step + rotation;
@@ -54,6 +59,7 @@ export function Orbit<T>({
     startRad,
     step,
     render,
+    initialRotation,
   );
 
   const onWheelEvent = useEffectEvent((e: WheelEvent) => {

@@ -8,6 +8,7 @@ export function useOrbitEngine(
   startAngle: number,
   step: number,
   render: (angle: number) => void,
+  initialRotation?: number,
 ) {
   const engineRef = useRef<OrbitEngine>(null);
   const renderRef = useRef(render);
@@ -24,10 +25,11 @@ export function useOrbitEngine(
       startAngle,
       step,
       reduced,
+      ...(initialRotation !== undefined && { initialRotation }),
       render: (rotation) => renderRef.current(rotation),
     });
     return () => engineRef.current?.destroy();
-  }, [n, arcSize, startAngle, step, reduced]);
+  }, [n, arcSize, startAngle, step, reduced, initialRotation]);
 
   const nudge = useCallback((d: number) => engineRef.current?.nudge(d), []);
   const applyWheel = useCallback((d: number) => engineRef.current?.applyWheel(d), []);

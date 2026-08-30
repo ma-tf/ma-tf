@@ -2,8 +2,8 @@
 import Layout from "@layouts/Layout.astro";
 import { getRawPosts } from "@features/blog/post-data";
 import Navbar from "@components/Navbar.astro";
-import { PostList } from "@features/tags/post-list.tsx";
-import { Tags, TagsTitle, TagsBackLink } from "@features/tags/tags";
+import { TagOrbit } from "@features/tags/tag-orbit";
+import { getTagIndex } from "@features/tags/tag-data";
 
 export async function getStaticPaths() {
   const posts = await getRawPosts();
@@ -11,23 +11,15 @@ export async function getStaticPaths() {
 
   return tags.map((tag) => ({
     params: { tag },
-    props: {
-      tag,
-      posts: posts
-        .filter((post) => post.data.tags.includes(tag))
-        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
-    },
+    props: { tag },
   }));
 }
 
-const { tag, posts } = Astro.props;
+const { tag } = Astro.props;
+const { tags, postsByTag } = await getTagIndex();
 ---
 
 <Layout>
   <Navbar />
-  <Tags>
-    <TagsTitle>Tag: {tag}</TagsTitle>
-    <TagsBackLink href="/tags">← All tags</TagsBackLink>
-    <PostList posts={posts} />
-  </Tags>
+  <TagOrbit tags={tags} postsByTag={postsByTag} initialSelected={tag} client:load />
 </Layout>

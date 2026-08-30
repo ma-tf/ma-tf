@@ -3,15 +3,32 @@ import type { Tag } from "@features/tags/tag-data";
 
 import { Orbit } from "@features/tags/orbit";
 import { TagLink } from "@features/tags/tags";
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+
+const STORAGE_KEY = "ma-tf:orbit-rotation";
 
 type TagOrbitProps = {
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
+  initialSelected?: string;
 };
 
-export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
-  const [selected, setSelected] = useState<Tag | null>(null);
+export function TagOrbit({ tags, postsByTag, initialSelected }: TagOrbitProps) {
+  const [selected] = useState<Tag | null>(() =>
+    initialSelected ? (tags.find((t) => t.tag === initialSelected) ?? null) : null,
+  );
+  const rotationRef = useRef(0);
+
+  const initialRotation = useMemo(() => Number(sessionStorage.getItem(STORAGE_KEY) ?? 0), []);
+
+  const navigate = useCallback(
+    (tag: Tag | null) => {
+      if (!tag) return;
+      sessionStorage.setItem(STORAGE_KEY, String(rotationRef.current));
+      window.location.href = selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`;
+    },
+    [selected],
+  );
 
   return (
     <Orbit
@@ -20,13 +37,17 @@ export function TagOrbit({ tags, postsByTag }: TagOrbitProps) {
       startAngle={95}
       endAngle={175}
       stepDeg={12.5}
-      onSelect={setSelected}
+      onSelect={navigate}
+      onRotate={(rotation) => {
+        rotationRef.current = rotation;
+      }}
+      initialRotation={initialRotation}
       renderItem={(tag) => (
         <TagLink
-          href={`/tags/${tag.tag}`}
+          href={selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`}
           onClick={(e) => {
             e.preventDefault();
-            setSelected((prev) => (prev?.tag === tag.tag ? null : tag));
+            navigate(tag);
           }}
         >
           {tag.tag} ({tag.count})
