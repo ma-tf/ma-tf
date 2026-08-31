@@ -9,5 +9,10 @@ const { tags, postsByTag } = await getTagIndex();
 
 <Layout>
   <Navbar />
-  <TagOrbit tags={tags} postsByTag={postsByTag} client:load />
+  <TagOrbit
+    tags={tags}
+    postsByTag={postsByTag}
+    initialSelected=""
+    client:load
+  />
 </Layout>

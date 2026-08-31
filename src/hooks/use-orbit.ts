@@ -33,7 +33,7 @@ export function useStageRef(arcSize: number, totalSpan: number, step: number, st
     configEvent();
   }, [radius]);
 
-  return stageRef;
+  return { stageRef, radius };
 }
 
 export function useItemRefs(itemsLength: number) {

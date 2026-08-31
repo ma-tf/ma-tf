@@ -1,7 +1,9 @@
+import { OrbitScrollbar } from "@features/tags/orbit-scrollbar";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useItemRefs, useStageRef } from "@hooks/use-orbit";
-import { useCallback, useEffect, useEffectEvent } from "react";
+import { useCallback, useEffect, useEffectEvent, useState } from "react";
 const DEG = Math.PI / 180;
+const SCROLLBAR_OFFSET = -64;
 
 type OrbitProps<T> = {
   items: T[];
@@ -35,10 +37,12 @@ export function Orbit<T>({
   const step = stepDeg * DEG;
   const totalSpan = items.length * step;
 
-  const stageRef = useStageRef(arcSize, totalSpan, step, startRad);
+  const { stageRef, radius } = useStageRef(arcSize, totalSpan, step, startRad);
+  const [rotation, setRotation] = useState(0);
 
   const render = (rotation: number) => {
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
+    setRotation(rotation);
     onRotate?.(rotation);
     itemRefs.current.forEach((el, i) => {
       if (!el) return;
@@ -102,6 +106,14 @@ export function Orbit<T>({
       onKeyDown={onKeyDown}
     >
       {children}
+      <OrbitScrollbar
+        rotation={rotation}
+        totalSpan={totalSpan}
+        radius={radius}
+        startRad={startRad}
+        arcSize={arcSize}
+        offset={SCROLLBAR_OFFSET}
+      />
       {items.map((item, i) => (
         <div
           key={getKey(item, i)}
