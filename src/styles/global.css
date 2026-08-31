@@ -221,5 +221,5 @@
 @property --cut-color {
   syntax: "<color>";
   inherits: true;
-  initial-value: var(--border);
+  initial-value: oklch(0.922 0 0);
 }
