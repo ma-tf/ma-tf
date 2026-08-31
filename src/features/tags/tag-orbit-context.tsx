@@ -59,9 +59,10 @@ export function TagOrbitProvider({
 }) {
   const groupedByTag = useGroupedByTag(postsByTag);
 
-  return (
-    <TagOrbitContext.Provider value={{ selected, postsByTag, groupedByTag, tags, onSelect }}>
-      {children}
-    </TagOrbitContext.Provider>
+  const value = useMemo(
+    () => ({ selected, postsByTag, groupedByTag, tags, onSelect }),
+    [selected, postsByTag, groupedByTag, tags, onSelect],
   );
+
+  return <TagOrbitContext.Provider value={value}>{children}</TagOrbitContext.Provider>;
 }

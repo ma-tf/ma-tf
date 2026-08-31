@@ -25,7 +25,7 @@ function TagPosts() {
             {posts.map((post) => (
               <li key={post.slug} className="group relative">
                 <a href={`/posts/${post.slug}`} className="block truncate text-xs font-semibold">
-                  <span className="inline-block duration-150 group-hover:translate-x-4">
+                  <span className="inline-block transition-transform duration-150 group-hover:translate-x-4">
                     {post.title}
                   </span>
                 </a>
@@ -62,7 +62,7 @@ function SelectedTagPanel() {
                 href={href}
                 className="group relative inline-flex items-center overflow-hidden border border-foreground bg-foreground pr-4 pl-1 text-xs text-background uppercase transition-[color,background-color] duration-150 hover:bg-background hover:text-foreground"
               >
-                <span className="inline-flex items-center gap-1 pr-2 duration-150 group-hover:translate-x-4">
+                <span className="inline-flex items-center gap-1 pr-2 transition-transform duration-150 group-hover:translate-x-4">
                   <ArrowLeftIcon size={14} className="-ml-5 shrink-0" />
                   {label}
                 </span>

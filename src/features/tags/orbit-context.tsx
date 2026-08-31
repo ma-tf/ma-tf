@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 
 const DEG = Math.PI / 180;
 
@@ -40,20 +40,18 @@ export function OrbitProvider<T>({
   const arcSize = (endAngle - startAngle) * DEG;
   const step = stepAngle * DEG;
 
-  return (
-    <OrbitContext.Provider
-      value={
-        {
-          startAngle: startRad,
-          arcSize,
-          step,
-          items,
-          getKey,
-          initialRotation,
-        } as OrbitContextValue<unknown>
-      }
-    >
-      {children}
-    </OrbitContext.Provider>
+  const value = useMemo(
+    () =>
+      ({
+        startAngle: startRad,
+        arcSize,
+        step,
+        items,
+        getKey,
+        initialRotation,
+      }) as OrbitContextValue<unknown>,
+    [startRad, arcSize, step, items, getKey, initialRotation],
   );
+
+  return <OrbitContext.Provider value={value}>{children}</OrbitContext.Provider>;
 }
