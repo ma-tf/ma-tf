@@ -1,8 +1,6 @@
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useItemRefs, useStageRef } from "@hooks/use-orbit";
 import { useCallback, useEffect, useEffectEvent } from "react";
-import "@features/tags/orbit-layout.css";
-
 const DEG = Math.PI / 180;
 
 type OrbitProps<T> = {
@@ -14,7 +12,7 @@ type OrbitProps<T> = {
   stepDeg: number;
   getKey: (item: T, index: number) => string | number;
   onRotate?: (rotation: number) => void;
-  initialRotation?: number;
+  initialRotation: number;
   children?: React.ReactNode;
 };
 

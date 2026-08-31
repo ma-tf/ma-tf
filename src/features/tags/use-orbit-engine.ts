@@ -8,7 +8,7 @@ export function useOrbitEngine(
   startAngle: number,
   step: number,
   render: (angle: number) => void,
-  initialRotation?: number,
+  initialRotation: number,
 ) {
   const engineRef = useRef<OrbitEngine>(null);
   const renderRef = useRef(render);
@@ -25,7 +25,7 @@ export function useOrbitEngine(
       startAngle,
       step,
       reduced,
-      ...(initialRotation !== undefined && { initialRotation }),
+      initialRotation,
       render: (rotation) => renderRef.current(rotation),
     });
     return () => engineRef.current?.destroy();

@@ -18,7 +18,6 @@ export function TagOrbit({ tags, postsByTag, initialSelected }: TagOrbitProps) {
     initialSelected ? (tags.find((t) => t.tag === initialSelected) ?? null) : null,
   );
   const rotationRef = useRef(0);
-
   const initialRotation = useMemo(() => Number(sessionStorage.getItem(STORAGE_KEY) ?? 0), []);
 
   const navigate = useCallback(

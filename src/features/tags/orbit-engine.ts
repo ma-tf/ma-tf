@@ -28,7 +28,7 @@ export function createOrbitEngine(config: {
   startAngle: number;
   step: number;
   reduced: boolean;
-  initialRotation?: number;
+  initialRotation: number;
   render: (angle: number) => void;
   now?: () => number;
 }): OrbitEngine {
@@ -73,7 +73,7 @@ export function createOrbitEngine(config: {
     idle: (s: OrbitState): OrbitState => s,
   } as Record<OrbitState["mode"], (state: OrbitState, now: number) => OrbitState>;
 
-  let state: OrbitState = { mode: "idle", rotation: config.initialRotation ?? 0 };
+  let state: OrbitState = { mode: "idle", rotation: config.initialRotation };
   config.render(state.rotation);
   let raf = 0;
   let disposed = false;
