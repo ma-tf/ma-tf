@@ -3,6 +3,7 @@ import type { Tag } from "@features/tags/tag-data";
 
 import { Orbit } from "@features/tags/orbit";
 import { TagLink } from "@features/tags/tags";
+import { previews } from "@lib/feature-flags";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 const STORAGE_KEY = "ma-tf:orbit-rotation";
@@ -53,28 +54,47 @@ export function TagOrbit({ tags, postsByTag, initialSelected }: TagOrbitProps) {
         </TagLink>
       )}
     >
-      {selected ? (
-        <div className="absolute top-0 left-1/2 z-10 flex h-dvh w-sm -translate-x-1/2 flex-col items-center justify-center gap-4 bg-muted px-8 py-12">
-          <span className="text-3xl font-bold">{selected.tag}</span>
-          <ul className="flex w-full flex-col gap-2 overflow-y-auto">
-            {(postsByTag[selected.tag] ?? []).map((post) => (
-              <li key={post.slug}>
+      <div className="absolute top-0 left-1/2 z-10 grid h-dvh w-sm -translate-x-1/2 grid-rows-[2fr_3fr] px-8 py-12">
+        <nav className="flex items-center justify-end">
+          <div className="flex flex-col gap-1">
+            {[
+              { href: "/blog", label: "Blog", enabled: previews.blog },
+              { href: "/music", label: "Music", enabled: previews.music },
+              { href: "/photos", label: "Photography", enabled: previews.photos },
+              { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+            ]
+              .filter(({ enabled }) => enabled)
+              .map(({ href, label }) => (
                 <a
-                  href={`/posts/${post.slug}`}
-                  className="block text-lg font-semibold underline-offset-4 hover:underline"
+                  key={href}
+                  href={href}
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  {post.title}
+                  {label}
                 </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute top-0 left-1/2 h-dvh w-sm -translate-x-1/2 bg-muted-foreground"
-        />
-      )}
+              ))}
+          </div>
+        </nav>
+        {selected ? (
+          <div className="flex flex-col gap-4 overflow-y-auto">
+            <span className="text-3xl font-bold">{selected.tag}</span>
+            <ul className="flex flex-col gap-2">
+              {(postsByTag[selected.tag] ?? []).map((post) => (
+                <li key={post.slug}>
+                  <a
+                    href={`/posts/${post.slug}`}
+                    className="block text-lg font-semibold underline-offset-4 hover:underline"
+                  >
+                    {post.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div>No tag selected</div>
+        )}
+      </div>
     </Orbit>
   );
 }
