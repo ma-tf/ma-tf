@@ -2,31 +2,30 @@ import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
 import { Orbit } from "@features/tags/orbit";
+import { OrbitProvider } from "@features/tags/orbit-context";
+import { TagOrbitContext, useTagOrbit } from "@features/tags/tag-orbit.context";
 import { TagLink } from "@features/tags/tags";
 import { previews } from "@lib/feature-flags";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 const STORAGE_KEY = "ma-tf:orbit-rotation";
 
-function TagPosts({
-  selected,
-  postsByTag,
-}: {
-  selected: Tag;
-  postsByTag: Record<string, PlainPost[]>;
-}) {
+function TagPosts() {
+  const { selected, postsByTag } = useTagOrbit();
+  if (!selected) return null;
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">
       <span className="text-3xl font-bold">{selected.tag}</span>
       <ul className="flex flex-col gap-2">
         {(postsByTag[selected.tag] ?? []).map((post) => (
-          <li key={post.slug}>
-            <a
-              href={`/posts/${post.slug}`}
-              className="block truncate text-xs font-semibold hover:indent-4"
-            >
-              {post.title}
+          <li key={post.slug} className="group relative">
+            <a href={`/posts/${post.slug}`} className="block truncate text-xs font-semibold">
+              <span className="inline-block duration-150 group-hover:translate-x-4">
+                {post.title}
+              </span>
             </a>
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-4 bg-linear-to-l from-background to-transparent" />
           </li>
         ))}
       </ul>
@@ -38,13 +37,8 @@ function EmptyPosts() {
   return <div>No tag selected</div>;
 }
 
-function SelectedTagPanel({
-  selected,
-  postsByTag,
-}: {
-  selected: Tag | null;
-  postsByTag: Record<string, PlainPost[]>;
-}) {
+function SelectedTagPanel() {
+  const { selected } = useTagOrbit();
   return (
     <div className="absolute top-0 left-5/9 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12">
       <nav className="flex items-center justify-end">
@@ -60,14 +54,18 @@ function SelectedTagPanel({
               <a
                 key={href}
                 href={href}
-                className="border border-foreground bg-foreground pr-4 pl-1 text-xs text-background uppercase"
+                className="group relative inline-flex items-center gap-1 border border-foreground bg-foreground pr-4 pl-1 text-xs text-background uppercase transition-[color,background-color] duration-150 hover:bg-background hover:text-foreground"
               >
-                {label}
+                <ArrowLeft
+                  size={14}
+                  className="opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                />
+                <span className="inline-block duration-150 group-hover:translate-x-4">{label}</span>
               </a>
             ))}
         </div>
       </nav>
-      {selected ? <TagPosts selected={selected} postsByTag={postsByTag} /> : <EmptyPosts />}
+      {selected ? <TagPosts /> : <EmptyPosts />}
     </div>
   );
 }
@@ -95,30 +93,35 @@ export function TagOrbit({ tags, postsByTag, initialSelected }: TagOrbitProps) {
   );
 
   return (
-    <Orbit
-      items={tags}
-      getKey={(tag) => tag.tag}
+    <OrbitProvider
       startAngle={95}
       endAngle={175}
-      stepDeg={12.5}
-      onSelect={navigate}
-      onRotate={(rotation) => {
-        rotationRef.current = rotation;
-      }}
+      stepAngle={12.5}
+      items={tags}
+      getKey={(tag) => tag.tag}
       initialRotation={initialRotation}
-      renderItem={(tag) => (
-        <TagLink
-          href={selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`}
-          onClick={(e) => {
-            e.preventDefault();
-            navigate(tag);
-          }}
-        >
-          {tag.tag} ({tag.count})
-        </TagLink>
-      )}
     >
-      <SelectedTagPanel selected={selected} postsByTag={postsByTag} />
-    </Orbit>
+      <TagOrbitContext.Provider value={{ selected, postsByTag, tags, onSelect: navigate }}>
+        <Orbit
+          onSelect={navigate}
+          onRotate={(rotation) => {
+            rotationRef.current = rotation;
+          }}
+          renderItem={(tag: Tag) => (
+            <TagLink
+              href={selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(tag);
+              }}
+            >
+              {tag.tag} ({tag.count})
+            </TagLink>
+          )}
+        >
+          <SelectedTagPanel />
+        </Orbit>
+      </TagOrbitContext.Provider>
+    </OrbitProvider>
   );
 }

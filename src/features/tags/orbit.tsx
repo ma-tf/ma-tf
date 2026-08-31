@@ -1,43 +1,25 @@
+import { useOrbit } from "@features/tags/orbit-context";
 import { OrbitScrollbar } from "@features/tags/orbit-scrollbar";
+import { useItemRefs } from "@features/tags/use-item-refs";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
-import { useItemRefs, useStageRef } from "@hooks/use-orbit";
+import { useStageRef } from "@features/tags/use-stage-ref";
 import { useCallback, useEffect, useEffectEvent, useState } from "react";
-const DEG = Math.PI / 180;
+
 const SCROLLBAR_OFFSET = -64;
 
 type OrbitProps<T> = {
-  items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
   onSelect: (item: T) => void;
-  startAngle: number;
-  endAngle: number;
-  stepDeg: number;
-  getKey: (item: T, index: number) => string | number;
   onRotate?: (rotation: number) => void;
-  initialRotation: number;
   children?: React.ReactNode;
 };
 
-export function Orbit<T>({
-  items,
-  renderItem,
-  onSelect,
-  startAngle,
-  endAngle,
-  stepDeg,
-  getKey,
-  onRotate,
-  initialRotation,
-  children,
-}: OrbitProps<T>) {
-  const { itemRefs, setRef } = useItemRefs(items.length);
-
-  const startRad = startAngle * DEG;
-  const arcSize = endAngle * DEG - startRad;
-  const step = stepDeg * DEG;
+export function Orbit<T>({ renderItem, onSelect, onRotate, children }: OrbitProps<T>) {
+  const { startAngle, arcSize, step, items, getKey } = useOrbit<T>();
+  const { itemRefs, setRef } = useItemRefs();
   const totalSpan = items.length * step;
 
-  const { stageRef, radius } = useStageRef(arcSize, totalSpan, step, startRad);
+  const { stageRef, radius } = useStageRef();
   const [rotation, setRotation] = useState(0);
 
   const render = (rotation: number) => {
@@ -48,21 +30,14 @@ export function Orbit<T>({
       if (!el) return;
       const raw = i * step + rotation;
       const wrapped = ((raw % totalSpan) + totalSpan) % totalSpan;
-      const angle = -Math.PI / 2 + startRad + wrapped;
+      const angle = -Math.PI / 2 + startAngle + wrapped;
       const depth = (Math.sin(angle) + 1) / 2;
       el.style.zIndex = String(Math.round(depth * items.length));
       el.style.visibility = wrapped < arcSize ? "visible" : "hidden";
     });
   };
 
-  const { nudge, applyWheel, getFrontIndex } = useOrbitEngine(
-    items.length,
-    arcSize,
-    startRad,
-    step,
-    render,
-    initialRotation,
-  );
+  const { nudge, applyWheel, getFrontIndex } = useOrbitEngine(render);
 
   const onWheelEvent = useEffectEvent((e: WheelEvent) => {
     e.preventDefault();
@@ -110,8 +85,6 @@ export function Orbit<T>({
         rotation={rotation}
         totalSpan={totalSpan}
         radius={radius}
-        startRad={startRad}
-        arcSize={arcSize}
         offset={SCROLLBAR_OFFSET}
       />
       {items.map((item, i) => (

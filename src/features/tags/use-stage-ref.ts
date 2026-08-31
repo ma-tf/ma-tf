@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef, useCallback, useEffectEvent } from "react";
+import { useOrbit } from "@features/tags/orbit-context";
+import { useState, useEffect, useRef, useEffectEvent } from "react";
 
-export function useStageRef(arcSize: number, totalSpan: number, step: number, startAngle: number) {
+export function useStageRef() {
+  const { startAngle, arcSize, step, items } = useOrbit();
+  const totalSpan = items.length * step;
   const [radius, setRadius] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -34,18 +37,4 @@ export function useStageRef(arcSize: number, totalSpan: number, step: number, st
   }, [radius]);
 
   return { stageRef, radius };
-}
-
-export function useItemRefs(itemsLength: number) {
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const setRef = useCallback(
-    (i: number) => (el: HTMLDivElement | null) => {
-      itemRefs.current[i] = el;
-    },
-    [],
-  );
-  useEffect(() => {
-    itemRefs.current.length = itemsLength;
-  }, [itemsLength]);
-  return { itemRefs, setRef };
 }

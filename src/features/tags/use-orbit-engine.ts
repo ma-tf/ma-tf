@@ -1,15 +1,10 @@
+import { useOrbit } from "@features/tags/orbit-context";
 import { createOrbitEngine, type OrbitEngine } from "@features/tags/orbit-engine";
 import { useReducedMotion } from "@hooks/use-reduced-motion";
 import { useCallback, useEffect, useRef } from "react";
 
-export function useOrbitEngine(
-  n: number,
-  arcSize: number,
-  startAngle: number,
-  step: number,
-  render: (angle: number) => void,
-  initialRotation: number,
-) {
+export function useOrbitEngine(render: (angle: number) => void) {
+  const { startAngle, arcSize, step, items, initialRotation } = useOrbit();
   const engineRef = useRef<OrbitEngine>(null);
   const renderRef = useRef(render);
   const reduced = useReducedMotion();
@@ -20,7 +15,7 @@ export function useOrbitEngine(
 
   useEffect(() => {
     engineRef.current = createOrbitEngine({
-      n,
+      n: items.length,
       arcSize,
       startAngle,
       step,
@@ -29,7 +24,7 @@ export function useOrbitEngine(
       render: (rotation) => renderRef.current(rotation),
     });
     return () => engineRef.current?.destroy();
-  }, [n, arcSize, startAngle, step, reduced, initialRotation]);
+  }, [items, arcSize, startAngle, step, reduced, initialRotation]);
 
   const nudge = useCallback((d: number) => engineRef.current?.nudge(d), []);
   const applyWheel = useCallback((d: number) => engineRef.current?.applyWheel(d), []);

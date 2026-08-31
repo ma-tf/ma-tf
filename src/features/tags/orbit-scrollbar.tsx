@@ -1,37 +1,31 @@
+import { useOrbit } from "@features/tags/orbit-context";
+
 const BASE_ANGLE = -Math.PI / 2;
 const FLATNESS = 0.62;
-const THUMB_RADIUS = 6;
+const THUMB_RADIUS = 1;
 
 type OrbitScrollbarProps = {
   rotation: number;
   totalSpan: number;
   radius: number;
-  startRad: number;
-  arcSize: number;
   offset: number;
 };
 
-export function OrbitScrollbar({
-  rotation,
-  totalSpan,
-  radius,
-  startRad,
-  arcSize,
-  offset,
-}: OrbitScrollbarProps) {
+export function OrbitScrollbar({ rotation, totalSpan, radius, offset }: OrbitScrollbarProps) {
+  const { startAngle, arcSize } = useOrbit();
   const trackRadius = radius + offset;
   const rx = trackRadius;
   const ry = trackRadius * FLATNESS;
 
   const progress = (((rotation % totalSpan) + totalSpan) % totalSpan) / totalSpan;
-  const thumbAngle = BASE_ANGLE + startRad + progress * arcSize;
+  const thumbAngle = BASE_ANGLE + startAngle + progress * arcSize;
   const thumbX = Math.cos(thumbAngle) * rx;
   const thumbY = Math.sin(thumbAngle) * ry;
 
-  const startAngle = BASE_ANGLE + startRad;
-  const endAngle = BASE_ANGLE + startRad + arcSize;
-  const startX = Math.cos(startAngle) * rx;
-  const startY = Math.sin(startAngle) * ry;
+  const startAngleDeg = BASE_ANGLE + startAngle;
+  const endAngle = BASE_ANGLE + startAngle + arcSize;
+  const startX = Math.cos(startAngleDeg) * rx;
+  const startY = Math.sin(startAngleDeg) * ry;
   const endX = Math.cos(endAngle) * rx;
   const endY = Math.sin(endAngle) * ry;
 
@@ -44,7 +38,7 @@ export function OrbitScrollbar({
       aria-hidden
       style={{ overflow: "visible" }}
     >
-      <path d={pathD} fill="none" stroke="var(--border)" strokeWidth={1.5} opacity={0.4} />
+      <path d={pathD} fill="none" stroke="var(--border)" strokeWidth={2} opacity={0.4} />
       <circle cx={thumbX} cy={thumbY} r={THUMB_RADIUS} fill="var(--foreground)" />
     </svg>
   );
