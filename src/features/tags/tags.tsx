@@ -9,7 +9,7 @@ export function TagLink({ children, className, ...props }: React.ComponentProps<
     >
       <a
         className={cn(
-          "block border border-(--cut-color) px-3 py-1 text-sm [transition:--cut-color_150ms_ease]",
+          "block border border-(--cut-color) bg-background/90 px-3 py-1 text-sm [transition:--cut-color_150ms_ease]",
           "[clip-path:polygon(0_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%)]",
         )}
         {...props}

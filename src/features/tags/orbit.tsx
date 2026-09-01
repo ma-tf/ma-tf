@@ -3,18 +3,21 @@ import { OrbitScrollbar } from "@features/tags/orbit-scrollbar";
 import { useItemRefs } from "@features/tags/use-item-refs";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useStageRef } from "@features/tags/use-stage-ref";
-import { useCallback, useEffect, useEffectEvent, useState } from "react";
+import { cn } from "@lib/cn";
+import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 
 const SCROLLBAR_OFFSET = -64;
+const TOUCH_SENSITIVITY = 4;
 
 type OrbitProps<T> = {
   renderItem: (item: T, index: number) => React.ReactNode;
   onSelect: (item: T) => void;
   onRotate?: (rotation: number) => void;
   children?: React.ReactNode;
+  style?: React.CSSProperties;
 };
 
-export function Orbit<T>({ renderItem, onSelect, onRotate, children }: OrbitProps<T>) {
+export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: OrbitProps<T>) {
   const { startAngle, arcSize, step, items, getKey } = useOrbit<T>();
   const { itemRefs, setRef } = useItemRefs();
   const totalSpan = items.length * step;
@@ -44,10 +47,33 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children }: OrbitProp
     applyWheel(e.deltaY);
   });
 
+  const touchStartY = useRef(0);
+
+  const onTouchStart = useEffectEvent((e: TouchEvent) => {
+    if (e.touches.length > 1) return;
+    touchStartY.current = e.touches[0]?.clientY ?? 0;
+  });
+
+  const onTouchMove = useEffectEvent((e: TouchEvent) => {
+    if (e.touches.length > 1) return;
+    e.preventDefault();
+    const clientY = e.touches[0]?.clientY ?? 0;
+    const deltaY = clientY - touchStartY.current;
+    applyWheel(deltaY * TOUCH_SENSITIVITY);
+    touchStartY.current = clientY;
+  });
+
   useEffect(() => {
     const el = stageRef.current;
-    el?.addEventListener("wheel", onWheelEvent, { passive: false });
-    return () => el?.removeEventListener("wheel", onWheelEvent);
+    if (!el) return;
+    el.addEventListener("wheel", onWheelEvent, { passive: false });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheelEvent);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+    };
   }, [stageRef]);
 
   const onKeyDown = useCallback(
@@ -74,7 +100,11 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children }: OrbitProp
   return (
     <div
       ref={stageRef}
-      className="orbit-stage relative h-dvh w-full overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className={cn(
+        "orbit-stage relative h-dvh w-full overflow-hidden outline-none [--edge-padding:-96px] md:[--edge-padding:96px]",
+        "focus-visible:ring-2 focus-visible:ring-ring",
+      )}
+      style={style}
       tabIndex={0}
       role="group"
       aria-label="Orbit. Use arrow keys to rotate, Enter to select."

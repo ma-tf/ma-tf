@@ -5,6 +5,7 @@ import { Orbit } from "@features/tags/orbit";
 import { OrbitProvider } from "@features/tags/orbit-context";
 import { TagOrbitProvider, useTagOrbit } from "@features/tags/tag-orbit-context";
 import { TagLink } from "@features/tags/tags";
+import { useParallax } from "@hooks/use-parallax";
 import { previews } from "@lib/feature-flags";
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -45,8 +46,12 @@ function EmptyPosts() {
 
 function SelectedTagPanel() {
   const { selected } = useTagOrbit();
+  const offset = useParallax();
   return (
-    <div className="absolute top-0 left-5/9 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12">
+    <div
+      className="absolute top-0 left-5/9 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12"
+      style={{ transform: `translate(${offset.x * 0.4}px, ${offset.y * 0.4}px)` }}
+    >
       <nav className="flex items-center justify-end">
         <div className="flex flex-col gap-1">
           {[
@@ -87,6 +92,7 @@ export function TagOrbit({ tags, postsByTag, initialSelected }: TagOrbitProps) {
   );
   const rotationRef = useRef(0);
   const initialRotation = useMemo(() => Number(sessionStorage.getItem(STORAGE_KEY) ?? 0), []);
+  const offset = useParallax();
 
   const navigate = useCallback(
     (tag: Tag | null) => {
@@ -108,6 +114,7 @@ export function TagOrbit({ tags, postsByTag, initialSelected }: TagOrbitProps) {
         initialRotation={initialRotation}
       >
         <Orbit
+          style={{ transform: `translate(${offset.x * 0.6}px, ${offset.y * 0.6}px)` }}
           onSelect={navigate}
           onRotate={(rotation) => {
             rotationRef.current = rotation;

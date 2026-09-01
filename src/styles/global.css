@@ -197,12 +197,12 @@
   --scale-range: 0.6;
   --opacity-back: 0.35;
   --opacity-range: 0.65;
-  --edge-padding: 96px;
   --rotation: 0rad;
   --step: 0rad;
   --arc-size: 0rad;
   --total-span: 0rad;
   --start-angle: 0rad;
+  touch-action: none;
 }
 
 .orbit-item {

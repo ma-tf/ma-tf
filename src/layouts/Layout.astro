@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+
+const { hideOverflow = false } = Astro.props;
 ---
 
 <script is:inline>
@@ -20,7 +22,7 @@ import "../styles/global.css";
 			rel="stylesheet"
 		/>
 	</head>
-	<body class="bg-background text-foreground">
+	<body class:list={["bg-background text-foreground", { "overflow-hidden": hideOverflow }]}>
 		<slot />
 	</body>
 </html>
