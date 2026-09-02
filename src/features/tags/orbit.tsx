@@ -65,14 +65,17 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: Or
 
   useEffect(() => {
     const el = stageRef.current;
-    if (!el) return;
-    el.addEventListener("wheel", onWheelEvent, { passive: false });
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("wheel", onWheelEvent, { passive: false });
+    if (el) {
+      el.addEventListener("touchstart", onTouchStart, { passive: true });
+      el.addEventListener("touchmove", onTouchMove, { passive: false });
+    }
     return () => {
-      el.removeEventListener("wheel", onWheelEvent);
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("wheel", onWheelEvent);
+      if (el) {
+        el.removeEventListener("touchstart", onTouchStart);
+        el.removeEventListener("touchmove", onTouchMove);
+      }
     };
   }, [stageRef]);
 
@@ -101,7 +104,7 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: Or
     <div
       ref={stageRef}
       className={cn(
-        "orbit-stage relative h-dvh w-full overflow-hidden outline-none [--edge-padding:-96px] md:[--edge-padding:96px]",
+        "orbit-stage relative h-dvh w-full outline-none [--edge-padding:-96px] md:[--edge-padding:96px]",
         "focus-visible:ring-2 focus-visible:ring-ring",
       )}
       style={style}

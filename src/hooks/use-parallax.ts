@@ -1,7 +1,7 @@
 import { useIsMobile } from "@hooks/use-mobile";
 import { useEffect, useRef, useState } from "react";
 
-export function useParallax(): {
+export function useParallax(disabled = false): {
   x: number;
   y: number;
 } {
@@ -14,7 +14,7 @@ export function useParallax(): {
   const raf = useRef(0);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile || disabled) return;
 
     const onMouseMove = (e: MouseEvent) => {
       const nx = -(e.clientX / window.innerWidth - 0.5) * 2;

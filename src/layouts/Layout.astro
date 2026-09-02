@@ -22,7 +22,7 @@ const { hideOverflow = false } = Astro.props;
 			rel="stylesheet"
 		/>
 	</head>
-	<body class:list={["bg-background text-foreground", { "overflow-hidden": hideOverflow }]}>
+	<body class:list={["flex min-h-dvh flex-col bg-background text-foreground", { "overflow-hidden": hideOverflow }]}>
 		<slot />
 	</body>
 </html>

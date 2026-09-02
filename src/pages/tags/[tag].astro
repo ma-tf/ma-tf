@@ -2,8 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { getRawPosts } from "@features/blog/post-data";
 import Navbar from "@components/Navbar.astro";
-import { TagOrbit } from "@features/tags/tag-orbit";
-import { ParallaxBackgrounds } from "@features/tags/parallax-backgrounds";
+import { TagContent } from "@features/tags/tag-content";
 import { getTagIndex } from "@features/tags/tag-data";
 
 export async function getStaticPaths() {
@@ -18,10 +17,15 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.props;
 const { tags, postsByTag } = await getTagIndex();
+const selected = tags.find((t) => t.tag === tag) ?? null;
 ---
 
 <Layout hideOverflow>
-  <ParallaxBackgrounds client:load />
   <Navbar />
-  <TagOrbit tags={tags} postsByTag={postsByTag} initialSelected={tag} client:load />
+  <TagContent
+    tags={tags}
+    selected={selected}
+    postsByTag={postsByTag}
+    client:load
+  />
 </Layout>
