@@ -38,16 +38,24 @@ const images: ImageMap = {
   "graphics/old house.png": oldHouseSrc,
   "music/20251014_Japan 6_19.jpg": japanSrc,
 };
+
+const bgImages = {
+  projects: "/20250930_Kodak_26.webp",
+  photos: "/20250930_Kodak_20.webp",
+  vignettes: "/20250930_Kodak_21.webp",
+  graphics: "/20250930_Kodak_16.webp",
+  music: "/20250930_Kodak_27.webp",
+};
 ---
 
 <Layout>
   <Navbar />
   <Home />
   {previews.blog && <BlogPreview posts={recentPosts} />}
-  {previews.projects && <ProjectsPreview />}
-  {previews.photos && <PhotosPreview />}
-  {previews.vignettes && <VignettesPreview images={images} />}
-  {previews.graphics && <GraphicsPreview images={images} />}
-  {previews.music && <MusicPreview images={images} />}
+  {previews.projects && <ProjectsPreview bgImage={bgImages.projects} />}
+  {previews.photos && <PhotosPreview bgImage={bgImages.photos} />}
+  {previews.vignettes && <VignettesPreview images={images} bgImage={bgImages.vignettes} />}
+  {previews.graphics && <GraphicsPreview images={images} bgImage={bgImages.graphics} />}
+  {previews.music && <MusicPreview images={images} bgImage={bgImages.music} />}
   <Footer />
 </Layout>

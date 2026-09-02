@@ -22,6 +22,7 @@ const selected = tags.find((t) => t.tag === tag) ?? null;
 
 <Layout hideOverflow>
   <Navbar />
+  <div class="absolute inset-0 -z-10" aria-hidden="true"></div>
   <TagContent
     tags={tags}
     selected={selected}

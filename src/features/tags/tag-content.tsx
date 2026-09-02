@@ -13,7 +13,7 @@ type TagContentProps = {
 
 export function TagContent({ tags, selected, postsByTag }: TagContentProps) {
   return (
-    <div className="relative flex w-7xl flex-1 self-center border-x">
+    <div className="relative flex w-full max-w-7xl flex-1 self-center border-x">
       <ParallaxBackgrounds />
       <TagOrbit tags={tags} selected={selected} />
       <SelectedTagPanel selected={selected} postsByTag={postsByTag} />
