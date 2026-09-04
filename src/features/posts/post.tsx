@@ -1,24 +1,11 @@
 import { cn } from "@lib/cn";
+import { CalendarIcon, HashIcon } from "@phosphor-icons/react";
 
 export function Post({ children, className, ...props }: React.ComponentProps<"article">) {
   return (
-    <article className={cn("mx-auto max-w-3xl px-8 py-12", className)} {...props}>
+    <article className={cn("mx-auto max-w-3xl px-8 py-24", className)} {...props}>
       {children}
     </article>
-  );
-}
-
-export function PostBackLink({ children, className, ...props }: React.ComponentProps<"a">) {
-  return (
-    <a
-      className={cn(
-        "text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </a>
   );
 }
 
@@ -39,7 +26,15 @@ export function PostTitle({ children, className, ...props }: React.ComponentProp
 }
 
 export function PostDate({ className, ...props }: React.ComponentProps<"time">) {
-  return <time className={cn("mb-4 block text-muted-foreground", className)} {...props} />;
+  return (
+    <time
+      className={cn("inline-flex items-center gap-1 text-muted-foreground", className)}
+      {...props}
+    >
+      <CalendarIcon size={14} aria-hidden="true" />
+      {props.children}
+    </time>
+  );
 }
 
 export function PostTags({ children, className, ...props }: React.ComponentProps<"ul">) {
@@ -54,12 +49,15 @@ export function PostTag({ children, className, ...props }: React.ComponentProps<
   return (
     <a
       className={cn(
-        "rounded bg-secondary px-2 py-1 text-sm transition-colors hover:bg-secondary/80",
+        "group relative inline-flex items-center overflow-hidden border border-foreground bg-background pl-1 text-xs text-foreground uppercase transition-[color,background-color] duration-150 hover:bg-foreground hover:text-background",
         className,
       )}
       {...props}
     >
-      {children}
+      <span className="inline-flex items-center gap-0 pr-2">
+        <HashIcon size={14} className="shrink-0" />
+        {children}
+      </span>
     </a>
   );
 }

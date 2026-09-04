@@ -17,37 +17,19 @@ type OrbitProps<T> = {
   style?: React.CSSProperties;
 };
 
-export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: OrbitProps<T>) {
-  const { startAngle, arcSize, step, items, getKey } = useOrbit<T>();
-  const { itemRefs, setRef } = useItemRefs();
-  const totalSpan = items.length * step;
-
-  const { stageRef, radius } = useStageRef();
-  const [rotation, setRotation] = useState(0);
-
-  const render = (rotation: number) => {
-    stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
-    setRotation(rotation);
-    onRotate?.(rotation);
-    itemRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const raw = i * step + rotation;
-      const wrapped = ((raw % totalSpan) + totalSpan) % totalSpan;
-      const angle = -Math.PI / 2 + startAngle + wrapped;
-      const depth = (Math.sin(angle) + 1) / 2;
-      el.style.zIndex = String(Math.round(depth * items.length));
-      el.style.visibility = wrapped < arcSize ? "visible" : "hidden";
-    });
-  };
-
-  const { nudge, applyWheel, getFrontIndex } = useOrbitEngine(render);
+function useOrbitInput({
+  stageRef,
+  applyWheel,
+}: {
+  stageRef: React.RefObject<HTMLDivElement | null>;
+  applyWheel: (delta: number) => void;
+}) {
+  const touchStartY = useRef(0);
 
   const onWheelEvent = useEffectEvent((e: WheelEvent) => {
     e.preventDefault();
     applyWheel(e.deltaY);
   });
-
-  const touchStartY = useRef(0);
 
   const onTouchStart = useEffectEvent((e: TouchEvent) => {
     if (e.touches.length > 1) return;
@@ -78,19 +60,33 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: Or
       }
     };
   }, [stageRef]);
+}
 
-  const onKeyDown = useCallback(
+function useOrbitKeyboard<T>({
+  nudge,
+  getFrontIndex,
+  onSelect,
+}: {
+  nudge: (delta: number) => void;
+  getFrontIndex: () => number;
+  onSelect: (item: T) => void;
+}) {
+  const { items, step } = useOrbit<T>();
+
+  return useCallback(
     (e: React.KeyboardEvent) => {
       const activateFront = () => {
         const tag = items[getFrontIndex()];
         if (tag) onSelect(tag);
       };
+
       const handlers: Record<string, () => void> = {
         ArrowLeft: () => nudge(-step),
         ArrowRight: () => nudge(step),
         Enter: activateFront,
         " ": activateFront,
       };
+
       const handler = handlers[e.key];
       if (handler) {
         e.preventDefault();
@@ -99,6 +95,34 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: Or
     },
     [nudge, getFrontIndex, items, step, onSelect],
   );
+}
+
+export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: OrbitProps<T>) {
+  const { startAngle, arcSize, step, items, getKey } = useOrbit<T>();
+  const { itemRefs, setRef } = useItemRefs();
+  const totalSpan = items.length * step;
+
+  const { stageRef, radius } = useStageRef();
+  const [rotation, setRotation] = useState(0);
+
+  const render = (rotation: number) => {
+    stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
+    setRotation(rotation);
+    onRotate?.(rotation);
+    itemRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const raw = i * step + rotation;
+      const wrapped = ((raw % totalSpan) + totalSpan) % totalSpan;
+      const angle = -Math.PI / 2 + startAngle + wrapped;
+      const depth = (Math.sin(angle) + 1) / 2;
+      el.style.zIndex = String(Math.round(depth * items.length));
+      el.style.visibility = wrapped < arcSize ? "visible" : "hidden";
+    });
+  };
+
+  const { nudge, applyWheel, getFrontIndex } = useOrbitEngine(render);
+  useOrbitInput({ stageRef, applyWheel });
+  const onKeyDown = useOrbitKeyboard({ nudge, getFrontIndex, onSelect });
 
   return (
     <div

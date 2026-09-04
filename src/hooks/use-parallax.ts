@@ -42,7 +42,7 @@ export function useParallax(disabled = false): {
       window.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(raf.current);
     };
-  }, [isMobile]);
+  }, [disabled, isMobile]);
 
   return offset;
 }

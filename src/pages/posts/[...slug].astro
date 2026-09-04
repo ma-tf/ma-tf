@@ -1,10 +1,10 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
+import { ArrowLeftIcon, ClockIcon, FileTextIcon } from "@phosphor-icons/react";
 import Navbar from "@components/Navbar.astro";
 import {
   Post,
-  PostBackLink,
   PostContent,
   PostDate,
   PostHeader,
@@ -23,18 +23,44 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
 <Layout>
   <Navbar />
   <Post>
-    <PostBackLink href="/blog">← Back to blog</PostBackLink>
+    <div>
+      <a
+        href="/blog"
+        class="group relative inline-flex items-center overflow-hidden border border-foreground bg-background pr-4 pl-1 text-xs text-foreground uppercase transition-[color,background-color] duration-150 hover:bg-foreground hover:text-background"
+      >
+        <span
+          class="inline-flex items-center gap-1 pr-2 transition-transform duration-150 group-hover:translate-x-4"
+        >
+          <ArrowLeftIcon size={14} className="-ml-5 shrink-0" />
+          Blog
+        </span>
+      </a>
+    </div>
     <PostHeader>
       <PostTitle>{post.data.title}</PostTitle>
-      <PostDate dateTime={post.data.pubDate.toISOString()}>
-        {post.data.pubDate.toISOString().split("T")[0]}
-      </PostDate>
+      <div
+        class="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+      >
+        <PostDate dateTime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toISOString().split("T")[0]}
+        </PostDate>
+        <span aria-hidden="true">·</span>
+        <span class="inline-flex items-center gap-1">
+          <FileTextIcon size={14} aria-hidden="true" />
+          {remarkPluginFrontmatter.words} words
+        </span>
+        <span aria-hidden="true">·</span>
+        <span class="inline-flex items-center gap-1">
+          <ClockIcon size={14} aria-hidden="true" />
+          {remarkPluginFrontmatter.minutesRead}
+        </span>
+      </div>
       {
         post.data.tags.length > 0 && (
           <PostTags>
