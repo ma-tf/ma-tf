@@ -6,6 +6,7 @@ import { getTagIndex } from "@features/tags/tag-data";
 
 const { tags, postsByTag } = await getTagIndex();
 const selected = tags.find((t) => t.tag === "") ?? null;
+const backgroundBaseUrl = import.meta.env.R2_PUBLIC_URL;
 ---
 
 <Layout hideOverflow>
@@ -16,6 +17,7 @@ const selected = tags.find((t) => t.tag === "") ?? null;
   >
   </div>
   <TagContent
+    backgroundBaseUrl={backgroundBaseUrl}
     tags={tags}
     selected={selected}
     postsByTag={postsByTag}

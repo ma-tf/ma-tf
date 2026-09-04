@@ -6,15 +6,16 @@ import { SelectedTagPanel } from "@features/tags/selected-tag-panel";
 import { TagOrbit } from "@features/tags/tag-orbit";
 
 type TagContentProps = {
+  backgroundBaseUrl: string;
   tags: Tag[];
   selected: Tag | null;
   postsByTag: Record<string, PlainPost[]>;
 };
 
-export function TagContent({ tags, selected, postsByTag }: TagContentProps) {
+export function TagContent({ backgroundBaseUrl, tags, selected, postsByTag }: TagContentProps) {
   return (
     <div className="relative flex w-full max-w-7xl flex-1 self-center border-x">
-      <ParallaxBackgrounds />
+      <ParallaxBackgrounds baseUrl={backgroundBaseUrl} />
       <TagOrbit tags={tags} selected={selected} />
       <SelectedTagPanel selected={selected} postsByTag={postsByTag} />
     </div>

@@ -18,6 +18,7 @@ export async function getStaticPaths() {
 const { tag } = Astro.props;
 const { tags, postsByTag } = await getTagIndex();
 const selected = tags.find((t) => t.tag === tag) ?? null;
+const backgroundBaseUrl = import.meta.env.R2_PUBLIC_URL;
 ---
 
 <Layout hideOverflow>
@@ -28,6 +29,7 @@ const selected = tags.find((t) => t.tag === tag) ?? null;
   >
   </div>
   <TagContent
+    backgroundBaseUrl={backgroundBaseUrl}
     tags={tags}
     selected={selected}
     postsByTag={postsByTag}
