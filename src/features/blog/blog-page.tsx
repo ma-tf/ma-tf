@@ -1,9 +1,73 @@
 import type { PlainPost } from "@features/blog/post-data";
 
+import { NavButton } from "@components/nav-button";
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
 import { useParallax } from "@hooks/use-parallax";
+import { previews } from "@lib/feature-flags";
 
 const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
+
+type Offset = { x: number; y: number };
+
+function BlogBackgrounds({
+  backgrounds,
+  offset,
+}: {
+  backgrounds: { back: string; front: string };
+  offset: Offset;
+}) {
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
+        style={
+          {
+            "--background-image": `url("${backgrounds.back}")`,
+            transform: `translate(${offset.x * PARALLAX.bg}px, ${offset.y * PARALLAX.bg}px)`,
+          } as React.CSSProperties
+        }
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
+        style={
+          {
+            "--background-image": `url("${backgrounds.front}")`,
+            transform: `translate(${offset.x * PARALLAX.bg2}px, ${offset.y * PARALLAX.bg2}px)`,
+          } as React.CSSProperties
+        }
+      />
+    </>
+  );
+}
+
+function BlogNavigation({ offset }: { offset: Offset }) {
+  const links = [
+    { href: "/", label: "Home", enabled: true },
+    { href: "/music", label: "Music", enabled: previews.music },
+    { href: "/photos", label: "Photography", enabled: previews.photos },
+    { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+  ];
+
+  return (
+    <nav
+      className="mt-4 flex flex-wrap justify-end gap-1"
+      aria-label="Section navigation"
+      style={{
+        transform: `translate(${offset.x * PARALLAX.description}px, ${offset.y * PARALLAX.description}px)`,
+      }}
+    >
+      {links
+        .filter(({ enabled }) => enabled)
+        .map(({ href, label }) => (
+          <NavButton key={href} href={href}>
+            {label}
+          </NavButton>
+        ))}
+    </nav>
+  );
+}
 
 export function BlogPage({
   title,
@@ -20,22 +84,7 @@ export function BlogPage({
 
   return (
     <div className="h-vh relative isolate flex px-4 md:h-dvh md:overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
-        style={{
-          backgroundImage: `url("${backgrounds.back}")`,
-          transform: `translate(${offset.x * PARALLAX.bg}px, ${offset.y * PARALLAX.bg}px)`,
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
-        style={{
-          backgroundImage: `url("${backgrounds.front}")`,
-          transform: `translate(${offset.x * PARALLAX.bg2}px, ${offset.y * PARALLAX.bg2}px)`,
-        }}
-      />
+      <BlogBackgrounds backgrounds={backgrounds} offset={offset} />
       <Blog>
         <BlogHeader>
           <BlogTitle
@@ -52,6 +101,7 @@ export function BlogPage({
           >
             {description}
           </BlogDescription>
+          <BlogNavigation offset={offset} />
         </BlogHeader>
         <BlogContent
           style={{

@@ -22,6 +22,43 @@ export type OrbitEngine = {
   destroy(): void;
 };
 
+function transitionSnapping(
+  state: Extract<OrbitState, { mode: "snapping" }>,
+  now: number,
+): OrbitState {
+  const progress = Math.min(1, (now - state.snapStartTime) / SNAP_DURATION);
+  const eased = 1 - Math.pow(1 - progress, 3);
+  const rotation = state.snapFrom + (state.snapTo - state.snapFrom) * eased;
+
+  return progress >= 1 || Math.abs(rotation - state.snapTo) < 0.001
+    ? { mode: "idle", rotation: state.snapTo }
+    : { ...state, rotation };
+}
+
+function transitionCoasting(
+  state: Extract<OrbitState, { mode: "coasting" }>,
+  now: number,
+  startAngle: number,
+  step: number,
+  reduced: boolean,
+): OrbitState {
+  const rotation = state.rotation + state.velocity;
+  const velocity = state.velocity * FRICTION;
+
+  if (Math.abs(velocity) >= STOP_THRESHOLD) {
+    return { mode: "coasting", rotation, velocity };
+  }
+
+  const nearest =
+    Math.round((rotation + BASE_ANGLE - startAngle) / step) * step - BASE_ANGLE + startAngle;
+  if (reduced) return { mode: "idle", rotation: nearest };
+  if (Math.abs(nearest - rotation) < 0.001) {
+    return { mode: "idle", rotation };
+  }
+
+  return { mode: "snapping", rotation, snapFrom: rotation, snapTo: nearest, snapStartTime: now };
+}
+
 export function createOrbitEngine(config: {
   n: number;
   arcSize: number;
@@ -35,41 +72,11 @@ export function createOrbitEngine(config: {
   const { render, n, step, startAngle, reduced } = config;
   const getTime = config.now ?? (() => performance.now());
 
-  function transitionSnapping(
-    state: Extract<OrbitState, { mode: "snapping" }>,
-    now: number,
-  ): OrbitState {
-    const t = Math.min(1, (now - state.snapStartTime) / SNAP_DURATION);
-    const eased = 1 - Math.pow(1 - t, 3);
-    const rotation = state.snapFrom + (state.snapTo - state.snapFrom) * eased;
-    return t >= 1 || Math.abs(rotation - state.snapTo) < 0.001
-      ? { mode: "idle", rotation: state.snapTo }
-      : { ...state, rotation };
-  }
-
-  function transitionCoasting(
-    state: Extract<OrbitState, { mode: "coasting" }>,
-    now: number,
-  ): OrbitState {
-    const rotation = state.rotation + state.velocity;
-    const velocity = state.velocity * FRICTION;
-    if (Math.abs(velocity) >= STOP_THRESHOLD) {
-      return { mode: "coasting", rotation, velocity };
-    }
-    const nearest =
-      Math.round((rotation + BASE_ANGLE - startAngle) / step) * step - BASE_ANGLE + startAngle;
-    if (reduced) {
-      return { mode: "idle", rotation: nearest };
-    }
-    if (Math.abs(nearest - rotation) < 0.001) {
-      return { mode: "idle", rotation };
-    }
-    return { mode: "snapping", rotation, snapFrom: rotation, snapTo: nearest, snapStartTime: now };
-  }
-
   const transitions = {
-    snapping: transitionSnapping,
-    coasting: transitionCoasting,
+    snapping: (state: Extract<OrbitState, { mode: "snapping" }>, now: number) =>
+      transitionSnapping(state, now),
+    coasting: (state: Extract<OrbitState, { mode: "coasting" }>, now: number) =>
+      transitionCoasting(state, now, startAngle, step, reduced),
     idle: (s: OrbitState): OrbitState => s,
   } as Record<OrbitState["mode"], (state: OrbitState, now: number) => OrbitState>;
 

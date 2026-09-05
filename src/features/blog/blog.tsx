@@ -3,7 +3,7 @@ import { cn } from "@lib/cn";
 export function Blog({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex w-full flex-col gap-2 md:h-full md:flex-row md:px-8", className)}
+      className={cn("flex w-full flex-col gap-8 md:h-full md:flex-row md:px-8", className)}
       {...props}
     >
       {children}

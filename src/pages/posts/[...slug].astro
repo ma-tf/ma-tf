@@ -1,8 +1,9 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
-import { ArrowLeftIcon, ClockIcon, FileTextIcon } from "@phosphor-icons/react";
+import { ClockIcon, FileTextIcon } from "@phosphor-icons/react";
 import Navbar from "@components/Navbar.astro";
+import { NavButton } from "@components/nav-button";
 import {
   Post,
   PostContent,
@@ -30,17 +31,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
   <Navbar />
   <Post>
     <div>
-      <a
-        href="/blog"
-        class="group relative inline-flex items-center overflow-hidden border border-foreground bg-background pr-4 pl-1 text-xs text-foreground uppercase transition-[color,background-color] duration-150 hover:bg-foreground hover:text-background"
-      >
-        <span
-          class="inline-flex items-center gap-1 pr-2 transition-transform duration-150 group-hover:translate-x-4"
-        >
-          <ArrowLeftIcon size={14} className="-ml-5 shrink-0" />
-          Blog
-        </span>
-      </a>
+      <NavButton href="/blog" variant="outline">Blog</NavButton>
     </div>
     <PostHeader>
       <PostTitle>{post.data.title}</PostTitle>
