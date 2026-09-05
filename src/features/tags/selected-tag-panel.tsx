@@ -1,9 +1,9 @@
 import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
+import { NavButton } from "@components/nav-button";
 import { useParallax } from "@hooks/use-parallax";
 import { previews } from "@lib/feature-flags";
-import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 
 type MonthGroup = {
@@ -92,16 +92,9 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
           ]
             .filter(({ enabled }) => enabled)
             .map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                className="group relative inline-flex items-center overflow-hidden border border-foreground bg-foreground pr-4 pl-1 text-xs text-background uppercase transition-[color,background-color] duration-150 hover:bg-background hover:text-foreground"
-              >
-                <span className="inline-flex items-center gap-1 pr-2 transition-transform duration-150 group-hover:translate-x-4">
-                  <ArrowLeftIcon size={14} className="-ml-5 shrink-0" />
-                  {label}
-                </span>
-              </a>
+              <NavButton key={href} href={href}>
+                {label}
+              </NavButton>
             ))}
         </div>
       </nav>

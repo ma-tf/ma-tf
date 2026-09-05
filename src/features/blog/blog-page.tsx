@@ -4,6 +4,7 @@ import { NavButton } from "@components/nav-button";
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
 import { useParallax } from "@hooks/use-parallax";
 import { previews } from "@lib/feature-flags";
+import { CaretRightIcon } from "@phosphor-icons/react";
 
 const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
 
@@ -119,16 +120,21 @@ function PostList({ posts }: { posts: PlainPost[] }) {
   return (
     <ul className="flex flex-col">
       {posts.map((post) => (
-        <li
-          key={post.slug}
-          className="my-2 transition-transform duration-150 md:my-0 md:py-2 focus-within:md:translate-x-2 hover:md:translate-x-2"
-        >
+        <li key={post.slug} className="group my-2 md:my-0 md:py-2">
           <button
-            className="flex w-full cursor-pointer flex-col text-left text-2xl outline-none"
+            className="flex w-full cursor-pointer flex-col text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
             onClick={() => (window.location.href = `/posts/${post.slug}`)}
           >
-            <div className="flex flex-col">
+            <div className="relative flex items-center">
+              <CaretRightIcon
+                size={18}
+                weight="bold"
+                aria-hidden="true"
+                className="absolute top-1/2 -left-1 -translate-x-full -translate-y-1/2"
+              />
               <span className="font-semibold">{post.title}</span>
+            </div>
+            <div className="flex flex-col">
               <time className="shrink-0" dateTime={post.pubDate}>
                 {post.pubDate.split("T")[0]}
               </time>

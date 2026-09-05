@@ -47,7 +47,7 @@ export function BlogContent({ children, className, ...props }: React.ComponentPr
       className={cn("w-full md:h-full md:w-3/5 md:scrollbar-hidden md:overflow-y-auto", className)}
       {...props}
     >
-      <div className="flex flex-col md:min-h-full md:justify-center">{children}</div>
+      <div className="flex flex-col md:min-h-full md:justify-center md:pl-6">{children}</div>
     </div>
   );
 }

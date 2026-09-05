@@ -1,4 +1,4 @@
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { defineCollection } from "astro:content";
 
@@ -64,4 +64,15 @@ const photography = defineCollection({
   }),
 });
 
-export const collections = { blog, experience, projects, education, photography };
+const vignettes = defineCollection({
+  loader: file("./src/content/vignettes.json"),
+  schema: z.object({
+    id: z.string(),
+    playbackId: z.string(),
+    order: z.number(),
+    description: z.string(),
+    enabled: z.boolean(),
+  }),
+});
+
+export const collections = { blog, experience, projects, education, photography, vignettes };
