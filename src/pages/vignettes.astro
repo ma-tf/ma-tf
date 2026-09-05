@@ -2,7 +2,13 @@
 import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import Navbar from "@components/Navbar.astro";
-import { Vignettes } from "@features/vignettes/vignettes";
+import {
+  Vignettes,
+  VignettesContent,
+  VignettesHeader,
+  VignettesTitle,
+} from "@features/vignettes/vignettes";
+import { VignettesInteractive } from "@features/vignettes/vignettes-interactive";
 
 const videos = (await getCollection("vignettes"))
   .filter(({ data }) => data.enabled)
@@ -12,5 +18,12 @@ const videos = (await getCollection("vignettes"))
 
 <Layout>
   <Navbar />
-  <Vignettes vignettes={videos} client:load />
+  <Vignettes>
+    <VignettesHeader>
+      <VignettesTitle>vignettes</VignettesTitle>
+    </VignettesHeader>
+    <VignettesContent>
+      <VignettesInteractive vignettes={videos} client:load />
+    </VignettesContent>
+  </Vignettes>
 </Layout>
