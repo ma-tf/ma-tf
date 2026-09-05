@@ -12,10 +12,5 @@ const videos = (await getCollection("vignettes"))
 
 <Layout>
   <Navbar />
-  <div class="h-dvh py-8">
-    <div class="w-full flex flex-col">
-      <h2 class="text-lg mb-6 md:ml-[80vw]">vignettes</h2>
-      <Vignettes vignettes={videos} client:load />
-    </div>
-  </div>
+  <Vignettes vignettes={videos} client:load />
 </Layout>

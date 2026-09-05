@@ -7,6 +7,12 @@ import { previews } from "@lib/feature-flags";
 import { CaretRightIcon } from "@phosphor-icons/react";
 
 const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
+const BLOG_NAVIGATION_LINKS = [
+  { href: "/", label: "Home", enabled: true },
+  { href: "/music", label: "Music", enabled: previews.music },
+  { href: "/photos", label: "Photography", enabled: previews.photos },
+  { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+] as const;
 
 type Offset = { x: number; y: number };
 
@@ -44,13 +50,6 @@ function BlogBackgrounds({
 }
 
 function BlogNavigation({ offset }: { offset: Offset }) {
-  const links = [
-    { href: "/", label: "Home", enabled: true },
-    { href: "/music", label: "Music", enabled: previews.music },
-    { href: "/photos", label: "Photography", enabled: previews.photos },
-    { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
-  ];
-
   return (
     <nav
       className="mt-4 flex flex-wrap justify-end gap-1"
@@ -59,13 +58,11 @@ function BlogNavigation({ offset }: { offset: Offset }) {
         transform: `translate(${offset.x * PARALLAX.description}px, ${offset.y * PARALLAX.description}px)`,
       }}
     >
-      {links
-        .filter(({ enabled }) => enabled)
-        .map(({ href, label }) => (
-          <NavButton key={href} href={href}>
-            {label}
-          </NavButton>
-        ))}
+      {BLOG_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
+        <NavButton key={href} href={href}>
+          {label}
+        </NavButton>
+      ))}
     </nav>
   );
 }

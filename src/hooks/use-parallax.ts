@@ -1,4 +1,5 @@
 import { useIsMobile } from "@hooks/use-mobile";
+import { useReducedMotion } from "@hooks/use-reduced-motion";
 import { useEffect, useRef, useState } from "react";
 
 export function useParallax(disabled = false): {
@@ -6,15 +7,22 @@ export function useParallax(disabled = false): {
   y: number;
 } {
   const isMobile = useIsMobile();
+  const reducedMotion = useReducedMotion();
   const intensity = 40;
   const easing = 0.05;
+  const shouldDisable = disabled || isMobile || reducedMotion;
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const target = useRef({ x: 0, y: 0 });
   const current = useRef({ x: 0, y: 0 });
   const raf = useRef(0);
 
   useEffect(() => {
-    if (isMobile || disabled) return;
+    if (shouldDisable) {
+      target.current = { x: 0, y: 0 };
+      current.current = { x: 0, y: 0 };
+      setOffset({ x: 0, y: 0 });
+      return;
+    }
 
     const onMouseMove = (e: MouseEvent) => {
       const nx = -(e.clientX / window.innerWidth - 0.5) * 2;
@@ -42,7 +50,7 @@ export function useParallax(disabled = false): {
       window.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(raf.current);
     };
-  }, [disabled, isMobile]);
+  }, [shouldDisable]);
 
   return offset;
 }
