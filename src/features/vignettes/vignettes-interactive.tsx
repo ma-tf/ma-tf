@@ -69,18 +69,18 @@ function VignetteDescription({
   return (
     <div
       className={cn(
-        "relative flex min-h-0 w-full max-w-md p-4 md:absolute md:inset-y-0 md:right-0 md:w-1/3 md:max-w-none",
+        "relative flex min-h-0 w-full overflow-hidden py-4 pl-4 md:h-full md:w-1/3",
         className,
       )}
     >
       <p
         ref={descriptionRef}
         onScroll={updateScrollProgress}
-        className="min-w-0 flex-1 scrollbar-hidden overflow-y-auto text-3xl/11 whitespace-pre-line text-zinc-50 text-shadow-sm md:h-full md:min-h-0"
+        className="min-h-0 min-w-0 flex-1 scrollbar-hidden overflow-y-auto text-2xl/9 whitespace-pre-line text-zinc-50 text-shadow-sm md:text-3xl/11"
       >
         {description}
       </p>
-      <div className="pointer-events-none relative w-1 shrink-0" aria-hidden="true">
+      <div className="pointer-events-none relative hidden w-1 shrink-0 md:block" aria-hidden="true">
         <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-zinc-50/40" />
         <div
           className="absolute left-1/2 size-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-zinc-50"
@@ -93,7 +93,7 @@ function VignetteDescription({
 
 function VignettesNavigation() {
   return (
-    <nav className="mr-4 flex flex-col items-stretch gap-1" aria-label="Section navigation">
+    <nav className="flex flex-col items-stretch gap-1" aria-label="Section navigation">
       {VIGNETTE_NAVIGATION_LINKS.map(({ href, label }) => (
         <NavButton key={href} href={href} variant="outline">
           {label}
@@ -115,13 +115,15 @@ export function VignettesInteractive({
     <>
       <div className="relative left-1/2 w-screen -translate-x-1/2 border-y border-zinc-50">
         <VignetteBackground playbackId={activeVignette.playbackId} />
-        <div className="relative z-10 mx-auto flex w-full max-w-6xl">
-          <VignetteVideo playbackId={activeVignette.playbackId} />
-          <VignetteDescription description={activeVignette.description} />
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-8">
+          <div className="flex w-full flex-col md:aspect-2/1 md:flex-row">
+            <VignetteVideo playbackId={activeVignette.playbackId} />
+            <VignetteDescription description={activeVignette.description} />
+          </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="grid grid-cols-3 gap-x-8 gap-y-2">
+      <div className="flex flex-wrap items-start justify-between gap-4 px-8">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-3">
           {vignettes.map((vignette, index) => (
             <VignetteThumbnailProvider
               key={vignette.id}

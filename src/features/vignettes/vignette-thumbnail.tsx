@@ -2,7 +2,12 @@ import { useVignetteThumbnail } from "@features/vignettes/vignette-thumbnail-con
 import { cn } from "@lib/cn";
 import { PlayIcon } from "@phosphor-icons/react";
 
-const VIGNETTE_ROW_OFFSET_CLASSES = ["translate-x-0", "translate-x-4", "translate-x-8"];
+const VIGNETTE_MOBILE_OFFSET_CLASSES = ["translate-x-0", "translate-x-4", "translate-x-8"];
+const VIGNETTE_DESKTOP_OFFSET_CLASSES = [
+  "md:translate-x-0",
+  "md:translate-x-4",
+  "md:translate-x-8",
+];
 
 export function thumbnailUrl(playbackId: string, width: number, height: number) {
   return `https://image.mux.com/${playbackId}/thumbnail.jpg?time=0&width=${width}&height=${height}&fit_mode=crop`;
@@ -66,7 +71,7 @@ function VignetteThumbnailSummary({ children, className, ...props }: React.Compo
   return (
     <span
       className={cn(
-        "block text-[0.625rem] text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground",
+        "block text-sm text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground md:text-[0.625rem]",
         isActive && "text-foreground",
         className,
       )}
@@ -83,7 +88,7 @@ function VignetteThumbnailTitle({ children, className, ...props }: React.Compone
   return (
     <span
       className={cn(
-        "text-xs font-medium text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground",
+        "text-base font-medium text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground md:text-xs",
         isActive && "text-foreground",
         className,
       )}
@@ -99,7 +104,7 @@ function VignetteThumbnailIcon({ children, className, ...props }: React.Componen
     <span
       aria-hidden="true"
       className={cn(
-        "grid size-3 shrink-0 place-items-center border border-foreground bg-background text-foreground transition-[background-color,color] duration-150 group-hover:bg-foreground group-hover:text-background",
+        "grid size-4 shrink-0 place-items-center border border-foreground bg-background text-foreground transition-[background-color,color] duration-150 group-hover:bg-foreground group-hover:text-background md:size-3",
         className,
       )}
       {...props}
@@ -112,10 +117,15 @@ function VignetteThumbnailIcon({ children, className, ...props }: React.Componen
 export function VignetteThumbnail() {
   const { vignette, index, onSelect, isActive } = useVignetteThumbnail();
   const rowIndex = Math.floor(index / 3);
+  const columnIndex = index % 3;
 
   return (
     <VignetteThumbnailButton
-      className={cn("min-w-0", VIGNETTE_ROW_OFFSET_CLASSES[rowIndex] ?? "translate-x-0")}
+      className={cn(
+        "min-w-0",
+        VIGNETTE_MOBILE_OFFSET_CLASSES[columnIndex],
+        VIGNETTE_DESKTOP_OFFSET_CLASSES[rowIndex],
+      )}
       onClick={() => onSelect(index)}
       aria-label={`Show vignette ${vignette.order}`}
       aria-pressed={isActive}
@@ -126,7 +136,7 @@ export function VignetteThumbnail() {
             src={thumbnailUrl(vignette.playbackId, 128, 96)}
             alt={`Vignette ${vignette.order}`}
             loading="lazy"
-            className="block aspect-5/3 w-12 object-cover transition-transform duration-200 group-hover:scale-110"
+            className="block aspect-5/3 w-20 object-cover transition-transform duration-200 group-hover:scale-110 md:w-12"
           />
         </span>
       </VignetteThumbnailMedia>
@@ -134,7 +144,7 @@ export function VignetteThumbnail() {
         <VignetteThumbnailHeader>
           <VignetteThumbnailTitle>{vignette.id}</VignetteThumbnailTitle>
           <VignetteThumbnailIcon>
-            <PlayIcon className="size-1.5" weight="fill" />
+            <PlayIcon className="size-2 md:size-1.5" weight="fill" />
           </VignetteThumbnailIcon>
         </VignetteThumbnailHeader>
         <VignetteThumbnailSummary>{vignette.summary}</VignetteThumbnailSummary>
