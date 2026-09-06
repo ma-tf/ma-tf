@@ -30,7 +30,10 @@ export function VignettesHeader({ children, className, ...props }: React.Compone
 export function VignettesTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
-      className={cn("cursor-default bg-zinc-50 px-1 text-lg dark:bg-zinc-950", className)}
+      className={cn(
+        "cursor-default border-x border-t border-zinc-50 bg-zinc-50 px-2 text-lg dark:bg-zinc-950",
+        className,
+      )}
       {...props}
     >
       {children}

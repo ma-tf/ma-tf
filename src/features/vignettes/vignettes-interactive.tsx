@@ -1,13 +1,26 @@
+import { NavButton } from "@components/nav-button";
 import { Spinner } from "@components/ui/spinner";
 import { VideoPlayer } from "@features/vignettes/mux-player";
 import { cn } from "@lib/cn";
+import { PlayIcon } from "@phosphor-icons/react";
 import { useRef, useState } from "react";
 
 type Vignette = {
+  id: string;
   playbackId: string;
   order: number;
+  summary: string;
   description: string;
 };
+
+const VIGNETTE_NAVIGATION_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/music", label: "Music" },
+  { href: "/photos", label: "Photography" },
+];
+
+const VIGNETTE_ROW_OFFSET_CLASSES = ["translate-x-0", "translate-x-4", "translate-x-8"];
 
 function thumbnailUrl(playbackId: string, width: number, height: number) {
   return `https://image.mux.com/${playbackId}/thumbnail.jpg?time=0&width=${width}&height=${height}&fit_mode=crop`;
@@ -89,52 +102,93 @@ function VignetteDescription({
   );
 }
 
-function VignettesThumbnails({
-  vignettes,
+function VignetteThumbnail({
+  vignette,
+  index,
   activeIndex,
   onSelect,
 }: {
-  vignettes: Vignette[];
+  vignette: Vignette;
+  index: number;
   activeIndex: number;
   onSelect: (index: number) => void;
 }) {
   const outline =
     "[filter:drop-shadow(0_1px_1px_rgb(0_0_0/0.05))_drop-shadow(2px_0_0_var(--thumb-outline))_drop-shadow(-2px_0_0_var(--thumb-outline))_drop-shadow(0_2px_0_var(--thumb-outline))_drop-shadow(0_-2px_0_var(--thumb-outline))]";
+  const rowIndex = Math.floor(index / 3);
+  const isActive = index === activeIndex;
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {vignettes.map((vignette, index) => {
-        const isActive = index === activeIndex;
-
-        return (
-          <div
-            key={vignette.playbackId}
+    <div className={cn("min-w-0", VIGNETTE_ROW_OFFSET_CLASSES[rowIndex] ?? "translate-x-0")}>
+      <button
+        type="button"
+        onClick={() => onSelect(index)}
+        aria-label={`Show vignette ${vignette.order}`}
+        aria-pressed={isActive}
+        className={cn(
+          "group flex min-w-0 cursor-pointer items-start gap-2 text-left transition-[transform,color] duration-150 hover:-translate-y-0.5",
+        )}
+      >
+        <div
+          className={cn(
+            outline,
+            "shrink-0 [--thumb-outline:transparent]",
+            "group-hover:[--thumb-outline:var(--muted-foreground)]",
+            "group-focus-visible:[--thumb-outline:var(--muted-foreground)]",
+            isActive && "[--thumb-outline:var(--foreground)]",
+          )}
+        >
+          <span className="block overflow-hidden [clip-path:polygon(0_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%)]">
+            <img
+              src={thumbnailUrl(vignette.playbackId, 128, 96)}
+              alt={`Vignette ${vignette.order}`}
+              loading="lazy"
+              className="block aspect-5/3 w-12 object-cover transition-transform duration-200 group-hover:scale-110"
+            />
+          </span>
+        </div>
+        <div className="min-w-0 text-sm">
+          <div className="flex items-center gap-1">
+            <span
+              className={cn(
+                "text-xs font-medium text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground",
+                isActive && "text-foreground",
+              )}
+            >
+              {vignette.id}
+            </span>
+            <span
+              aria-hidden="true"
+              className={cn(
+                "grid size-3 shrink-0 place-items-center border border-foreground bg-background text-foreground transition-[background-color,color] duration-150 group-hover:bg-foreground group-hover:text-background",
+              )}
+            >
+              <PlayIcon className="size-1.5" weight="fill" />
+            </span>
+          </div>
+          <span
             className={cn(
-              outline,
-              "[--thumb-outline:transparent]",
-              "hover:[--thumb-outline:var(--muted-foreground)]",
-              "focus-within:[--thumb-outline:var(--muted-foreground)]",
-              isActive && "[--thumb-outline:var(--foreground)]",
+              "block text-[0.625rem] text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground",
+              isActive && "text-foreground",
             )}
           >
-            <button
-              type="button"
-              onClick={() => onSelect(index)}
-              aria-label={`Show vignette ${vignette.order}`}
-              aria-pressed={isActive}
-              className="group block cursor-pointer overflow-hidden [clip-path:polygon(0_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%)]"
-            >
-              <img
-                src={thumbnailUrl(vignette.playbackId, 128, 96)}
-                alt={`Vignette ${vignette.order}`}
-                loading="lazy"
-                className="block aspect-5/3 w-12 object-cover transition-transform duration-200 group-hover:scale-110"
-              />
-            </button>
-          </div>
-        );
-      })}
+            {vignette.summary}
+          </span>
+        </div>
+      </button>
     </div>
+  );
+}
+
+function VignettesNavigation() {
+  return (
+    <nav className="mr-4 flex flex-col items-stretch gap-1" aria-label="Section navigation">
+      {VIGNETTE_NAVIGATION_LINKS.map(({ href, label }) => (
+        <NavButton key={href} href={href} variant="outline">
+          {label}
+        </NavButton>
+      ))}
+    </nav>
   );
 }
 
@@ -151,11 +205,20 @@ export function VignettesInteractive({ vignettes }: { vignettes: Vignette[] }) {
           <VignetteDescription description={activeVignette.description} />
         </div>
       </div>
-      <VignettesThumbnails
-        vignettes={vignettes}
-        activeIndex={activeIndex}
-        onSelect={setActiveIndex}
-      />
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="grid grid-cols-3 gap-x-8 gap-y-2">
+          {vignettes.map((vignette, index) => (
+            <VignetteThumbnail
+              key={vignette.id}
+              vignette={vignette}
+              index={index}
+              activeIndex={activeIndex}
+              onSelect={setActiveIndex}
+            />
+          ))}
+        </div>
+        <VignettesNavigation />
+      </div>
     </>
   );
 }
