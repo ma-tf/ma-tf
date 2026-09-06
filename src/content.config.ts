@@ -68,6 +68,7 @@ const vignettes = defineCollection({
   loader: file("./src/content/vignettes.json"),
   schema: z.object({
     id: z.string(),
+    summary: z.string(),
     playbackId: z.string(),
     order: z.number(),
     description: z.string(),
