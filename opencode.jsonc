@@ -34,7 +34,7 @@
     },
     "netlify": {
       "type": "local",
-      "command": ["vpx", "-y", "@netlify/mcp"],
+      "command": ["npx", "--force", "-y", "@netlify/mcp"],
       "enabled": true,
     },
   },
