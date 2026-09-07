@@ -1,6 +1,7 @@
 [
   {
     "id": "Underground Echoes",
+    "slug": "underground-echoes",
     "summary": "Empty car park echoes",
     "playbackId": "6X3BeDuvZ2BEgJwaaF9700E9Re1WO02FjkiQKMBU43fR8",
     "order": 1,
@@ -9,6 +10,7 @@
   },
   {
     "id": "Wire Shoes",
+    "slug": "wire-shoes",
     "summary": "Shoes swing overhead",
     "playbackId": "UXGlghx6krtNvopFsJd8kRRGdhejPnwavUNNeoOG4mQ",
     "order": 2,
@@ -17,6 +19,7 @@
   },
   {
     "id": "Fuji Sunset",
+    "slug": "fuji-sunset",
     "summary": "Sunset over Mount Fuji",
     "playbackId": "ETJbmGydT6vsk02eO8uCp49fFLieO5BO5DJVGklS4SlI",
     "order": 3,
@@ -25,6 +28,7 @@
   },
   {
     "id": "Vignette Four",
+    "slug": "vignette-four",
     "summary": "Coming soon",
     "playbackId": "GH3xlI019KRqjGvfHffUGVJxDJvdaQPw00s9Uhv3JGQ7A",
     "order": 4,
@@ -33,6 +37,7 @@
   },
   {
     "id": "Rangefinder Bokeh",
+    "slug": "rangefinder-bokeh",
     "summary": "Accidental bokeh footage",
     "playbackId": "Ziv01nveEVq5PpPW01SK02TmRolIpsaLdZ8FLqXHWYAmp00",
     "order": 5,
@@ -41,6 +46,7 @@
   },
   {
     "id": "Ogimachi Rain",
+    "slug": "ogimachi-rain",
     "summary": "Rain at station",
     "playbackId": "2IjjXN1Gd4tGbSzzIZ5Pe01Tzn9I2Azx401PqBxAgh025s",
     "order": 6,
@@ -49,6 +55,7 @@
   },
   {
     "id": "Vignette Seven",
+    "slug": "vignette-seven",
     "summary": "Coming soon",
     "playbackId": "na96OKmxoqf7GXO7Sx9UFON00ie00gXpcqueRPM3LZhyU",
     "order": 7,
@@ -57,6 +64,7 @@
   },
   {
     "id": "Chuo Line",
+    "slug": "chuo-line",
     "summary": "Train between buildings",
     "playbackId": "01RHJtTKonPi3ItqVhTa2RhHGEQ3S02sS7U2021UvNhLic",
     "order": 8,
@@ -65,6 +73,7 @@
   },
   {
     "id": "Akihabara Long Shot",
+    "slug": "akihabara-long-shot",
     "summary": "Layered city movement",
     "playbackId": "8u8qE8i4xODqWYQqbkZ00TCofRkKSshLJQ4gMeb74POc",
     "order": 9,

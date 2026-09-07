@@ -1,29 +1,14 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@layouts/Layout.astro";
-import Navbar from "@components/Navbar.astro";
-import {
-  Vignettes,
-  VignettesContent,
-  VignettesHeader,
-  VignettesTitle,
-} from "@features/vignettes/vignettes";
-import { VignettesInteractive } from "@features/vignettes/vignettes-interactive";
 
-const videos = (await getCollection("vignettes"))
+const firstVignette = (await getCollection("vignettes"))
   .filter(({ data }) => data.enabled)
   .sort((a, b) => a.data.order - b.data.order)
-  .map(({ data }) => data);
----
+  .at(0);
 
-<Layout>
-  <Navbar />
-  <Vignettes>
-    <VignettesHeader>
-      <VignettesTitle>vignettes</VignettesTitle>
-    </VignettesHeader>
-    <VignettesContent>
-      <VignettesInteractive vignettes={videos} client:load />
-    </VignettesContent>
-  </Vignettes>
-</Layout>
+if (!firstVignette) {
+  return new Response("No enabled vignettes found", { status: 404 });
+}
+
+return Astro.redirect(`/vignettes/${firstVignette.data.slug}`);
+---

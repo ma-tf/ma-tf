@@ -105,12 +105,11 @@ function VignettesNavigation() {
 
 export function VignettesInteractive({
   vignettes,
+  activeVignette,
 }: {
   vignettes: CollectionEntry<"vignettes">["data"][];
+  activeVignette: CollectionEntry<"vignettes">["data"];
 }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const activeVignette = vignettes[activeIndex]!;
-
   return (
     <>
       <div className="relative left-1/2 w-screen -translate-x-1/2 border-y border-zinc-50">
@@ -129,9 +128,7 @@ export function VignettesInteractive({
               key={vignette.id}
               vignette={vignette}
               index={index}
-              activeIndex={activeIndex}
-              isActive={index === activeIndex}
-              onSelect={setActiveIndex}
+              isActive={vignette.slug === activeVignette.slug}
             >
               <VignetteThumbnail />
             </VignetteThumbnailProvider>

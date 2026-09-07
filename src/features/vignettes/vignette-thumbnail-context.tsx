@@ -5,9 +5,7 @@ import { createContext, useContext, type PropsWithChildren } from "react";
 type VignetteThumbnailContextValue = {
   vignette: CollectionEntry<"vignettes">["data"];
   index: number;
-  activeIndex: number;
   isActive: boolean;
-  onSelect: (index: number) => void;
 };
 
 const VignetteThumbnailContext = createContext<VignetteThumbnailContextValue | null>(null);

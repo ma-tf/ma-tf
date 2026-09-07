@@ -13,14 +13,9 @@ export function thumbnailUrl(playbackId: string, width: number, height: number) 
   return `https://image.mux.com/${playbackId}/thumbnail.jpg?time=0&width=${width}&height=${height}&fit_mode=crop`;
 }
 
-function VignetteThumbnailButton({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
+function VignetteThumbnailButton({ children, className, ...props }: React.ComponentProps<"a">) {
   return (
-    <button
-      type="button"
+    <a
       className={cn(
         "group flex min-w-0 cursor-pointer items-start gap-2 text-left transition-[transform,color] duration-150 hover:-translate-y-0.5",
         className,
@@ -28,7 +23,7 @@ function VignetteThumbnailButton({
       {...props}
     >
       {children}
-    </button>
+    </a>
   );
 }
 
@@ -115,20 +110,20 @@ function VignetteThumbnailIcon({ children, className, ...props }: React.Componen
 }
 
 export function VignetteThumbnail() {
-  const { vignette, index, onSelect, isActive } = useVignetteThumbnail();
+  const { vignette, index, isActive } = useVignetteThumbnail();
   const rowIndex = Math.floor(index / 3);
   const columnIndex = index % 3;
 
   return (
     <VignetteThumbnailButton
+      href={`/vignettes/${vignette.slug}`}
       className={cn(
         "min-w-0",
         VIGNETTE_MOBILE_OFFSET_CLASSES[columnIndex],
         VIGNETTE_DESKTOP_OFFSET_CLASSES[rowIndex],
       )}
-      onClick={() => onSelect(index)}
       aria-label={`Show vignette ${vignette.order}`}
-      aria-pressed={isActive}
+      aria-current={isActive ? "page" : undefined}
     >
       <VignetteThumbnailMedia>
         <span className="block overflow-hidden [clip-path:polygon(0_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%)]">
