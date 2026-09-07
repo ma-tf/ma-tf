@@ -1,0 +1,13 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import PhotographyGallery from "@features/photography/photography-grid.astro";
+import { PhotographyPage } from "@features/photography/photography-page";
+---
+
+	<Layout>
+	  <Navbar />
+	  <PhotographyPage client:load>
+	    <PhotographyGallery />
+	  </PhotographyPage>
+	</Layout>

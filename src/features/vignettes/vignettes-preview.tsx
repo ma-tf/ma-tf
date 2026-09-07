@@ -40,7 +40,7 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
           <div className="flex flex-col gap-4 indent-8 text-lg text-foreground md:col-span-3">
             <p>
               A series of short motion studies, shot on location in the quiet hours. Small
-              observations of a place and the details that give it character. Photographs freeze a
+              observations of a place and the details that give it character. Photography freezes a
               single instant, but some places only come alive in motion. The speed of a moving
               train, the swing of shoes on a wire, the rolling waves on a beach during sunset. These
               studies are an attempt to hold on to those moving moments.

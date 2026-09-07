@@ -87,7 +87,7 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
           {[
             { href: "/", label: "Home", enabled: true },
             { href: "/blog", label: "Blog", enabled: previews.blog },
-            { href: "/photos", label: "Photography", enabled: previews.photos },
+            { href: "/photography", label: "Photography", enabled: previews.photography },
             { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
             { href: "/music", label: "Music", enabled: previews.music },
           ]

@@ -2,7 +2,7 @@
 import { Home } from "@features/home/home";
 import { BlogPreview } from "@features/blog/blog-preview";
 import { ProjectsPreview } from "@features/projects/projects-preview";
-import { PhotosPreview } from "@features/photos/photos-preview";
+import { PhotographyPreview } from "@features/photography/photography-preview";
 import { VignettesPreview } from "@features/vignettes/vignettes-preview";
 import { GraphicsPreview } from "@features/graphics/graphics-preview";
 import { MusicPreview } from "@features/music/music-preview";
@@ -45,7 +45,7 @@ const images: ImageMap = {
   <Home />
   {previews.blog && <BlogPreview posts={recentPosts} />}
   {previews.projects && <ProjectsPreview />}
-  {previews.photos && <PhotosPreview />}
+  {previews.photography && <PhotographyPreview />}
   {
     previews.vignettes && (
       <VignettesPreview images={images} />

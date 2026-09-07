@@ -5,7 +5,7 @@
 The project has multiple Astro pages that each have corresponding React components. The component naming and structure was inconsistent across pages:
 
 - `music.tsx` exported `Music`, `MusicTitle`, `MusicDescription`, etc.
-- `photograph.tsx` exported `PhotographDescription`, `PhotographDescriptionHeader`, `PhotographDescriptionContent`
+- `photography.tsx` exports the `Photography` page layout components.
 - `blog.tsx` only exported a preview card component
 
 This inconsistency made it harder to understand the codebase and predict where components should be defined.

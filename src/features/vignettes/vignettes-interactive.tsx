@@ -11,7 +11,7 @@ import { useRef, useState } from "react";
 const VIGNETTE_NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
   { href: "/blog", label: "Blog" },
-  { href: "/photos", label: "Photography" },
+  { href: "/photography", label: "Photography" },
   { href: "/music", label: "Music" },
 ];
 

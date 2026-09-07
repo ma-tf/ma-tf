@@ -28,7 +28,7 @@ function LoadableImage({ src, alt, className }: { src: string; alt: string; clas
   );
 }
 
-export function PhotoDialog({
+export function PhotographyDialog({
   src,
   thumbSrc,
   alt,

@@ -9,14 +9,14 @@ import {
 import { Button } from "@components/ui/button";
 import { CameraIcon, FilmStripIcon } from "@phosphor-icons/react";
 
-export function PhotosPreview() {
+export function PhotographyPreview() {
   return (
     <Section className="mx-auto max-w-480 py-24">
       <SectionHeader>
         <SectionNumber />
-        <SectionTitle href="/photos">Photography</SectionTitle>
+        <SectionTitle href="/photography">Photography</SectionTitle>
       </SectionHeader>
-      <SectionSubtitle>Digital and analogue photographs.</SectionSubtitle>
+      <SectionSubtitle>Digital and analogue photography.</SectionSubtitle>
       <SectionContent>
         <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
           <div className="flex flex-col gap-4 indent-8 text-lg">
@@ -37,7 +37,7 @@ export function PhotosPreview() {
             </p>
             <Button
               variant="outline"
-              render={<a href="/photos">View photographs</a>}
+              render={<a href="/photography">View photography</a>}
               className="mt-6 w-full rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground md:w-fit dark:bg-foreground dark:hover:bg-muted-foreground/80"
               size="lg"
             />

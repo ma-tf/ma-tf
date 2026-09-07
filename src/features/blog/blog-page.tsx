@@ -9,7 +9,7 @@ import { CaretRightIcon } from "@phosphor-icons/react";
 const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
 const BLOG_NAVIGATION_LINKS = [
   { href: "/", label: "Home", enabled: true },
-  { href: "/photos", label: "Photography", enabled: previews.photos },
+  { href: "/photography", label: "Photography", enabled: previews.photography },
   { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
   { href: "/music", label: "Music", enabled: previews.music },
 ] as const;
