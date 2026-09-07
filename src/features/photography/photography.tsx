@@ -3,7 +3,7 @@ import { cn } from "@lib/cn";
 
 export function Photography({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("max-w-480 self-center overflow-x-clip px-4", className)} {...props}>
+    <div className={cn("max-w-480 self-center overflow-x-clip px-4 py-16", className)} {...props}>
       {children}
     </div>
   );
@@ -14,7 +14,7 @@ export function PhotographyHeader({ children, className, ...props }: React.Compo
 
   return (
     <div
-      className={cn("flex items-center justify-between gap-4 p-4", className)}
+      className={cn("flex items-center justify-between gap-4 p-4 pb-16", className)}
       style={{ transform: `translate(${offset.x * 0.3}px, ${offset.y * 0.3}px)` }}
       {...props}
     >
@@ -41,7 +41,7 @@ export function PhotographyDescription({
   return (
     <div
       className={cn("indent-8 text-4xl will-change-transform lg:col-span-2", className)}
-      style={{ transform: `translate(${offset.x * 0.2}px, ${offset.y * 0.2}px)` }}
+      style={{ transform: `translate(${offset.x * 0.5}px, ${offset.y * 0.5}px)` }}
       {...props}
     >
       {children}
@@ -55,7 +55,7 @@ export function PhotographyGrid({ children, className, ...props }: React.Compone
   return (
     <div
       className={cn("min-w-0 will-change-transform lg:col-span-4", className)}
-      style={{ transform: `translate(${offset.x * 0.5}px, ${offset.y * 0.5}px)` }}
+      style={{ transform: `translate(${offset.x * 0.2}px, ${offset.y * 0.2}px)` }}
       {...props}
     >
       {children}

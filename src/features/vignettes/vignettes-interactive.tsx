@@ -95,7 +95,7 @@ function VignettesNavigation() {
   return (
     <nav className="flex flex-col items-stretch gap-1" aria-label="Section navigation">
       {VIGNETTE_NAVIGATION_LINKS.map(({ href, label }) => (
-        <NavButton key={href} href={href} variant="outline">
+        <NavButton key={href} href={href} variant="solid">
           {label}
         </NavButton>
       ))}

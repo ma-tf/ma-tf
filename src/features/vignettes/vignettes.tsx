@@ -34,7 +34,7 @@ export function VignettesTitle({ children, className, ...props }: React.Componen
   return (
     <h2
       className={cn(
-        "mr-8 cursor-default border-x border-t border-zinc-50 bg-zinc-50 px-2 text-lg dark:bg-zinc-950",
+        "mr-8 cursor-default border-x border-t border-zinc-950 bg-zinc-950 px-2 text-lg text-zinc-50 dark:border-zinc-50 dark:bg-zinc-50 dark:text-zinc-950",
         className,
       )}
       {...props}
