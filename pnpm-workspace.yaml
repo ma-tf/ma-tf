@@ -18,7 +18,10 @@ minimumReleaseAgeExclude:
   - "@oxfmt/*"
   - vitest
   - "@vitest/*"
-onlyBuiltDependencies: ["esbuild"]
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unix-dgram
 peerDependencyRules:
   allowAny:
     - vite
