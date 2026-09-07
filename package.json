@@ -1,8 +1,10 @@
 {
   "name": "ma-tf",
-  "version": "0.0.0",
+  "version": "0.0.10",
   "private": true,
+  "homepage": "https://m4t.tf",
   "license": "AGPL-3.0-only",
+  "repository": "https://github.com/ma-tf/ma-tf",
   "type": "module",
   "scripts": {
     "astro": "astro",
