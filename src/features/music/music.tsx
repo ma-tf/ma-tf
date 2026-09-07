@@ -1,8 +1,23 @@
+import { NavButton } from "@components/nav-button";
 import { cn } from "@lib/cn";
+import { previews } from "@lib/feature-flags";
+
+const MUSIC_NAVIGATION_LINKS = [
+  { href: "/", label: "Home", enabled: true },
+  { href: "/blog", label: "Blog", enabled: true },
+  { href: "/photos", label: "Photography", enabled: previews.photos },
+  { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+] as const;
 
 export function Music({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col justify-center", className)} {...props}>
+    <div
+      className={cn(
+        "flex w-full max-w-360 flex-col justify-center self-center bg-background px-8 py-24 min-[1440px]:border-r min-[1440px]:border-foreground",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -26,9 +41,21 @@ export function MusicTitle({ children, className, ...props }: React.ComponentPro
 
 export function MusicHeader({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col gap-4", className)} {...props}>
+    <div className={cn("flex flex-col py-8", className)} {...props}>
       {children}
     </div>
+  );
+}
+
+export function MusicNavigation() {
+  return (
+    <nav className="flex flex-wrap justify-end gap-1" aria-label="Section navigation">
+      {MUSIC_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
+        <NavButton key={href} href={href}>
+          {label}
+        </NavButton>
+      ))}
+    </nav>
   );
 }
 

@@ -11,8 +11,8 @@ import { useRef, useState } from "react";
 const VIGNETTE_NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
   { href: "/blog", label: "Blog" },
-  { href: "/music", label: "Music" },
   { href: "/photos", label: "Photography" },
+  { href: "/music", label: "Music" },
 ];
 
 function VignetteBackground({ playbackId }: { playbackId: string }) {

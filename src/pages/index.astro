@@ -8,7 +8,6 @@ import { GraphicsPreview } from "@features/graphics/graphics-preview";
 import { MusicPreview } from "@features/music/music-preview";
 import Layout from "@layouts/Layout.astro";
 import Navbar from "@components/Navbar.astro";
-import Footer from "@layouts/footer.astro";
 import { getPosts } from "@features/blog/post-data";
 import { previews } from "@lib/feature-flags";
 import { getImage } from "astro:assets";
@@ -39,31 +38,23 @@ const images: ImageMap = {
   "music/20251014_Japan 6_19.jpg": japanSrc,
 };
 
-const bgImages = {
-  projects: "/20250930_Kodak_26.webp",
-  photos: "/20250930_Kodak_20.webp",
-  vignettes: "/20250930_Kodak_21.webp",
-  graphics: "/20250930_Kodak_16.webp",
-  music: "/20250930_Kodak_27.webp",
-};
 ---
 
 <Layout>
   <Navbar />
   <Home />
   {previews.blog && <BlogPreview posts={recentPosts} />}
-  {previews.projects && <ProjectsPreview bgImage={bgImages.projects} />}
-  {previews.photos && <PhotosPreview bgImage={bgImages.photos} />}
+  {previews.projects && <ProjectsPreview />}
+  {previews.photos && <PhotosPreview />}
   {
     previews.vignettes && (
-      <VignettesPreview images={images} bgImage={bgImages.vignettes} />
+      <VignettesPreview images={images} />
     )
   }
   {
     previews.graphics && (
-      <GraphicsPreview images={images} bgImage={bgImages.graphics} />
+      <GraphicsPreview images={images} />
     )
   }
-  {previews.music && <MusicPreview images={images} bgImage={bgImages.music} />}
-  <Footer />
+  {previews.music && <MusicPreview images={images} />}
 </Layout>

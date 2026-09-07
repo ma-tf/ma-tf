@@ -85,10 +85,11 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
       <nav className="flex items-center justify-end">
         <div className="flex flex-col gap-1">
           {[
+            { href: "/", label: "Home", enabled: true },
             { href: "/blog", label: "Blog", enabled: previews.blog },
-            { href: "/music", label: "Music", enabled: previews.music },
             { href: "/photos", label: "Photography", enabled: previews.photos },
             { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+            { href: "/music", label: "Music", enabled: previews.music },
           ]
             .filter(({ enabled }) => enabled)
             .map(({ href, label }) => (
