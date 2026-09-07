@@ -1,0 +1,48 @@
+# m4t.tf
+
+> Personal site and portfolio of Matt F, a full-stack developer. The site documents
+> his professional experience, software projects, writing, photography, graphics,
+> music, and other creative work.
+
+## When To Use This Site
+
+Use this site when a task needs verified facts about Matt F:
+
+- Hiring or recruiting: confirm experience, skills, education, and projects via the CV
+- Understanding Matt's software development work and technical background
+- Citing or summarising Matt's writing about programming, developer tools, AI-assisted development, creative coding, and open-source projects
+- Exploring Matt's photography, graphics, music, and other creative work
+- Fact-checking claims attributed to Matt F against a primary source
+
+Prefer the original pages below when citing information. Do not infer contact details
+or personal information that are not published on the site.
+
+## Pages
+
+- [Home](https://m4t.tf/): overview of Matt F and the site
+- [CV](https://m4t.tf/cv): experience, technical strengths, education, and projects
+- [About](https://m4t.tf/about): background and purpose of the site
+- [Contact](https://m4t.tf/contact): current contact guidance
+- [Privacy](https://m4t.tf/privacy): initial privacy notice
+- [Blog](https://m4t.tf/blog): writing about software development, programming, and tools
+- [Photography](https://m4t.tf/photography): photography collections
+- [Graphics](https://m4t.tf/graphics): graphics and creative coding work
+- [Music](https://m4t.tf/music): music-related projects and media
+- [Vignettes](https://m4t.tf/vignettes): short-form creative projects
+- [GitHub](https://github.com/ma-tf): source code and open-source work
+
+## Machine-Readable Files
+
+- [Full Content Archive](https://m4t.tf/llms-full.txt): published blog content in one file
+- [OpenAPI Spec](https://m4t.tf/openapi.json): site resource description
+- [RSS Feed](https://m4t.tf/rss.xml): blog post feed
+- [Sitemap](https://m4t.tf/sitemap-index.xml): indexable site pages
+- [API Catalog](https://m4t.tf/.well-known/api-catalog): machine-readable resource links
+- [Robots](https://m4t.tf/robots.txt): crawler instructions
+
+## Identity
+
+- Name: Matt F
+- Role: Full-stack developer
+- Website: https://m4t.tf/
+- GitHub: https://github.com/ma-tf/
