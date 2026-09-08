@@ -17,7 +17,7 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
         <PhotographyTitle>photography</PhotographyTitle>
         <nav className="flex w-fit flex-col items-stretch gap-1" aria-label="Section navigation">
           <NavButton href="/">Home</NavButton>
-          <NavButton href="/photography">Photography</NavButton>
+          <NavButton href="/blog">Blog</NavButton>
           <NavButton href="/vignettes">Vignettes</NavButton>
           <NavButton href="/music">Music</NavButton>
         </nav>
