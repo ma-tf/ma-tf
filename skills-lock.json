@@ -103,6 +103,12 @@
       "skillPath": "skills/productivity/handoff/SKILL.md",
       "computedHash": "20e5f4afdef502637510bc5c64d27645d3c85c88df9cb006824bbb0980166319"
     },
+    "humanize": {
+      "source": "krake747/skills",
+      "sourceType": "github",
+      "skillPath": "humanize/SKILL.md",
+      "computedHash": "225fca8d883d1183eea8ef2dacece71d65ea623141c486741f58c6512d214404"
+    },
     "implement": {
       "source": "mattpocock/skills",
       "sourceType": "github",
