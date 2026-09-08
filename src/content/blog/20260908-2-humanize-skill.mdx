@@ -1,0 +1,101 @@
+---
+title: "Make AI writing sound human with the humanize skill"
+slug: "20260908-2-humanize-skill"
+pubDate: 2026-09-08
+description: "The humanize skill removes language that performs importance while preserving meaning, voice, and useful detail."
+author: "Matt F"
+tags: ["ai", "writing", "tools", "skills"]
+---
+
+AI-generated writing often sounds polished in the wrong way.
+
+It explains what it is about before getting to the point. It adds a summary after the conclusion. It reaches for words such as "utilise" and "commence" when "use" and "start" would do. Every paragraph arrives with the same careful rhythm.
+
+The `humanize` skill is a small set of instructions for fixing that. It lives at `https://github.com/krake747/skills/humanize/SKILL.md` and applies whenever I ask an agent to write or edit prose.
+
+> Good humanization removes language that performs importance while preserving meaning and voice.
+
+## Five passes
+
+### Strip
+
+Remove filler, throat-clearing, chatbot courtesy, self-reference, and unnecessary decoration.
+
+Instead of:
+
+> In this piece, we will take a look at why this matters.
+
+Write:
+
+> This matters because...
+
+The first sentence talks about the writing. The second talks about the subject.
+
+### Swap
+
+Replace inflated words with their plain equivalents.
+
+The skill gives examples such as:
+
+- `commence` becomes `start`
+- `ascertain` becomes `find out`
+- `additionally` becomes `also`
+- `numerous` becomes `many`
+
+Formal vocabulary is sometimes the right choice. Question words that add status but no meaning.
+
+### Rebuild
+
+Some sentences sound artificial because of their shape, not their vocabulary.
+
+The skill calls out reversal frames such as "It is not X, it is Y", forced lists of three, fake ranges, self-interview questions, and dense clauses that make the reader backtrack.
+
+State the point. Use the real number of items. Split a sentence when it contains too many ideas.
+
+### Shape
+
+Human prose has rhythm. Five sentences of similar length, each beginning with "However" or "Moreover", can sound assembled even when every sentence is grammatical.
+
+Vary sentence lengths, strengthen endings, and begin paragraphs with their own claims rather than repeated cue words.
+
+Short sentences help.
+
+Then a longer one can take its time when the idea needs room.
+
+### Guard
+
+The final pass protects meaning.
+
+Numbers, names, dates, quotes, units, negations, domain terms, and meaningful hedges must survive. Code and quoted examples are exempt. A phrase such as "Use pnpm, not npm" is not inflated language. It is an instruction.
+
+Tension matters too. A serious ending is not automatically a sermon. If the final line carries the conflict or the important fact, it should stay.
+
+## The smallest useful edit
+
+The skill is deliberately conservative. Fix the span, not the paragraph. If one sentence is bloated, change that sentence. If nothing is broken, change nothing.
+
+That matters because humanising prose can easily become another kind of performance. A text can be stripped so aggressively that it loses personality, precision, or the writer's actual voice.
+
+Human writing also needs voice.
+
+Have a position. Name the concrete thing. Read the sentence aloud. Vary the rhythm. Say "I" when it fits. Leave a little mess.
+
+Perfect structure is its own tell.
+
+## What it is not
+
+It does not turn every piece of writing into casual conversation, remove every formal word, flatten technical language, rewrite a story's structure, or invent a stronger argument.
+
+It fixes sentences, not stories.
+
+The skill leaves the meaning alone and keeps the language from getting in its way.
+
+## Appendix: Why plain English works
+
+English has Germanic and Latinate vocabulary because of its history. That gives us pairs such as `ask` and `question`, `help` and `assist`, and `begin` and `commence`.
+
+These words are not always exact synonyms. Germanic words often feel shorter, more familiar, and more concrete. French and Latinate words can feel more formal, abstract, or institutional.
+
+Germanic words are not automatically better than Latinate ones. Use the clearest, most precise word. When a Latinate word adds no useful meaning, a shorter and more familiar word will often help.
+
+Humanising prose means choosing the word that says exactly what the writer means.

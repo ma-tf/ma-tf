@@ -54,7 +54,7 @@ function CodeBlock({ children, className, ...props }: React.ComponentProps<"pre"
   return (
     <pre
       className={cn(
-        "overflow-x-auto rounded-lg border border-border bg-muted p-4 text-sm",
+        "overflow-x-auto rounded-lg border border-border bg-background p-4 text-sm",
         className,
       )}
       {...props}

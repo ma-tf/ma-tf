@@ -1,0 +1,170 @@
+---
+title: "LLMs are tactical programmers"
+slug: "20260908-1-llms-are-tactical-programmers"
+pubDate: 2026-09-08
+description: "LLMs are very good at making changes. They are less good at deciding which changes should exist in the first place."
+author: "Matt F"
+tags: ["ai", "llms", "programming"]
+---
+
+AI coding agents are very good at making changes. Give one a clear ticket and it will search the codebase, edit the files, run the tests, and continue until everything is green.
+
+The result often works. That does not necessarily mean it was the right change.
+
+It is useful to classify programming into two categories: tactical and strategic. Tactical programming gets the current task finished. Strategic programming makes the next task easier.
+
+In my experience, LLMs are much better at the former than the latter.
+
+## Tactical programming
+
+Tactical programming focuses on the immediate problem in front of you.
+
+A user needs a new form field, so you add the field. An API needs validation, so you add a check. A test fails, so you change the implementation until it passes.
+
+None of this is inherently bad. Most software work is tactical. Features need to ship and bugs need fixing.
+
+The problem is what happens when the tactical solution becomes permanent.
+
+Suppose three screens need to validate an email address. A tactical solution adds the same check to all three screens:
+
+```ts
+if (!email.includes("@")) {
+  setError("Enter a valid email address");
+}
+```
+
+It works. The tests pass. The feature is done.
+
+Then the validation rules change. You now need to find every copy and update them all. Maybe one gets missed. Maybe each screen has drifted slightly. Maybe the same rule now exists in the frontend, backend, and database.
+
+The original change was successful, but the system is worse.
+
+## Strategic programming
+
+Strategic programming asks a different question:
+
+> What change would make this and future changes easier?
+
+In the email example, the answer might be a shared validation function:
+
+```ts
+const result = validateEmail(email);
+```
+
+Or it might be a schema shared between the frontend and backend. Or it might be no new abstraction at all, because the three screens are unrelated and the validation rules are unlikely to change.
+
+That last possibility matters. Strategic programming does not mean adding an abstraction every time code looks duplicated. It means understanding the trade-off and choosing deliberately.
+
+Sometimes the strategic change is a new module. Sometimes it is moving a decision to a better boundary. Sometimes it is deleting an abstraction that no longer helps.
+
+## Where LLMs are good
+
+LLMs are excellent tactical programmers.
+
+They are good at:
+
+- Following an explicit plan
+- Matching the conventions of an existing codebase
+- Making repetitive changes across many files
+- Translating a design into code
+- Fixing compiler errors
+- Fixing failing tests
+- Filling in familiar patterns
+
+This is why coding agents can feel so productive. Once you know what you want, they can turn the idea into working code very quickly.
+
+The faster feedback loop helps too. The agent writes something, runs the tests, reads the error, and tries again. It is very good at navigating a local loop where success is clearly defined.
+
+## Where they struggle
+
+Strategic programming is harder because the specification is rarely written down.
+
+The ticket might say:
+
+> Add support for soft-deleting notes.
+
+It probably does not say:
+
+- Whether deletion belongs in the repository or service layer
+- Whether all resources should eventually use the same mechanism
+- Whether the existing database abstraction is already too complicated
+- Which parts of the API are public by accident
+- What the team expects this system to look like in a year
+
+An agent can inspect the codebase, but it cannot automatically know which awkward patterns are temporary, which are deliberate, and which everyone has simply learned to tolerate.
+
+It also tends to preserve local patterns. If the codebase contains duplicated logic, the agent will often copy that logic. If every feature creates a new service class, it will probably create another service class.
+
+The result is locally consistent but globally worse.
+
+This is the dangerous kind of AI-generated code. Not code that obviously fails, but code that looks reasonable while increasing coupling, duplication, and future maintenance cost.
+
+## The missing context
+
+Strategic decisions depend on context that is difficult to include in a prompt.
+
+You need to know:
+
+- Why the current architecture looks the way it does
+- Which parts of the system are likely to change
+- Which interfaces other teams depend on
+- What the operational constraints are
+- Which complexity is intentional
+- What the team is willing to maintain
+
+This context often lives in old pull requests, conversations, incidents, and the heads of the people who built the system.
+
+An LLM does not own the consequences of an architectural decision. It will not be maintaining the code six months later. It does not feel the cost of adding another special case.
+
+That responsibility still belongs to the programmer.
+
+## How I use coding agents
+
+I do not think this means LLMs should be kept away from design work. They can be useful strategic collaborators, but they need to be asked different questions.
+
+Before asking an agent to implement a feature, ask it to:
+
+- Inspect the existing patterns
+- Identify the boundaries involved
+- Propose multiple approaches
+- Explain what each approach makes easier or harder
+- Find existing duplication
+- Describe the likely impact of each option
+
+I also want the agent to answer a simple question:
+
+> What will be harder after we make this change?
+
+That question is often more useful than asking what files need to be edited.
+
+The first implementation should be treated as a proposal, not as the design. Tests can tell you whether the code works. They cannot tell you whether the abstraction is in the right place.
+
+## A way to find the gaps
+
+This is where [`grill-me`](./20260716-1-grill-me-skill) helps. Before implementation, it interviews you one question at a time, uncovering assumptions, missing decisions, and edge cases that a feature ticket leaves unstated.
+
+It does not replace strategic judgment. It helps expose the gaps so you can resolve them before handing the plan to a tactical agent. Read the [full post on the grill-me skill](./20260716-1-grill-me-skill) for the details.
+
+## Make the next change cheaper
+
+The best review question I know is:
+
+> Did this change make the next change cheaper?
+
+It does not have to make every future change cheaper. That is impossible. But it should be clear what trade-off was made.
+
+Did we reduce the number of places that know this rule?
+
+Did we create a real abstraction, or just hide duplicated code behind a function?
+
+What code can now be deleted?
+
+What happens when this feature becomes twice as large?
+
+LLMs are not incapable of answering these questions. They are simply not naturally optimised for them. Most prompts ask for a feature. Most feedback checks whether the feature works. Both encourage tactical programming.
+
+The current sweet spot is to provide the strategy yourself and let the agent handle the execution.
+
+The agent can search, edit, test, and iterate. You decide where the behaviour belongs, which trade-offs are acceptable, and whether the system is better than it was before.
+
+The code working is the beginning of the review, not the end.

@@ -190,6 +190,10 @@
   }
 }
 
+pre[data-language] > code {
+  background-color: transparent !important;
+}
+
 .orbit-stage {
   --base-angle: -1.5708rad;
   --flatness: 0.62;
