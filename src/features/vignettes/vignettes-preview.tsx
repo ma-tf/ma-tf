@@ -47,10 +47,10 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
             </p>
             <p>
               The <span className="italic">Bolex H-16 SBM</span> offers a portable way to create
-              true filmic experiences without electricity as a hard requirement. Using 30 metre film
+              true filmic experiences without electricity as a hard requirement. Using 30-metre film
               reels and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
               approximately 2 minutes and 45 seconds of footage per reel. For my own convenience, I
-              use a battery powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
+              use a battery-powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
               The battery powers the auto exposure and the in-built electric motor for zooming.
             </p>
             <p>

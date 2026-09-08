@@ -7,7 +7,7 @@ author: "Matt F"
 tags: ["ai", "tools", "open-source", "programming"]
 ---
 
-AI coding agents are powerful, but they're also synchronous and limited by the human its converses with. You open a chat, type a prompt, watch code stream in, review diffs, copy-paste, commit. Every interaction is a conversation you have to sit through.
+AI coding agents are powerful, but they're also synchronous and limited by the human they converse with. You open a chat, type a prompt, watch code stream in, review diffs, copy-paste, commit. Every interaction is a conversation you have to sit through.
 
 What if you could treat an agent like a function call instead?
 
@@ -25,7 +25,7 @@ That's what Sandcastle does.
 
 Sandcastle is a TypeScript library and CLI for orchestrating AI coding agents built by Matt Pocock.
 
-It plugs into multiple providers - Claude Code, Codex, Cursor, OpenCode, Copilot, etc - and it can run in different sandboxes - Docker, Podman etc. One API, many backends.
+It plugs into multiple providers - Claude Code, Codex, Cursor, OpenCode, Copilot, etc - and it can run in different sandboxes - Docker, Podman, etc. One API, many backends.
 
 Behind the scenes, Sandcastle manages the full lifecycle: spin up a sandbox, create a git worktree, invoke the agent, collect commits, and merge results back. You don't wrangle Docker commands or git plumbing. You just call `run()`.
 

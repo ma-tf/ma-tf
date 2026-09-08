@@ -9,7 +9,7 @@ tags: ["ai", "tools", "open-source", "programming"]
 
 In my last post I introduced Sandcastle, the agent orchestration library from Matt Pocock. Today I want to show how I actually use it on a real project called Ogle, a Docker Compose TUI written in Go.
 
-Sandcastle ships with scaffold templates. The `parallel-planner-with-review` template provides a powerful workflow out of the box - for a Typescript project. Tailoring prompts, infrastructure, and models to a Go project - is where my time went.
+Sandcastle ships with scaffold templates. The `parallel-planner-with-review` template provides a powerful workflow out of the box for a TypeScript project. Tailoring prompts, infrastructure, and models to a Go project is where my time went.
 
 ## The Pipeline
 
@@ -19,7 +19,7 @@ Ogle's Sandcastle workflow runs a 3-phase loop, up to 10 iterations, so newly un
 2. **Execute + Scrivener + Review** - Each issue gets a dedicated sandbox on its own branch. The implementer runs first (flash model, up to 100 iterations). If it produces commits, a scrivener agent audits documentation, then a reviewer refines the code. All issue pipelines run concurrently via `Promise.allSettled` - one failure doesn't cancel the others.
 3. **Merge** - A single agent merges all completed branches into the base branch, resolves conflicts, runs tests, and closes issues via `gh`.
 
-Edge cases handled: if an implementer makes no changes (already completed), the branch is skipped and the issue closed. If the scrivener fails (network issue, `gh` auth), the review still runs - it's non-fatal.
+Edge cases are handled too: if an implementer makes no changes (already completed), the branch is skipped and the issue closed. If the scrivener fails (network issue, `gh` auth), the review still runs - it's non-fatal.
 
 ## Infrastructure
 
@@ -109,13 +109,13 @@ The skip logic prevents circularity: if the current issue was _itself_ created b
 
 Sandcastle's `parallel-planner-with-review` template gave me a solid foundation. The real work was tailoring it to Ogle's specific needs: a custom Docker image with Go tooling, phase-specific model selection, detailed prompts encoding Go conventions, and the scrivener documentation audit phase.
 
-Hundreds of execution logs, tens of branches, and countless `[RALPH]` commits later, the pipeline runs entirely AFK - set it up, walk away, come back to merged, reviewed, documented changes. Documentation being a particularly bothersome issue that I no longer need to worry about.
+Hundreds of execution logs, tens of branches, and countless `[RALPH]` commits later, the pipeline runs entirely AFK - set it up, walk away, and come back to merged, reviewed, documented changes. Documentation is now a particularly bothersome issue that I no longer need to worry about.
 
 The templates give you the skeleton. The prompts, the models, and the infrastructure decisions are what make it work for your project.
 
 ### The data
 
-I introduced sandcastle to the project with commit `f398f5e` and v0.3.0 is the current release of ogle.
+I introduced Sandcastle to the project with commit `f398f5e`, and v0.3.0 is the current release of Ogle.
 
 | Category                    | Commits |
 | --------------------------- | ------- |
@@ -123,4 +123,4 @@ I introduced sandcastle to the project with commit `f398f5e` and v0.3.0 is the c
 | Merge                       | 67      |
 | Human                       | 82      |
 
-I find this acceptable. Given I can implement many bitesize github issues in parallel, fixing a few misimplemented issues myself is still an increase in productivity. Having used GPT 5.4 as well as Sonnet 4.6 and Opus 4.6 - Deepseek v4 Flash is a sufficient model that costs pennies for features. But with a stronger model like GPT or Sonnet, I have no doubt the code quality issues would be reduced further. Overall, this is a great method to increase output without sacrificing code quality.
+I find this acceptable. Given that I can implement many bite-sized GitHub issues in parallel, fixing a few misimplemented issues myself is still an increase in productivity. Having used GPT 5.4, Sonnet 4.6, and Opus 4.6, I find DeepSeek v4 Flash to be a sufficient model that costs pennies per feature. But with a stronger model like GPT or Sonnet, I have no doubt the code quality issues would be reduced further. Overall, this is a great method to increase output without sacrificing code quality.
