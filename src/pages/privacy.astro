@@ -9,5 +9,33 @@ import Navbar from "@components/Navbar.astro";
     class="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground md:px-8"
   >
     <h1 class="mb-6 text-4xl font-semibold">Privacy</h1>
+    <div class="flex flex-col gap-8 text-lg leading-relaxed">
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">This site</h2>
+        <p>
+          This site does not use first-party analytics, advertising, or tracking
+          cookies. It does not provide forms that collect personal information,
+          and no personal information is intentionally stored by the site.
+        </p>
+      </section>
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Third-party services</h2>
+        <p>
+          Some pages embed media from Bandcamp and Mixcloud. These services may
+          receive requests from your browser and may process information
+          according to their own privacy policies. The site also loads the Inter
+          font from Google Fonts.
+        </p>
+      </section>
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Questions</h2>
+        <p>If you have a question about privacy on this site, contact:</p>
+        <a
+          href="mailto:admin@m4t.tf"
+          class="underline underline-offset-4 hover:text-foreground/70"
+          >admin@m4t.tf</a
+        >
+      </section>
+    </div>
   </div>
 </Layout>
