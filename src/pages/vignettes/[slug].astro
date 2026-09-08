@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import {
@@ -10,24 +10,13 @@ import {
 } from "@features/vignettes/vignettes";
 import { VignettesInteractive } from "@features/vignettes/vignettes-interactive";
 
-type Vignette = CollectionEntry<"vignettes">["data"];
+const vignettes = (await getCollection("vignettes"))
+  .filter(({ data }) => data.enabled)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(({ data }) => data);
+const activeVignette = vignettes.find(({ slug }) => slug === Astro.params.slug);
 
-export async function getStaticPaths() {
-  const vignettes = (await getCollection("vignettes"))
-    .filter(({ data }) => data.enabled)
-    .sort((a, b) => a.data.order - b.data.order)
-    .map(({ data }) => data);
-
-  return vignettes.map((vignette) => ({
-    params: { slug: vignette.slug },
-    props: { vignettes, activeVignette: vignette },
-  }));
-}
-
-const {
-  vignettes,
-  activeVignette,
-}: { vignettes: Vignette[]; activeVignette: Vignette } = Astro.props;
+if (!activeVignette) return new Response(null, { status: 404 });
 ---
 
 <Layout>

@@ -15,15 +15,12 @@ import {
 } from "@features/posts/post";
 import { postComponents } from "@features/posts/post-content";
 
-export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.data.slug },
-    props: { post },
-  }));
-}
+const post = (await getCollection("blog")).find(
+  (entry) => entry.data.slug === Astro.params.slug && !entry.data.draft,
+);
 
-const { post } = Astro.props;
+if (!post) return new Response(null, { status: 404 });
+
 const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 

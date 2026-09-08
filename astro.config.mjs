@@ -1,5 +1,6 @@
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
+import netlify from "@astrojs/netlify";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
@@ -9,6 +10,8 @@ import { remarkReadingTime } from "./src/remark-reading-time.mjs";
 
 export default defineConfig({
   site: "https://m4t.tf",
+  output: "server",
+  adapter: netlify(),
   integrations: [
     react(),
     sitemap(),

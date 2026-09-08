@@ -4,22 +4,9 @@ import Navbar from "@components/Navbar.astro";
 import { TagContent } from "@features/tags/tag-content";
 import { getTagIndex } from "@features/tags/tag-data";
 
-export async function getStaticPaths() {
-  const data = await getTagIndex();
-
-  return [
-    {
-      params: { tag: undefined },
-      props: { ...data, selected: null },
-    },
-    ...data.tags.map((selected) => ({
-      params: { tag: selected.tag },
-      props: { ...data, selected },
-    })),
-  ];
-}
-
-const { tags, postsByTag, selected } = Astro.props;
+const data = await getTagIndex();
+const { tags, postsByTag } = data;
+const selected = data.tags.find(({ tag }) => tag === Astro.params.tag) ?? null;
 const backgroundBaseUrl = import.meta.env.R2_PUBLIC_URL;
 ---
 
