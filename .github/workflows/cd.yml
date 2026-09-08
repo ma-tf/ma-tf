@@ -25,11 +25,11 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: dist-production
-          path: dist
+          path: .
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
       - run: vp list netlify
-      - run: vpx npxnetlify deploy --dir=./dist --prod --no-build
+      - run: vpx npxnetlify deploy --dir=./dist --functions=./.netlify/functions-internal --prod --no-build
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

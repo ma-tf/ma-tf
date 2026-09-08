@@ -29,4 +29,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: dist-production
-          path: dist
+          path: |
+            dist
+            .netlify
+          include-hidden-files: true
