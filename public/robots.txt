@@ -34,4 +34,6 @@ User-Agent: *
 Content-Signal: /blog/ ai-train=no, search=yes, ai-input=no
 Allow: /blog/
 
+Agentmap: https://m4t.tf/.well-known/ai-catalog.json
+
 Sitemap: https://m4t.tf/sitemap.xml

@@ -24,6 +24,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 			content="Personal portfolio and work of Matt F, a full-stack developer."
 		/>
 		<link rel="canonical" href={canonicalUrl} />
+		<link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/ai-catalog+json" />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Matt F | Full-stack developer" />
 		<meta

@@ -29,6 +29,13 @@ export const resources = [
     rel: "api-catalog",
   },
   {
+    path: "/.well-known/ai-catalog.json",
+    type: "application/ai-catalog+json",
+    title: "AI catalog",
+    description: "A machine-readable catalog of the site's agent-facing capabilities.",
+    rel: "ai-catalog",
+  },
+  {
     path: "/rss.xml",
     type: "application/rss+xml",
     title: "Blog RSS feed",

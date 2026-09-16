@@ -39,6 +39,7 @@ or personal information that are not published on the site.
 - [RSS Feed](https://m4t.tf/rss.xml): blog post feed
 - [Sitemap](https://m4t.tf/sitemap.xml): indexable site pages
 - [API Catalog](https://m4t.tf/.well-known/api-catalog): machine-readable resource links
+- [AI Catalog](https://m4t.tf/.well-known/ai-catalog.json): agent-facing capabilities for registries
 - [Robots](https://m4t.tf/robots.txt): crawler instructions, served by Cloudflare at the edge
 
 ## How To Retrieve Content
