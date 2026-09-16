@@ -37,7 +37,6 @@ const images: ImageMap = {
   "graphics/old house.png": oldHouseSrc,
   "music/20251014_Japan 6_19.jpg": japanSrc,
 };
-
 ---
 
 <Layout>
@@ -46,18 +45,10 @@ const images: ImageMap = {
   {previews.blog && <BlogPreview posts={recentPosts} />}
   {previews.projects && <ProjectsPreview />}
   {previews.photography && <PhotographyPreview />}
-  {
-    previews.vignettes && (
-      <VignettesPreview images={images} />
-    )
-  }
-  {
-    previews.graphics && (
-      <GraphicsPreview images={images} />
-    )
-  }
+  {previews.vignettes && <VignettesPreview images={images} />}
+  {previews.graphics && <GraphicsPreview images={images} />}
   {previews.music && <MusicPreview images={images} />}
-  <footer class="mx-auto w-full max-w-6xl px-8 pb-16">
+  <footer class="flex w-full max-w-360 justify-end px-3">
     <a
       href="/developers"
       class="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
