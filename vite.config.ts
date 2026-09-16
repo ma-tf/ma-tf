@@ -23,7 +23,10 @@ export default defineConfig({
   },
   lint: {
     ignorePatterns: [".agents", ".astro", ".opencode"],
-    jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
+    jsPlugins: [
+      { name: "vite-plus", specifier: "vite-plus/oxlint-plugin" },
+      { name: "shadcn", specifier: "@shadcn/lint" },
+    ],
     options: { typeAware: true, typeCheck: true },
     rules: {
       "vite-plus/prefer-vite-plus-imports": "error",

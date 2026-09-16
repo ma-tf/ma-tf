@@ -3,6 +3,7 @@
   "ignoreDependencies": [
     "@base-ui/react",
     "@phosphor-icons/react",
+    "@shadcn/lint",
     "@ui/dialog",
     "@ui/skeleton",
     "class-variance-authority",
