@@ -1,10 +1,18 @@
-name: CI
+name: Prod
+
+run-name: Prod deploy · ${{ github.ref_name }}
+
 on:
   push:
-    branches: [master]
     tags: ["v*"]
+
+concurrency:
+  group: prod-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  ci:
+  deploy:
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -26,10 +34,14 @@ jobs:
           PUBLIC_PREVIEW_VIGNETTES: ${{ vars.PUBLIC_PREVIEW_VIGNETTES }}
           PUBLIC_PREVIEW_GRAPHICS: ${{ vars.PUBLIC_PREVIEW_GRAPHICS }}
           PUBLIC_PREVIEW_MUSIC: ${{ vars.PUBLIC_PREVIEW_MUSIC }}
-      - uses: actions/upload-artifact@v7
-        with:
-          name: dist-production
-          path: |
-            dist
-            .netlify
-          include-hidden-files: true
+      # Build and deploy must stay in this one job on this one runner — .netlify
+      # holds pnpm symlinks that upload-artifact would dereference. See ADR 007.
+      - run: vpx npxnetlify deploy --dir=./dist --prod --no-build
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Smoke test production
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 https://m4t.tf/)
+          echo "GET / -> $code"
+          test "$code" = "200"
