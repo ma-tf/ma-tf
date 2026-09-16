@@ -1,0 +1,20 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+---
+
+<Layout>
+  <Navbar />
+  <main class="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground md:px-8">
+    <h1 class="mb-4 text-4xl font-semibold">Something went wrong</h1>
+    <p class="mb-6">
+      The server could not complete the request. Try again, and if the problem
+      persists use the contact page to report it.
+    </p>
+    <nav class="flex flex-wrap gap-4">
+      <a class="underline" href="/">Home</a>
+      <a class="underline" href="/contact">Contact</a>
+      <a class="underline" href="/llms.txt">Agent guide</a>
+    </nav>
+  </main>
+</Layout>

@@ -31,6 +31,15 @@ function prefersMarkdown(accept: string | null): boolean {
   return markdownQuality > 0 && markdownQuality >= htmlQuality;
 }
 
+export function prefersJson(accept: string | null): boolean {
+  if (!accept) return false;
+
+  const jsonQuality = getAcceptedQuality(accept, "application/json");
+  const htmlQuality = getAcceptedQuality(accept, "text/html");
+
+  return jsonQuality > 0 && jsonQuality >= htmlQuality;
+}
+
 export function selectRepresentation(url: URL, accept: string | null): Representation {
   if (url.pathname.endsWith(".md")) {
     return { kind: "markdown-suffix", target: getMarkdownTarget(url) };
@@ -49,7 +58,7 @@ function getMarkdownTarget(url: URL): URL {
   return target;
 }
 
-function appendVaryValue(headers: Headers, value: string): void {
+export function appendVaryValue(headers: Headers, value: string): void {
   const values = (headers.get("Vary") ?? "")
     .split(",")
     .map((item) => item.trim())

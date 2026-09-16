@@ -8,16 +8,28 @@ const document = {
     title: "m4t.tf Site Resources",
     version: "0.1.0",
     description:
-      "Machine-readable resources published by m4t.tf. API compatibility is identified with the required API-Version header. The current API version is 1. Deprecated resources will be marked with Deprecation and Sunset response headers and documented with their retirement timeline before removal.",
+      "Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date.",
   },
   components: {
     parameters: {
       ApiVersion: {
         name: "API-Version",
         in: "header",
-        required: true,
-        description: "The API compatibility version requested by the client.",
+        required: false,
+        description:
+          "The API compatibility version the client expects. The current API version is 1; requests without this header receive the current version.",
         schema: { type: "integer", enum: [1] },
+      },
+    },
+    headers: {
+      Deprecation: {
+        description: "RFC 9745 deprecation date. Present only on deprecated resources.",
+        schema: { type: "string", examples: ["@1688169599"] },
+      },
+      Sunset: {
+        description:
+          "RFC 8594 date after which the resource stops responding. Present only on deprecated resources.",
+        schema: { type: "string", examples: ["Sat, 31 Dec 2026 23:59:59 GMT"] },
       },
     },
     schemas: {
@@ -49,6 +61,7 @@ const document = {
           },
           code: {
             type: "string",
+            enum: ["RESOURCE_NOT_FOUND", "INTERNAL_SERVER_ERROR"],
             description: "A stable machine-readable error code.",
           },
         },
@@ -60,13 +73,6 @@ const document = {
         content: {
           "application/problem+json": {
             schema: { $ref: "#/components/schemas/Problem" },
-            example: {
-              type: "https://m4t.tf/problems/not-found",
-              title: "Resource not found",
-              status: 404,
-              detail: "The requested resource does not exist.",
-              code: "RESOURCE_NOT_FOUND",
-            },
           },
         },
       },
@@ -75,13 +81,6 @@ const document = {
         content: {
           "application/problem+json": {
             schema: { $ref: "#/components/schemas/Problem" },
-            example: {
-              type: "https://m4t.tf/problems/internal-server-error",
-              title: "Internal server error",
-              status: 500,
-              detail: "The server could not complete the request.",
-              code: "INTERNAL_SERVER_ERROR",
-            },
           },
         },
       },
@@ -98,6 +97,10 @@ const document = {
           responses: {
             "200": {
               description: resource.description,
+              headers: {
+                Deprecation: { $ref: "#/components/headers/Deprecation" },
+                Sunset: { $ref: "#/components/headers/Sunset" },
+              },
               content: { [resource.type]: {} },
             },
             "404": { $ref: "#/components/responses/NotFound" },

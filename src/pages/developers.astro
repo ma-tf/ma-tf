@@ -77,9 +77,31 @@ curl ${siteUrl}/llms.txt`}</code></pre>
   "title": "Resource not found",
   "status": 404,
   "detail": "No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.",
-  "instance": "/no-such-page",
-  "code": "RESOURCE_NOT_FOUND"
+  "code": "RESOURCE_NOT_FOUND",
+  "instance": "/no-such-page"
 }`}</code></pre>
+      </section>
+
+      <section id="versioning-and-deprecation" class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Versioning and deprecation</h2>
+        <p>
+          Send the <code>API-Version</code> header to declare the API
+          compatibility version you expect. The current version is
+          <code>1</code>, which is also the default when the header is absent.
+          Non-breaking changes stay within a version; a breaking change takes a
+          new value, while the previous version is deprecated rather than
+          changed in place.
+        </p>
+        <p>
+          Deprecated resources return RFC 9745
+          <code>Deprecation</code> and RFC 8594 <code>Sunset</code> response
+          headers, plus a <code>Link</code> header with
+          <code>rel="deprecation"</code> and
+          <code>rel="successor-version"</code>. A deprecated resource keeps
+          working for at least six months after its deprecation date, until the
+          <code>Sunset</code> date, after which it returns
+          <code>410 Gone</code>. The OpenAPI document declares both headers.
+        </p>
       </section>
 
       <p>
