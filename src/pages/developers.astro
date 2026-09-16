@@ -1,36 +1,7 @@
 ---
-import Layout from "@layouts/Layout.astro";
 import Navbar from "@components/Navbar.astro";
-
-const siteUrl = "https://m4t.tf";
-
-const resources = [
-  {
-    path: "/llms.txt",
-    type: "text/plain",
-    description: "A guide to the site and when agents should use it.",
-  },
-  {
-    path: "/llms-full.txt",
-    type: "text/plain",
-    description: "The published-content archive for agent retrieval.",
-  },
-  {
-    path: "/openapi.json",
-    type: "application/vnd.oai.openapi+json;version=3.1",
-    description: "This machine-readable resource catalogue.",
-  },
-  {
-    path: "/.well-known/api-catalog",
-    type: "application/linkset+json",
-    description: "A machine-readable catalogue of published resources.",
-  },
-  {
-    path: "/rss.xml",
-    type: "application/rss+xml",
-    description: "The feed of published blog posts.",
-  },
-] as const;
+import Layout from "@layouts/Layout.astro";
+import { resources, siteUrl } from "@lib/resource-catalog";
 ---
 
 <Layout>

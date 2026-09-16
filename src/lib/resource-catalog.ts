@@ -31,4 +31,10 @@ export const resources = [
     title: "Blog RSS feed",
     description: "The feed of published blog posts.",
   },
+  {
+    path: "/robots.txt",
+    type: "text/plain",
+    title: "Robots exclusion policy",
+    description: "Crawler instructions and the sitemap location.",
+  },
 ] as const;

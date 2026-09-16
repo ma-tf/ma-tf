@@ -2,7 +2,7 @@ import type { APIContext, APIRoute } from "astro";
 
 import { getRawPosts } from "@features/blog/post-data";
 import { getTagIndex } from "@features/tags/tag-data";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 export const prerender = true;
 
@@ -49,9 +49,9 @@ export const GET = (async (context: APIContext) => {
       lastmod: undefined,
     })),
     ...vignettes
-      .filter(({ data }) => data.enabled)
-      .map(({ data }) => ({
-        path: `/vignettes/${encodeURIComponent(data.slug)}/`,
+      .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
+      .map((entry: CollectionEntry<"vignettes">) => ({
+        path: `/vignettes/${encodeURIComponent(entry.data.slug)}/`,
         lastmod: undefined,
       })),
   ];
