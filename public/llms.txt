@@ -42,6 +42,12 @@ or personal information that are not published on the site.
 - [AI Catalog](https://m4t.tf/.well-known/ai-catalog.json): agent-facing capabilities for registries
 - [Robots](https://m4t.tf/robots.txt): crawler instructions, served by Cloudflare at the edge
 
+Not published, intentionally: `/.well-known/openid-configuration`,
+`/.well-known/oauth-authorization-server`,
+`/.well-known/oauth-protected-resource`, and
+`/.well-known/mcp/server-card.json`. The site has no authentication, no
+protected APIs, and no MCP server.
+
 ## How To Retrieve Content
 
 Request any page with `Accept: text/markdown` to receive it as markdown instead of HTML:

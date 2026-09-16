@@ -18,7 +18,7 @@ import { resources, siteUrl } from "@lib/resource-catalog";
       </p>
 
       <section class="flex flex-col gap-3">
-        <h2 class="text-2xl font-semibold">Endpoints</h2>
+        <h2 class="text-2xl font-semibold">Machine-readable files</h2>
         <p>
           Each entry is an unauthenticated GET. The human-readable pages are
           served by the same interface.
@@ -40,6 +40,14 @@ import { resources, siteUrl } from "@lib/resource-catalog";
             ))
           }
         </ul>
+        <p>
+          These paths are intentionally absent rather than missing: there is no
+          file at <code>/.well-known/openid-configuration</code>,
+          <code>/.well-known/oauth-authorization-server</code>,
+          <code>/.well-known/oauth-protected-resource</code>, or
+          <code>/.well-known/mcp/server-card.json</code>, because the site has no
+          authentication, no protected APIs, and no MCP server.
+        </p>
       </section>
 
       <section class="flex flex-col gap-3">
