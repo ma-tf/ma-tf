@@ -24,6 +24,7 @@ or personal information that are not published on the site.
 - [About](https://m4t.tf/about): background and purpose of the site
 - [Contact](https://m4t.tf/contact): current contact guidance
 - [Privacy](https://m4t.tf/privacy): initial privacy notice
+- [Developers](https://m4t.tf/developers): machine-readable endpoints, retrieval quickstart, and error shape
 - [Blog](https://m4t.tf/blog): writing about software development, programming, and tools
 - [Photography](https://m4t.tf/photography): photography collections
 - [Graphics](https://m4t.tf/graphics): graphics and creative coding work
@@ -38,7 +39,20 @@ or personal information that are not published on the site.
 - [RSS Feed](https://m4t.tf/rss.xml): blog post feed
 - [Sitemap](https://m4t.tf/sitemap-index.xml): indexable site pages
 - [API Catalog](https://m4t.tf/.well-known/api-catalog): machine-readable resource links
-- [Robots](https://m4t.tf/robots.txt): crawler instructions
+- [Robots](https://m4t.tf/robots.txt): crawler instructions, served by Cloudflare at the edge
+
+## How To Retrieve Content
+
+Request any page with `Accept: text/markdown` to receive it as markdown instead of HTML:
+
+    curl -H "Accept: text/markdown" https://m4t.tf/cv
+
+Appending `.md` to a page path does the same, for example `https://m4t.tf/about.md`.
+Responses carry `Vary: Accept, Accept-Encoding`, so caches must store the HTML and markdown
+representations separately. Nonexistent paths return a real HTTP 404, so a 404 is proof the
+path does not exist. Send `Accept: application/json` to receive that error as an RFC 9457
+`application/problem+json` document. The whole interface is described by the OpenAPI 3.1
+document at [openapi.json](https://m4t.tf/openapi.json).
 
 ## Identity
 

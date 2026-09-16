@@ -1,0 +1,129 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+
+const siteUrl = "https://m4t.tf";
+
+const resources = [
+  {
+    path: "/llms.txt",
+    type: "text/plain",
+    description: "A guide to the site and when agents should use it.",
+  },
+  {
+    path: "/llms-full.txt",
+    type: "text/plain",
+    description: "The published-content archive for agent retrieval.",
+  },
+  {
+    path: "/openapi.json",
+    type: "application/vnd.oai.openapi+json;version=3.1",
+    description: "This machine-readable resource catalogue.",
+  },
+  {
+    path: "/.well-known/api-catalog",
+    type: "application/linkset+json",
+    description: "A machine-readable catalogue of published resources.",
+  },
+  {
+    path: "/rss.xml",
+    type: "application/rss+xml",
+    description: "The feed of published blog posts.",
+  },
+] as const;
+---
+
+<Layout>
+  <Navbar />
+  <main
+    class="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground md:px-8"
+  >
+    <h1 class="mb-6 text-4xl font-semibold">Developers</h1>
+    <div class="flex flex-col gap-8 text-lg leading-relaxed">
+      <p>
+        m4t.tf is machine-readable. Every page is available as HTML or markdown,
+        and the files below expose the site's content and metadata as data.
+        Everything is public: there are no API keys and no rate limits.
+      </p>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Endpoints</h2>
+        <p>
+          Each entry is an unauthenticated GET. The human-readable pages are
+          served by the same interface.
+        </p>
+        <ul class="flex flex-col gap-3">
+          {
+            resources.map((resource) => (
+              <li>
+                <a
+                  href={resource.path}
+                  class="underline underline-offset-4 hover:text-foreground/70"
+                >
+                  {resource.path}
+                </a>
+                <span class="block text-base text-muted-foreground">
+                  {resource.type} — {resource.description}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Quickstart</h2>
+        <p>
+          Send <code>Accept: text/markdown</code> to any page to receive it as markdown
+          instead of HTML. Appending <code>.md</code> to a page path does the same.
+        </p>
+        <pre
+          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv
+curl ${siteUrl}/about.md
+curl ${siteUrl}/llms.txt`}</code></pre>
+        <p>
+          Nonexistent paths return a real HTTP 404, so a 404 is proof the path
+          does not exist. Responses carry <code
+            >Vary: Accept, Accept-Encoding</code
+          >, so caches must store the HTML and markdown representations
+          separately.
+        </p>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Errors</h2>
+        <p>
+          Send <code>Accept: application/json</code> to receive a failed request as
+          an RFC 9457
+          <code>application/problem+json</code> document. Every error carries a stable
+          <code>code</code> alongside the human-readable <code>detail</code>.
+        </p>
+        <pre
+          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: application/json" ${siteUrl}/no-such-page`}</code></pre>
+        <pre
+          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`{
+  "type": "${siteUrl}/problems/not-found",
+  "title": "Resource not found",
+  "status": 404,
+  "detail": "No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.",
+  "instance": "/no-such-page",
+  "code": "RESOURCE_NOT_FOUND"
+}`}</code></pre>
+      </section>
+
+      <p>
+        The whole interface is described by the OpenAPI 3.1 document at
+        <a
+          href="/openapi.json"
+          class="underline underline-offset-4 hover:text-foreground/70"
+          >/openapi.json</a
+        >, and
+        <a
+          href="/llms.txt"
+          class="underline underline-offset-4 hover:text-foreground/70"
+          >/llms.txt</a
+        > indexes everything the site publishes.
+      </p>
+    </div>
+  </main>
+</Layout>
