@@ -2,7 +2,7 @@ allowBuilds:
   esbuild: true
   netlify: true
   sharp: true
-  unix-dgram: true
+  unix-dgram: false
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.3.2
   vite-plus: 0.3.2
@@ -18,10 +18,6 @@ minimumReleaseAgeExclude:
   - "@oxfmt/*"
   - vitest
   - "@vitest/*"
-onlyBuiltDependencies:
-  - esbuild
-  - sharp
-  - unix-dgram
 peerDependencyRules:
   allowAny:
     - vite
