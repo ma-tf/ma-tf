@@ -37,7 +37,7 @@ or personal information that are not published on the site.
 - [Full Content Archive](https://m4t.tf/llms-full.txt): published blog content in one file
 - [OpenAPI Spec](https://m4t.tf/openapi.json): site resource description
 - [RSS Feed](https://m4t.tf/rss.xml): blog post feed
-- [Sitemap](https://m4t.tf/sitemap-index.xml): indexable site pages
+- [Sitemap](https://m4t.tf/sitemap.xml): indexable site pages
 - [API Catalog](https://m4t.tf/.well-known/api-catalog): machine-readable resource links
 - [Robots](https://m4t.tf/robots.txt): crawler instructions, served by Cloudflare at the edge
 

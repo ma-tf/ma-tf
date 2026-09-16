@@ -2,7 +2,6 @@ import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import netlify from "@astrojs/netlify";
 import react from "@astrojs/react";
-import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 
@@ -14,7 +13,6 @@ export default defineConfig({
   adapter: netlify(),
   integrations: [
     react(),
-    sitemap(),
     mdx({
       processor: unified({ remarkPlugins: [remarkReadingTime] }),
     }),
