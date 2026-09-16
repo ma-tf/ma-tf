@@ -4,8 +4,8 @@ const turndown = new TurndownService();
 
 type Representation =
   | { kind: "html" }
-  | { kind: "markdown"; source: "suffix"; target: URL }
-  | { kind: "markdown"; source: "accept" };
+  | { kind: "markdown-suffix"; target: URL }
+  | { kind: "markdown-accept" };
 
 function getAcceptedQuality(value: string, mediaType: string): number {
   const candidate = value
@@ -33,10 +33,10 @@ function prefersMarkdown(accept: string | null): boolean {
 
 export function selectRepresentation(url: URL, accept: string | null): Representation {
   if (url.pathname.endsWith(".md")) {
-    return { kind: "markdown", source: "suffix", target: getMarkdownTarget(url) };
+    return { kind: "markdown-suffix", target: getMarkdownTarget(url) };
   }
 
-  if (prefersMarkdown(accept)) return { kind: "markdown", source: "accept" };
+  if (prefersMarkdown(accept)) return { kind: "markdown-accept" };
 
   return { kind: "html" };
 }

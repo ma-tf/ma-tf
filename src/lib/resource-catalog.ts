@@ -6,6 +6,7 @@ export const resources = [
     type: "text/plain",
     title: "Agent site guide",
     description: "A guide to the site and when agents should use it.",
+    rel: "describedby",
   },
   {
     path: "/llms-full.txt",
@@ -18,12 +19,14 @@ export const resources = [
     type: "application/vnd.oai.openapi+json;version=3.1",
     title: "OpenAPI document",
     description: "This machine-readable resource catalogue.",
+    rel: "service-desc",
   },
   {
     path: "/.well-known/api-catalog",
     type: "application/linkset+json",
     title: "API catalog",
     description: "A machine-readable catalogue of published resources.",
+    rel: "api-catalog",
   },
   {
     path: "/rss.xml",
