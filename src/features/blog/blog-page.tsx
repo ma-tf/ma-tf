@@ -132,8 +132,8 @@ function PostList({ posts }: { posts: PlainPost[] }) {
               <span className="font-semibold">{post.title}</span>
             </div>
             <div className="flex flex-col">
-              <time className="shrink-0" dateTime={post.pubDate}>
-                {post.pubDate.split("T")[0]}
+              <time className="shrink-0" dateTime={post.publicationDate}>
+                {post.publicationDate.split("T")[0]}
               </time>
             </div>
             <p className="text-sm">{post.description}</p>

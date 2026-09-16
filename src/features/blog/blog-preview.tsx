@@ -1,7 +1,7 @@
 import { Button } from "@components/ui/button";
 import { RssIcon } from "@phosphor-icons/react";
 
-export type PreviewPost = { slug: string; title: string; pubDate: string };
+export type PreviewPost = { slug: string; title: string; publicationDate: string };
 
 export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
   return (
@@ -26,8 +26,8 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
               <span className="truncate text-xl font-semibold transition-colors group-hover:text-foreground/70 md:text-clip">
                 {post.title}
               </span>
-              <time dateTime={post.pubDate} className="shrink-0 text-lg text-foreground">
-                {post.pubDate.split("T")[0]}
+              <time dateTime={post.publicationDate} className="shrink-0 text-lg text-foreground">
+                {post.publicationDate.split("T")[0]}
               </time>
             </a>
           </li>

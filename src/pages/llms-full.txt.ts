@@ -5,17 +5,17 @@ import { siteUrl } from "@lib/resource-catalog";
 
 export const GET = (async () => {
   const posts = (await getRawPosts()).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    (a, b) => b.data.publicationDate.valueOf() - a.data.publicationDate.valueOf(),
   );
 
   const sections = posts.map((post) => {
-    const { title, slug, pubDate, description, tags } = post.data;
+    const { title, slug, publicationDate, description, tags } = post.data;
 
     return [
       `## ${title}`,
       "",
       `- URL: ${siteUrl}/posts/${slug}`,
-      `- Published: ${pubDate.toISOString().split("T")[0]}`,
+      `- Published: ${publicationDate.toISOString().split("T")[0]}`,
       `- Description: ${description}`,
       `- Tags: ${tags.join(", ")}`,
       "",

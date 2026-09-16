@@ -42,7 +42,7 @@ export const GET = (async (context: APIContext) => {
     ...staticPaths.map((path) => ({ path, lastmod: undefined })),
     ...posts.map((post) => ({
       path: `/posts/${encodeURIComponent(post.data.slug)}/`,
-      lastmod: post.data.pubDate.toISOString(),
+      lastmod: post.data.publicationDate.toISOString(),
     })),
     ...tagIndex.tags.map(({ tag }) => ({
       path: `/tags/${encodeURIComponent(tag)}/`,

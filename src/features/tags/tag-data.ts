@@ -18,7 +18,7 @@ export async function getTagIndex(): Promise<{
       slug: post.data.slug,
       title: post.data.title,
       description: post.data.description,
-      pubDate: post.data.pubDate.toISOString(),
+      publicationDate: post.data.publicationDate.toISOString(),
     };
     for (const tag of post.data.tags) {
       getOrInit(postsByTag, tag, () => []).push(plain);
@@ -27,7 +27,7 @@ export async function getTagIndex(): Promise<{
 
   const tags: Tag[] = [];
   for (const [tag, list] of postsByTag.entries()) {
-    list.sort((a, b) => b.pubDate.localeCompare(a.pubDate));
+    list.sort((a, b) => b.publicationDate.localeCompare(a.publicationDate));
     tags.push({ tag, count: list.length });
   }
   tags.sort((a, b) => b.count - a.count);

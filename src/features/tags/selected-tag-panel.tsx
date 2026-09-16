@@ -14,7 +14,7 @@ type MonthGroup = {
 function groupPostsByMonth(posts: PlainPost[]): MonthGroup[] {
   const map = new Map<string, PlainPost[]>();
   for (const post of posts) {
-    const key = post.pubDate.slice(0, 7);
+    const key = post.publicationDate.slice(0, 7);
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(post);
   }

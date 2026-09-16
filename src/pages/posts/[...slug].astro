@@ -35,8 +35,8 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       <div
         class="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
       >
-        <PostDate dateTime={post.data.pubDate.toISOString()}>
-          {post.data.pubDate.toISOString().split("T")[0]}
+        <PostDate dateTime={post.data.publicationDate.toISOString()}>
+          {post.data.publicationDate.toISOString().split("T")[0]}
         </PostDate>
         <span aria-hidden="true">·</span>
         <span class="inline-flex items-center gap-1">
