@@ -17,7 +17,7 @@ const VIGNETTE_NAVIGATION_LINKS = [
 
 function VignetteBackground({ playbackId }: { playbackId: string }) {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden bg-slate-500">
+    <div className="absolute inset-0 z-0 overflow-hidden bg-vignettes-video">
       <img
         src={thumbnailUrl(playbackId, 1920, 1080)}
         alt=""
@@ -76,14 +76,14 @@ function VignetteDescription({
       <p
         ref={descriptionRef}
         onScroll={updateScrollProgress}
-        className="min-h-0 min-w-0 flex-1 scrollbar-hidden overflow-y-auto text-2xl/9 whitespace-pre-line text-zinc-50 text-shadow-sm md:text-3xl/11"
+        className="min-h-0 min-w-0 flex-1 scrollbar-hidden overflow-y-auto text-2xl/9 whitespace-pre-line text-vignettes-video-ink text-shadow-sm md:text-3xl/11"
       >
         {description}
       </p>
       <div className="pointer-events-none relative hidden w-1 shrink-0 md:block" aria-hidden="true">
-        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-zinc-50/40" />
+        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-vignettes-video-ink/40" />
         <div
-          className="absolute left-1/2 size-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-zinc-50"
+          className="absolute left-1/2 size-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-vignettes-video-ink"
           style={{ top: `${scrollProgress * 100}%` }}
         />
       </div>
@@ -112,7 +112,7 @@ export function VignettesInteractive({
 }) {
   return (
     <>
-      <div className="relative left-1/2 w-screen -translate-x-1/2 border-y border-zinc-50">
+      <div className="relative left-1/2 w-screen -translate-x-1/2 border-y border-vignettes-video-ink">
         <VignetteBackground playbackId={activeVignette.playbackId} />
         <div className="relative z-10 mx-auto w-full max-w-6xl px-8">
           <div className="flex w-full flex-col md:aspect-2/1 md:flex-row">

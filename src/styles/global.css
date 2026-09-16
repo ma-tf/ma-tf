@@ -37,6 +37,11 @@
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
+  --color-vignettes-surface: var(--vignettes-surface);
+  --color-vignettes-ink: var(--vignettes-ink);
+  --color-vignettes-ink-foreground: var(--vignettes-ink-foreground);
+  --color-vignettes-video: oklch(55.4% 0.046 257.417);
+  --color-vignettes-video-ink: oklch(98.5% 0 none);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -135,6 +140,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --vignettes-surface: oklch(92.9% 0.013 255.508);
+  --vignettes-ink: oklch(14.1% 0.005 285.823);
+  --vignettes-ink-foreground: oklch(98.5% 0 none);
 }
 
 .dark {
@@ -169,6 +177,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --vignettes-surface: oklch(27.9% 0.041 260.031);
+  --vignettes-ink: oklch(98.5% 0 none);
+  --vignettes-ink-foreground: oklch(14.1% 0.005 285.823);
 }
 
 @layer base {
