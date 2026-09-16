@@ -21,6 +21,16 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      chunkSizeWarningLimit: 510,
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [{ name: "hls", test: /node_modules\/hls\.js/ }],
+          },
+        },
+      },
+    },
   },
   image: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.m4t.tf" }],
