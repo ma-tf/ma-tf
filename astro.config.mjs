@@ -23,6 +23,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   image: {
-    remotePatterns: [{ protocol: "https" }],
+    remotePatterns: [{ protocol: "https", hostname: "cdn.m4t.tf" }],
   },
 });
