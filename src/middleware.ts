@@ -2,6 +2,8 @@ import { formatMarkdownResponse, selectRepresentation } from "@lib/markdown";
 import { defineMiddleware } from "astro:middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  if (context.isPrerendered) return next();
+
   const representation = selectRepresentation(context.url, context.request.headers.get("Accept"));
 
   if (representation.kind === "html") return next();
