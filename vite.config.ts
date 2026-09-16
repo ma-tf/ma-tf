@@ -29,6 +29,7 @@ export default defineConfig({
     ],
     options: { typeAware: true, typeCheck: true },
     rules: {
+      "shadcn/no-raw-colors": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
         "error",
@@ -42,6 +43,12 @@ export default defineConfig({
         },
       ],
     },
+    overrides: [
+      {
+        files: ["src/features/**/*-preview.tsx"],
+        rules: { "shadcn/no-raw-colors": "off" },
+      },
+    ],
   },
   staged: {
     "*.{js,json,mjs,ts,tsx}": "vp check --fix",
