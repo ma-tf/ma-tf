@@ -18,7 +18,7 @@ function getAcceptedQuality(value: string, mediaType: string): number {
   return Math.min(Math.max(quality, 0), 1);
 }
 
-function prefersMarkdown(accept: string | null): boolean {
+export function prefersMarkdown(accept: string | null): boolean {
   if (!accept) return false;
 
   const markdownQuality = getAcceptedQuality(accept, "text/markdown");

@@ -86,18 +86,20 @@ curl ${siteUrl}/llms.txt`}</code></pre>
       <section class="flex flex-col gap-3">
         <h2 class="text-2xl font-semibold">Errors</h2>
         <p>
-          A failed request returns an RFC 9457
-          <code>application/problem+json</code> document. You get JSON when you
-          send <code>Accept: application/json</code>, when the path is a
-          machine-readable file or lives under <code>/.well-known/</code>, or
-          when your <code>Accept</code> header excludes HTML. A browser
+          A failed request returns a representation matching your
+          <code>Accept</code> header. Send <code>Accept: application/json</code>
+          to receive an RFC 9457 <code>application/problem+json</code> document,
+          or <code>Accept: text/markdown</code> to receive the same problem as
+          markdown. A request to a machine-readable file or a path under
+          <code>/.well-known/</code> also receives JSON, and a browser
           navigation still receives the HTML error page. Every error carries a
           stable <code>code</code> and a recovery <code>resolution</code>
           alongside the human-readable <code>detail</code> and the
           <code>documentation_url</code> for this page.
         </p>
         <pre
-          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: application/json" ${siteUrl}/no-such-page`}</code></pre>
+          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: application/json" ${siteUrl}/no-such-page
+curl -H "Accept: text/markdown" ${siteUrl}/no-such-page`}</code></pre>
         <pre
           class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`{
   "type": "${siteUrl}/problems/not-found",
@@ -109,6 +111,16 @@ curl ${siteUrl}/llms.txt`}</code></pre>
   "documentation_url": "${siteUrl}/developers",
   "instance": "/no-such-page"
 }`}</code></pre>
+        <pre
+          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`# Resource not found
+
+No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.
+
+Resolution: Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${siteUrl}/developers for the interface.
+
+- Documentation: ${siteUrl}/developers
+- Site guide: ${siteUrl}/llms.txt
+- Sitemap: ${siteUrl}/sitemap.xml`}</code></pre>
         <p>
           A non-GET request to a machine-readable file returns
           <code>405 Method Not Allowed</code> with an <code>Allow</code> header,

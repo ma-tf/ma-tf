@@ -4,6 +4,7 @@ import {
   acceptsSupportedRepresentation,
   appendVaryValue,
   prefersJson,
+  prefersMarkdown,
 } from "@features/discovery/negotiation";
 
 type Problem = {
@@ -137,6 +138,34 @@ function problemJsonResponse(
   });
 }
 
+function problemMarkdownResponse(status: number, pathname: string): Response {
+  const problem = problemFor(status);
+
+  const body = [
+    `# ${problem.title}`,
+    "",
+    problem.detail,
+    "",
+    `Resolution: ${problem.resolution}`,
+    "",
+    `- Status: ${problem.status}`,
+    `- Code: ${problem.code}`,
+    `- Instance: ${pathname}`,
+    `- Documentation: ${problem.documentation_url}`,
+    `- Site guide: ${siteUrl}/llms.txt`,
+    `- Sitemap: ${siteUrl}/sitemap.xml`,
+    "",
+  ].join("\n");
+
+  return new Response(body, {
+    status: problem.status,
+    headers: {
+      "Content-Type": "text/markdown; charset=utf-8",
+      Vary: "Accept",
+    },
+  });
+}
+
 function passthroughError(response: Response): Response {
   const headers = new Headers(response.headers);
   appendVaryValue(headers, "Accept");
@@ -153,7 +182,10 @@ export function problemResponse(
   accept: string | null,
   pathname: string,
 ): Response {
-  const asJson = prefersJson(accept) || isResourcePath(pathname) || !acceptsHtml(accept);
+  if (prefersJson(accept)) return problemJsonResponse(response.status, pathname);
+  if (prefersMarkdown(accept)) return problemMarkdownResponse(response.status, pathname);
+
+  const asJson = isResourcePath(pathname) || !acceptsHtml(accept);
 
   return asJson ? problemJsonResponse(response.status, pathname) : passthroughError(response);
 }

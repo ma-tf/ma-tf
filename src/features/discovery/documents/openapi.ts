@@ -134,7 +134,7 @@ export function buildOpenApiDocument() {
           in: "header",
           required: false,
           description:
-            "The representation the client accepts. Pages are available as text/html or text/markdown; each machine-readable resource is served with the media type documented in its 200 response. A request whose Accept header matches none of these returns application/problem+json with status 406.",
+            "The representation the client accepts. Pages are available as text/html or text/markdown; each machine-readable resource is served with the media type documented in its 200 response. Error responses follow the same negotiation, returning application/problem+json for JSON clients and text/markdown for markdown clients. A request whose Accept header matches none of these returns application/problem+json with status 406.",
           schema: { type: "string" },
         },
       },
@@ -174,6 +174,12 @@ export function buildOpenApiDocument() {
             "application/problem+json": {
               schema: { $ref: "#/components/schemas/Problem" },
             },
+            "text/markdown": {
+              schema: {
+                type: "string",
+                description: "The problem rendered as markdown for markdown-preferring clients.",
+              },
+            },
           },
         },
         InternalServerError: {
@@ -181,6 +187,12 @@ export function buildOpenApiDocument() {
           content: {
             "application/problem+json": {
               schema: { $ref: "#/components/schemas/Problem" },
+            },
+            "text/markdown": {
+              schema: {
+                type: "string",
+                description: "The problem rendered as markdown for markdown-preferring clients.",
+              },
             },
           },
         },
