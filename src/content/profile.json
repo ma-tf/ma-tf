@@ -1,4 +1,9 @@
 {
   "name": "Matt F",
-  "title": "Full-stack developer"
+  "title": "Full-stack developer",
+  "description": "Personal portfolio and work of Matt F, a full-stack developer.",
+  "email": "admin@m4t.tf",
+  "github": "https://github.com/ma-tf",
+  "linkedin": "https://www.linkedin.com/in/matt-fehrenbach-04705910b/",
+  "bandcamp": "https://mattf.bandcamp.com"
 }

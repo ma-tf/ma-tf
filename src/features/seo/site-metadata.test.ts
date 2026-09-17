@@ -20,7 +20,11 @@ describe("siteJsonLd", () => {
 
   it("describes the person with the image, authority profiles, and a country-only address", () => {
     expect(person?.["image"]).toBe(imageUrl);
-    expect(person?.["sameAs"]).toEqual([siteIdentity.github, siteIdentity.bandcamp]);
+    expect(person?.["sameAs"]).toEqual([
+      siteIdentity.github,
+      siteIdentity.linkedin,
+      siteIdentity.bandcamp,
+    ]);
     expect(person?.["address"]).toEqual({
       "@type": "PostalAddress",
       addressCountry: siteIdentity.addressCountry,

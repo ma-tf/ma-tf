@@ -1,12 +1,14 @@
+import profile from "@content/profile.json";
 import { siteUrl } from "@features/discovery/catalog";
 
 export const siteIdentity = {
-  name: "Matt F",
-  description: "Personal portfolio and work of Matt F, a full-stack developer.",
-  jobTitle: "Full-stack developer",
-  email: "admin@m4t.tf",
-  github: "https://github.com/ma-tf",
-  bandcamp: "https://mattf.bandcamp.com",
+  name: profile.name,
+  description: profile.description,
+  jobTitle: profile.title,
+  email: profile.email,
+  github: profile.github,
+  linkedin: profile.linkedin,
+  bandcamp: profile.bandcamp,
   addressCountry: "LU",
   ogImagePath: "graphics/old house.png",
 } as const;
@@ -31,7 +33,7 @@ export function siteJsonLd(imageUrl: string) {
         url: siteUrl,
         email: siteIdentity.email,
         jobTitle: siteIdentity.jobTitle,
-        sameAs: [siteIdentity.github, siteIdentity.bandcamp],
+        sameAs: [siteIdentity.github, siteIdentity.linkedin, siteIdentity.bandcamp],
         image: imageUrl,
         address: {
           "@type": "PostalAddress",

@@ -1,3 +1,4 @@
+import profile from "@content/profile.json";
 import { resources, siteUrl } from "@features/discovery/catalog";
 import { rateLimit } from "@features/discovery/rate-limits";
 
@@ -62,7 +63,7 @@ export function buildLlmsTxt(): string {
     "## Pages",
     "",
     ...pages.map(([title, path, description]) => `- [${title}](${siteUrl}${path}): ${description}`),
-    "- [GitHub](https://github.com/ma-tf): source code and open-source work",
+    `- [GitHub](${profile.github}): source code and open-source work`,
     "",
     "## Machine-Readable Files",
     "",
@@ -100,10 +101,11 @@ export function buildLlmsTxt(): string {
     "",
     "## Identity",
     "",
-    "- Name: Matt F",
-    "- Role: Full-stack developer",
+    `- Name: ${profile.name}`,
+    `- Role: ${profile.title}`,
     `- Website: ${siteUrl}/`,
-    "- GitHub: https://github.com/ma-tf/",
+    `- GitHub: ${profile.github}`,
+    `- LinkedIn: ${profile.linkedin}`,
     "",
   ].join("\n");
 }

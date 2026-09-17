@@ -57,6 +57,7 @@ export default defineConfig({
   },
   test: {
     alias: {
+      "@content": fileURLToPath(new URL("./src/content", import.meta.url)),
       "@features": fileURLToPath(new URL("./src/features", import.meta.url)),
     },
   },
