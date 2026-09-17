@@ -99,6 +99,7 @@ function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown>
   switch (resource.type) {
     case "text/plain":
     case "application/rss+xml":
+    case "application/xml":
       return { type: "string" };
     case "application/linkset+json":
       return { $ref: "#/components/schemas/Linkset" };

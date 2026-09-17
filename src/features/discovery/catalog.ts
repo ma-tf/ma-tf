@@ -107,12 +107,29 @@ export const resources: readonly DiscoveryResource[] = [
       "Where is the m4t.tf sitemap?",
     ],
   },
+  {
+    path: "/sitemap.xml",
+    type: "application/xml",
+    title: "Sitemap",
+    description: "The indexable site pages.",
+    identifier: "urn:air:m4t.tf:index:sitemap",
+    tags: ["sitemap", "index", "pages"],
+    representativeQueries: [
+      "Which pages does m4t.tf publish?",
+      "Give me the list of indexable m4t.tf pages.",
+      "Where is the m4t.tf sitemap?",
+    ],
+  },
 ];
 
 export function isResourcePath(pathname: string): boolean {
   return (
     pathname.startsWith("/.well-known/") || resources.some((resource) => resource.path === pathname)
   );
+}
+
+export function resourceByPath(pathname: string): DiscoveryResource | undefined {
+  return resources.find((resource) => resource.path === pathname);
 }
 
 export function resourceByRel(rel: string): DiscoveryResource {

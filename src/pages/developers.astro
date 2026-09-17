@@ -55,7 +55,8 @@ import { rateLimit } from "@features/discovery/rate-limits";
         <h2 class="text-2xl font-semibold">Quickstart</h2>
         <p>
           Send <code>Accept: text/markdown</code> to any page to receive it as markdown
-          instead of HTML. Appending <code>.md</code> to a page path does the same.
+          instead of HTML. Appending <code>.md</code> does the same for a page, and
+          returns a markdown summary for a machine-readable file.
         </p>
         <pre
           class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv

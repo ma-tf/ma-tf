@@ -5,6 +5,7 @@ import { formatMarkdownResponse } from "@features/discovery/markdown";
 import { selectRepresentation } from "@features/discovery/negotiation";
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
 import { rateLimitHeaders } from "@features/discovery/rate-limits";
+import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
 import { defineMiddleware } from "astro:middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
@@ -24,7 +25,10 @@ async function resolveResponse(
   representation: Representation,
 ): Promise<Response> {
   if (representation.kind === "markdown-suffix") {
-    return formatMarkdownResponse(await next(representation.target), false);
+    return (
+      resourceMarkdownResponse(representation.target.pathname) ??
+      formatMarkdownResponse(await next(representation.target), false)
+    );
   }
 
   if (representation.kind === "markdown-accept") {

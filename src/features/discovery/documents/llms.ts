@@ -30,16 +30,13 @@ const pages = [
   ["Vignettes", "/vignettes", "short-form creative projects"],
 ] as const;
 
-const machineReadableFiles = [
-  ...resources
-    .filter((resource) => resource.path !== "/llms.txt")
-    .map((resource) => ({
-      path: resource.path,
-      title: resource.title,
-      description: resource.description,
-    })),
-  { path: "/sitemap.xml", title: "Sitemap", description: "indexable site pages" },
-];
+const machineReadableFiles = resources
+  .filter((resource) => resource.path !== "/llms.txt")
+  .map((resource) => ({
+    path: resource.path,
+    title: resource.title,
+    description: resource.description,
+  }));
 
 export function buildLlmsTxt(): string {
   return [
@@ -75,8 +72,9 @@ export function buildLlmsTxt(): string {
     "",
     "Not published, intentionally: `/.well-known/openid-configuration`,",
     "`/.well-known/oauth-authorization-server`, and",
-    "`/.well-known/oauth-protected-resource`. The site has no authentication",
-    "and no protected APIs.",
+    "`/.well-known/oauth-protected-resource`. The site has no authentication,",
+    "no protected APIs, and no CLI tool or SDK; interact with it over HTTP using",
+    "the retrieval methods below.",
     "",
     "## How To Retrieve Content",
     "",
@@ -84,7 +82,8 @@ export function buildLlmsTxt(): string {
     "",
     `    curl -H "Accept: text/markdown" ${siteUrl}/cv`,
     "",
-    `Appending \`.md\` to a page path does the same, for example \`${siteUrl}/about.md\`.`,
+    `Appending \`.md\` does the same for a page, for example \`${siteUrl}/about.md\`, and`,
+    "returns a markdown summary for a machine-readable file.",
     "Responses carry `Vary: Accept, Accept-Encoding`, so caches must store the HTML and markdown",
     "representations separately. Nonexistent paths return a real HTTP 404, so a 404 is proof the",
     "path does not exist. The error follows the same negotiation: `Accept: application/json`",
