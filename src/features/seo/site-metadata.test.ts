@@ -3,17 +3,13 @@ import { siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
 import { describe, expect, it } from "vite-plus/test";
 
 describe("siteJsonLd", () => {
-  const logoUrl = `${siteUrl}/graphics/old house.png`;
-  const graph = siteJsonLd(logoUrl)["@graph"] as unknown as Array<Record<string, unknown>>;
-  const [website, organization, person] = graph;
+  const imageUrl = `${siteUrl}/graphics/old house.png`;
+  const graph = siteJsonLd(imageUrl)["@graph"] as unknown as Array<Record<string, unknown>>;
+  const [website, person] = graph;
 
-  it("declares website, organization, and person nodes with stable ids", () => {
-    expect(graph.map((node) => node["@type"])).toEqual(["WebSite", "Organization", "Person"]);
-    expect(graph.map((node) => node["@id"])).toEqual([
-      `${siteUrl}/#website`,
-      `${siteUrl}/#organization`,
-      `${siteUrl}/#person`,
-    ]);
+  it("declares website and person nodes with stable ids", () => {
+    expect(graph.map((node) => node["@type"])).toEqual(["WebSite", "Person"]);
+    expect(graph.map((node) => node["@id"])).toEqual([`${siteUrl}/#website`, `${siteUrl}/#person`]);
   });
 
   it("uses absolute site urls", () => {
@@ -22,18 +18,16 @@ describe("siteJsonLd", () => {
     }
   });
 
-  it("describes the organization with the logo, GitHub, and a contact point", () => {
-    expect(organization?.["logo"]).toBe(logoUrl);
-    expect(organization?.["sameAs"]).toEqual([siteIdentity.github]);
-    expect(organization?.["contactPoint"]).toEqual({
-      "@type": "ContactPoint",
-      email: siteIdentity.email,
-      contactType: "customer support",
+  it("describes the person with the image, GitHub, and a country-only address", () => {
+    expect(person?.["image"]).toBe(imageUrl);
+    expect(person?.["sameAs"]).toEqual([siteIdentity.github]);
+    expect(person?.["address"]).toEqual({
+      "@type": "PostalAddress",
+      addressCountry: siteIdentity.addressCountry,
     });
   });
 
-  it("links the person to the same profile and the website to the person", () => {
+  it("links the website to the person", () => {
     expect(website?.["publisher"]).toEqual({ "@id": `${siteUrl}/#person` });
-    expect(person?.["sameAs"]).toEqual([siteIdentity.github]);
   });
 });

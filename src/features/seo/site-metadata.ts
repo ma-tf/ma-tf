@@ -6,10 +6,11 @@ export const siteIdentity = {
   jobTitle: "Full-stack developer",
   email: "admin@m4t.tf",
   github: "https://github.com/ma-tf",
+  addressCountry: "LU",
   ogImagePath: "graphics/old house.png",
 } as const;
 
-export function siteJsonLd(logoUrl: string) {
+export function siteJsonLd(imageUrl: string) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -22,19 +23,6 @@ export function siteJsonLd(logoUrl: string) {
         publisher: { "@id": `${siteUrl}/#person` },
       },
       {
-        "@type": "Organization",
-        "@id": `${siteUrl}/#organization`,
-        name: siteIdentity.name,
-        url: siteUrl,
-        logo: logoUrl,
-        sameAs: [siteIdentity.github],
-        contactPoint: {
-          "@type": "ContactPoint",
-          email: siteIdentity.email,
-          contactType: "customer support",
-        },
-      },
-      {
         "@type": "Person",
         "@id": `${siteUrl}/#person`,
         name: siteIdentity.name,
@@ -43,6 +31,11 @@ export function siteJsonLd(logoUrl: string) {
         email: siteIdentity.email,
         jobTitle: siteIdentity.jobTitle,
         sameAs: [siteIdentity.github],
+        image: imageUrl,
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: siteIdentity.addressCountry,
+        },
       },
     ],
   };
