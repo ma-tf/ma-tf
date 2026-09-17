@@ -10,8 +10,11 @@ const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const aiCatalog = resourceByRel("ai-catalog");
 const agentSkills = resourceByRel("agent-skills");
-const ogImage = new URL(siteIdentity.ogImagePath, `${import.meta.env.R2_PUBLIC_URL}/`);
-const jsonLd = siteJsonLd(ogImage.href);
+const ogImage = new URL(
+	siteIdentity.ogImagePath,
+	`${import.meta.env.R2_PUBLIC_URL}/`,
+);
+const jsonLd = siteJsonLd(ogImage.href, Astro.url.pathname);
 const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 ---
 
@@ -49,9 +52,18 @@ const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={JSON.stringify(jsonLd)}
+		/>
 	</head>
-	<body class:list={["flex min-h-dvh flex-col bg-background text-foreground", { "overflow-hidden": hideOverflow }]}>
+	<body
+		class:list={[
+			"flex min-h-dvh flex-col bg-background text-foreground",
+			{ "overflow-hidden": hideOverflow },
+		]}
+	>
 		<slot />
 	</body>
 </html>
