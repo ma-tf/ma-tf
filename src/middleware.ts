@@ -7,7 +7,6 @@ import { selectRepresentation } from "@features/discovery/negotiation";
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
 import { rateLimitHeaders } from "@features/discovery/rate-limits";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
-import { defineMiddleware } from "astro:middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
 
@@ -54,6 +53,6 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
   return response.status >= 400 ? problemResponse(response, accept, pathname) : response;
 }
 
-export const onRequest = defineMiddleware(async (context, next) => {
+export async function onRequest(context: APIContext, next: MiddlewareNext): Promise<Response> {
   return applySiteHeaders(await respond(context, next));
-});
+}
