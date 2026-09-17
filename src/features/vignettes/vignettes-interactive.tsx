@@ -5,7 +5,7 @@ import { Spinner } from "@components/ui/spinner";
 import { VideoPlayer } from "@features/vignettes/mux-player";
 import { thumbnailUrl, VignetteThumbnail } from "@features/vignettes/vignette-thumbnail";
 import { VignetteThumbnailProvider } from "@features/vignettes/vignette-thumbnail-context";
-import { cn } from "@lib/cn";
+import { cn } from "cn";
 import { useRef, useState } from "react";
 
 const VIGNETTE_NAVIGATION_LINKS = [

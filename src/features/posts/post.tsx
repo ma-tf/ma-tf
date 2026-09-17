@@ -1,5 +1,5 @@
-import { cn } from "@lib/cn";
 import { CalendarIcon, HashIcon } from "@phosphor-icons/react";
+import { cn } from "cn";
 
 export function Post({ children, className, ...props }: React.ComponentProps<"article">) {
   return (

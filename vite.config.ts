@@ -5,7 +5,7 @@ export default defineConfig({
   fmt: {
     ignorePatterns: [".agents", ".astro", ".opencode"],
     sortTailwindcss: {
-      functions: ["clsx", "cn"],
+      functions: ["cn"],
       preserveWhitespace: false,
       stylesheet: "./src/styles/global.css",
     },

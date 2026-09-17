@@ -1,5 +1,5 @@
-import { cn } from "@lib/cn";
 import MuxPlayer, { type MuxPlayerProps } from "@mux/mux-player-react";
+import { cn } from "cn";
 
 export function VideoPlayer({
   playbackId,

@@ -10,8 +10,8 @@ Styling conventions for this project.
 - **Use design tokens, not raw colours.** Reference the theme tokens defined in
   `global.css` (`text-foreground`, `bg-muted`, `border-border`,
   `text-muted-foreground`, etc.) rather than hardcoded hex/oklch values.
-- **Compose classes with `cn()`** (`clsx` + `tailwind-merge`) for conditional
-  class strings.
+- **Compose classes with `cn()`** (the `cn` package) for conditional class
+  strings.
 
 ## Arbitrary values
 

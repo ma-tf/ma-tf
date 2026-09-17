@@ -1,6 +1,6 @@
 import { NavButton } from "@components/nav-button";
-import { cn } from "@lib/cn";
 import { previews } from "@lib/feature-flags";
+import { cn } from "cn";
 
 const MUSIC_NAVIGATION_LINKS = [
   { href: "/", label: "Home", enabled: true },

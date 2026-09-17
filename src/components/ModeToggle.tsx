@@ -1,7 +1,7 @@
-import { cn } from "@lib/cn";
 import { useStore } from "@nanostores/react";
 import { SunIcon, MoonIcon } from "@phosphor-icons/react";
 import { theme, toggleTheme } from "@stores/theme";
+import { cn } from "cn";
 
 export function ModeToggle() {
   const current = useStore(theme);

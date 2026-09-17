@@ -1,5 +1,5 @@
 import { useParallax } from "@hooks/use-parallax";
-import { cn } from "@lib/cn";
+import { cn } from "cn";
 
 export function Photography({ children, className, ...props }: React.ComponentProps<"div">) {
   return (

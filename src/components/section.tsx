@@ -1,4 +1,4 @@
-import { cn } from "@lib/cn";
+import { cn } from "cn";
 
 export function Section({ children, className, ...props }: React.ComponentProps<"section">) {
   return (

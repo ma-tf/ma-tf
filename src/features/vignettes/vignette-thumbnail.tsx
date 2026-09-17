@@ -1,6 +1,6 @@
 import { useVignetteThumbnail } from "@features/vignettes/vignette-thumbnail-context";
-import { cn } from "@lib/cn";
 import { PlayIcon } from "@phosphor-icons/react";
+import { cn } from "cn";
 
 const VIGNETTE_MOBILE_OFFSET_CLASSES = ["translate-x-0", "translate-x-4", "translate-x-8"];
 const VIGNETTE_DESKTOP_OFFSET_CLASSES = [

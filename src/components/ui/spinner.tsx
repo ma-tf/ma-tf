@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 
-import { cn } from "@lib/cn";
 import { CircleNotchIcon } from "@phosphor-icons/react";
+import { cn } from "cn";
 
 function Spinner({ className }: ComponentProps<"svg">) {
   return (

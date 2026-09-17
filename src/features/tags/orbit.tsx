@@ -3,7 +3,7 @@ import { OrbitScrollbar } from "@features/tags/orbit-scrollbar";
 import { useItemRefs } from "@features/tags/use-item-refs";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useStageRef } from "@features/tags/use-stage-ref";
-import { cn } from "@lib/cn";
+import { cn } from "cn";
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 
 const SCROLLBAR_OFFSET = -64;

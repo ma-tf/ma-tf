@@ -1,4 +1,3 @@
-import { cn } from "@lib/cn";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@ui/dialog";
+import { cn } from "cn";
 import { useState } from "react";
 
 function LoadableImage({ src, alt, className }: { src: string; alt: string; className: string }) {
