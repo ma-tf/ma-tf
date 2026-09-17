@@ -3,9 +3,10 @@ import type { APIContext, MiddlewareNext } from "astro";
 import { linkHeader } from "@features/discovery/catalog";
 import { isAgentSkillArtifactPath } from "@features/discovery/documents/agent-skills";
 import { formatMarkdownResponse } from "@features/discovery/markdown";
-import { selectRepresentation } from "@features/discovery/negotiation";
+import { appendVaryValue, selectRepresentation } from "@features/discovery/negotiation";
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
 import { rateLimitHeaders } from "@features/discovery/rate-limits";
+import { resourceJson } from "@features/discovery/resource-json";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
 
 type Representation = ReturnType<typeof selectRepresentation>;
@@ -20,22 +21,41 @@ function applySiteHeaders(response: Response): Response {
   return response;
 }
 
+function jsonResponse(response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.set("Content-Type", "application/json; charset=utf-8");
+  appendVaryValue(headers, "Accept");
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 async function resolveResponse(
   next: MiddlewareNext,
   representation: Representation,
 ): Promise<Response> {
-  if (representation.kind === "markdown-suffix") {
-    return (
-      resourceMarkdownResponse(representation.target.pathname) ??
-      formatMarkdownResponse(await next(representation.target), false)
-    );
-  }
+  switch (representation.kind) {
+    case "markdown-suffix":
+      return (
+        resourceMarkdownResponse(representation.target.pathname) ??
+        formatMarkdownResponse(await next(representation.target), false)
+      );
 
-  if (representation.kind === "markdown-accept") {
-    return formatMarkdownResponse(await next(), true);
-  }
+    case "markdown-accept":
+      return formatMarkdownResponse(await next(), true);
 
-  return next();
+    case "json-document":
+      return jsonResponse(await next());
+
+    case "json-descriptor":
+      return jsonResponse(resourceJson(representation.resource));
+
+    default:
+      return next();
+  }
 }
 
 async function respond(context: APIContext, next: MiddlewareNext): Promise<Response> {

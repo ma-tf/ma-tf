@@ -58,10 +58,15 @@ import { rateLimit } from "@features/discovery/rate-limits";
           instead of HTML. Appending <code>.md</code> does the same for a page, and
           returns a markdown summary for a machine-readable file.
         </p>
+        <p>
+          Send <code>Accept: application/json</code> to a machine-readable file to
+          receive it as JSON: JSON resources return their canonical document, and the
+          others return a typed descriptor with the resource's metadata.
+        </p>
         <pre
           class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv
 curl ${siteUrl}/about.md
-curl ${siteUrl}/llms.txt`}</code></pre>
+curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
         <p>
           Nonexistent paths return a real HTTP 404, so a 404 is proof the path
           does not exist. Responses carry <code

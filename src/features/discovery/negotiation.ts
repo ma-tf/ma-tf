@@ -1,5 +1,11 @@
+import type { DiscoveryResource } from "@features/discovery/catalog";
+
+import { isJsonMediaType, resourceByPath } from "@features/discovery/catalog";
+
 export type Representation =
   | { kind: "html" }
+  | { kind: "json-document" }
+  | { kind: "json-descriptor"; resource: DiscoveryResource }
   | { kind: "markdown-suffix"; target: URL }
   | { kind: "markdown-accept" };
 
@@ -74,6 +80,13 @@ function getMarkdownTarget(url: URL): URL {
 export function selectRepresentation(url: URL, accept: string | null): Representation {
   if (url.pathname.endsWith(".md")) {
     return { kind: "markdown-suffix", target: getMarkdownTarget(url) };
+  }
+
+  const resource = resourceByPath(url.pathname);
+  if (resource && prefersJson(accept)) {
+    return isJsonMediaType(resource.type)
+      ? { kind: "json-document" }
+      : { kind: "json-descriptor", resource };
   }
 
   if (prefersMarkdown(accept)) return { kind: "markdown-accept" };

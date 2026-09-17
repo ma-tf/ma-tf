@@ -144,6 +144,12 @@ export function isResourcePath(pathname: string): boolean {
   );
 }
 
+export function isJsonMediaType(type: string): boolean {
+  const mediaType = type.split(";", 1)[0]?.trim().toLowerCase() ?? "";
+
+  return mediaType === "application/json" || mediaType.endsWith("+json");
+}
+
 export function resourceByPath(pathname: string): DiscoveryResource | undefined {
   return resources.find((resource) => resource.path === pathname);
 }

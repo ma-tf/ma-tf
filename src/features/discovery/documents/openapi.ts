@@ -1,6 +1,6 @@
 import type { DiscoveryResource } from "@features/discovery/catalog";
 
-import { resources, siteUrl } from "@features/discovery/catalog";
+import { isJsonMediaType, resources, siteUrl } from "@features/discovery/catalog";
 import { problemSchema } from "@features/discovery/problems";
 import { rateLimit, rateLimitPolicy } from "@features/discovery/rate-limits";
 
@@ -115,6 +115,27 @@ const agentSkillsIndexSchema = {
   },
 };
 
+const discoveryResourceSchema = {
+  type: "object",
+  required: ["path", "url", "mediaType", "title", "description", "tags", "representativeQueries"],
+  properties: {
+    path: { type: "string", description: "The resource's site-relative path." },
+    url: { type: "string", format: "uri", description: "The resource's canonical absolute URL." },
+    mediaType: {
+      type: "string",
+      description: "The media type the canonical resource is served with.",
+    },
+    title: { type: "string", description: "The resource's human-readable title." },
+    description: { type: "string", description: "What the resource is for." },
+    tags: { type: "array", items: { type: "string" }, description: "Discovery tags." },
+    representativeQueries: {
+      type: "array",
+      items: { type: "string" },
+      description: "The kinds of query the resource answers.",
+    },
+  },
+};
+
 function operationIdFor(resource: DiscoveryResource): string {
   const name = resource.identifier.split(":").slice(-2).join("-");
   const pascal = name
@@ -144,13 +165,26 @@ function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown>
   }
 }
 
+function jsonSchemaFor(resource: DiscoveryResource): Record<string, unknown> {
+  return isJsonMediaType(resource.type)
+    ? responseSchemaFor(resource)
+    : { $ref: "#/components/schemas/DiscoveryResource" };
+}
+
+function responseContentFor(resource: DiscoveryResource): Record<string, { schema: unknown }> {
+  return {
+    [resource.type]: { schema: responseSchemaFor(resource) },
+    "application/json": { schema: jsonSchemaFor(resource) },
+  };
+}
+
 export function buildOpenApiDocument() {
   return {
     openapi: "3.1.0",
     info: {
       title: "m4t.tf Site Resources",
       version: "0.1.0",
-      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered; every response declares a published floor of ${rateLimit.quota} requests per minute per client.`,
+      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered; every response declares a published floor of ${rateLimit.quota} requests per minute per client. Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
     },
     components: {
       parameters: {
@@ -167,7 +201,7 @@ export function buildOpenApiDocument() {
           in: "header",
           required: false,
           description:
-            "The representation the client accepts. Pages are available as text/html or text/markdown; each machine-readable resource is served with the media type documented in its 200 response. Error responses follow the same negotiation, returning application/problem+json for JSON clients and text/markdown for markdown clients. A request whose Accept header matches none of these returns application/problem+json with status 406.",
+            "The representation the client accepts. Pages are available as text/html or text/markdown. Each machine-readable resource is served with the media type documented in its 200 response, or as application/json when the client asks for it: the canonical document for JSON resources, and a typed descriptor for the others. Error responses follow the same negotiation, returning application/problem+json for JSON clients and text/markdown for markdown clients. A request whose Accept header matches none of these returns application/problem+json with status 406.",
           schema: { type: "string" },
         },
       },
@@ -197,6 +231,7 @@ export function buildOpenApiDocument() {
       schemas: {
         AgentSkillsIndex: agentSkillsIndexSchema,
         AiCatalog: aiCatalogSchema,
+        DiscoveryResource: discoveryResourceSchema,
         Linkset: linksetSchema,
         LinksetReference: linksetReferenceSchema,
         Problem: problemSchema,
@@ -278,7 +313,7 @@ export function buildOpenApiDocument() {
                   "RateLimit-Limit": { $ref: "#/components/headers/RateLimitLimit" },
                   "RateLimit-Reset": { $ref: "#/components/headers/RateLimitReset" },
                 },
-                content: { [resource.type]: { schema: responseSchemaFor(resource) } },
+                content: responseContentFor(resource),
               },
               "404": { $ref: "#/components/responses/NotFound" },
               "405": { $ref: "#/components/responses/MethodNotAllowed" },

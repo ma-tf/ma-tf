@@ -1,4 +1,4 @@
-import { resources } from "@features/discovery/catalog";
+import { isJsonMediaType, resources } from "@features/discovery/catalog";
 import { buildOpenApiDocument } from "@features/discovery/documents/openapi";
 import { validate } from "@readme/openapi-parser";
 import { describe, expect, it } from "vite-plus/test";
@@ -46,12 +46,43 @@ describe("buildOpenApiDocument", () => {
       const ok = operation.responses["200"];
       if (!ok) throw new Error(`Missing 200 response for ${resource.path}`);
 
-      expect(Object.keys(ok.content)).toEqual([resource.type]);
+      expect(Object.keys(ok.content)).toContain(resource.type);
+      expect(Object.keys(ok.content)).toContain("application/json");
 
       const schema = ok.content[resource.type]?.schema as Record<string, unknown> | undefined;
       if (!schema) throw new Error(`Missing 200 schema for ${resource.path}`);
 
       expect(schema.type ?? schema.$ref).toBeTruthy();
+    }
+  });
+
+  it("declares a typed application/json response for every operation", () => {
+    const document = buildOpenApiDocument();
+    const operations = Object.values(document.paths).map((pathItem) => pathItem.get);
+
+    const withJson = operations.filter((operation) => {
+      const schema = operation.responses["200"]?.content["application/json"]?.schema as
+        | Record<string, unknown>
+        | undefined;
+
+      return Boolean(schema?.type ?? schema?.$ref);
+    });
+
+    expect(withJson.length).toBe(operations.length);
+    expect(withJson.length / operations.length).toBeGreaterThan(0.6);
+  });
+
+  it("describes non-JSON resources with the DiscoveryResource schema", () => {
+    const document = buildOpenApiDocument();
+
+    for (const resource of resources) {
+      if (isJsonMediaType(resource.type)) continue;
+
+      const schema = document.paths[resource.path]?.get.responses["200"]?.content[
+        "application/json"
+      ]?.schema as Record<string, unknown> | undefined;
+
+      expect(schema?.$ref).toBe("#/components/schemas/DiscoveryResource");
     }
   });
 });

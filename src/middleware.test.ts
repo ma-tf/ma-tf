@@ -64,6 +64,30 @@ describe("onRequest", () => {
     expect(await response.text()).toContain("# Agent site guide");
   });
 
+  it("serves a resource's JSON descriptor when the client prefers JSON", async () => {
+    const response = await onRequest(
+      buildContext("/llms.txt", { accept: "application/json" }),
+      next,
+    );
+
+    expect(response.headers.get("Content-Type")).toMatch(/^application\/json\b/);
+    expect(response.headers.get("Vary")).toContain("Accept");
+
+    const descriptor = (await response.json()) as { path: string; mediaType: string };
+    expect(descriptor.path).toBe("/llms.txt");
+    expect(descriptor.mediaType).toBe("text/plain");
+  });
+
+  it("serves a JSON resource as application/json when the client prefers JSON", async () => {
+    const response = await onRequest(
+      buildContext("/openapi.json", { accept: "application/json" }),
+      next,
+    );
+
+    expect(response.headers.get("Content-Type")).toMatch(/^application\/json\b/);
+    expect(response.headers.get("Vary")).toContain("Accept");
+  });
+
   it("markdown-ifies a normal page for a .md suffix", async () => {
     const response = await onRequest(buildContext("/about.md"), next);
 
