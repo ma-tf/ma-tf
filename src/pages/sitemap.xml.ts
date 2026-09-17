@@ -1,36 +1,15 @@
 import type { APIContext, APIRoute } from "astro";
 
 import { getRawPosts } from "@features/blog/post-data";
+import { siteUrl } from "@features/discovery/catalog";
+import { buildSitemap } from "@features/discovery/documents/sitemap";
 import { getTagIndex } from "@features/tags/tag-data";
 import { getCollection, type CollectionEntry } from "astro:content";
 
 export const prerender = true;
 
-const staticPaths = [
-  "/",
-  "/about/",
-  "/blog/",
-  "/contact/",
-  "/cv/",
-  "/developers/",
-  "/graphics/",
-  "/music/",
-  "/photography/",
-  "/privacy/",
-  "/vignettes/",
-];
-
-function escapeXml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
-
 export const GET = (async (context: APIContext) => {
-  const site = context.site ?? new URL("https://m4t.tf");
+  const site = context.site ?? new URL(siteUrl);
 
   const [posts, tagIndex, vignettes] = await Promise.all([
     getRawPosts(),
@@ -38,34 +17,19 @@ export const GET = (async (context: APIContext) => {
     getCollection("vignettes"),
   ]);
 
-  const entries = [
-    ...staticPaths.map((path) => ({ path, lastmod: undefined })),
-    ...posts.map((post) => ({
-      path: `/posts/${encodeURIComponent(post.data.slug)}/`,
-      lastmod: post.data.publicationDate.toISOString(),
-    })),
-    ...tagIndex.tags.map(({ tag }) => ({
-      path: `/tags/${encodeURIComponent(tag)}/`,
-      lastmod: undefined,
-    })),
-    ...vignettes
-      .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
-      .map((entry: CollectionEntry<"vignettes">) => ({
-        path: `/vignettes/${encodeURIComponent(entry.data.slug)}/`,
-        lastmod: undefined,
+  const body = buildSitemap(
+    {
+      posts: posts.map((post) => ({
+        slug: post.data.slug,
+        publicationDate: post.data.publicationDate,
       })),
-  ];
-
-  const body = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...entries.map(({ path, lastmod }) => {
-      const loc = escapeXml(new URL(path, site).href);
-      return `  <url><loc>${loc}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}</url>`;
-    }),
-    "</urlset>",
-    "",
-  ].join("\n");
+      tags: tagIndex.tags,
+      vignettes: vignettes
+        .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
+        .map((entry: CollectionEntry<"vignettes">) => ({ slug: entry.data.slug })),
+    },
+    site,
+  );
 
   return new Response(body, {
     headers: { "Content-Type": "application/xml; charset=utf-8" },

@@ -25,6 +25,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", ".astro/types.d.ts"],
+  "include": ["src", "src/pages/.well-known/**/*", ".astro/types.d.ts"],
   "exclude": ["dist"]
 }

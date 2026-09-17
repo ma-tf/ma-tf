@@ -1,10 +1,13 @@
 ---
+import { resourceByRel } from "@features/discovery/catalog";
+
 import "../styles/global.css";
 
 const { hideOverflow = false } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const aiCatalog = resourceByRel("ai-catalog");
 ---
 
 <script is:inline>
@@ -24,7 +27,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 			content="Personal portfolio and work of Matt F, a full-stack developer."
 		/>
 		<link rel="canonical" href={canonicalUrl} />
-		<link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/ai-catalog+json" />
+		<link rel="ai-catalog" href={aiCatalog.path} type={aiCatalog.type} />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Matt F | Full-stack developer" />
 		<meta

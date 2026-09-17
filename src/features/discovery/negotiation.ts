@@ -1,8 +1,4 @@
-import TurndownService from "turndown";
-
-const turndown = new TurndownService();
-
-type Representation =
+export type Representation =
   | { kind: "html" }
   | { kind: "markdown-suffix"; target: URL }
   | { kind: "markdown-accept" };
@@ -40,6 +36,14 @@ export function prefersJson(accept: string | null): boolean {
   return jsonQuality > 0 && jsonQuality >= htmlQuality;
 }
 
+function getMarkdownTarget(url: URL): URL {
+  const target = new URL(url);
+  target.pathname =
+    target.pathname === "/index.md" ? "/" : target.pathname.slice(0, -".md".length) || "/";
+
+  return target;
+}
+
 export function selectRepresentation(url: URL, accept: string | null): Representation {
   if (url.pathname.endsWith(".md")) {
     return { kind: "markdown-suffix", target: getMarkdownTarget(url) };
@@ -48,14 +52,6 @@ export function selectRepresentation(url: URL, accept: string | null): Represent
   if (prefersMarkdown(accept)) return { kind: "markdown-accept" };
 
   return { kind: "html" };
-}
-
-function getMarkdownTarget(url: URL): URL {
-  const target = new URL(url);
-  target.pathname =
-    target.pathname === "/index.md" ? "/" : target.pathname.slice(0, -".md".length) || "/";
-
-  return target;
 }
 
 export function appendVaryValue(headers: Headers, value: string): void {
@@ -69,34 +65,4 @@ export function appendVaryValue(headers: Headers, value: string): void {
   }
 
   headers.set("Vary", values.join(", "));
-}
-
-function getMarkdownSource(html: string): string {
-  const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] ?? html;
-
-  return body
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "");
-}
-
-export async function formatMarkdownResponse(
-  response: Response,
-  shouldVaryByAccept: boolean,
-): Promise<Response> {
-  if (!response.headers.get("Content-Type")?.startsWith("text/html")) return response;
-
-  const headers = new Headers(response.headers);
-  if (shouldVaryByAccept) appendVaryValue(headers, "Accept");
-
-  const markdown = turndown.turndown(getMarkdownSource(await response.text()));
-  headers.set("Content-Type", "text/markdown; charset=utf-8");
-  headers.delete("Content-Encoding");
-  headers.delete("Content-Length");
-  headers.delete("ETag");
-
-  return new Response(markdown, {
-    headers,
-    status: response.status,
-    statusText: response.statusText,
-  });
 }

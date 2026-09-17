@@ -1,37 +1,12 @@
 import type { APIRoute } from "astro";
 
 import { getRawPosts } from "@features/blog/post-data";
-import { siteUrl } from "@lib/resource-catalog";
+import { buildLlmsFullTxt } from "@features/discovery/documents/llms";
 
 export const GET = (async () => {
-  const posts = (await getRawPosts()).sort(
-    (a, b) => b.data.publicationDate.valueOf() - a.data.publicationDate.valueOf(),
-  );
+  const posts = await getRawPosts();
 
-  const sections = posts.map((post) => {
-    const { title, slug, publicationDate, description, tags } = post.data;
-
-    return [
-      `## ${title}`,
-      "",
-      `- URL: ${siteUrl}/posts/${slug}`,
-      `- Published: ${publicationDate.toISOString().split("T")[0]}`,
-      `- Description: ${description}`,
-      `- Tags: ${tags.join(", ")}`,
-      "",
-      post.body?.trim() ?? "",
-    ].join("\n");
-  });
-
-  const content = [
-    "# m4t.tf: Full Content Archive",
-    "",
-    "This file contains the published blog content from m4t.tf.",
-    "",
-    ...sections.flatMap((section) => [section, "---", ""]),
-  ].join("\n");
-
-  return new Response(content, {
+  return new Response(buildLlmsFullTxt(posts), {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
     },
