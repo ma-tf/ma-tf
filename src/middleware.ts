@@ -1,6 +1,7 @@
 import type { APIContext, MiddlewareNext } from "astro";
 
 import { linkHeader } from "@features/discovery/catalog";
+import { isAgentSkillArtifactPath } from "@features/discovery/documents/agent-skills";
 import { formatMarkdownResponse } from "@features/discovery/markdown";
 import { selectRepresentation } from "@features/discovery/negotiation";
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
@@ -46,7 +47,9 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
   const rejection = preflightResponse(context.request, accept, pathname);
   if (rejection) return rejection;
 
-  const response = await resolveResponse(next, selectRepresentation(context.url, accept));
+  const response = isAgentSkillArtifactPath(pathname)
+    ? await next()
+    : await resolveResponse(next, selectRepresentation(context.url, accept));
 
   return response.status >= 400 ? problemResponse(response, accept, pathname) : response;
 }

@@ -9,6 +9,7 @@ const { hideOverflow = false } = Astro.props;
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const aiCatalog = resourceByRel("ai-catalog");
+const agentSkills = resourceByRel("agent-skills");
 const ogImage = new URL(siteIdentity.ogImagePath, `${import.meta.env.R2_PUBLIC_URL}/`);
 const jsonLd = siteJsonLd(ogImage.href);
 const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
@@ -29,6 +30,7 @@ const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 		<meta name="description" content={siteIdentity.description} />
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="ai-catalog" href={aiCatalog.path} type={aiCatalog.type} />
+		<link rel="agent-skills" href={agentSkills.path} type={agentSkills.type} />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={siteIdentity.description} />

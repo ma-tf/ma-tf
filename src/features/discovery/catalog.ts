@@ -120,6 +120,20 @@ export const resources: readonly DiscoveryResource[] = [
       "Where is the m4t.tf sitemap?",
     ],
   },
+  {
+    path: "/.well-known/agent-skills/index.json",
+    type: "application/json",
+    title: "Agent Skills index",
+    description: "The Agent Skills the site publishes for agents.",
+    rel: "agent-skills",
+    identifier: "urn:air:m4t.tf:catalog:agent-skills",
+    tags: ["agent-skills", "skills", "discovery"],
+    representativeQueries: [
+      "What agent skills does m4t.tf publish?",
+      "How should an agent work with m4t.tf?",
+      "Where is the m4t.tf Agent Skills index?",
+    ],
+  },
 ];
 
 export function isResourcePath(pathname: string): boolean {

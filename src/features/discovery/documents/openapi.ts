@@ -85,6 +85,36 @@ const aiCatalogSchema = {
   },
 };
 
+const agentSkillsIndexSchema = {
+  type: "object",
+  required: ["$schema", "skills"],
+  properties: {
+    $schema: {
+      type: "string",
+      format: "uri",
+      description: "The Agent Skills discovery schema the index conforms to.",
+    },
+    skills: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["name", "type", "description", "url", "digest"],
+        properties: {
+          name: { type: "string", description: "The skill name." },
+          type: { type: "string", enum: ["skill-md", "archive"] },
+          description: { type: "string", description: "What the skill does and when to use it." },
+          url: { type: "string", description: "Where the skill artifact is served." },
+          digest: {
+            type: "string",
+            pattern: "^sha256:[a-f0-9]{64}$",
+            description: "The sha256 digest of the artifact's raw bytes.",
+          },
+        },
+      },
+    },
+  },
+};
+
 function operationIdFor(resource: DiscoveryResource): string {
   const name = resource.identifier.split(":").slice(-2).join("-");
   const pascal = name
@@ -105,6 +135,8 @@ function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown>
       return { $ref: "#/components/schemas/Linkset" };
     case "application/ai-catalog+json":
       return { $ref: "#/components/schemas/AiCatalog" };
+    case "application/json":
+      return { $ref: "#/components/schemas/AgentSkillsIndex" };
     case "application/vnd.oai.openapi+json;version=3.1":
       return { type: "object", additionalProperties: true };
     default:
@@ -163,6 +195,7 @@ export function buildOpenApiDocument() {
         },
       },
       schemas: {
+        AgentSkillsIndex: agentSkillsIndexSchema,
         AiCatalog: aiCatalogSchema,
         Linkset: linksetSchema,
         LinksetReference: linksetReferenceSchema,

@@ -7,6 +7,7 @@ This project uses Astro for development and Vite+ for tooling.
 - **`vp run preview`** — Preview the Astro build
 - **`vp check`** — Format and lint project
 - **`vp test`** — Run all tests
+- **`vpx astro dev stop`** — Stop active dev server
 
 See [docs/vite-plus.md](docs/vite-plus.md) for the Vite+ toolchain docs and review checklist.
 See [docs/adr/](docs/adr/) for Architecture Decision Records.
