@@ -1,5 +1,6 @@
 ---
 import { resourceByRel } from "@features/discovery/catalog";
+import { siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
 
 import "../styles/global.css";
 
@@ -8,6 +9,9 @@ const { hideOverflow = false } = Astro.props;
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const aiCatalog = resourceByRel("ai-catalog");
+const ogImage = new URL(siteIdentity.ogImagePath, `${import.meta.env.R2_PUBLIC_URL}/`);
+const jsonLd = siteJsonLd(ogImage.href);
+const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 ---
 
 <script is:inline>
@@ -21,42 +25,29 @@ const aiCatalog = resourceByRel("ai-catalog");
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="color-scheme" content="light dark" />
-		<title>Matt F | Full-stack developer</title>
-		<meta
-			name="description"
-			content="Personal portfolio and work of Matt F, a full-stack developer."
-		/>
+		<title>{pageTitle}</title>
+		<meta name="description" content={siteIdentity.description} />
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="ai-catalog" href={aiCatalog.path} type={aiCatalog.type} />
 		<meta property="og:type" content="website" />
-		<meta property="og:title" content="Matt F | Full-stack developer" />
-		<meta
-			property="og:description"
-			content="Personal portfolio and work of Matt F, a full-stack developer."
-		/>
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={siteIdentity.description} />
 		<meta property="og:url" content={canonicalUrl} />
-		<meta
-			property="og:image"
-			content={new URL("graphics/old house.png", `${import.meta.env.R2_PUBLIC_URL}/`).href}
-		/>
+		<meta property="og:image" content={ogImage.href} />
 		<meta property="og:image:alt" content="Matt F's portfolio" />
+		<meta property="og:image:width" content="640" />
+		<meta property="og:image:height" content="480" />
+		<meta property="og:site_name" content={siteIdentity.name} />
+		<meta property="og:locale" content="en_GB" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="is-agentic-site-type" content="content" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<script is:inline type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "Person",
-				"name": "Matt F",
-				"description": "Personal portfolio and work of Matt F, a full-stack developer.",
-				"url": "https://m4t.tf",
-				"email": "admin@m4t.tf",
-				"jobTitle": "Full-stack developer"
-			}
-		</script>
+		<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 	</head>
 	<body class:list={["flex min-h-dvh flex-col bg-background text-foreground", { "overflow-hidden": hideOverflow }]}>
 		<slot />
