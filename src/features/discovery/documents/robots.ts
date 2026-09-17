@@ -15,6 +15,7 @@ const allowedCrawlers = [
   "ClaudeBot",
   "CloudflareBrowserRenderingCrawler",
   "cohere-ai",
+  "DeepSeekBot",
   "Diffbot",
   "DuckDuckBot",
   "DuckDuckGo-Favicons-Bot",
