@@ -1,4 +1,10 @@
 import { Section, SectionContent, SectionHeader, SectionNumber } from "@components/section";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@components/ui/accordion";
 import { faqs } from "@features/seo/site-metadata";
 
 export function Faq() {
@@ -9,14 +15,18 @@ export function Faq() {
         <span>FAQ</span>
       </SectionHeader>
       <SectionContent>
-        <div className="flex max-w-3xl flex-col gap-8">
+        <Accordion multiple keepMounted className="max-w-3xl">
           {faqs.map((faq) => (
-            <div key={faq.question} className="flex flex-col gap-2">
-              <h3 className="text-xl font-semibold text-foreground">{faq.question}</h3>
-              <p className="text-lg leading-relaxed text-foreground">{faq.answer}</p>
-            </div>
+            <AccordionItem key={faq.question} value={faq.question}>
+              <AccordionTrigger className="text-xl font-semibold text-foreground">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-lg leading-relaxed text-foreground">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       </SectionContent>
     </Section>
   );
