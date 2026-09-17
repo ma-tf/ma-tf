@@ -6,6 +6,7 @@ export const siteIdentity = {
   jobTitle: "Full-stack developer",
   email: "admin@m4t.tf",
   github: "https://github.com/ma-tf",
+  bandcamp: "https://mattf.bandcamp.com",
   addressCountry: "LU",
   ogImagePath: "graphics/old house.png",
 } as const;
@@ -30,7 +31,7 @@ export function siteJsonLd(imageUrl: string) {
         url: siteUrl,
         email: siteIdentity.email,
         jobTitle: siteIdentity.jobTitle,
-        sameAs: [siteIdentity.github],
+        sameAs: [siteIdentity.github, siteIdentity.bandcamp],
         image: imageUrl,
         address: {
           "@type": "PostalAddress",
