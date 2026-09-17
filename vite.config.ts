@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
@@ -53,5 +54,10 @@ export default defineConfig({
   staged: {
     "*.{js,json,mjs,ts,tsx}": "vp check --fix",
     "*.astro": "vpx astro check",
+  },
+  test: {
+    alias: {
+      "@features": fileURLToPath(new URL("./src/features", import.meta.url)),
+    },
   },
 });

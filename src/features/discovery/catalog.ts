@@ -1,6 +1,6 @@
 export const siteUrl = "https://m4t.tf";
 
-type DiscoveryResource = {
+export type DiscoveryResource = {
   path: string;
   type: string;
   title: string;
