@@ -11,6 +11,7 @@ This project uses Astro for development and Vite+ for tooling.
 
 See [docs/vite-plus.md](docs/vite-plus.md) for the Vite+ toolchain docs and review checklist.
 See [docs/adr/](docs/adr/) for Architecture Decision Records.
+See [docs/CONTEXT.md](docs/CONTEXT.md) for the project's domain glossary.
 
 ## Conventions
 
