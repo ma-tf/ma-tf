@@ -123,8 +123,11 @@ export function resourceByRel(rel: string): DiscoveryResource {
   return resource;
 }
 
-export const linkHeader = resources
-  .flatMap((resource) =>
+const serviceDocLink = `<${siteUrl}/developers>; rel="service-doc"; type="text/html"`;
+
+export const linkHeader = [
+  serviceDocLink,
+  ...resources.flatMap((resource) =>
     resource.rel ? [`<${resource.path}>; rel="${resource.rel}"; type="${resource.type}"`] : [],
-  )
-  .join(", ");
+  ),
+].join(", ");

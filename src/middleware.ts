@@ -8,9 +8,7 @@ import { defineMiddleware } from "astro:middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
 
-function applyDiscoveryLinks(response: Response, url: URL): Response {
-  if (url.pathname !== "/") return response;
-
+function applyDiscoveryLinks(response: Response): Response {
   response.headers.set("Link", linkHeader);
 
   return response;
@@ -43,5 +41,5 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   if (response.status >= 400) return problemResponse(response, accept, pathname);
 
-  return applyDiscoveryLinks(response, context.url);
+  return applyDiscoveryLinks(response);
 });
