@@ -7,7 +7,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
 export async function GET(context: APIContext) {
   const posts = await getRawPosts();
   return rss({
-    title: "Matt F | Blog",
+    title: "Matt Fehrenbach | Blog",
     description: `Blog posts by ${siteIdentity.name}`,
     site: context.site!,
     items: posts.map((post) => ({
