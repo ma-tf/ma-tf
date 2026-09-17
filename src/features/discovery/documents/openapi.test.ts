@@ -3,86 +3,116 @@ import { buildOpenApiDocument } from "@features/discovery/documents/openapi";
 import { validate } from "@readme/openapi-parser";
 import { describe, expect, it } from "vite-plus/test";
 
+const ERROR_STATUSES = ["404", "405", "406", "500"] as const;
+const PROBLEM_REF = "#/components/schemas/Problem";
+const DESCRIPTOR_REF = "#/components/schemas/DiscoveryResource";
+const JSON_MEDIA_TYPE = "application/json";
+
+const document = buildOpenApiDocument();
+const operationFor = (path: string) => document.paths[path]?.get;
+
+const schemaAt = (content: unknown, mediaType: string) =>
+  (content as Record<string, { schema: unknown }> | undefined)?.[mediaType]?.schema as
+    | Record<string, unknown>
+    | undefined;
+
+const schemaRefAt = (content: unknown, mediaType: string) => schemaAt(content, mediaType)?.$ref;
+
+const isTypedSchema = (content: unknown, mediaType: string) => {
+  const schema = schemaAt(content, mediaType);
+
+  return Boolean(schema?.type ?? schema?.$ref);
+};
+
 describe("buildOpenApiDocument", () => {
   it("validates as OpenAPI 3.1", async () => {
-    const document = buildOpenApiDocument() as unknown as Parameters<typeof validate>[0];
+    // A fresh document: validate() dereferences $refs in place.
+    const fresh = buildOpenApiDocument() as unknown as Parameters<typeof validate>[0];
 
-    await expect(validate(document)).resolves.toBeTruthy();
+    await expect(validate(fresh)).resolves.toBeTruthy();
   });
 
   it("declares one path per discovery resource", () => {
-    const document = buildOpenApiDocument();
-
     expect(Object.keys(document.paths).sort()).toEqual(
       resources.map((resource) => resource.path).sort(),
     );
   });
 
-  it("gives every operation unique, non-empty metadata", () => {
-    const document = buildOpenApiDocument();
-    const operations = Object.values(document.paths).map((pathItem) => pathItem.get);
+  it("gives every operation a unique operationId", () => {
+    const operationIds = Object.values(document.paths).map((pathItem) => pathItem.get.operationId);
 
-    const operationIds = operations.map((operation) => operation.operationId);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-
-    for (const operation of operations) {
-      expect(operation.operationId).toBeTruthy();
-      expect(operation.summary).toBeTruthy();
-      expect(operation.description).toBeTruthy();
-      expect(operation.tags.length).toBeGreaterThan(0);
-    }
   });
 
-  it("documents the media type and schema of every 200 response", () => {
-    const document = buildOpenApiDocument();
+  it("documents operation metadata for every resource", () => {
+    const table = resources.map((resource) => {
+      const operation = operationFor(resource.path);
 
-    for (const resource of resources) {
-      const operation = document.paths[resource.path]?.get;
-      if (!operation) throw new Error(`Missing path for ${resource.path}`);
+      return [
+        resource.path,
+        operation?.summary,
+        operation?.tags,
+        Boolean(operation?.operationId),
+        Boolean(operation?.description),
+      ];
+    });
 
-      expect(operation.tags).toEqual([...resource.tags]);
-      expect(operation.summary).toBe(resource.title);
-
-      const ok = operation.responses["200"];
-      if (!ok) throw new Error(`Missing 200 response for ${resource.path}`);
-
-      expect(Object.keys(ok.content)).toContain(resource.type);
-      expect(Object.keys(ok.content)).toContain("application/json");
-
-      const schema = ok.content[resource.type]?.schema as Record<string, unknown> | undefined;
-      if (!schema) throw new Error(`Missing 200 schema for ${resource.path}`);
-
-      expect(schema.type ?? schema.$ref).toBeTruthy();
-    }
+    expect(table).toEqual(
+      resources.map((resource) => [resource.path, resource.title, [...resource.tags], true, true]),
+    );
   });
 
-  it("declares a typed application/json response for every operation", () => {
-    const document = buildOpenApiDocument();
-    const operations = Object.values(document.paths).map((pathItem) => pathItem.get);
-
-    const withJson = operations.filter((operation) => {
-      const schema = operation.responses["200"]?.content["application/json"]?.schema as
+  it("documents typed canonical and JSON schemas for every 200 response", () => {
+    const table = resources.map((resource) => {
+      const content = operationFor(resource.path)?.responses["200"]?.content as
         | Record<string, unknown>
         | undefined;
 
-      return Boolean(schema?.type ?? schema?.$ref);
+      return [
+        resource.path,
+        Object.keys(content ?? {}).sort(),
+        isTypedSchema(content, resource.type),
+        isTypedSchema(content, JSON_MEDIA_TYPE),
+      ];
     });
 
-    expect(withJson.length).toBe(operations.length);
-    expect(withJson.length / operations.length).toBeGreaterThan(0.6);
+    expect(table).toEqual(
+      resources.map((resource) => [
+        resource.path,
+        [...new Set([resource.type, JSON_MEDIA_TYPE])].sort(),
+        true,
+        true,
+      ]),
+    );
   });
 
-  it("describes non-JSON resources with the DiscoveryResource schema", () => {
-    const document = buildOpenApiDocument();
+  it("points the JSON response of non-JSON resources at the descriptor schema", () => {
+    const descriptorResources = resources.filter((resource) => !isJsonMediaType(resource.type));
 
-    for (const resource of resources) {
-      if (isJsonMediaType(resource.type)) continue;
+    const table = descriptorResources.map((resource) => [
+      resource.path,
+      schemaRefAt(operationFor(resource.path)?.responses["200"]?.content, JSON_MEDIA_TYPE),
+    ]);
 
-      const schema = document.paths[resource.path]?.get.responses["200"]?.content[
-        "application/json"
-      ]?.schema as Record<string, unknown> | undefined;
+    expect(table).toEqual(descriptorResources.map((resource) => [resource.path, DESCRIPTOR_REF]));
+  });
 
-      expect(schema?.$ref).toBe("#/components/schemas/DiscoveryResource");
-    }
+  it("types every 4xx and 5xx response with the Problem schema", () => {
+    const table = resources.flatMap((resource) =>
+      ERROR_STATUSES.map((status) => [
+        resource.path,
+        status,
+        schemaRefAt(
+          operationFor(resource.path)?.responses[status]?.content,
+          "application/problem+json",
+        ),
+      ]),
+    );
+
+    expect(table).toEqual(
+      resources.flatMap((resource) =>
+        ERROR_STATUSES.map((status) => [resource.path, status, PROBLEM_REF]),
+      ),
+    );
   });
 });

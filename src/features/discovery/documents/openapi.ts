@@ -178,6 +178,53 @@ function responseContentFor(resource: DiscoveryResource): Record<string, { schem
   };
 }
 
+function problemContent() {
+  return {
+    "application/problem+json": {
+      schema: { $ref: "#/components/schemas/Problem" },
+    },
+  };
+}
+
+function markdownProblemContent() {
+  return {
+    ...problemContent(),
+    "text/markdown": {
+      schema: {
+        type: "string",
+        description: "The problem rendered as markdown for markdown-preferring clients.",
+      },
+    },
+  };
+}
+
+function errorResponses() {
+  return {
+    "404": {
+      description: "The requested resource does not exist.",
+      content: markdownProblemContent(),
+    },
+    "405": {
+      description: "The resource does not support the request method.",
+      headers: {
+        Allow: {
+          description: "The methods the resource supports.",
+          schema: { type: "string", examples: ["GET, HEAD"] },
+        },
+      },
+      content: problemContent(),
+    },
+    "406": {
+      description: "No representation matches the Accept header.",
+      content: problemContent(),
+    },
+    "500": {
+      description: "The server encountered an unexpected condition.",
+      content: markdownProblemContent(),
+    },
+  };
+}
+
 export function buildOpenApiDocument() {
   return {
     openapi: "3.1.0",
@@ -236,58 +283,6 @@ export function buildOpenApiDocument() {
         LinksetReference: linksetReferenceSchema,
         Problem: problemSchema,
       },
-      responses: {
-        NotFound: {
-          description: "The requested resource does not exist.",
-          content: {
-            "application/problem+json": {
-              schema: { $ref: "#/components/schemas/Problem" },
-            },
-            "text/markdown": {
-              schema: {
-                type: "string",
-                description: "The problem rendered as markdown for markdown-preferring clients.",
-              },
-            },
-          },
-        },
-        InternalServerError: {
-          description: "The server encountered an unexpected condition.",
-          content: {
-            "application/problem+json": {
-              schema: { $ref: "#/components/schemas/Problem" },
-            },
-            "text/markdown": {
-              schema: {
-                type: "string",
-                description: "The problem rendered as markdown for markdown-preferring clients.",
-              },
-            },
-          },
-        },
-        MethodNotAllowed: {
-          description: "The resource does not support the request method.",
-          headers: {
-            Allow: {
-              description: "The methods the resource supports.",
-              schema: { type: "string", examples: ["GET, HEAD"] },
-            },
-          },
-          content: {
-            "application/problem+json": {
-              schema: { $ref: "#/components/schemas/Problem" },
-            },
-          },
-        },
-        NotAcceptable: {
-          description: "No representation matches the Accept header.",
-          content: {
-            "application/problem+json": {
-              schema: { $ref: "#/components/schemas/Problem" },
-            },
-          },
-        },
-      },
     },
     servers: [{ url: siteUrl }],
     paths: Object.fromEntries(
@@ -315,10 +310,7 @@ export function buildOpenApiDocument() {
                 },
                 content: responseContentFor(resource),
               },
-              "404": { $ref: "#/components/responses/NotFound" },
-              "405": { $ref: "#/components/responses/MethodNotAllowed" },
-              "406": { $ref: "#/components/responses/NotAcceptable" },
-              "500": { $ref: "#/components/responses/InternalServerError" },
+              ...errorResponses(),
             },
           },
         },
