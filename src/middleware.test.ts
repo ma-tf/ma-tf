@@ -144,4 +144,23 @@ describe("onRequest", () => {
     expect(problem.code).toBe("RESOURCE_NOT_FOUND");
     expect(problem.instance).toBe("/__probe");
   });
+
+  it("wraps an error response as a problem document for a wildcard Accept", async () => {
+    const notFound: MiddlewareNext = async () => htmlResponse(404);
+    const response = await onRequest(buildContext("/__probe", { accept: "*/*" }), notFound);
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get("Content-Type")).toMatch(/^application\/problem\+json\b/);
+
+    const problem = (await response.json()) as { code: string };
+    expect(problem.code).toBe("RESOURCE_NOT_FOUND");
+  });
+
+  it("still serves HTML to a wildcard client on a success response", async () => {
+    const response = await onRequest(buildContext("/", { accept: "*/*" }), next);
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toMatch(/^text\/html\b/);
+    expect(await response.text()).toContain("Hello");
+  });
 });

@@ -248,7 +248,7 @@ export function buildOpenApiDocument() {
           in: "header",
           required: false,
           description:
-            "The representation the client accepts. Pages are available as text/html or text/markdown. Each machine-readable resource is served with the media type documented in its 200 response, or as application/json when the client asks for it: the canonical document for JSON resources, and a typed descriptor for the others. Error responses follow the same negotiation, returning application/problem+json for JSON clients and text/markdown for markdown clients. A request whose Accept header matches none of these returns application/problem+json with status 406.",
+            "The representation the client accepts. Pages are available as text/html or text/markdown. Each machine-readable resource is served with the media type documented in its 200 response, or as application/json when the client asks for it: the canonical document for JSON resources, and a typed descriptor for the others. Error responses follow the same negotiation, returning application/problem+json for JSON clients and text/markdown for markdown clients. Clients that state no preference, whether by a */* Accept header or no Accept header at all, receive application/problem+json for errors. A request whose Accept header matches none of these returns application/problem+json with status 406.",
           schema: { type: "string" },
         },
       },

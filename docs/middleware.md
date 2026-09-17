@@ -34,7 +34,7 @@ flowchart TD
     Q -- yes --> S{problemResponse}
     S -- prefersJson --> T["problem+json"] --> W
     S -- prefersMarkdown --> U["markdown problem"] --> W
-    S -- "resource & !acceptsHtml" --> T
+    S -- "resource or !prefersHtml" --> T
     S -- "html browser" --> V["passthrough<br/>Vary: Accept"] --> W
     R --> W
     W["applySiteHeaders<br/>Link + RateLimit-*"] --> X([Response])
@@ -48,10 +48,10 @@ flowchart TD
 | 2a  | resource path and method not GET/HEAD  | `problems.ts:193`   | 405 problem+json with `Allow`, bypasses problem wrapping            |
 | 2b  | `Accept` set and no supported type     | `problems.ts:200`   | 406 problem+json, bypasses problem wrapping                         |
 | 3   | agent skill artifact path              | `middleware.ts:69`  | `next()` untouched, still problem-wrapped                           |
-| 4a  | path ends `.md`                        | `negotiation.ts:81` | `markdown-suffix`                                                   |
-| 4b  | catalogued resource and JSON preferred | `negotiation.ts:85` | `json-document` when the media type is JSON, else `json-descriptor` |
-| 4c  | markdown preferred                     | `negotiation.ts:92` | `markdown-accept`                                                   |
-| 4d  | otherwise                              | `negotiation.ts:94` | `html`                                                              |
+| 4a  | path ends `.md`                        | `negotiation.ts:84` | `markdown-suffix`                                                   |
+| 4b  | catalogued resource and JSON preferred | `negotiation.ts:88` | `json-document` when the media type is JSON, else `json-descriptor` |
+| 4c  | markdown preferred                     | `negotiation.ts:95` | `markdown-accept`                                                   |
+| 4d  | otherwise                              | `negotiation.ts:97` | `html`                                                              |
 | 5   | `status >= 400`                        | `middleware.ts:73`  | `problemResponse`                                                   |
 | 6   | always                                 | `middleware.ts:14`  | `Link` and `RateLimit-*`                                            |
 
@@ -69,8 +69,10 @@ The four kinds resolve as follows:
 - `html` — `next()`.
 
 `problemResponse` (`problems.ts:180`) prefers JSON, then markdown, then
-problem+json when the path is a resource or the client does not accept HTML;
-otherwise it passes the original error through with `Vary: Accept`.
+problem+json when the path is a resource (`/.well-known/*`, catalogued
+resources) or the client does not explicitly prefer HTML; otherwise it passes
+the original error through with `Vary: Accept`. `*/*` is not an HTML preference
+— it expresses no preference, so it receives problem+json.
 
 ## Notes
 
@@ -88,3 +90,6 @@ otherwise it passes the original error through with `Vary: Accept`.
 - `isResourcePath` matches any `/.well-known/*` path, not only catalogued ones
   (`catalog.ts:141`), so 405 and 406 apply more widely than descriptor
   negotiation does.
+- `prefersHtml` (`negotiation.ts:71`) requires an explicit `text/html` or
+  `text/*`; `acceptsSupportedRepresentation` still counts `*/*`, so a wildcard
+  client is never rejected with a 406.

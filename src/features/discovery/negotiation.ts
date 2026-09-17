@@ -42,11 +42,15 @@ export function prefersJson(accept: string | null): boolean {
   return jsonQuality > 0 && jsonQuality >= htmlQuality;
 }
 
-function acceptsMediaType(accept: string | null, mediaType: string): boolean {
+function acceptsMediaType(
+  accept: string | null,
+  mediaType: string,
+  { explicitOnly = false }: { explicitOnly?: boolean } = {},
+): boolean {
   if (!accept) return false;
 
   const [type] = mediaType.split("/");
-  const candidates = [mediaType, `${type}/*`, "*/*"];
+  const candidates = explicitOnly ? [mediaType, `${type}/*`] : [mediaType, `${type}/*`, "*/*"];
 
   for (const candidate of candidates) {
     const matched = accept
@@ -65,8 +69,8 @@ export function acceptsSupportedRepresentation(accept: string | null): boolean {
   return representableTypes.some((mediaType) => acceptsMediaType(accept, mediaType));
 }
 
-export function acceptsHtml(accept: string | null): boolean {
-  return acceptsMediaType(accept, "text/html");
+export function prefersHtml(accept: string | null): boolean {
+  return acceptsMediaType(accept, "text/html", { explicitOnly: true });
 }
 
 function getMarkdownTarget(url: URL): URL {

@@ -51,8 +51,22 @@ describe("problemResponse", () => {
     expect(await response.text()).toContain("Page not found");
   });
 
-  it("passes the wildcard Accept header through to the HTML error page", async () => {
+  it("renders a problem document for a wildcard Accept instead of the HTML error page", async () => {
     const response = problemResponse(htmlNotFound(), "*/*", "/__probe");
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get("Content-Type")).toMatch(/^application\/problem\+json\b/);
+
+    const problem = (await response.json()) as { code: string };
+    expect(problem.code).toBe("RESOURCE_NOT_FOUND");
+  });
+
+  it("falls back to the HTML error page when every representation is excluded", async () => {
+    const response = problemResponse(
+      htmlNotFound(),
+      "application/problem+json;q=0, text/markdown;q=0, text/html",
+      "/__probe",
+    );
 
     expect(response.headers.get("Content-Type")).toMatch(/^text\/html\b/);
   });

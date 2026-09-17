@@ -1,8 +1,8 @@
 import { isResourcePath, siteUrl } from "@features/discovery/catalog";
 import {
-  acceptsHtml,
   acceptsSupportedRepresentation,
   appendVaryValue,
+  prefersHtml,
   prefersJson,
   prefersMarkdown,
 } from "@features/discovery/negotiation";
@@ -185,7 +185,7 @@ export function problemResponse(
   if (prefersJson(accept)) return problemJsonResponse(response.status, pathname);
   if (prefersMarkdown(accept)) return problemMarkdownResponse(response.status, pathname);
 
-  const asJson = isResourcePath(pathname) || !acceptsHtml(accept);
+  const asJson = isResourcePath(pathname) || !prefersHtml(accept);
 
   return asJson ? problemJsonResponse(response.status, pathname) : passthroughError(response);
 }
