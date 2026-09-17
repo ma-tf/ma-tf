@@ -23,8 +23,7 @@ export const service = {
 export const faqs = [
   {
     question: "Who are you?",
-    answer:
-      "I'm Matt F, a full-stack developer. I started programming in 2013 and have worked professionally since 2018, across public safety, finance, and intellectual property.",
+    answer: `I'm ${profile.name}, a full-stack developer. I started programming in 2013 and have worked professionally since 2018, across public safety, finance, and intellectual property.`,
   },
   {
     question: "How can I contact you?",

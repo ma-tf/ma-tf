@@ -1,3 +1,5 @@
+import profile from "@content/profile.json";
+
 export const siteUrl = "https://m4t.tf";
 
 export type DiscoveryResource = {
@@ -21,7 +23,7 @@ export const resources: readonly DiscoveryResource[] = [
     identifier: "urn:air:m4t.tf:guide:llms",
     tags: ["llms", "guide", "identity"],
     representativeQueries: [
-      "Who is Matt F?",
+      `Who is ${profile.name}?`,
       "What is m4t.tf and when should I use it?",
       "Which pages does m4t.tf publish?",
     ],
@@ -34,9 +36,9 @@ export const resources: readonly DiscoveryResource[] = [
     identifier: "urn:air:m4t.tf:archive:content",
     tags: ["archive", "blog", "content"],
     representativeQueries: [
-      "Give me the full text of Matt F's blog.",
-      "What has Matt F written about?",
-      "Summarise Matt F's published content.",
+      `Give me the full text of ${profile.name}'s blog.`,
+      `What has ${profile.name} written about?`,
+      `Summarise ${profile.name}'s published content.`,
     ],
   },
   {
@@ -91,7 +93,7 @@ export const resources: readonly DiscoveryResource[] = [
     representativeQueries: [
       "What are the latest blog posts on m4t.tf?",
       "List recent posts from m4t.tf.",
-      "How do I subscribe to Matt F's writing?",
+      `How do I subscribe to ${profile.name}'s writing?`,
     ],
   },
   {

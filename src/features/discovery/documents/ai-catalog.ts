@@ -1,10 +1,11 @@
+import profile from "@content/profile.json";
 import { resources, siteUrl } from "@features/discovery/catalog";
 
 export function buildAiCatalog() {
   return {
     specVersion: "1.0",
     host: {
-      displayName: "Matt F",
+      displayName: profile.name,
       identifier: "did:web:m4t.tf",
       documentationUrl: `${siteUrl}/developers`,
     },

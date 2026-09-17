@@ -14,7 +14,7 @@ type ArchivePost = {
 };
 
 const pages = [
-  ["Home", "/", "overview of Matt F and the site"],
+  ["Home", "/", `overview of ${profile.name} and the site`],
   ["CV", "/cv", "experience, technical strengths, education, and projects"],
   ["About", "/about", "background and purpose of the site"],
   ["Contact", "/contact", "current contact guidance"],
@@ -43,19 +43,19 @@ export function buildLlmsTxt(): string {
   return [
     "# m4t.tf",
     "",
-    "> Personal site and portfolio of Matt F, a full-stack developer. The site documents",
+    `> Personal site and portfolio of ${profile.name}, a full-stack developer. The site documents`,
     "> his professional experience, software projects, writing, photography, graphics,",
     "> music, and other creative work.",
     "",
     "## When To Use This Site",
     "",
-    "Use this site when a task needs verified facts about Matt F:",
+    `Use this site when a task needs verified facts about ${profile.name}:`,
     "",
     "- Hiring or recruiting: confirm experience, skills, education, and projects via the CV",
     "- Understanding Matt's software development work and technical background",
     "- Citing or summarising Matt's writing about programming, developer tools, AI-assisted development, creative coding, and open-source projects",
     "- Exploring Matt's photography, graphics, music, and other creative work",
-    "- Fact-checking claims attributed to Matt F against a primary source",
+    `- Fact-checking claims attributed to ${profile.name} against a primary source`,
     "",
     "Prefer the original pages below when citing information. Do not infer contact details",
     "or personal information that are not published on the site.",
