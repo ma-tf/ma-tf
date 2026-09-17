@@ -52,6 +52,28 @@ export function buildOpenApiDocument() {
             },
           },
         },
+        MethodNotAllowed: {
+          description: "The resource does not support the request method.",
+          headers: {
+            Allow: {
+              description: "The methods the resource supports.",
+              schema: { type: "string", examples: ["GET, HEAD"] },
+            },
+          },
+          content: {
+            "application/problem+json": {
+              schema: { $ref: "#/components/schemas/Problem" },
+            },
+          },
+        },
+        NotAcceptable: {
+          description: "No representation matches the Accept header.",
+          content: {
+            "application/problem+json": {
+              schema: { $ref: "#/components/schemas/Problem" },
+            },
+          },
+        },
       },
     },
     servers: [{ url: siteUrl }],
@@ -72,6 +94,8 @@ export function buildOpenApiDocument() {
                 content: { [resource.type]: {} },
               },
               "404": { $ref: "#/components/responses/NotFound" },
+              "405": { $ref: "#/components/responses/MethodNotAllowed" },
+              "406": { $ref: "#/components/responses/NotAcceptable" },
               "500": { $ref: "#/components/responses/InternalServerError" },
             },
           },

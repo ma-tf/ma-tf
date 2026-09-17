@@ -6,8 +6,6 @@ import { buildSitemap } from "@features/discovery/documents/sitemap";
 import { getTagIndex } from "@features/tags/tag-data";
 import { getCollection, type CollectionEntry } from "astro:content";
 
-export const prerender = true;
-
 export const GET = (async (context: APIContext) => {
   const site = context.site ?? new URL(siteUrl);
 

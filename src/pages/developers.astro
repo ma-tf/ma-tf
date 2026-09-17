@@ -72,10 +72,15 @@ curl ${siteUrl}/llms.txt`}</code></pre>
       <section class="flex flex-col gap-3">
         <h2 class="text-2xl font-semibold">Errors</h2>
         <p>
-          Send <code>Accept: application/json</code> to receive a failed request as
-          an RFC 9457
-          <code>application/problem+json</code> document. Every error carries a stable
-          <code>code</code> alongside the human-readable <code>detail</code>.
+          A failed request returns an RFC 9457
+          <code>application/problem+json</code> document. You get JSON when you
+          send <code>Accept: application/json</code>, when the path is a
+          machine-readable file or lives under <code>/.well-known/</code>, or
+          when your <code>Accept</code> header excludes HTML. A browser
+          navigation still receives the HTML error page. Every error carries a
+          stable <code>code</code> and a recovery <code>resolution</code>
+          alongside the human-readable <code>detail</code> and the
+          <code>documentation_url</code> for this page.
         </p>
         <pre
           class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: application/json" ${siteUrl}/no-such-page`}</code></pre>
@@ -86,8 +91,16 @@ curl ${siteUrl}/llms.txt`}</code></pre>
   "status": 404,
   "detail": "No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.",
   "code": "RESOURCE_NOT_FOUND",
+  "resolution": "Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${siteUrl}/developers for the interface.",
+  "documentation_url": "${siteUrl}/developers",
   "instance": "/no-such-page"
 }`}</code></pre>
+        <p>
+          A non-GET request to a machine-readable file returns
+          <code>405 Method Not Allowed</code> with an <code>Allow</code> header,
+          and a request whose <code>Accept</code> header excludes every
+          supported representation returns <code>406 Not Acceptable</code>.
+        </p>
       </section>
 
       <section id="versioning-and-deprecation" class="flex flex-col gap-3">

@@ -36,6 +36,33 @@ export function prefersJson(accept: string | null): boolean {
   return jsonQuality > 0 && jsonQuality >= htmlQuality;
 }
 
+function acceptsMediaType(accept: string | null, mediaType: string): boolean {
+  if (!accept) return false;
+
+  const [type] = mediaType.split("/");
+  const candidates = [mediaType, `${type}/*`, "*/*"];
+
+  for (const candidate of candidates) {
+    const matched = accept
+      .split(",")
+      .some((item) => item.split(";", 1)[0]?.trim().toLowerCase() === candidate);
+
+    if (matched) return getAcceptedQuality(accept, candidate) > 0;
+  }
+
+  return false;
+}
+
+const representableTypes = ["text/html", "text/markdown", "application/json"] as const;
+
+export function acceptsSupportedRepresentation(accept: string | null): boolean {
+  return representableTypes.some((mediaType) => acceptsMediaType(accept, mediaType));
+}
+
+export function acceptsHtml(accept: string | null): boolean {
+  return acceptsMediaType(accept, "text/html");
+}
+
 function getMarkdownTarget(url: URL): URL {
   const target = new URL(url);
   target.pathname =

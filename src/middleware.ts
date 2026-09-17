@@ -2,8 +2,8 @@ import type { MiddlewareNext } from "astro";
 
 import { linkHeader } from "@features/discovery/catalog";
 import { formatMarkdownResponse } from "@features/discovery/markdown";
-import { prefersJson, selectRepresentation } from "@features/discovery/negotiation";
-import { problemResponse } from "@features/discovery/problems";
+import { selectRepresentation } from "@features/discovery/negotiation";
+import { preflightResponse, problemResponse } from "@features/discovery/problems";
 import { defineMiddleware } from "astro:middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
@@ -35,12 +35,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (context.isPrerendered) return next();
 
   const accept = context.request.headers.get("Accept");
-  const representation = selectRepresentation(context.url, accept);
-  const response = await resolveResponse(next, representation);
+  const { pathname } = context.url;
+  const rejection = preflightResponse(context.request, accept, pathname);
+  if (rejection) return rejection;
 
-  if (response.status >= 400) {
-    return problemResponse(response, prefersJson(accept), context.url.pathname);
-  }
+  const response = await resolveResponse(next, selectRepresentation(context.url, accept));
+
+  if (response.status >= 400) return problemResponse(response, accept, pathname);
 
   return applyDiscoveryLinks(response, context.url);
 });

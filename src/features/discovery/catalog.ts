@@ -109,6 +109,12 @@ export const resources: readonly DiscoveryResource[] = [
   },
 ];
 
+export function isResourcePath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/.well-known/") || resources.some((resource) => resource.path === pathname)
+  );
+}
+
 export function resourceByRel(rel: string): DiscoveryResource {
   const resource = resources.find((candidate) => candidate.rel === rel);
 

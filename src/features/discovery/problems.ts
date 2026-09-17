@@ -1,5 +1,10 @@
-import { siteUrl } from "@features/discovery/catalog";
-import { appendVaryValue } from "@features/discovery/negotiation";
+import { isResourcePath, siteUrl } from "@features/discovery/catalog";
+import {
+  acceptsHtml,
+  acceptsSupportedRepresentation,
+  appendVaryValue,
+  prefersJson,
+} from "@features/discovery/negotiation";
 
 type Problem = {
   type: string;
@@ -7,9 +12,18 @@ type Problem = {
   status: number;
   detail: string;
   code: string;
+  resolution: string;
+  documentation_url: string;
 };
 
-const problemCodes = ["RESOURCE_NOT_FOUND", "INTERNAL_SERVER_ERROR"] as const;
+const documentationUrl = `${siteUrl}/developers`;
+
+const problemCodes = [
+  "RESOURCE_NOT_FOUND",
+  "METHOD_NOT_ALLOWED",
+  "NOT_ACCEPTABLE",
+  "INTERNAL_SERVER_ERROR",
+] as const;
 
 const notFoundProblem: Problem = {
   type: `${siteUrl}/problems/not-found`,
@@ -17,6 +31,29 @@ const notFoundProblem: Problem = {
   status: 404,
   detail: `No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.`,
   code: "RESOURCE_NOT_FOUND",
+  resolution: `Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${documentationUrl} for the interface.`,
+  documentation_url: documentationUrl,
+};
+
+const methodNotAllowedProblem: Problem = {
+  type: `${siteUrl}/problems/method-not-allowed`,
+  title: "Method not allowed",
+  status: 405,
+  detail: "This resource only responds to GET requests.",
+  code: "METHOD_NOT_ALLOWED",
+  resolution: `Send a GET request instead. The interface is documented at ${documentationUrl}.`,
+  documentation_url: documentationUrl,
+};
+
+const notAcceptableProblem: Problem = {
+  type: `${siteUrl}/problems/not-acceptable`,
+  title: "Not acceptable",
+  status: 406,
+  detail:
+    "The requested path has no representation matching the Accept header. This site serves text/html, text/markdown, and application/json.",
+  code: "NOT_ACCEPTABLE",
+  resolution: "Send an Accept header that includes text/html, text/markdown, or application/json.",
+  documentation_url: documentationUrl,
 };
 
 const serverErrorProblem: Problem = {
@@ -25,11 +62,24 @@ const serverErrorProblem: Problem = {
   status: 500,
   detail: "The server could not complete the request.",
   code: "INTERNAL_SERVER_ERROR",
+  resolution: `Retry the request, and if the problem persists report it via ${siteUrl}/contact. The interface is documented at ${documentationUrl}.`,
+  documentation_url: documentationUrl,
 };
+
+const problemsByStatus: Record<number, Problem> = {
+  404: notFoundProblem,
+  405: methodNotAllowedProblem,
+  406: notAcceptableProblem,
+  500: serverErrorProblem,
+};
+
+function problemFor(status: number): Problem {
+  return problemsByStatus[status] ?? { ...serverErrorProblem, status };
+}
 
 export const problemSchema = {
   type: "object",
-  required: ["type", "title", "status", "detail", "code"],
+  required: ["type", "title", "status", "detail", "code", "resolution", "documentation_url"],
   properties: {
     type: {
       type: "string",
@@ -58,26 +108,36 @@ export const problemSchema = {
       enum: [...problemCodes],
       description: "A stable machine-readable error code.",
     },
+    resolution: {
+      type: "string",
+      description: "A hint describing how to recover from the problem.",
+    },
+    documentation_url: {
+      type: "string",
+      format: "uri",
+      description: "A URL for the interface documentation.",
+    },
   },
 };
 
-export function problemResponse(
-  response: Response,
-  acceptsJson: boolean,
+function problemJsonResponse(
+  status: number,
   pathname: string,
+  extraHeaders?: Record<string, string>,
 ): Response {
-  if (acceptsJson) {
-    const problem = response.status === 404 ? notFoundProblem : serverErrorProblem;
+  const problem = problemFor(status);
 
-    return new Response(JSON.stringify({ ...problem, instance: pathname }), {
-      status: response.status,
-      headers: {
-        "Content-Type": "application/problem+json; charset=utf-8",
-        Vary: "Accept",
-      },
-    });
-  }
+  return new Response(JSON.stringify({ ...problem, instance: pathname }), {
+    status: problem.status,
+    headers: {
+      "Content-Type": "application/problem+json; charset=utf-8",
+      Vary: "Accept",
+      ...extraHeaders,
+    },
+  });
+}
 
+function passthroughError(response: Response): Response {
   const headers = new Headers(response.headers);
   appendVaryValue(headers, "Accept");
 
@@ -86,4 +146,36 @@ export function problemResponse(
     statusText: response.statusText,
     headers,
   });
+}
+
+export function problemResponse(
+  response: Response,
+  accept: string | null,
+  pathname: string,
+): Response {
+  const asJson = prefersJson(accept) || isResourcePath(pathname) || !acceptsHtml(accept);
+
+  return asJson ? problemJsonResponse(response.status, pathname) : passthroughError(response);
+}
+
+function methodNotAllowedResponse(request: Request, pathname: string): Response | undefined {
+  if (!isResourcePath(pathname)) return undefined;
+  if (request.method === "GET" || request.method === "HEAD") return undefined;
+
+  return problemJsonResponse(405, pathname, { Allow: "GET, HEAD" });
+}
+
+function notAcceptableResponse(accept: string | null, pathname: string): Response | undefined {
+  if (!accept) return undefined;
+  if (acceptsSupportedRepresentation(accept)) return undefined;
+
+  return problemJsonResponse(406, pathname);
+}
+
+export function preflightResponse(
+  request: Request,
+  accept: string | null,
+  pathname: string,
+): Response | undefined {
+  return methodNotAllowedResponse(request, pathname) ?? notAcceptableResponse(accept, pathname);
 }
