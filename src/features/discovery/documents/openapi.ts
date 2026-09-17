@@ -2,6 +2,7 @@ import type { DiscoveryResource } from "@features/discovery/catalog";
 
 import { resources, siteUrl } from "@features/discovery/catalog";
 import { problemSchema } from "@features/discovery/problems";
+import { rateLimit, rateLimitPolicy } from "@features/discovery/rate-limits";
 
 const linksetReferenceSchema = {
   type: "object",
@@ -116,8 +117,7 @@ export function buildOpenApiDocument() {
     info: {
       title: "m4t.tf Site Resources",
       version: "0.1.0",
-      description:
-        "Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date.",
+      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered; every response declares a published floor of ${rateLimit.quota} requests per minute per client.`,
     },
     components: {
       parameters: {
@@ -147,6 +147,18 @@ export function buildOpenApiDocument() {
           description:
             "RFC 8594 date after which the resource stops responding. Present only on deprecated resources.",
           schema: { type: "string", examples: ["Sat, 31 Dec 2026 23:59:59 GMT"] },
+        },
+        RateLimitPolicy: {
+          description: "The published request floor as an IETF RateLimit-Policy field.",
+          schema: { type: "string", examples: [rateLimitPolicy] },
+        },
+        RateLimitLimit: {
+          description: "The published request floor per window.",
+          schema: { type: "integer", examples: [rateLimit.quota] },
+        },
+        RateLimitReset: {
+          description: "The length of the rate-limit window in seconds.",
+          schema: { type: "integer", examples: [rateLimit.windowSeconds] },
         },
       },
       schemas: {
@@ -216,6 +228,9 @@ export function buildOpenApiDocument() {
                 headers: {
                   Deprecation: { $ref: "#/components/headers/Deprecation" },
                   Sunset: { $ref: "#/components/headers/Sunset" },
+                  "RateLimit-Policy": { $ref: "#/components/headers/RateLimitPolicy" },
+                  "RateLimit-Limit": { $ref: "#/components/headers/RateLimitLimit" },
+                  "RateLimit-Reset": { $ref: "#/components/headers/RateLimitReset" },
                 },
                 content: { [resource.type]: { schema: responseSchemaFor(resource) } },
               },

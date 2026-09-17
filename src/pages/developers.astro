@@ -2,6 +2,7 @@
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import { resources, siteUrl } from "@features/discovery/catalog";
+import { rateLimit } from "@features/discovery/rate-limits";
 ---
 
 <Layout>
@@ -14,7 +15,8 @@ import { resources, siteUrl } from "@features/discovery/catalog";
       <p>
         m4t.tf is machine-readable. Every page is available as HTML or markdown,
         and the files below expose the site's content and metadata as data.
-        Everything is public: there are no API keys and no rate limits.
+        Everything is public: there are no API keys, and requests are not
+        metered.
       </p>
 
       <section class="flex flex-col gap-3">
@@ -66,6 +68,18 @@ curl ${siteUrl}/llms.txt`}</code></pre>
             >Vary: Accept, Accept-Encoding</code
           >, so caches must store the HTML and markdown representations
           separately.
+        </p>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-2xl font-semibold">Rate limits</h2>
+        <p>
+          Requests are not metered. Every response carries
+          <code>RateLimit-Policy</code>, <code>RateLimit-Limit</code>, and
+          <code>RateLimit-Reset</code> declaring a published floor of
+          <code>{rateLimit.quota}</code> requests per minute per client. The
+          origin will not reject you below that floor, so the site never returns
+          <code>429 Too Many Requests</code> for rate limiting.
         </p>
       </section>
 

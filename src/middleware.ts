@@ -1,15 +1,20 @@
-import type { MiddlewareNext } from "astro";
+import type { APIContext, MiddlewareNext } from "astro";
 
 import { linkHeader } from "@features/discovery/catalog";
 import { formatMarkdownResponse } from "@features/discovery/markdown";
 import { selectRepresentation } from "@features/discovery/negotiation";
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
+import { rateLimitHeaders } from "@features/discovery/rate-limits";
 import { defineMiddleware } from "astro:middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
 
-function applyDiscoveryLinks(response: Response): Response {
+function applySiteHeaders(response: Response): Response {
   response.headers.set("Link", linkHeader);
+
+  for (const [name, value] of Object.entries(rateLimitHeaders)) {
+    response.headers.set(name, value);
+  }
 
   return response;
 }
@@ -29,7 +34,7 @@ async function resolveResponse(
   return next();
 }
 
-export const onRequest = defineMiddleware(async (context, next) => {
+async function respond(context: APIContext, next: MiddlewareNext): Promise<Response> {
   if (context.isPrerendered) return next();
 
   const accept = context.request.headers.get("Accept");
@@ -39,7 +44,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const response = await resolveResponse(next, selectRepresentation(context.url, accept));
 
-  if (response.status >= 400) return problemResponse(response, accept, pathname);
+  return response.status >= 400 ? problemResponse(response, accept, pathname) : response;
+}
 
-  return applyDiscoveryLinks(response);
+export const onRequest = defineMiddleware(async (context, next) => {
+  return applySiteHeaders(await respond(context, next));
 });

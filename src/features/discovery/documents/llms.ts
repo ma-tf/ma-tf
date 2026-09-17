@@ -1,4 +1,5 @@
 import { resources, siteUrl } from "@features/discovery/catalog";
+import { rateLimit } from "@features/discovery/rate-limits";
 
 type ArchivePost = {
   body?: string;
@@ -90,6 +91,13 @@ export function buildLlmsTxt(): string {
     "path does not exist. Send `Accept: application/json` to receive that error as an RFC 9457",
     "`application/problem+json` document. The whole interface is described by the OpenAPI 3.1",
     `document at [openapi.json](${siteUrl}/openapi.json).`,
+    "",
+    "## Rate Limits",
+    "",
+    "Requests are not metered, and the site never returns `429 Too Many Requests`.",
+    `Every response declares a published floor of ${rateLimit.quota} requests per minute per client`,
+    "with `RateLimit-Policy`, `RateLimit-Limit`, and `RateLimit-Reset`. The origin will",
+    "not reject you below that floor.",
     "",
     "## Identity",
     "",
