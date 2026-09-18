@@ -9,13 +9,13 @@ import { faqs } from "@features/seo/site-metadata";
 
 export function Faq() {
   return (
-    <Section className="mx-auto max-w-480 py-24">
+    <Section className="mx-auto w-full max-w-480 py-24">
       <SectionHeader>
         <SectionNumber />
         <span>FAQ</span>
       </SectionHeader>
       <SectionContent>
-        <Accordion multiple keepMounted>
+        <Accordion multiple keepMounted className="mx-auto max-w-prose">
           {faqs.map((faq) => (
             <AccordionItem key={faq.question} value={faq.question}>
               <AccordionTrigger className="text-xl font-semibold text-foreground">
