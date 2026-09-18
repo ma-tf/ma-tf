@@ -11,7 +11,6 @@ import Layout from "@layouts/Layout.astro";
 import Navbar from "@components/Navbar.astro";
 import { getPosts } from "@features/blog/post-data";
 import { previews } from "@lib/feature-flags";
-import { getImage } from "astro:assets";
 import type { ImageMap } from "@lib/images";
 
 const allPosts = await getPosts();
@@ -19,24 +18,11 @@ const recentPosts = previews.blog ? allPosts.slice(0, 4) : [];
 
 const r2 = import.meta.env.R2_PUBLIC_URL;
 
-const [oldHouseSrc, japanSrc] = await Promise.all([
-  getImage({
-    src: `${r2}/graphics/old house.png`,
-    quality: "mid",
-    inferSize: true,
-  }).then((i) => i.src),
-  getImage({
-    src: `${r2}/music/20251014_Japan 6_19.jpg`,
-    quality: "low",
-    inferSize: true,
-  }).then((i) => i.src),
-]);
-
 const images: ImageMap = {
   "vignettes/bolex-bg-dither.png": `${r2}/vignettes/bolex-bg-dither.png`,
   "vignettes/bolex-fg-dither-anon.png": `${r2}/vignettes/bolex-fg-dither-anon.png`,
-  "graphics/old house.png": oldHouseSrc,
-  "music/20251014_Japan 6_19.jpg": japanSrc,
+  "graphics/old house.png": `${r2}/graphics/old%20house.webp`,
+  "music/20251014_Japan 6_19.jpg": `${r2}/music/20251014_Japan%206_19.webp`,
 };
 ---
 

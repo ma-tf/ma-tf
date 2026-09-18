@@ -1,6 +1,5 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { getImage } from "astro:assets";
 import { BandcampEmbed, MixcloudEmbed } from "@features/music/embedded-media";
 import {
 	Music,
@@ -14,23 +13,7 @@ import Navbar from "@components/Navbar.astro";
 
 const r2 = import.meta.env.R2_PUBLIC_URL;
 
-async function getMusicImage(key: string) {
-	return (
-		await getImage({
-			src: `${r2}/${key}`,
-			width: 1000,
-			height: 1000,
-			quality: "low",
-			inferSize: true,
-		})
-	).src;
-}
-
-// const elevatedSpiritImg = await getMusicImage(
-// 	"music/matt f elevated spirit.jpg",
-// );
-// const contractsImg = await getMusicImage("music/prcsr contracts.jpg");
-const asagayaImg = await getMusicImage("music/asagaya poster.jpg");
+const asagayaImg = `${r2}/music/asagaya%20poster.webp`;
 ---
 
 <Layout>

@@ -15,7 +15,7 @@ export function Faq() {
         <span>FAQ</span>
       </SectionHeader>
       <SectionContent>
-        <Accordion multiple keepMounted className="max-w-3xl">
+        <Accordion multiple keepMounted>
           {faqs.map((faq) => (
             <AccordionItem key={faq.question} value={faq.question}>
               <AccordionTrigger className="text-xl font-semibold text-foreground">
