@@ -9,7 +9,6 @@ import {
 	MusicDescription,
 	MusicNavigation,
 } from "@features/music/music";
-import Navbar from "@components/Navbar.astro";
 
 const r2 = import.meta.env.R2_PUBLIC_URL;
 
@@ -17,7 +16,6 @@ const asagayaImg = `${r2}/music/asagaya%20poster.webp`;
 ---
 
 <Layout>
-	<Navbar />
 	<div class="relative min-h-dvh bg-background">
 		<div
 			aria-hidden="true"

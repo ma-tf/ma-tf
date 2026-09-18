@@ -2,7 +2,6 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 import { ClockIcon, FileTextIcon } from "@phosphor-icons/react";
-import Navbar from "@components/Navbar.astro";
 import { NavButton } from "@components/nav-button";
 import {
   Post,
@@ -25,7 +24,6 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
 <Layout>
-  <Navbar />
   <Post>
     <div>
       <NavButton href="/blog" variant="outline">Blog</NavButton>

@@ -1,6 +1,5 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import Navbar from "@components/Navbar.astro";
 import { TagContent } from "@features/tags/tag-content";
 import { getTagIndex } from "@features/tags/tag-data";
 
@@ -11,7 +10,6 @@ const backgroundBaseUrl = import.meta.env.R2_PUBLIC_URL;
 ---
 
 <Layout hideOverflow>
-  <Navbar />
   <div
     class="absolute inset-0 -z-10 bg-emerald-50 dark:bg-emerald-950"
     aria-hidden="true"

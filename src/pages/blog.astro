@@ -1,6 +1,5 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import Navbar from "@components/Navbar.astro";
 import { getPosts } from "@features/blog/post-data";
 import { BlogPage } from "@features/blog/blog-page";
 
@@ -11,7 +10,6 @@ const plainPosts = await getPosts();
 ---
 
 <Layout>
-  <Navbar />
   <BlogPage
     client:load
     title="blog"

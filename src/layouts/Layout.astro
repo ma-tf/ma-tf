@@ -1,10 +1,16 @@
 ---
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
 import { resourceByRel } from "@features/discovery/catalog";
 import { siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
 
 import "../styles/global.css";
 
-const { hideOverflow = false } = Astro.props;
+const {
+  hideOverflow = false,
+  showHeader = true,
+  showFooter = true,
+} = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
@@ -67,6 +73,8 @@ const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 			{ "overflow-hidden": hideOverflow },
 		]}
 	>
+		{showHeader && <Header />}
 		<slot />
+		{showFooter && <Footer />}
 	</body>
 </html>
