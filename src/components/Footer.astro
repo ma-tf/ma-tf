@@ -6,10 +6,12 @@ const links = [
 ];
 ---
 
-<footer class="w-full px-8 py-8">
+<footer
+  class="fixed bottom-0 z-50 flex h-8 w-full items-center border-t border-border bg-background px-8"
+>
   <nav
     aria-label="Footer"
-    class="mx-auto flex w-full max-w-480 justify-end gap-6"
+    class="mx-auto flex w-full max-w-480 items-center justify-end gap-6"
   >
     {
       links.map((link) => (
