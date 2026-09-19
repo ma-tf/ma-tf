@@ -7,17 +7,21 @@ const links = [
 ---
 
 <footer
-  class="fixed bottom-0 z-50 flex h-8 w-full items-center border-t border-border bg-background px-8"
+  class="fixed bottom-0 z-50 h-4 w-full border-t border-border bg-background text-foreground"
 >
   <nav
     aria-label="Footer"
-    class="mx-auto flex w-full max-w-480 items-center justify-end gap-6"
+    class="mx-auto flex h-full w-full max-w-480 items-stretch justify-end"
   >
     {
-      links.map((link) => (
+      links.map((link, index) => (
         <a
           href={link.href}
-          class="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          class:list={[
+            "flex items-center px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
+            "hover:bg-foreground hover:text-background",
+            index > 0 && "border-l border-foreground/20",
+          ]}
         >
           {link.label}
         </a>

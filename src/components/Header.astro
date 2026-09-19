@@ -2,6 +2,19 @@
 import { ModeToggle } from "@components/ModeToggle";
 ---
 
-<header class="fixed top-0 z-50 h-8 w-full">
+<header class="fixed top-0 z-50 flex h-8 w-full items-center px-2">
+  <a
+    href="/"
+    class="group flex items-center gap-2 font-mono text-xs tracking-widest text-muted-foreground uppercase transition-colors duration-150 hover:text-foreground"
+  >
+    <img
+      src="/favicon.png"
+      alt=""
+      width="16"
+      height="16"
+      class="size-4 shrink-0 opacity-80 transition-opacity duration-150 group-hover:opacity-100 dark:invert"
+    />
+    m4t.tf
+  </a>
   <ModeToggle client:only="react" />
 </header>

@@ -66,7 +66,7 @@ function VignetteThumbnailSummary({ children, className, ...props }: React.Compo
   return (
     <span
       className={cn(
-        "block text-sm text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground md:text-[0.625rem]",
+        "block text-sm text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground md:text-2xs",
         isActive && "text-foreground",
         className,
       )}
