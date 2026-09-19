@@ -6,7 +6,6 @@ import { useParallax } from "@hooks/use-parallax";
 import { previews } from "@lib/feature-flags";
 import { CaretRightIcon } from "@phosphor-icons/react";
 
-const PARALLAX = { bg: 0.15, bg2: 0.3, title: 0.3, description: 0.6, posts: 1.0 } as const;
 const BLOG_NAVIGATION_LINKS = [
   { href: "/", label: "Home", enabled: true },
   { href: "/photography", label: "Photography", enabled: previews.photography },
@@ -14,49 +13,28 @@ const BLOG_NAVIGATION_LINKS = [
   { href: "/music", label: "Music", enabled: previews.music },
 ] as const;
 
-type Offset = { x: number; y: number };
-
-function BlogBackgrounds({
-  backgrounds,
-  offset,
-}: {
-  backgrounds: { back: string; front: string };
-  offset: Offset;
-}) {
+function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: string } }) {
   return (
     <>
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
-        style={
-          {
-            "--background-image": `url("${backgrounds.back}")`,
-            transform: `translate(${offset.x * PARALLAX.bg}px, ${offset.y * PARALLAX.bg}px)`,
-          } as React.CSSProperties
-        }
+        className="absolute inset-0 -z-10 parallax-[0.15] bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
+        style={{ "--background-image": `url("${backgrounds.back}")` } as React.CSSProperties}
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
-        style={
-          {
-            "--background-image": `url("${backgrounds.front}")`,
-            transform: `translate(${offset.x * PARALLAX.bg2}px, ${offset.y * PARALLAX.bg2}px)`,
-          } as React.CSSProperties
-        }
+        className="absolute inset-0 -z-10 parallax-[0.3] bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
+        style={{ "--background-image": `url("${backgrounds.front}")` } as React.CSSProperties}
       />
     </>
   );
 }
 
-function BlogNavigation({ offset }: { offset: Offset }) {
+function BlogNavigation() {
   return (
     <nav
-      className="mt-4 flex flex-wrap justify-end gap-1"
+      className="mt-4 flex parallax-[0.6] flex-wrap justify-end gap-1"
       aria-label="Section navigation"
-      style={{
-        transform: `translate(${offset.x * PARALLAX.description}px, ${offset.y * PARALLAX.description}px)`,
-      }}
     >
       {BLOG_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
         <NavButton key={href} href={href}>
@@ -81,31 +59,29 @@ export function BlogPage({
   const offset = useParallax();
 
   return (
-    <div className="h-vh relative isolate flex px-4 md:h-dvh md:overflow-hidden">
-      <BlogBackgrounds backgrounds={backgrounds} offset={offset} />
+    <div
+      className="h-vh relative isolate flex px-4 md:h-dvh md:overflow-hidden"
+      style={
+        {
+          "--parallax-x": `${offset.x}px`,
+          "--parallax-y": `${offset.y}px`,
+        } as React.CSSProperties
+      }
+    >
+      <BlogBackgrounds backgrounds={backgrounds} />
       <Blog>
         <BlogHeader>
-          <BlogTitle
-            style={{
-              transform: `translate(${offset.x * PARALLAX.title}px, ${offset.y * PARALLAX.title}px)`,
-            }}
-          >
-            {title}
-          </BlogTitle>
-          <BlogDescription
-            style={{
-              transform: `translate(${offset.x * PARALLAX.description}px, ${offset.y * PARALLAX.description}px)`,
-            }}
-          >
-            {description}
-          </BlogDescription>
-          <BlogNavigation offset={offset} />
+          <div className="animate-fade-up [animation-delay:200ms]">
+            <BlogTitle className="parallax-[0.3]">{title}</BlogTitle>
+          </div>
+          <div className="animate-fade-up [animation-delay:300ms]">
+            <BlogDescription className="parallax-[0.6]">{description}</BlogDescription>
+          </div>
+          <div className="animate-fade-up [animation-delay:400ms]">
+            <BlogNavigation />
+          </div>
         </BlogHeader>
-        <BlogContent
-          style={{
-            transform: `translate(${offset.x * PARALLAX.posts}px, ${offset.y * PARALLAX.posts}px)`,
-          }}
-        >
+        <BlogContent className="parallax">
           <PostList posts={posts} />
         </BlogContent>
       </Blog>
@@ -116,8 +92,12 @@ export function BlogPage({
 function PostList({ posts }: { posts: PlainPost[] }) {
   return (
     <ul className="flex flex-col">
-      {posts.map((post) => (
-        <li key={post.slug} className="group my-2 md:my-0 md:py-2">
+      {posts.map((post, index) => (
+        <li
+          key={post.slug}
+          className="group my-2 animate-fade-up [animation-delay:var(--delay)] md:my-0 md:py-2"
+          style={{ "--delay": `${500 + index * 10}ms` } as React.CSSProperties}
+        >
           <button
             className="flex w-full cursor-pointer flex-col text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
             onClick={() => (window.location.href = `/posts/${post.slug}`)}

@@ -33,11 +33,7 @@ export function OrbitScrollbar({ rotation, totalSpan, radius, offset }: OrbitScr
   const pathD = `M ${startX} ${startY} A ${rx} ${ry} 0 ${largeArc} 1 ${endX} ${endY}`;
 
   return (
-    <svg
-      className="pointer-events-none absolute inset-0"
-      aria-hidden
-      style={{ overflow: "visible" }}
-    >
+    <svg className="pointer-events-none absolute inset-0 overflow-visible" aria-hidden>
       <path d={pathD} fill="none" stroke="var(--border)" strokeWidth={2} opacity={0.4} />
       <circle cx={thumbX} cy={thumbY} r={THUMB_RADIUS} fill="var(--foreground)" />
     </svg>

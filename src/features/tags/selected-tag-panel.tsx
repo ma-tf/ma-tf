@@ -2,7 +2,6 @@ import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
 import { NavButton } from "@components/nav-button";
-import { useParallax } from "@hooks/use-parallax";
 import { previews } from "@lib/feature-flags";
 import { useMemo } from "react";
 
@@ -73,15 +72,10 @@ type SelectedTagPanelProps = {
 };
 
 export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps) {
-  const offset = useParallax();
   const groupedByTag = useGroupedByTag(postsByTag);
-  const PARALLAX = 0.6;
 
   return (
-    <div
-      className="absolute top-0 right-8 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12 xl:left-218"
-      style={{ transform: `translate(${offset.x * PARALLAX}px, ${offset.y * PARALLAX}px)` }}
-    >
+    <div className="absolute top-0 right-8 z-10 grid h-dvh w-sm parallax-[0.6] grid-rows-[2fr_3fr] px-8 py-12 xl:left-218">
       <nav className="flex items-center justify-end">
         <div className="flex flex-col gap-1">
           {[

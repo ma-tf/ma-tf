@@ -15,6 +15,7 @@ type OrbitProps<T> = {
   onRotate?: (rotation: number) => void;
   children?: React.ReactNode;
   style?: React.CSSProperties;
+  className?: string;
 };
 
 function useOrbitInput({
@@ -97,7 +98,14 @@ function useOrbitKeyboard<T>({
   );
 }
 
-export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: OrbitProps<T>) {
+export function Orbit<T>({
+  renderItem,
+  onSelect,
+  onRotate,
+  children,
+  style,
+  className,
+}: OrbitProps<T>) {
   const { startAngle, arcSize, step, items, getKey } = useOrbit<T>();
   const { itemRefs, setRef } = useItemRefs();
   const totalSpan = items.length * step;
@@ -130,6 +138,7 @@ export function Orbit<T>({ renderItem, onSelect, onRotate, children, style }: Or
       className={cn(
         "orbit-stage relative h-dvh w-full outline-none [--edge-padding:-96px] md:[--edge-padding:96px]",
         "focus-visible:ring-2 focus-visible:ring-ring",
+        className,
       )}
       style={style}
       tabIndex={0}
