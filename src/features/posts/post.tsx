@@ -49,7 +49,7 @@ export function PostTag({ children, className, ...props }: React.ComponentProps<
   return (
     <a
       className={cn(
-        "group relative inline-flex items-center overflow-hidden border border-foreground bg-background pl-1 text-xs text-foreground uppercase transition-[color,background-color] duration-150 hover:bg-foreground hover:text-background",
+        "group relative inline-flex items-center overflow-hidden border border-foreground bg-background pl-1 text-xs text-foreground uppercase transition-colors duration-150 hover:bg-foreground hover:text-background",
         className,
       )}
       {...props}

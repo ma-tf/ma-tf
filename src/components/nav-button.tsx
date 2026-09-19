@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 
 const navButtonVariants = cva(
-  "group relative inline-flex items-center overflow-hidden border border-foreground pr-4 pl-1 uppercase transition-[color,background-color] duration-150",
+  "group relative inline-flex items-center overflow-hidden border border-foreground pr-4 pl-1 uppercase transition-colors duration-150",
   {
     variants: {
       variant: {

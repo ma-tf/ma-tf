@@ -71,13 +71,13 @@ export function BlogPage({
       <BlogBackgrounds backgrounds={backgrounds} />
       <Blog>
         <BlogHeader>
-          <div className="animate-fade-up [animation-delay:200ms]">
+          <div className="animate-fade-up animation-delay-200">
             <BlogTitle className="parallax-[0.3]">{title}</BlogTitle>
           </div>
-          <div className="animate-fade-up [animation-delay:300ms]">
+          <div className="animate-fade-up animation-delay-300">
             <BlogDescription className="parallax-[0.6]">{description}</BlogDescription>
           </div>
-          <div className="animate-fade-up [animation-delay:400ms]">
+          <div className="animate-fade-up animation-delay-400">
             <BlogNavigation />
           </div>
         </BlogHeader>
@@ -95,7 +95,7 @@ function PostList({ posts }: { posts: PlainPost[] }) {
       {posts.map((post, index) => (
         <li
           key={post.slug}
-          className="group my-2 animate-fade-up [animation-delay:var(--delay)] md:my-0 md:py-2"
+          className="group my-2 animate-fade-up md:my-0 md:py-2"
           style={{ "--delay": `${500 + index * 10}ms` } as React.CSSProperties}
         >
           <button

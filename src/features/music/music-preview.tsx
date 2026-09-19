@@ -70,7 +70,7 @@ export function MusicPreview({ images }: { images: ImageMap }) {
                       aria-hidden="true"
                     />
                     <WaveformIcon
-                      className="absolute inset-0 size-5 animate-icon-crossfade [animation-delay:-2s]"
+                      className="absolute inset-0 size-5 animate-icon-crossfade -animation-delay-2000"
                       aria-hidden="true"
                     />
                   </span>

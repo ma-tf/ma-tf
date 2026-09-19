@@ -35,7 +35,7 @@ function VignetteThumbnailMedia({ children, className, ...props }: React.Compone
   return (
     <div
       className={cn(
-        "shrink-0 filter-[drop-shadow(0_1px_1px_rgb(0_0_0/0.05))_drop-shadow(2px_0_0_var(--thumb-outline))_drop-shadow(-2px_0_0_var(--thumb-outline))_drop-shadow(0_2px_0_var(--thumb-outline))_drop-shadow(0_-2px_0_var(--thumb-outline))] [--thumb-outline:transparent] group-hover:[--thumb-outline:var(--muted-foreground)] group-focus-visible:[--thumb-outline:var(--muted-foreground)]",
+        "shrink-0 vignette-thumb-outline [--thumb-outline:transparent] group-hover:[--thumb-outline:var(--muted-foreground)] group-focus-visible:[--thumb-outline:var(--muted-foreground)]",
         isActive &&
           "[--thumb-outline:var(--foreground)] max-md:[--thumb-outline:var(--background)]",
         className,
@@ -102,7 +102,7 @@ function VignetteThumbnailIcon({ children, className, ...props }: React.Componen
     <span
       aria-hidden="true"
       className={cn(
-        "grid size-4 shrink-0 place-items-center border border-foreground bg-background text-foreground transition-[background-color,color] duration-150 group-hover:bg-foreground group-hover:text-background md:size-3",
+        "grid size-4 shrink-0 place-items-center border border-foreground bg-background text-foreground transition-colors duration-150 group-hover:bg-foreground group-hover:text-background md:size-3",
         className,
       )}
       {...props}

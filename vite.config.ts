@@ -30,12 +30,17 @@ export default defineConfig({
     ],
     options: { typeAware: true, typeCheck: true },
     rules: {
-      // "shadcn/no-arbitrary-values": ["warn", { allow: ["layout"] }],
+      "shadcn/no-arbitrary-values": [
+        "warn",
+        {
+          allow: ["parallax-*", "transition-[transform,color]"],
+        },
+      ],
       "shadcn/no-inline-styles": "error",
       "shadcn/no-raw-colors": "error",
       // "shadcn/no-restyle": ["warn", { allow: ["layout"] }],
-      "shadcn/no-unknown-classes": "warn",
-      // "shadcn/require-static-classes": "warn",
+      "shadcn/no-unknown-classes": "error",
+      "shadcn/require-static-classes": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
         "error",
@@ -51,7 +56,7 @@ export default defineConfig({
     },
     overrides: [
       {
-        files: ["components/ui/**"],
+        files: ["src/components/ui/**"],
         rules: {
           "shadcn/no-restyle": "off",
           "shadcn/no-arbitrary-values": "off",

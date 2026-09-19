@@ -33,7 +33,7 @@ export function MusicContent({ children, className, ...props }: React.ComponentP
 
 export function MusicTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("text-right text-9xl md:text-[156px] lg:text-[240px]", className)} {...props}>
+    <h2 className={cn("text-right text-9xl md:text-10xl lg:text-11xl", className)} {...props}>
       {children}
     </h2>
   );

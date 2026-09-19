@@ -7,6 +7,8 @@
   --font-sans: "Inter Variable", sans-serif;
   --font-heading: var(--font-sans);
   --text-2xs: 0.625rem;
+  --text-10xl: 156px;
+  --text-11xl: 240px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -52,6 +54,8 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Custom utilities ------------------------------------------------ */
+
 @keyframes fade-in-scroll {
   0% {
     opacity: 0;
@@ -81,6 +85,7 @@
 
 @utility animate-fade-up {
   animation: fadeUp 0.3s var(--ease-out-expo) both;
+  animation-delay: var(--delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -110,6 +115,7 @@
 
 @utility animate-icon-crossfade {
   animation: icon-crossfade 4s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -121,12 +127,69 @@
   }
 }
 
+/* Feeds --delay, consumed by the animate-* utilities above. */
+@utility animation-delay-* {
+  --delay: calc(--value(integer) * 1ms);
+}
+
+@utility -animation-delay-* {
+  --delay: calc(--value(integer) * -1ms);
+}
+
+@utility transition-filter {
+  transition-property: filter;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+}
+
 @utility parallax-* {
   --parallax-factor: --value([number], number, --default(1));
   transform: translate(
     calc(var(--parallax-x, 0px) * var(--parallax-factor)),
     calc(var(--parallax-y, 0px) * var(--parallax-factor))
   );
+}
+
+/* Clip */
+@utility cut-corner {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+/* Tag link */
+@property --tag-cut {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.922 0 0);
+}
+
+@utility tag-page-bg {
+  background-size: min(1440px, 100vw) auto;
+}
+
+@utility tag-page-bg-fixed {
+  background-size: 1440px auto;
+}
+
+@utility tag-cut-corner {
+  background-image: linear-gradient(
+    -45deg,
+    transparent calc(50% - 0.5px),
+    var(--tag-cut) calc(50% - 0.5px),
+    var(--tag-cut) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
+@utility tag-cut-transition {
+  transition-property: --tag-cut;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+@utility vignette-thumb-outline {
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) drop-shadow(2px 0 0 var(--thumb-outline))
+    drop-shadow(-2px 0 0 var(--thumb-outline)) drop-shadow(0 2px 0 var(--thumb-outline))
+    drop-shadow(0 -2px 0 var(--thumb-outline));
 }
 
 @utility scrollbar-hidden {
@@ -280,10 +343,4 @@ pre[data-language] > code {
   --scale: calc(var(--scale-back) + var(--scale-range) * var(--depth));
   transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(var(--scale));
   opacity: calc(var(--opacity-back) + var(--opacity-range) * var(--depth));
-}
-
-@property --cut-color {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: oklch(0.922 0 0);
 }
