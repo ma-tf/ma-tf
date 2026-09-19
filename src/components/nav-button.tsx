@@ -5,16 +5,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 
 const navButtonVariants = cva(
-  "group relative inline-flex items-center overflow-hidden border border-foreground pr-4 pl-1 text-xs uppercase transition-[color,background-color] duration-150",
+  "group relative inline-flex items-center overflow-hidden border border-foreground pr-4 pl-1 uppercase transition-[color,background-color] duration-150",
   {
     variants: {
       variant: {
         solid: "bg-foreground text-background hover:bg-background hover:text-foreground",
         outline: "bg-background text-foreground hover:bg-foreground hover:text-background",
       },
+      full: {
+        true: "min-h-12 w-full justify-start pl-4 text-sm",
+        false: "text-xs",
+      },
     },
     defaultVariants: {
       variant: "solid",
+      full: false,
     },
   },
 );
@@ -23,12 +28,18 @@ export function NavButton({
   children,
   className,
   variant,
+  full,
   ...props
 }: ComponentProps<"a"> & VariantProps<typeof navButtonVariants>) {
   return (
-    <a className={cn(navButtonVariants({ variant, className }))} {...props}>
-      <span className="inline-flex items-center gap-1 pr-2 transition-transform duration-150 group-hover:translate-x-4">
-        <ArrowLeftIcon size={14} className="-ml-5 shrink-0" />
+    <a className={cn(navButtonVariants({ variant, full, className }))} {...props}>
+      <span
+        className={cn(
+          "inline-flex items-center gap-1",
+          !full && "pr-2 transition-transform duration-150 group-hover:translate-x-4",
+        )}
+      >
+        <ArrowLeftIcon size={14} className={cn("shrink-0", !full && "-ml-5")} />
         {children}
       </span>
     </a>

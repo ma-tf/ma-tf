@@ -1,8 +1,7 @@
 import { useVignetteThumbnail } from "@features/vignettes/vignette-thumbnail-context";
-import { PlayIcon } from "@phosphor-icons/react";
+import { CaretRightIcon, PlayIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
-const VIGNETTE_MOBILE_OFFSET_CLASSES = ["translate-x-0", "translate-x-4", "translate-x-8"];
 const VIGNETTE_DESKTOP_OFFSET_CLASSES = [
   "md:translate-x-0",
   "md:translate-x-4",
@@ -14,10 +13,13 @@ export function thumbnailUrl(playbackId: string, width: number, height: number) 
 }
 
 function VignetteThumbnailButton({ children, className, ...props }: React.ComponentProps<"a">) {
+  const { isActive } = useVignetteThumbnail();
+
   return (
     <a
       className={cn(
-        "group flex min-w-0 cursor-pointer items-start gap-2 text-left transition-[transform,color] duration-150 hover:-translate-y-0.5",
+        "group flex min-w-0 cursor-pointer items-center gap-3 text-left transition-[transform,color] duration-150 max-md:w-full max-md:border-b max-md:border-foreground/20 max-md:px-4 max-md:py-3 md:items-start md:gap-2 md:hover:-translate-y-0.5",
+        isActive && "max-md:bg-foreground max-md:text-background",
         className,
       )}
       {...props}
@@ -34,7 +36,8 @@ function VignetteThumbnailMedia({ children, className, ...props }: React.Compone
     <div
       className={cn(
         "shrink-0 filter-[drop-shadow(0_1px_1px_rgb(0_0_0/0.05))_drop-shadow(2px_0_0_var(--thumb-outline))_drop-shadow(-2px_0_0_var(--thumb-outline))_drop-shadow(0_2px_0_var(--thumb-outline))_drop-shadow(0_-2px_0_var(--thumb-outline))] [--thumb-outline:transparent] group-hover:[--thumb-outline:var(--muted-foreground)] group-focus-visible:[--thumb-outline:var(--muted-foreground)]",
-        isActive && "[--thumb-outline:var(--foreground)]",
+        isActive &&
+          "[--thumb-outline:var(--foreground)] max-md:[--thumb-outline:var(--background)]",
         className,
       )}
       {...props}
@@ -67,7 +70,7 @@ function VignetteThumbnailSummary({ children, className, ...props }: React.Compo
     <span
       className={cn(
         "block text-sm text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground md:text-2xs",
-        isActive && "text-foreground",
+        isActive && "text-foreground max-md:text-background",
         className,
       )}
       {...props}
@@ -84,7 +87,7 @@ function VignetteThumbnailTitle({ children, className, ...props }: React.Compone
     <span
       className={cn(
         "text-base font-medium text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground md:text-xs",
-        isActive && "text-foreground",
+        isActive && "text-foreground max-md:text-background",
         className,
       )}
       {...props}
@@ -112,16 +115,11 @@ function VignetteThumbnailIcon({ children, className, ...props }: React.Componen
 export function VignetteThumbnail() {
   const { vignette, index, isActive } = useVignetteThumbnail();
   const rowIndex = Math.floor(index / 3);
-  const columnIndex = index % 3;
 
   return (
     <VignetteThumbnailButton
       href={`/vignettes/${vignette.slug}`}
-      className={cn(
-        "min-w-0",
-        VIGNETTE_MOBILE_OFFSET_CLASSES[columnIndex],
-        VIGNETTE_DESKTOP_OFFSET_CLASSES[rowIndex],
-      )}
+      className={VIGNETTE_DESKTOP_OFFSET_CLASSES[rowIndex]}
       aria-label={`Show vignette ${vignette.order}`}
       aria-current={isActive ? "page" : undefined}
     >
@@ -131,7 +129,7 @@ export function VignetteThumbnail() {
             src={thumbnailUrl(vignette.playbackId, 128, 96)}
             alt={`Vignette ${vignette.order}`}
             loading="lazy"
-            className="block aspect-5/3 w-20 object-cover transition-transform duration-200 group-hover:scale-110 md:w-12"
+            className="block aspect-5/3 w-24 object-cover transition-transform duration-200 group-hover:scale-110 md:w-12"
           />
         </span>
       </VignetteThumbnailMedia>
@@ -144,6 +142,12 @@ export function VignetteThumbnail() {
         </VignetteThumbnailHeader>
         <VignetteThumbnailSummary>{vignette.summary}</VignetteThumbnailSummary>
       </VignetteThumbnailDetails>
+      <CaretRightIcon
+        size={16}
+        weight="bold"
+        aria-hidden="true"
+        className="ml-auto shrink-0 md:hidden"
+      />
     </VignetteThumbnailButton>
   );
 }

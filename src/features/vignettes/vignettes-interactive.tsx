@@ -5,15 +5,9 @@ import { Spinner } from "@components/ui/spinner";
 import { VideoPlayer } from "@features/vignettes/mux-player";
 import { thumbnailUrl, VignetteThumbnail } from "@features/vignettes/vignette-thumbnail";
 import { VignetteThumbnailProvider } from "@features/vignettes/vignette-thumbnail-context";
+import { VIGNETTE_NAVIGATION_LINKS } from "@features/vignettes/vignettes-menu";
 import { cn } from "cn";
 import { useRef, useState } from "react";
-
-const VIGNETTE_NAVIGATION_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/blog", label: "Blog" },
-  { href: "/photography", label: "Photography" },
-  { href: "/music", label: "Music" },
-];
 
 function VignetteBackground({ playbackId }: { playbackId: string }) {
   return (
@@ -93,7 +87,7 @@ function VignetteDescription({
 
 function VignettesNavigation() {
   return (
-    <nav className="flex flex-col items-stretch gap-1" aria-label="Section navigation">
+    <nav className="hidden flex-col items-stretch gap-1 md:flex" aria-label="Section navigation">
       {VIGNETTE_NAVIGATION_LINKS.map(({ href, label }) => (
         <NavButton key={href} href={href} variant="solid">
           {label}
@@ -121,8 +115,8 @@ export function VignettesInteractive({
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-start justify-between gap-4 px-8">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-3">
+      <div className="flex flex-col md:flex-row md:flex-wrap md:items-start md:justify-between md:gap-4 md:px-8">
+        <div className="flex flex-col md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-2">
           {vignettes.map((vignette, index) => (
             <VignetteThumbnailProvider
               key={vignette.id}

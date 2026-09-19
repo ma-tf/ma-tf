@@ -4,7 +4,7 @@ export function Vignettes({ children, className, ...props }: React.ComponentProp
   return (
     <div
       className={cn(
-        "flex min-h-dvh w-full flex-col overflow-x-clip bg-vignettes-surface pt-16",
+        "flex min-h-dvh w-full flex-col overflow-x-clip bg-vignettes-surface py-16",
         className,
       )}
       {...props}
@@ -32,13 +32,7 @@ export function VignettesHeader({ children, className, ...props }: React.Compone
 
 export function VignettesTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <h2
-      className={cn(
-        "mr-8 cursor-default border-x border-t border-vignettes-ink bg-vignettes-ink px-2 text-lg text-vignettes-ink-foreground",
-        className,
-      )}
-      {...props}
-    >
+    <h2 className={cn("mr-8 text-lg text-vignettes-ink-foreground", className)} {...props}>
       {children}
     </h2>
   );
