@@ -25,7 +25,7 @@ peerDependencyRules:
     vite: "*"
 trustPolicy: no-downgrade
 trustPolicyExclude:
-  - "@netlify/serverless-functions-api@2.18.0 || 2.22.0"
+  - "@netlify/serverless-functions-api@2.18.0 || 2.22.0 || 2.23.0"
   - "chokidar@4.0.3"
   - "semver@6.3.1"
 overrides:
