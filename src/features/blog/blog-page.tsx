@@ -60,7 +60,7 @@ export function BlogPage({
 
   return (
     <div
-      className="h-vh relative isolate flex px-4 md:h-dvh md:overflow-hidden"
+      className="relative isolate flex h-dvh px-4 md:h-dvh md:overflow-hidden"
       style={
         {
           "--parallax-x": `${offset.x}px`,

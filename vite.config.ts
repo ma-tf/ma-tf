@@ -34,7 +34,7 @@ export default defineConfig({
       "shadcn/no-inline-styles": "error",
       "shadcn/no-raw-colors": "error",
       // "shadcn/no-restyle": ["warn", { allow: ["layout"] }],
-      // "shadcn/no-unknown-classes": "warn",
+      "shadcn/no-unknown-classes": "warn",
       // "shadcn/require-static-classes": "warn",
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
