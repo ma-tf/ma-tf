@@ -142,6 +142,18 @@
   transition-duration: var(--tw-duration, var(--default-transition-duration));
 }
 
+@utility max-w-dvw-* {
+  max-width: calc(--value(integer) * 1dvw);
+}
+
+@utility max-h-dvh-* {
+  max-height: calc(--value(integer) * 1dvh);
+}
+
+@utility scroll-progress-dot {
+  top: calc(var(--scroll-progress) * 100%);
+}
+
 @utility parallax-* {
   --parallax-factor: --value([number], number, --default(1));
   transform: translate(
@@ -184,6 +196,20 @@
   transition-property: --tag-cut;
   transition-duration: 150ms;
   transition-timing-function: ease;
+}
+
+@utility tag-link {
+  --tag-cut: var(--border);
+  &:hover {
+    --tag-cut: var(--foreground);
+  }
+}
+
+/* Video player */
+@utility video-player {
+  --controls: none;
+  --dialog: none;
+  --loading-indicator: none;
 }
 
 @utility vignette-thumb-outline {
@@ -318,6 +344,7 @@ pre[data-language] > code {
 }
 
 .orbit-stage {
+  --edge-padding: -96px;
   --base-angle: -1.5708rad;
   --flatness: 0.62;
   --scale-back: 0.6;
@@ -330,6 +357,12 @@ pre[data-language] > code {
   --total-span: 0rad;
   --start-angle: 0rad;
   touch-action: none;
+}
+
+@media (min-width: 48rem) {
+  .orbit-stage {
+    --edge-padding: 96px;
+  }
 }
 
 .orbit-item {

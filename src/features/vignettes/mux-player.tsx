@@ -14,10 +14,7 @@ export function VideoPlayer({
       autoPlay={true}
       loop={true}
       {...props}
-      className={cn(
-        "block aspect-4/3 max-h-full w-full bg-black [--controls:none] [--dialog:none] [--loading-indicator:none]",
-        className,
-      )}
+      className={cn("block aspect-4/3 max-h-full w-full bg-black video-player", className)}
     />
   );
 }

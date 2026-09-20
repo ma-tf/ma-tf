@@ -124,7 +124,7 @@ export function VignetteThumbnail() {
       aria-current={isActive ? "page" : undefined}
     >
       <VignetteThumbnailMedia>
-        <span className="block overflow-hidden [clip-path:polygon(0_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%)]">
+        <span className="block overflow-hidden cut-corner">
           <img
             src={thumbnailUrl(vignette.playbackId, 128, 96)}
             alt={`Vignette ${vignette.order}`}

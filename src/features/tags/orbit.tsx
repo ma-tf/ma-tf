@@ -136,7 +136,7 @@ export function Orbit<T>({
     <div
       ref={stageRef}
       className={cn(
-        "orbit-stage relative h-dvh w-full outline-none [--edge-padding:-96px] md:[--edge-padding:96px]",
+        "orbit-stage relative h-dvh w-full outline-none",
         "focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}

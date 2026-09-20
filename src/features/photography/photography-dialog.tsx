@@ -60,18 +60,14 @@ export function PhotographyDialog({
           className="size-full object-cover transition-transform duration-150 hover:scale-110"
         />
       </DialogTrigger>
-      <DialogContent className="w-fit max-w-[90dvw] sm:max-w-[90dvw]" showCloseButton>
+      <DialogContent className="w-fit max-w-dvw-90 sm:max-w-dvw-90" showCloseButton>
         <DialogHeader>
           <DialogTitle>{children}</DialogTitle>
           <DialogDescription>
             Shot by the {data.camera} {data.film ? ` on ${data.film}` : null}
           </DialogDescription>
         </DialogHeader>
-        <LoadableImage
-          src={src}
-          alt={alt}
-          className={`max-h-[85dvh] max-w-[85dvw] object-contain`}
-        />
+        <LoadableImage src={src} alt={alt} className={`max-h-dvh-85 max-w-dvw-85 object-contain`} />
       </DialogContent>
     </Dialog>
   );

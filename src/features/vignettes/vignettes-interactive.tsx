@@ -77,7 +77,7 @@ function VignetteDescription({
       <div className="pointer-events-none relative hidden w-1 shrink-0 md:block" aria-hidden="true">
         <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-vignettes-video-ink/40" />
         <div
-          className="absolute top-[calc(var(--scroll-progress)*100%)] left-1/2 size-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-vignettes-video-ink"
+          className="absolute scroll-progress-dot left-1/2 size-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-vignettes-video-ink"
           style={{ "--scroll-progress": scrollProgress } as React.CSSProperties}
         />
       </div>
