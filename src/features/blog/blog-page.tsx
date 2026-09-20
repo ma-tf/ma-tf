@@ -18,12 +18,12 @@ function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: 
     <>
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 parallax-[0.15] bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
+        className="absolute inset-0 -z-10 parallax-15 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
         style={{ "--background-image": `url("${backgrounds.back}")` } as React.CSSProperties}
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 parallax-[0.3] bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
+        className="absolute inset-0 -z-10 parallax-30 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
         style={{ "--background-image": `url("${backgrounds.front}")` } as React.CSSProperties}
       />
     </>
@@ -33,7 +33,7 @@ function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: 
 function BlogNavigation() {
   return (
     <nav
-      className="mt-4 flex parallax-[0.6] flex-wrap justify-end gap-1"
+      className="mt-4 flex parallax-60 flex-wrap justify-end gap-1"
       aria-label="Section navigation"
     >
       {BLOG_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
@@ -72,10 +72,10 @@ export function BlogPage({
       <Blog>
         <BlogHeader>
           <div className="animate-fade-up animation-delay-200">
-            <BlogTitle className="parallax-[0.3]">{title}</BlogTitle>
+            <BlogTitle className="parallax-30">{title}</BlogTitle>
           </div>
           <div className="animate-fade-up animation-delay-300">
-            <BlogDescription className="parallax-[0.6]">{description}</BlogDescription>
+            <BlogDescription className="parallax-60">{description}</BlogDescription>
           </div>
           <div className="animate-fade-up animation-delay-400">
             <BlogNavigation />

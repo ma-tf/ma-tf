@@ -23,7 +23,7 @@ export function Photography({ children, className, ...props }: React.ComponentPr
 export function PhotographyHeader({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex parallax-[0.3] items-center justify-between gap-4 p-4 pb-16", className)}
+      className={cn("flex parallax-30 items-center justify-between gap-4 p-4 pb-16", className)}
       {...props}
     >
       {children}
@@ -46,10 +46,7 @@ export function PhotographyDescription({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "parallax-0.5 indent-8 text-4xl will-change-transform lg:col-span-2",
-        className,
-      )}
+      className={cn("parallax-50 indent-8 text-4xl will-change-transform lg:col-span-2", className)}
       {...props}
     >
       {children}
@@ -60,7 +57,7 @@ export function PhotographyDescription({
 export function PhotographyGrid({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("min-w-0 parallax-[0.2] will-change-transform lg:col-span-4", className)}
+      className={cn("min-w-0 parallax-20 will-change-transform lg:col-span-4", className)}
       {...props}
     >
       {children}

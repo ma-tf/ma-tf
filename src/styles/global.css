@@ -163,7 +163,7 @@
 }
 
 @utility parallax-* {
-  --parallax-factor: --value([number], number, --default(1));
+  --parallax-factor: calc(--value(integer, --default(100)) / 100);
   transform: translate(
     calc(var(--parallax-x, 0px) * var(--parallax-factor)),
     calc(var(--parallax-y, 0px) * var(--parallax-factor))
