@@ -11,3 +11,97 @@ from = "https://xn--tu8h.m4t.tf/*"
 to = "https://m4t.tf/photography"
 status = 301
 force = true
+
+# The other emoji aliases follow the same shape: the exact root and any deeper
+# path both land on the section root on m4t.tf.
+
+# Alias 👤.m4t.tf (punycode xn--mq8h) → canonical /about
+[[redirects]]
+from = "https://xn--mq8h.m4t.tf/"
+to = "https://m4t.tf/about"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--mq8h.m4t.tf/*"
+to = "https://m4t.tf/about"
+status = 301
+force = true
+
+# Alias 🖋️.m4t.tf (punycode xn--1y8h) → canonical /blog
+[[redirects]]
+from = "https://xn--1y8h.m4t.tf/"
+to = "https://m4t.tf/blog"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--1y8h.m4t.tf/*"
+to = "https://m4t.tf/blog"
+status = 301
+force = true
+
+# Alias 🎞️.m4t.tf (punycode xn--yk8h) → canonical /vignettes
+[[redirects]]
+from = "https://xn--yk8h.m4t.tf/"
+to = "https://m4t.tf/vignettes"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--yk8h.m4t.tf/*"
+to = "https://m4t.tf/vignettes"
+status = 301
+force = true
+
+# Alias 🎨.m4t.tf (punycode xn--8k8h) → canonical /graphics
+[[redirects]]
+from = "https://xn--8k8h.m4t.tf/"
+to = "https://m4t.tf/graphics"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--8k8h.m4t.tf/*"
+to = "https://m4t.tf/graphics"
+status = 301
+force = true
+
+# Alias 🎧.m4t.tf (punycode xn--7k8h) → canonical /music
+[[redirects]]
+from = "https://xn--7k8h.m4t.tf/"
+to = "https://m4t.tf/music"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--7k8h.m4t.tf/*"
+to = "https://m4t.tf/music"
+status = 301
+force = true
+
+# Alias 📄.m4t.tf (punycode xn--dt8h) → canonical /cv
+[[redirects]]
+from = "https://xn--dt8h.m4t.tf/"
+to = "https://m4t.tf/cv"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--dt8h.m4t.tf/*"
+to = "https://m4t.tf/cv"
+status = 301
+force = true
+
+# Alias ✉️.m4t.tf (punycode xn--4bi) → canonical /contact
+[[redirects]]
+from = "https://xn--4bi.m4t.tf/"
+to = "https://m4t.tf/contact"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://xn--4bi.m4t.tf/*"
+to = "https://m4t.tf/contact"
+status = 301
+force = true
