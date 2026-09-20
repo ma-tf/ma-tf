@@ -65,9 +65,12 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
             <Button
               variant="inverted"
               shape="sharp"
-              render={<a href="/vignettes">View vignettes</a>}
-              className="mt-6 w-full md:w-fit"
               size="lg"
+              render={
+                <a href="/vignettes" className="mt-6 w-full md:w-fit">
+                  View vignettes
+                </a>
+              }
             />
           </div>
           <div className="flex flex-col gap-4 md:col-span-3 md:items-end md:justify-center">

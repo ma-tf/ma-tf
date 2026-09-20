@@ -12,34 +12,45 @@ export const VIGNETTE_NAVIGATION_LINKS = [
   { href: "/music", label: "Music" },
 ];
 
-export function VignettesMenu() {
+export function VignettesMobileMenu() {
   const [open, setOpen] = useState(false);
   const Icon = open ? XIcon : ListIcon;
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen} className="w-full">
-      <VignettesHeader>
-        <VignettesTitle>
-          <CollapsibleTrigger className="flex items-center gap-2 border-x border-t border-vignettes-ink bg-vignettes-ink px-2 md:hidden">
-            vignettes
-            <Icon size={16} weight="bold" aria-hidden="true" />
-          </CollapsibleTrigger>
-          <span className="hidden border-x border-t border-vignettes-ink bg-vignettes-ink px-2 md:inline-block">
-            vignettes
-          </span>
-        </VignettesTitle>
-      </VignettesHeader>
-      <CollapsibleContent className="overflow-hidden md:hidden">
-        <nav className="flex flex-col" aria-label="Section navigation">
-          {VIGNETTE_NAVIGATION_LINKS.map(({ href, label }, index) => (
-            <div key={href} className={cn(index > 0 && "border-t border-background/20")}>
-              <NavButton href={href} variant="solid" full>
-                {label}
-              </NavButton>
-            </div>
-          ))}
-        </nav>
-      </CollapsibleContent>
-    </Collapsible>
+    <div className="md:hidden">
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <VignettesHeader>
+          <VignettesTitle>
+            <CollapsibleTrigger>
+              <span className="flex items-center gap-2 border-x border-t border-vignettes-ink bg-vignettes-ink px-2">
+                vignettes
+                <Icon size={16} weight="bold" aria-hidden="true" />
+              </span>
+            </CollapsibleTrigger>
+          </VignettesTitle>
+        </VignettesHeader>
+        <CollapsibleContent>
+          <nav className="flex flex-col" aria-label="Section navigation">
+            {VIGNETTE_NAVIGATION_LINKS.map(({ href, label }, index) => (
+              <div key={href} className={cn(index > 0 && "border-t border-background/20")}>
+                <NavButton href={href} variant="solid" full>
+                  {label}
+                </NavButton>
+              </div>
+            ))}
+          </nav>
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
+  );
+}
+
+export function VignettesDesktopMenu() {
+  return (
+    <VignettesHeader className="hidden md:flex">
+      <VignettesTitle className="border-x border-t border-vignettes-ink bg-vignettes-ink px-2">
+        vignettes
+      </VignettesTitle>
+    </VignettesHeader>
   );
 }

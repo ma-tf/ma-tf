@@ -1,12 +1,14 @@
 ---
-import { PhotographyDialog } from "@features/photography/photography-dialog";
+import {
+	PhotographyDialog,
+	type PhotographyDialogPhoto,
+} from "@features/photography/photography-dialog";
 import { render, type CollectionEntry } from "astro:content";
 
 interface Props {
 	items: {
 		photography: CollectionEntry<"photography">;
-		fullSrc: string;
-		thumbSrc: string;
+		photo: PhotographyDialogPhoto;
 	}[];
 	orientation: "portrait" | "square";
 }
@@ -24,16 +26,9 @@ const renderedItems = await Promise.all(
 
 <div class="grid grid-cols-1 gap-4">
 	{
-		renderedItems.map(({ photography, fullSrc, thumbSrc, Content }) => {
+		renderedItems.map(({ photo, Content }) => {
 			return (
-				<PhotographyDialog
-					src={fullSrc}
-					thumbSrc={thumbSrc}
-					alt={photography.body || "Photography"}
-					data={photography.data}
-					className={rowSpan}
-					client:load
-				>
+				<PhotographyDialog photo={photo} className={rowSpan} client:load>
 					<Content />
 				</PhotographyDialog>
 			);

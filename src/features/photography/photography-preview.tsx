@@ -38,9 +38,12 @@ export function PhotographyPreview() {
             <Button
               variant="inverted"
               shape="sharp"
-              render={<a href="/photography">View photography</a>}
-              className="mt-6 w-full md:w-fit"
               size="lg"
+              render={
+                <a href="/photography" className="mt-6 w-full md:w-fit">
+                  View photography
+                </a>
+              }
             />
           </div>
           <div className="flex flex-col gap-4">

@@ -3,7 +3,10 @@ import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import { Vignettes, VignettesContent } from "@features/vignettes/vignettes";
 import { VignettesInteractive } from "@features/vignettes/vignettes-interactive";
-import { VignettesMenu } from "@features/vignettes/vignettes-menu";
+import {
+  VignettesDesktopMenu,
+  VignettesMobileMenu,
+} from "@features/vignettes/vignettes-menu";
 
 const vignettes = (await getCollection("vignettes"))
   .filter(({ data }) => data.enabled)
@@ -16,7 +19,8 @@ if (!activeVignette) return new Response(null, { status: 404 });
 
 <Layout>
   <Vignettes>
-    <VignettesMenu client:load />
+    <VignettesMobileMenu client:load />
+    <VignettesDesktopMenu />
     <VignettesContent>
       <VignettesInteractive
         vignettes={vignettes}

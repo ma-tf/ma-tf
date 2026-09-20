@@ -28,43 +28,37 @@ function LoadableImage({ src, alt, className }: { src: string; alt: string; clas
   );
 }
 
-export function PhotographyDialog({
-  src,
-  thumbSrc,
-  alt,
-  data,
-  className,
-  children,
-}: {
+export type PhotographyDialogPhoto = {
   src: string;
   thumbSrc: string;
   alt: string;
-  data: {
-    image: string;
-    camera: string;
-    film?: string | undefined;
-    column: number;
-    order: number;
-  };
+  camera: string;
+  film?: string | undefined;
+};
+
+export function PhotographyDialog({
+  photo: { src, thumbSrc, alt, camera, film },
+  className,
+  children,
+}: {
+  photo: PhotographyDialogPhoto;
   className?: string;
   children?: React.ReactNode;
 }) {
   return (
     <Dialog>
-      <DialogTrigger
-        className={`cursor-pointer overflow-hidden md:animate-fade-in-scroll ${className ?? ""}`}
-      >
+      <DialogTrigger render={<button className={cn("cursor-pointer overflow-clip", className)} />}>
         <img
           src={thumbSrc}
           alt={alt}
-          className="size-full object-cover transition-transform duration-150 hover:scale-110"
+          className="size-full object-cover transition-transform duration-150 hover:scale-110 md:animate-fade-in-scroll"
         />
       </DialogTrigger>
-      <DialogContent className="w-fit max-w-dvw-90 sm:max-w-dvw-90" showCloseButton>
+      <DialogContent size="media" showCloseButton>
         <DialogHeader>
           <DialogTitle>{children}</DialogTitle>
           <DialogDescription>
-            Shot by the {data.camera} {data.film ? ` on ${data.film}` : null}
+            Shot by the {camera} {film ? ` on ${film}` : null}
           </DialogDescription>
         </DialogHeader>
         <LoadableImage src={src} alt={alt} className={`max-h-dvh-85 max-w-dvw-85 object-contain`} />

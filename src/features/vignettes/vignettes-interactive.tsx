@@ -35,7 +35,7 @@ function VignetteVideo({ playbackId }: { playbackId: string }) {
       />
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <Spinner className="size-8" />
+          <Spinner size="xl" />
         </div>
       )}
     </div>

@@ -10,20 +10,26 @@ const photography = await getCollection("photography");
 const processed = await Promise.all(
 	photography.map(async (photography) => {
 		const src = `${r2}/${photography.data.image}`;
+		const [fullImage, thumbImage] = await Promise.all([
+			getImage({ src, quality: "mid", inferSize: true }),
+			getImage({
+				src,
+				quality: "low",
+				height: 1000,
+				width: 1000,
+				inferSize: true,
+			}),
+		]);
+
 		return {
 			photography,
-			fullSrc: (
-				await getImage({ src, quality: "mid", inferSize: true })
-			).src,
-			thumbSrc: (
-				await getImage({
-					src,
-					quality: "low",
-					height: 1000,
-					width: 1000,
-					inferSize: true,
-				})
-			).src,
+			photo: {
+				src: fullImage.src,
+				thumbSrc: thumbImage.src,
+				alt: photography.body || "Photography",
+				camera: photography.data.camera,
+				film: photography.data.film,
+			},
 		};
 	}),
 );

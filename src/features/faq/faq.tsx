@@ -14,15 +14,15 @@ export function Faq() {
         <SectionNumber />
         <span>FAQ</span>
       </SectionHeader>
-      <SectionContent>
-        <Accordion multiple keepMounted className="mx-auto max-w-prose">
+      <SectionContent className="w-full max-w-prose justify-self-center">
+        <Accordion multiple keepMounted>
           {faqs.map((faq) => (
             <AccordionItem key={faq.question} value={faq.question}>
-              <AccordionTrigger className="text-xl font-semibold text-foreground">
-                {faq.question}
+              <AccordionTrigger>
+                <span className="text-xl font-semibold text-foreground">{faq.question}</span>
               </AccordionTrigger>
-              <AccordionContent className="text-lg leading-relaxed text-foreground">
-                {faq.answer}
+              <AccordionContent>
+                <p className="text-lg leading-relaxed text-foreground">{faq.answer}</p>
               </AccordionContent>
             </AccordionItem>
           ))}

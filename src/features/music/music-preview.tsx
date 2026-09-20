@@ -81,9 +81,12 @@ export function MusicPreview({ images }: { images: ImageMap }) {
             <Button
               variant="inverted"
               shape="sharp"
-              render={<a href="/music">View music</a>}
-              className="mt-6 w-full md:w-fit"
               size="lg"
+              render={
+                <a href="/music" className="mt-6 w-full md:w-fit">
+                  View music
+                </a>
+              }
             />
           </div>
         </SectionContent>
