@@ -35,9 +35,8 @@ function VignetteThumbnailMedia({ children, className, ...props }: React.Compone
   return (
     <div
       className={cn(
-        "shrink-0 vignette-thumb-outline [--thumb-outline:transparent] group-hover:[--thumb-outline:var(--muted-foreground)] group-focus-visible:[--thumb-outline:var(--muted-foreground)]",
-        isActive &&
-          "[--thumb-outline:var(--foreground)] max-md:[--thumb-outline:var(--background)]",
+        "shrink-0 vignette-thumb-outline thumb-outline-transparent group-hover:thumb-outline-muted-foreground group-focus-visible:thumb-outline-muted-foreground",
+        isActive && "thumb-outline-foreground max-md:thumb-outline-background",
         className,
       )}
       {...props}

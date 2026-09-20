@@ -33,7 +33,7 @@ export default defineConfig({
       "shadcn/no-arbitrary-values": [
         "warn",
         {
-          allow: ["parallax-*", "transition-[transform,color]"],
+          allow: ["parallax-*", "transition-*", "origin-*", "grid-rows-*"],
         },
       ],
       "shadcn/no-inline-styles": "error",

@@ -150,6 +150,14 @@
   max-height: calc(--value(integer) * 1dvh);
 }
 
+@utility page-bg-* {
+  background-size: calc(--value(integer) * 1px) auto;
+}
+
+@utility page-bg-cap-* {
+  background-size: min(calc(--value(integer) * 1px), 100vw) auto;
+}
+
 @utility scroll-progress-dot {
   top: calc(var(--scroll-progress) * 100%);
 }
@@ -172,14 +180,6 @@
   syntax: "<color>";
   inherits: true;
   initial-value: oklch(0.922 0 0);
-}
-
-@utility tag-page-bg {
-  background-size: min(1440px, 100vw) auto;
-}
-
-@utility tag-page-bg-fixed {
-  background-size: 1440px auto;
 }
 
 @utility tag-cut-corner {
@@ -210,6 +210,10 @@
   --controls: none;
   --dialog: none;
   --loading-indicator: none;
+}
+
+@utility thumb-outline-* {
+  --thumb-outline: --value(--color-*, "transparent");
 }
 
 @utility vignette-thumb-outline {
