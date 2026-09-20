@@ -136,12 +136,6 @@
   --delay: calc(--value(integer) * -1ms);
 }
 
-@utility transition-filter {
-  transition-property: filter;
-  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
-}
-
 @utility max-w-dvw-* {
   max-width: calc(--value(integer) * 1dvw);
 }
