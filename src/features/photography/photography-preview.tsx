@@ -19,26 +19,27 @@ export function PhotographyPreview() {
       <SectionSubtitle>Digital and analogue photography.</SectionSubtitle>
       <SectionContent>
         <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
-          <div className="flex flex-col gap-4 indent-8 text-lg">
-            <p>
+          <div className="flex flex-col gap-4 text-lg">
+            <p className="indent-8">
               In my spare time I am an amateur photographer. I shoot on both digital and film, and
               have collected a small family of cameras over the years, each covering a different use
               case.
             </p>
-            <p>
+            <p className="indent-8">
               The cameras I use include: a Canon EOS-1V as my primary camera with swappable lenses;
               an Olympus mju mini Digital for when I want retro digital shots; a Ricoh Mirai when I
               need an all rounder bridge camera. They have served me well so far.
             </p>
-            <p>
+            <p className="indent-8">
               I scan every roll myself on a Nikon CoolScan V ED using SilverFast, and colour correct
               the frames in SilverFast HDR. It's a slow, hands-on part of the process, but it's
               become as much a part of the craft as the shooting itself.
             </p>
             <Button
-              variant="outline"
+              variant="inverted"
+              shape="sharp"
               render={<a href="/photography">View photography</a>}
-              className="mt-6 w-full rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground md:w-fit dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              className="mt-6 w-full md:w-fit"
               size="lg"
             />
           </div>

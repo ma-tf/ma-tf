@@ -37,15 +37,15 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
               className="absolute inset-0 size-full origin-[45%_100%] scale-200 object-cover"
             />
           </div>
-          <div className="flex flex-col gap-4 indent-8 text-lg text-foreground md:col-span-3">
-            <p>
+          <div className="flex flex-col gap-4 text-lg text-foreground md:col-span-3">
+            <p className="indent-8">
               A series of short motion studies, shot on location in the quiet hours. Small
               observations of a place and the details that give it character. Photography freezes a
               single instant, but some places only come alive in motion. The speed of a moving
               train, the swing of shoes on a wire, the rolling waves on a beach during sunset. These
               studies are an attempt to hold on to those moving moments.
             </p>
-            <p>
+            <p className="indent-8">
               The <span className="italic">Bolex H-16 SBM</span> offers a portable way to create
               true filmic experiences without electricity as a hard requirement. Using 30-metre film
               reels and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
@@ -53,7 +53,7 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
               use a battery-powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
               The battery powers the auto exposure and the in-built electric motor for zooming.
             </p>
-            <p>
+            <p className="indent-8">
               Everything is shot on 16mm film. Its grain and tonal latitude give the footage a
               texture that digital struggles to match, and the format's soft, rounded frame corners
               come straight from the lens and gate rather than any filter. Shooting on film is an
@@ -63,9 +63,10 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
             </p>
             <p></p>
             <Button
-              variant="outline"
+              variant="inverted"
+              shape="sharp"
               render={<a href="/vignettes">View vignettes</a>}
-              className="mt-6 w-full rounded-none border-none bg-foreground indent-0 text-background hover:bg-muted-foreground md:w-fit dark:bg-foreground dark:hover:bg-muted-foreground/80"
+              className="mt-6 w-full md:w-fit"
               size="lg"
             />
           </div>

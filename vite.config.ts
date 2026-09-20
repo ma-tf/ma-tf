@@ -31,7 +31,7 @@ export default defineConfig({
     options: { typeAware: true, typeCheck: true },
     rules: {
       "shadcn/no-arbitrary-values": [
-        "warn",
+        "error",
         {
           allow: ["transition-*", "origin-*", "grid-rows-*"],
         },
