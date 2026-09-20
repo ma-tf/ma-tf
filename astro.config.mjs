@@ -13,7 +13,6 @@ export default defineConfig({
   adapter: netlify({
     devFeatures: {
       environmentVariables: false,
-      images: true,
       edgeFunctions: false,
     },
   }),
@@ -35,8 +34,5 @@ export default defineConfig({
         },
       },
     },
-  },
-  image: {
-    remotePatterns: [{ protocol: "https", hostname: "cdn.m4t.tf" }],
   },
 });

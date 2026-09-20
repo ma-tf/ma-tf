@@ -51,6 +51,8 @@ export function PhotographyDialog({
         <img
           src={thumbSrc}
           alt={alt}
+          loading="lazy"
+          decoding="async"
           className="size-full object-cover transition-transform duration-150 hover:scale-110 md:animate-fade-in-scroll"
         />
       </DialogTrigger>

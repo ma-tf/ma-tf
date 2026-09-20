@@ -1,2 +1,13 @@
-[images]
-remote_images = ["https://cdn\\.m4t\\.tf/.*"]
+# Alias 📷.m4t.tf (punycode xn--tu8h) → canonical /photography
+[[redirects]]
+from = "https://xn--tu8h.m4t.tf/"
+to = "https://m4t.tf/photography"
+status = 301
+force = true
+
+# Any deeper path on the alias lands on the section root
+[[redirects]]
+from = "https://xn--tu8h.m4t.tf/*"
+to = "https://m4t.tf/photography"
+status = 301
+force = true
