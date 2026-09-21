@@ -19,7 +19,7 @@ export function Faq() {
           {faqs.map((faq) => (
             <AccordionItem key={faq.question} value={faq.question}>
               <AccordionTrigger>
-                <span className="text-xl font-semibold text-foreground">{faq.question}</span>
+                <span className="text-xl font-semibold">{faq.question}</span>
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-lg leading-relaxed text-foreground">{faq.answer}</p>
