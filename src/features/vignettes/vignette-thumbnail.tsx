@@ -18,13 +18,15 @@ function VignetteThumbnailButton({ children, className, ...props }: React.Compon
   return (
     <a
       className={cn(
-        "group flex min-w-0 cursor-pointer items-center gap-3 text-left transition-[transform,color] duration-150 max-md:w-full max-md:border-b max-md:border-foreground/20 max-md:px-4 max-md:py-3 md:items-start md:gap-2 md:hover:-translate-y-0.5",
+        "group block min-w-0 cursor-pointer text-left max-md:w-full max-md:border-b max-md:border-foreground/20 max-md:px-4 max-md:py-3",
         isActive && "max-md:bg-foreground max-md:text-background",
         className,
       )}
       {...props}
     >
-      {children}
+      <div className="flex min-w-0 items-center gap-3 transition-transform duration-150 md:items-start md:gap-2 md:group-hover:-translate-y-0.5">
+        {children}
+      </div>
     </a>
   );
 }
