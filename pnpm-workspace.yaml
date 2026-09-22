@@ -4,14 +4,15 @@ allowBuilds:
   sharp: true
   unix-dgram: false
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.3.3
-  vite-plus: 0.3.3
+  vite: npm:@voidzero-dev/vite-plus-core@1.0.0-rc.0
+  vite-plus: 1.0.0-rc.0
 minimumReleaseAge: 2880
 minimumReleaseAgeExclude:
   - vite-plus
   - "@voidzero-dev/*"
   - oxlint
   - "@oxlint/*"
+  - "@oxc-project/*"
   - oxlint-tsgolint
   - "@oxlint-tsgolint/*"
   - oxfmt

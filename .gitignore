@@ -35,3 +35,4 @@ docs/design-refs
 
 # Local Netlify folder
 .netlify
+.vitest/
