@@ -14,8 +14,11 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
   return (
     <Photography>
       <PhotographyHeader>
-        <PhotographyTitle>photography</PhotographyTitle>
-        <nav className="flex w-fit flex-col items-stretch gap-1" aria-label="Section navigation">
+        <PhotographyTitle className="animate-fade-up">photography</PhotographyTitle>
+        <nav
+          className="flex w-fit animate-fade-up flex-col items-stretch gap-1 animation-delay-100"
+          aria-label="Section navigation"
+        >
           <NavButton href="/">Home</NavButton>
           <NavButton href="/blog">Blog</NavButton>
           <NavButton href="/vignettes">Vignettes</NavButton>
@@ -23,7 +26,7 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
         </nav>
       </PhotographyHeader>
       <PhotographyContent>
-        <PhotographyDescription>
+        <PhotographyDescription className="animate-reveal">
           In my spare time I am an amateur photographer. My photography is in both digital and film
           formats. I have collected many cameras over the last few years. The cameras I use include:
           <ul>

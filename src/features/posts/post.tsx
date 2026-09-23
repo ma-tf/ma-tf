@@ -19,7 +19,7 @@ export function PostHeader({ children, className, ...props }: React.ComponentPro
 
 export function PostTitle({ children, className, ...props }: React.ComponentProps<"h1">) {
   return (
-    <h1 className={cn("mb-2 text-4xl font-bold", className)} {...props}>
+    <h1 className={cn("mb-2 animate-fade-up text-4xl font-bold", className)} {...props}>
       {children}
     </h1>
   );
@@ -64,7 +64,7 @@ export function PostTag({ children, className, ...props }: React.ComponentProps<
 
 export function PostContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col gap-5", className)} {...props}>
+    <div className={cn("flex animate-reveal flex-col gap-5", className)} {...props}>
       {children}
     </div>
   );

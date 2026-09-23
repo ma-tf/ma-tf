@@ -26,12 +26,12 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 <Layout>
   <Post>
     <div>
-      <NavButton href="/blog" variant="outline">Blog</NavButton>
+      <NavButton href="/blog" variant="outline" className="animate-fade-up">Blog</NavButton>
     </div>
     <PostHeader>
-      <PostTitle>{post.data.title}</PostTitle>
+      <PostTitle className="animation-delay-100">{post.data.title}</PostTitle>
       <div
-        class="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+        class="mb-4 flex animate-fade-up animation-delay-200 flex-wrap items-center gap-2 text-sm text-muted-foreground"
       >
         <PostDate dateTime={post.data.publicationDate.toISOString()}>
           {post.data.publicationDate.toISOString().split("T")[0]}
@@ -49,7 +49,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       </div>
       {
         post.data.tags.length > 0 && (
-          <PostTags>
+          <PostTags className="animate-fade-up animation-delay-300">
             {post.data.tags.map((tag) => (
               <PostTag href={`/tags/${tag}`}>{tag}</PostTag>
             ))}

@@ -11,9 +11,20 @@ function getInitialTheme(): Theme {
 
 export const theme = atom<Theme>(getInitialTheme());
 
-export function toggleTheme() {
-  const next: Theme = theme.get() === "light" ? "dark" : "light";
+function applyTheme(next: Theme) {
   theme.set(next);
   document.documentElement.classList.toggle("dark", next === "dark");
   localStorage.setItem("theme", next);
+}
+
+export function toggleTheme() {
+  const next: Theme = theme.get() === "light" ? "dark" : "light";
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (prefersReducedMotion || typeof document.startViewTransition !== "function") {
+    applyTheme(next);
+    return;
+  }
+
+  document.startViewTransition(() => applyTheme(next));
 }

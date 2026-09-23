@@ -72,6 +72,36 @@
   animation-range-end: entry 70%;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-scroll {
+    animation: none;
+  }
+}
+
+@keyframes reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-reveal {
+  animation: reveal linear backwards;
+  animation-timeline: view();
+  animation-range-start: entry var(--reveal-offset, 0px);
+  animation-range-end: entry calc(var(--reveal-offset, 0px) + 200px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal {
+    animation: none;
+  }
+}
+
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -124,6 +154,43 @@
   }
   .animate-icon-crossfade:first-child {
     opacity: 0;
+  }
+}
+
+/* Theme change --------------------------------------------------- */
+
+@keyframes theme-sweep {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/*
+ * Toggling the theme runs through `document.startViewTransition`, so the new
+ * snapshot sweeps over the old one. Disabling the default crossfade and
+ * animating only the incoming snapshot's clip-path turns it into a wipe.
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-sweep 500ms var(--ease-in-out-quart) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) {
+    animation: none;
   }
 }
 

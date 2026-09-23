@@ -31,3 +31,13 @@ draw a shadow or outline that follows a clipped shape, apply
 
 Never use `transition-all` — name the specific properties. See
 [ADR 003](adr/003-no-transition-all.md).
+
+## Motion
+
+- **Entrances reuse the shared utilities**, not ad-hoc keyframes.
+  `animate-fade-up` (+ `animation-delay-*`) reveals above-the-fold content on
+  page load; `animate-reveal` reveals content as it scrolls into view. Stagger
+  scroll-revealed siblings with an inline `--reveal-offset`.
+- **Theme changes sweep** through the View Transitions API. See
+  [ADR 010](adr/010-theme-transitions-via-view-transitions.md).
+- Every entrance utility is disabled under `prefers-reduced-motion: reduce`.

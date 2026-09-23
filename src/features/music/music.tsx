@@ -33,7 +33,10 @@ export function MusicContent({ children, className, ...props }: React.ComponentP
 
 export function MusicTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("text-right text-9xl md:text-10xl lg:text-11xl", className)} {...props}>
+    <h2
+      className={cn("animate-fade-up text-right text-9xl md:text-10xl lg:text-11xl", className)}
+      {...props}
+    >
       {children}
     </h2>
   );
@@ -49,7 +52,10 @@ export function MusicHeader({ children, className, ...props }: React.ComponentPr
 
 export function MusicNavigation() {
   return (
-    <nav className="flex flex-wrap justify-end gap-1" aria-label="Section navigation">
+    <nav
+      className="flex animate-fade-up flex-wrap justify-end gap-1 animation-delay-100"
+      aria-label="Section navigation"
+    >
       {MUSIC_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
         <NavButton key={href} href={href}>
           {label}

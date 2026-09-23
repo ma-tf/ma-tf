@@ -15,7 +15,7 @@ export function SectionHeader({ children, className, ...props }: React.Component
   return (
     <header
       className={cn(
-        "col-start-1 flex items-baseline gap-4 font-heading text-lg uppercase",
+        "col-start-1 flex animate-reveal items-baseline gap-4 font-heading text-lg uppercase",
         className,
       )}
       {...props}
@@ -53,7 +53,7 @@ export function SectionTitle({ children, className, ...props }: React.ComponentP
 
 export function SectionSubtitle({ children, className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("col-start-1 font-heading text-5xl", className)} {...props}>
+    <h2 className={cn("col-start-1 animate-reveal font-heading text-5xl", className)} {...props}>
       {children}
     </h2>
   );
@@ -61,7 +61,7 @@ export function SectionSubtitle({ children, className, ...props }: React.Compone
 
 export function SectionContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("col-span-3 col-start-1", className)} {...props}>
+    <div className={cn("col-span-3 col-start-1 animate-reveal", className)} {...props}>
       {children}
     </div>
   );
