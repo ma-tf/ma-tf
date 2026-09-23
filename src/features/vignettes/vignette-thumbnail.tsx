@@ -70,7 +70,7 @@ function VignetteThumbnailSummary({ children, className, ...props }: React.Compo
   return (
     <span
       className={cn(
-        "block text-sm text-muted-foreground lowercase transition-colors duration-200 group-hover:text-foreground md:text-2xs",
+        "block text-sm text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground md:text-2xs",
         isActive && "text-foreground max-md:text-background",
         className,
       )}
@@ -130,7 +130,7 @@ export function VignetteThumbnail() {
             src={thumbnailUrl(vignette.playbackId, 128, 96)}
             alt={`Vignette ${vignette.order}`}
             loading="lazy"
-            className="block aspect-5/3 w-24 object-cover transition-transform duration-200 group-hover:scale-110 md:w-12"
+            className="block aspect-5/3 w-24 object-cover transition-transform duration-150 group-hover:scale-110 md:w-12"
           />
         </span>
       </VignetteThumbnailMedia>

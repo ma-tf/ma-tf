@@ -53,7 +53,7 @@ export function MusicHeader({ children, className, ...props }: React.ComponentPr
 export function MusicNavigation() {
   return (
     <nav
-      className="flex animate-fade-up flex-wrap justify-end gap-1 animation-delay-100"
+      className="flex animate-fade-up flex-wrap justify-end gap-1 animation-delay-50"
       aria-label="Section navigation"
     >
       {MUSIC_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (

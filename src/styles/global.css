@@ -114,7 +114,7 @@
 }
 
 @utility animate-fade-up {
-  animation: fadeUp 0.3s var(--ease-out-expo) both;
+  animation: fadeUp 0.15s var(--ease-out-expo) both;
   animation-delay: var(--delay, 0s);
 }
 
@@ -185,7 +185,7 @@
 
 ::view-transition-new(root) {
   z-index: 2;
-  animation: theme-sweep 500ms var(--ease-in-out-quart) both;
+  animation: theme-sweep 150ms var(--ease-in-out-quart) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -25,8 +25,9 @@ does not prefer reduced motion. Otherwise it applies the mutation directly, so
 the theme still changes instantly.
 
 `global.css` replaces the default crossfade: the old snapshot stays in place
-underneath and the new snapshot is revealed with a `clip-path` wipe over 500ms
-using the `--ease-in-out-quart` token.
+underneath and the new snapshot is revealed with a `clip-path` wipe over 150ms
+using the `--ease-in-out-quart` token. See
+[ADR 011](011-motion-timing-budget.md) for the timing budget this follows.
 
 ## Consequences
 
@@ -40,9 +41,10 @@ using the `--ease-in-out-quart` token.
 ### Negative
 
 - The page is rasterised for the duration of the transition, so anything running
-  at that moment (video, parallax, looping icon animations) freezes for ~500ms.
-- The duration is above the 300ms budget used for interaction feedback. This is
-  acceptable because toggling the theme is occasional, not a frequent action.
+  at that moment (video, parallax, looping icon animations) freezes for ~150ms.
+- The sweep is short enough to read as a quick wipe rather than a slow reveal.
+  If that proves too fast to follow, it is the one animation worth exempting
+  from the timing budget in [ADR 011](011-motion-timing-budget.md).
 - The sweep is a browser dependency: same-document View Transitions are
   supported in Chrome 111+, Safari 18+, and Firefox 144+.
 

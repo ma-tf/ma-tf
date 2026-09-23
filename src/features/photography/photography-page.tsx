@@ -16,7 +16,7 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
       <PhotographyHeader>
         <PhotographyTitle className="animate-fade-up">photography</PhotographyTitle>
         <nav
-          className="flex w-fit animate-fade-up flex-col items-stretch gap-1 animation-delay-100"
+          className="flex w-fit animate-fade-up flex-col items-stretch gap-1 animation-delay-50"
           aria-label="Section navigation"
         >
           <NavButton href="/">Home</NavButton>

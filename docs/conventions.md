@@ -40,4 +40,7 @@ Never use `transition-all` — name the specific properties. See
   scroll-revealed siblings with an inline `--reveal-offset`.
 - **Theme changes sweep** through the View Transitions API. See
   [ADR 010](adr/010-theme-transitions-via-view-transitions.md).
+- **Keep motion snappy:** time-based transitions run for at most 150ms, and
+  staggered delays sit 50ms apart. See
+  [ADR 011](adr/011-motion-timing-budget.md).
 - Every entrance utility is disabled under `prefers-reduced-motion: reduce`.
