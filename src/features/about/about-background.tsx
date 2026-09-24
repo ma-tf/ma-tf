@@ -1,16 +1,20 @@
 import { useParallax } from "@hooks/use-parallax";
 import { cn } from "cn";
 
+const base = `${import.meta.env.R2_PUBLIC_URL}/about`;
+
 const layers = [
-  { src: "/about-page_0003_1Asset-1.png", className: "parallax-10 dark:invert" },
-  { src: "/about-page_0000_Group-2.png", className: "parallax-20 dark:invert" },
-  { src: "/about-page_0001_1Asset-5.png", className: "parallax-30 dark:invert" },
-  { src: "/about-page_0002_1Asset-4.png", className: "parallax-40 dark:invert" },
-  { src: "/about-page_0004_Group-1.png", className: "parallax-50" },
+  { path: "about-bg-hexagons.webp", className: "parallax-10 dark:invert" },
+  { path: "about-bg-chevrons.webp", className: "parallax-15 dark:invert" },
+  { path: "about-bg-table-pedestal.webp", className: "parallax-30" },
+  { path: "about-bg-table-top.webp", className: "parallax-30" },
+  { path: "about-bg-zigzag.webp", className: "parallax-20 dark:invert" },
+  { path: "about-bg-arrows.webp", className: "parallax-35 dark:invert" },
 ];
 
-export function AboutBackground() {
+export function AboutBackground({ baseUrl }: { baseUrl?: string }) {
   const offset = useParallax();
+  const url = (path: string) => `${baseUrl ?? base}/${path}`;
 
   return (
     <div
@@ -23,10 +27,10 @@ export function AboutBackground() {
         } as React.CSSProperties
       }
     >
-      {layers.map(({ src, className }) => (
+      {layers.map(({ path, className }) => (
         <img
-          key={src}
-          src={src}
+          key={path}
+          src={url(path)}
           alt=""
           className={cn("absolute -inset-5 object-contain will-change-transform", className)}
         />

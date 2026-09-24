@@ -6,7 +6,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
 
 <Layout>
   <div class="relative isolate min-h-screen overflow-hidden">
-    <AboutBackground client:load />
+    <AboutBackground client:load baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
     <div class="mx-auto max-w-3xl px-4 py-16 text-foreground md:px-8">
       <h1 class="mb-6 animate-fade-up text-4xl font-semibold">About</h1>
       <div class="flex animate-fade-up animation-delay-50 flex-col gap-8 text-lg leading-relaxed">
