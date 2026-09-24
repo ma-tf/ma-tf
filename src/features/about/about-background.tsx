@@ -1,20 +1,9 @@
 import { useParallax } from "@hooks/use-parallax";
-import { cn } from "cn";
 
-const base = `${import.meta.env.R2_PUBLIC_URL}/about`;
+const shared = "absolute -inset-5 object-contain will-change-transform";
 
-const layers = [
-  { path: "about-bg-hexagons.webp", className: "parallax-10 dark:invert" },
-  { path: "about-bg-chevrons.webp", className: "parallax-15 dark:invert" },
-  { path: "about-bg-table-pedestal.webp", className: "parallax-30" },
-  { path: "about-bg-table-top.webp", className: "parallax-30" },
-  { path: "about-bg-zigzag.webp", className: "parallax-20 dark:invert" },
-  { path: "about-bg-arrows.webp", className: "parallax-35 dark:invert" },
-];
-
-export function AboutBackground({ baseUrl }: { baseUrl?: string }) {
+export function AboutBackground({ baseUrl }: { baseUrl: string }) {
   const offset = useParallax();
-  const url = (path: string) => `${baseUrl ?? base}/${path}`;
 
   return (
     <div
@@ -27,14 +16,36 @@ export function AboutBackground({ baseUrl }: { baseUrl?: string }) {
         } as React.CSSProperties
       }
     >
-      {layers.map(({ path, className }) => (
-        <img
-          key={path}
-          src={url(path)}
-          alt=""
-          className={cn("absolute -inset-5 object-contain will-change-transform", className)}
-        />
-      ))}
+      <img
+        src={`${baseUrl}/about-bg-hexagons.webp`}
+        alt=""
+        className={`${shared} parallax-10 dark:invert`}
+      />
+      <img
+        src={`${baseUrl}/about-bg-chevrons.webp`}
+        alt=""
+        className={`${shared} parallax-15 dark:invert`}
+      />
+      <img
+        src={`${baseUrl}/about-bg-table-pedestal.webp`}
+        alt=""
+        className={`${shared} parallax-x-27 parallax-y-33`}
+      />
+      <img
+        src={`${baseUrl}/about-bg-table-top.webp`}
+        alt=""
+        className={`${shared} parallax-x-27 parallax-y-27`}
+      />
+      <img
+        src={`${baseUrl}/about-bg-zigzag.webp`}
+        alt=""
+        className={`${shared} parallax-20 dark:invert`}
+      />
+      <img
+        src={`${baseUrl}/about-bg-arrows.webp`}
+        alt=""
+        className={`${shared} parallax-35 dark:invert`}
+      />
     </div>
   );
 }
