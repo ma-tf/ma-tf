@@ -13,10 +13,7 @@ type OrbitProps<T> = {
   renderItem: (item: T, index: number) => React.ReactNode;
   onSelect: (item: T) => void;
   onRotate?: (rotation: number) => void;
-  children?: React.ReactNode;
-  style?: React.CSSProperties;
-  className?: string;
-};
+} & Omit<React.ComponentProps<"div">, "onSelect">;
 
 function useOrbitInput({
   stageRef,
@@ -105,6 +102,7 @@ export function Orbit<T>({
   children,
   style,
   className,
+  ...props
 }: OrbitProps<T>) {
   const { startAngle, arcSize, step, items, getKey } = useOrbit<T>();
   const { itemRefs, setRef } = useItemRefs();
@@ -134,6 +132,7 @@ export function Orbit<T>({
 
   return (
     <div
+      {...props}
       ref={stageRef}
       className={cn(
         "orbit-stage relative h-dvh w-full outline-none",

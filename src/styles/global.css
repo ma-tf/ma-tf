@@ -223,34 +223,6 @@
   top: calc(var(--scroll-progress) * 100%);
 }
 
-/* fallow-ignore-next-line code-duplication */
-@utility parallax-* {
-  --parallax-factor-x: calc(--value(integer, --default(100)) / 100);
-  --parallax-factor-y: calc(--value(integer, --default(100)) / 100);
-  transform: translate(
-    calc(var(--parallax-x, 0px) * var(--parallax-factor-x, 0)),
-    calc(var(--parallax-y, 0px) * var(--parallax-factor-y, 0))
-  );
-}
-
-/* fallow-ignore-next-line code-duplication */
-@utility parallax-x-* {
-  --parallax-factor-x: calc(--value(integer, --default(100)) / 100);
-  transform: translate(
-    calc(var(--parallax-x, 0px) * var(--parallax-factor-x, 0)),
-    calc(var(--parallax-y, 0px) * var(--parallax-factor-y, 0))
-  );
-}
-
-/* fallow-ignore-next-line code-duplication */
-@utility parallax-y-* {
-  --parallax-factor-y: calc(--value(integer, --default(100)) / 100);
-  transform: translate(
-    calc(var(--parallax-x, 0px) * var(--parallax-factor-x, 0)),
-    calc(var(--parallax-y, 0px) * var(--parallax-factor-y, 0))
-  );
-}
-
 /* Clip */
 @utility cut-corner {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);

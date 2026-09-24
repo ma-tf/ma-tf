@@ -2,7 +2,6 @@ import type { PlainPost } from "@features/blog/post-data";
 
 import { NavButton } from "@components/nav-button";
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
-import { useParallax } from "@hooks/use-parallax";
 import { previews } from "@lib/feature-flags";
 import { CaretRightIcon } from "@phosphor-icons/react";
 
@@ -18,12 +17,14 @@ function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: 
     <>
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 parallax-15 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
+        data-parallax={15}
+        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
         style={{ "--background-image": `url("${backgrounds.back}")` } as React.CSSProperties}
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 parallax-30 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
+        data-parallax={30}
+        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
         style={{ "--background-image": `url("${backgrounds.front}")` } as React.CSSProperties}
       />
     </>
@@ -33,7 +34,8 @@ function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: 
 function BlogNavigation() {
   return (
     <nav
-      className="mt-4 flex parallax-60 flex-wrap justify-end gap-1"
+      data-parallax={60}
+      className="mt-4 flex flex-wrap justify-end gap-1"
       aria-label="Section navigation"
     >
       {BLOG_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
@@ -56,32 +58,22 @@ export function BlogPage({
   posts: PlainPost[];
   backgrounds: { back: string; front: string };
 }) {
-  const offset = useParallax();
-
   return (
-    <div
-      className="relative isolate flex h-dvh px-4 md:h-dvh md:overflow-hidden"
-      style={
-        {
-          "--parallax-x": `${offset.x}px`,
-          "--parallax-y": `${offset.y}px`,
-        } as React.CSSProperties
-      }
-    >
+    <div className="relative isolate flex h-dvh px-4 md:h-dvh md:overflow-hidden">
       <BlogBackgrounds backgrounds={backgrounds} />
       <Blog>
         <BlogHeader>
           <div className="animate-fade-up">
-            <BlogTitle className="parallax-30">{title}</BlogTitle>
+            <BlogTitle data-parallax={30}>{title}</BlogTitle>
           </div>
           <div className="animate-fade-up animation-delay-50">
-            <BlogDescription className="parallax-60">{description}</BlogDescription>
+            <BlogDescription data-parallax={60}>{description}</BlogDescription>
           </div>
           <div className="animate-fade-up animation-delay-100">
             <BlogNavigation />
           </div>
         </BlogHeader>
-        <BlogContent className="parallax">
+        <BlogContent data-parallax={100}>
           <PostList posts={posts} />
         </BlogContent>
       </Blog>

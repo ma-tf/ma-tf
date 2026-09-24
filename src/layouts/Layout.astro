@@ -30,6 +30,12 @@ const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 	document.documentElement.classList[isDark ? "add" : "remove"]("dark");
 </script>
 
+<script>
+	import { startParallax } from "@lib/parallax";
+
+	startParallax();
+</script>
+
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />

@@ -75,7 +75,10 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
   const groupedByTag = useGroupedByTag(postsByTag);
 
   return (
-    <div className="absolute top-0 right-8 z-10 grid h-dvh w-sm parallax-60 grid-rows-[2fr_3fr] px-8 py-12 xl:left-218">
+    <div
+      data-parallax={60}
+      className="absolute top-0 right-8 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12 xl:left-218"
+    >
       <nav className="flex items-center justify-end">
         <div className="flex flex-col gap-1">
           {[

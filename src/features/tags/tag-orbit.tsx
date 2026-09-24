@@ -35,7 +35,7 @@ export function TagOrbit({ tags, selected }: TagOrbitProps) {
       initialRotation={initialRotation}
     >
       <Orbit
-        className="parallax-60"
+        data-parallax={60}
         onSelect={navigate}
         onRotate={(rotation) => {
           rotationRef.current = rotation;
