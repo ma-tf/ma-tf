@@ -46,7 +46,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/turndown": "^5.0.6",
     "astro": "^7.3.3",
-    "fallow": "^3.27.0",
+    "fallow": "^3.28.0",
     "is-agentic": "^1.0.1",
     "mdast-util-to-string": "^4.0.0",
     "netlify": "^27.8.0",
