@@ -1,18 +1,19 @@
 import { cn } from "cn";
 
 export function About({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("grid md:h-dvh md:grid-cols-10", className)} {...props} />;
+  return (
+    <div
+      className={cn("grid md:h-dvh md:grid-cols-10 md:grid-rows-[1fr_auto]", className)}
+      {...props}
+    />
+  );
 }
 
 export function AboutHeader({ className, ...props }: React.ComponentProps<"header">) {
   return (
     <header
       data-parallax={40}
-      className={cn(
-        // oxlint-disable-next-line shadcn/no-arbitrary-values
-        "text-center md:col-span-4 md:flex md:h-dvh md:justify-end md:pt-[calc(50dvh-12rem)]",
-        className,
-      )}
+      className={cn("text-center md:col-start-5 md:flex md:items-center", className)}
       {...props}
     />
   );
@@ -20,18 +21,26 @@ export function AboutHeader({ className, ...props }: React.ComponentProps<"heade
 
 export function AboutTitle({ className, ...props }: React.ComponentProps<"h1">) {
   return (
-    <h1 className={cn("animate-fade-up text-2xl font-semibold uppercase", className)} {...props} />
+    <h1
+      className={cn(
+        "rotate-90 animate-fade-in text-9xl font-semibold uppercase animation-delay-1200",
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
 export function AboutContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      data-parallax={80}
-      className={cn("max-w-prose text-lg md:col-span-5 md:col-start-6", className)}
+      className={cn(
+        "md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:auto-cols-fr md:grid-flow-col",
+        className,
+      )}
       {...props}
     >
-      <div className="flex animate-fade-up flex-col gap-8 animation-delay-50">{children}</div>
+      {children}
     </div>
   );
 }

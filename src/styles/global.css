@@ -102,24 +102,78 @@
   }
 }
 
-@keyframes fadeUp {
+@keyframes fadeUpFade {
   0% {
     opacity: 0;
-    transform: translateY(12px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-@utility animate-fade-up {
-  animation: fadeUp 0.15s var(--ease-out-expo) both;
+@keyframes fadeUpMove {
+  0% {
+    translate: 0 var(--fade-up-distance, 12px);
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@utility animate-fade-up-* {
+  --fade-up-distance: calc(--value(integer, --default(12)) * 1px);
+  --fade-up-duration: calc(--modifier(integer, --default(150)) * 1ms);
+  animation:
+    fadeUpFade var(--fade-up-duration) var(--ease-out-expo) both,
+    fadeUpMove var(--fade-up-duration) var(--ease-out-expo) both;
+  animation-delay: var(--delay, 0s), calc(var(--delay, 0s) + var(--fade-move-delay, 0s));
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility fade-move-delay-* {
+  --fade-move-delay: calc(--value(integer) * 1ms);
+}
+
+@keyframes flickerIn {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.12;
+  }
+  26% {
+    opacity: 1;
+  }
+  44% {
+    opacity: 0.65;
+  }
+  52% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility animate-fade-in {
+  animation: flickerIn 1s linear both;
   animation-delay: var(--delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-up {
+  .animate-fade-in {
     animation: none;
   }
 }
@@ -226,6 +280,44 @@
 /* Clip */
 @utility cut-corner {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+/* Corner brackets */
+@utility corner-brackets-* {
+  --bracket-len: calc(--value(integer) * 1px);
+  background-image:
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground)),
+    linear-gradient(var(--foreground), var(--foreground));
+  background-position:
+    top left,
+    top left,
+    top right,
+    top right,
+    bottom left,
+    bottom left,
+    bottom right,
+    bottom right;
+  background-size:
+    var(--bracket-len) var(--bracket-thick, 1px),
+    var(--bracket-thick, 1px) var(--bracket-len),
+    var(--bracket-len) var(--bracket-thick, 1px),
+    var(--bracket-thick, 1px) var(--bracket-len),
+    var(--bracket-len) var(--bracket-thick, 1px),
+    var(--bracket-thick, 1px) var(--bracket-len),
+    var(--bracket-len) var(--bracket-thick, 1px),
+    var(--bracket-thick, 1px) var(--bracket-len);
+  background-repeat: no-repeat;
+}
+
+/* Corner bracket thickness */
+@utility corner-thickness-* {
+  --bracket-thick: calc(--value(integer) * 1px);
 }
 
 /* Tag link */

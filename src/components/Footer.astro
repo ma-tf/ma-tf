@@ -4,6 +4,8 @@ const links = [
   { label: "Privacy", href: "/privacy" },
   { label: "Developers", href: "/developers" },
 ];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
 <footer
@@ -14,18 +16,22 @@ const links = [
     class="mx-auto flex h-full w-full max-w-480 items-stretch justify-end"
   >
     {
-      links.map((link, index) => (
-        <a
-          href={link.href}
-          class:list={[
-            "flex items-center px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
-            "hover:bg-foreground hover:text-background",
-            index > 0 && "border-l border-foreground/20",
-          ]}
-        >
-          {link.label}
-        </a>
-      ))
+      links.map((link, index) => {
+        const isCurrent = link.href === currentPath;
+        return (
+          <a
+            href={link.href}
+            aria-current={isCurrent ? "page" : undefined}
+            class:list={[
+              "flex items-center px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
+              "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground",
+              index > 0 && "border-l border-foreground/20",
+            ]}
+          >
+            {link.label}
+          </a>
+        );
+      })
     }
   </nav>
 </footer>

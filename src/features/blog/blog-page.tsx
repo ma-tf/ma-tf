@@ -90,9 +90,9 @@ function PostList({ posts }: { posts: PlainPost[] }) {
           className="group my-2 animate-fade-up md:my-0 md:py-2"
           style={{ "--delay": `${150 + index * 50}ms` } as React.CSSProperties}
         >
-          <button
-            className="flex w-full cursor-pointer flex-col text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
-            onClick={() => (window.location.href = `/posts/${post.slug}`)}
+          <a
+            href={`/posts/${post.slug}`}
+            className="flex w-full flex-col text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
           >
             <div className="relative flex items-center">
               <CaretRightIcon
@@ -109,7 +109,7 @@ function PostList({ posts }: { posts: PlainPost[] }) {
               </time>
             </div>
             <p className="text-sm">{post.description}</p>
-          </button>
+          </a>
         </li>
       ))}
     </ul>

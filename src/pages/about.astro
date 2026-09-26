@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { AboutBackground } from "@features/about/about-background";
+import { StillLifeBackground } from "@components/still-life-background";
 import {
   About,
   AboutContent,
@@ -11,37 +11,57 @@ import { siteIdentity } from "@features/seo/site-metadata";
 ---
 
 <Layout>
-  <div class="max-w-480 overflow-hidden">
-    <AboutBackground
-      client:load
-      baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
-    />
+  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
+    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
     <About>
       <AboutHeader>
         <AboutTitle>About</AboutTitle>
       </AboutHeader>
       <AboutContent>
-        <p>
-          I'm {siteIdentity.name}, a full-stack developer. I started programming
-          in 2013 and began working professionally in 2018. My experience spans
-          public safety, finance, and intellectual property.
-        </p>
-        <p>
-          I work across the stack, from interfaces and APIs to infrastructure
-          and databases. My main tools include TypeScript, React, Angular, C#,
-          Go, SQL, Azure, Kubernetes, Helm, and OpenTofu.
-        </p>
-        <p>
-          This site is a record of the things I make and learn. Alongside
-          software projects and writing, it includes photography, graphics,
-          music, and other creative experiments.
-        </p>
-        <p>
-          You can read about my professional experience on the <a
-            href="/cv"
-            class="underline underline-offset-4 hover:text-foreground/70">CV</a
-          > page, or browse the projects and creative work from the home page.
-        </p>
+        <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={3}
+          >
+            <p
+              class="p-2 animate-fade-up animation-delay-1050"
+              data-parallax={10}
+            >
+              I'm {siteIdentity.name}, a full-stack developer. I started
+              programming in 2013 and began working professionally in 2018. My
+              experience spans public safety, finance, and intellectual
+              property.
+            </p>
+          </div>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={5}
+          >
+            <p
+              class="p-2 animate-fade-up animation-delay-1100"
+              data-parallax={17}
+            >
+              This site is a record of the things I make and learn. Alongside
+              software projects and writing, it includes photography, graphics,
+              music, and other creative experiments.
+            </p>
+          </div>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={7}
+          >
+            <p
+              class="p-2 animate-fade-up animation-delay-1150"
+              data-parallax={23}
+            >
+              You can read about my professional experience on the <a
+                href="/cv"
+                class="underline underline-offset-4 hover:text-foreground/70"
+                >CV</a
+              > page, or browse the projects and creative work from the home page.
+            </p>
+          </div>
+        </section>
       </AboutContent>
     </About>
   </div>
