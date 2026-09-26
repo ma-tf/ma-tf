@@ -1,5 +1,5 @@
 import profile from "@content/profile.json";
-import { resources, siteUrl } from "@features/discovery/catalog";
+import { isSectionGuide, resources, sectionGuides, siteUrl } from "@features/discovery/catalog";
 import { rateLimit } from "@features/discovery/rate-limits";
 
 type ArchivePost = {
@@ -32,7 +32,7 @@ const pages = [
 ] as const;
 
 const machineReadableFiles = resources
-  .filter((resource) => resource.path !== "/llms.txt")
+  .filter((resource) => resource.path !== "/llms.txt" && !isSectionGuide(resource))
   .map((resource) => ({
     path: resource.path,
     title: resource.title,
@@ -64,6 +64,12 @@ export function buildLlmsTxt(): string {
     "",
     ...pages.map(([title, path, description]) => `- [${title}](${siteUrl}${path}): ${description}`),
     `- [GitHub](${profile.github}): source code and open-source work`,
+    "",
+    "## Section Guides",
+    "",
+    ...sectionGuides.map(
+      (guide) => `- [${guide.title}](${siteUrl}${guide.path}): ${guide.description}`,
+    ),
     "",
     "## Machine-Readable Files",
     "",
@@ -139,5 +145,116 @@ export function buildLlmsFullTxt(posts: ArchivePost[]): string {
     "This file contains the published blog content from m4t.tf.",
     "",
     ...sections.flatMap((section) => [section, "---", ""]),
+  ].join("\n");
+}
+
+export function buildBlogLlmsTxt(posts: ArchivePost[]): string {
+  const sorted = [...posts].sort(
+    (a, b) => b.data.publicationDate.valueOf() - a.data.publicationDate.valueOf(),
+  );
+
+  const tags = [...new Set(sorted.flatMap((post) => post.data.tags))].sort((a, b) =>
+    a.localeCompare(b),
+  );
+
+  const firstPost = sorted[0]?.data.slug ?? "<slug>";
+
+  return [
+    "# m4t.tf: Blog",
+    "",
+    `> Writing by ${profile.name} about software development, programming, and tools. This`,
+    "> guide indexes the published posts so an agent can choose one without fetching the",
+    "> full archive.",
+    "",
+    "## Posts",
+    "",
+    ...sorted.map((post) => {
+      const { title, slug, publicationDate, description, tags: postTags } = post.data;
+      const date = publicationDate.toISOString().split("T")[0];
+
+      return `- [${title}](${siteUrl}/posts/${slug}): ${description} (${date}; ${postTags.join(", ")})`;
+    }),
+    "",
+    "## Tags",
+    "",
+    ...tags.map(
+      (tag) => `- [${tag}](${siteUrl}/tags/${encodeURIComponent(tag)}): posts tagged ${tag}`,
+    ),
+    "",
+    "## Retrieval",
+    "",
+    `Fetch any post with \`Accept: text/markdown\`, for example`,
+    `\`curl -H "Accept: text/markdown" ${siteUrl}/posts/${firstPost}\`, or read the full`,
+    `text of every post at [llms-full.txt](${siteUrl}/llms-full.txt).`,
+    "",
+  ].join("\n");
+}
+
+export function buildDevelopersLlmsTxt(): string {
+  const listed = resources.filter((resource) => !isSectionGuide(resource));
+
+  return [
+    "# m4t.tf: Developers",
+    "",
+    `> The machine-readable surface of ${profile.name}'s site. This guide scopes the`,
+    "> retrieval interface for agents that read the site's resources.",
+    "",
+    "## Resources",
+    "",
+    ...listed.map(
+      (resource) => `- [${resource.path}](${siteUrl}${resource.path}): ${resource.description}`,
+    ),
+    "",
+    "## Retrieval",
+    "",
+    "Request any page with `Accept: text/markdown` to receive it as markdown, or append",
+    `\`.md\` to the path, for example \`${siteUrl}/about.md\`. Send`,
+    "`Accept: application/json` to a resource to receive its canonical document or a typed",
+    "descriptor. Responses carry `Vary: Accept, Accept-Encoding`.",
+    "",
+    "## Errors",
+    "",
+    "Nonexistent paths return a real HTTP 404. The error follows the same negotiation:",
+    "`Accept: application/json` returns an RFC 9457 `application/problem+json` document,",
+    "and `Accept: text/markdown` returns the error as markdown. The whole interface is",
+    `described by the OpenAPI 3.1 document at [openapi.json](${siteUrl}/openapi.json).`,
+    "",
+    "## Versioning",
+    "",
+    "Send `API-Version` to declare the compatibility version you expect; the current",
+    "version is 1 and is the default. Deprecated resources carry RFC 9745 `Deprecation`",
+    "and RFC 8594 `Sunset` headers.",
+    "",
+    "## Rate Limits",
+    "",
+    "Requests are not metered, and the site never returns `429 Too Many Requests`.",
+    `Every response declares a published floor of ${rateLimit.quota} requests per minute per`,
+    "client with `RateLimit-Policy`, `RateLimit-Limit`, and `RateLimit-Reset`.",
+    "",
+  ].join("\n");
+}
+
+export function buildCvLlmsTxt(): string {
+  return [
+    "# m4t.tf: CV",
+    "",
+    `> The professional profile of ${profile.name}, a ${profile.title}. This guide points`,
+    "> an agent at the pages that verify claims about his experience, skills, education,",
+    "> and projects.",
+    "",
+    "## Pages",
+    "",
+    `- [CV](${siteUrl}/cv): experience, technical strengths, education, and projects`,
+    `- [About](${siteUrl}/about): background and purpose of the site`,
+    `- [Contact](${siteUrl}/contact): current contact guidance`,
+    `- [Blog](${siteUrl}/blog): writing about software development, programming, and tools`,
+    "",
+    "## Citing",
+    "",
+    "Answer from these published pages rather than from inference. Request a page with",
+    "`Accept: text/markdown` for a clean, quotable form. When a claim is not supported",
+    "by a published page, report it as unverified. Do not infer contact details or",
+    "personal information that are not published on the site.",
+    "",
   ].join("\n");
 }

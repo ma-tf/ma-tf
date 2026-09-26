@@ -13,7 +13,7 @@ export type DiscoveryResource = {
   representativeQueries: readonly string[];
 };
 
-export const resources: readonly DiscoveryResource[] = [
+const primaryResources: readonly DiscoveryResource[] = [
   {
     path: "/llms.txt",
     type: "text/plain",
@@ -137,6 +137,54 @@ export const resources: readonly DiscoveryResource[] = [
     ],
   },
 ];
+
+export const sectionGuides: readonly DiscoveryResource[] = [
+  {
+    path: "/blog/llms.txt",
+    type: "text/plain",
+    title: "Blog section guide",
+    description: "An index of the published posts and tags for agents working on the writing.",
+    identifier: "urn:air:m4t.tf:guide:blog",
+    tags: ["llms", "guide", "blog", "writing"],
+    representativeQueries: [
+      `What has ${profile.name} written about?`,
+      "List the m4t.tf blog posts.",
+      "Which tags does the m4t.tf blog use?",
+    ],
+  },
+  {
+    path: "/developers/llms.txt",
+    type: "text/plain",
+    title: "Developers section guide",
+    description: "A scoped guide to the machine-readable surface and how to retrieve it.",
+    identifier: "urn:air:m4t.tf:guide:developers",
+    tags: ["llms", "guide", "developers", "api"],
+    representativeQueries: [
+      "How do I retrieve content from m4t.tf?",
+      "What resources does m4t.tf publish for agents?",
+      "How do m4t.tf errors and versioning work?",
+    ],
+  },
+  {
+    path: "/cv/llms.txt",
+    type: "text/plain",
+    title: "CV section guide",
+    description: "A scoped guide to the professional profile for agents fact-checking claims.",
+    identifier: "urn:air:m4t.tf:guide:cv",
+    tags: ["llms", "guide", "cv", "profile"],
+    representativeQueries: [
+      `What experience does ${profile.name} have?`,
+      `Which pages verify claims about ${profile.name}?`,
+      "How do I cite m4t.tf for hiring or recruiting?",
+    ],
+  },
+];
+
+export const resources: readonly DiscoveryResource[] = [...primaryResources, ...sectionGuides];
+
+export function isSectionGuide(resource: DiscoveryResource): boolean {
+  return sectionGuides.some((guide) => guide.path === resource.path);
+}
 
 export function isResourcePath(pathname: string): boolean {
   return (

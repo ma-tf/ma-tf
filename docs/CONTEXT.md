@@ -28,6 +28,12 @@ _Avoid_: original, source
 The markdown form of a page or discovery resource.
 _Avoid_: markdown copy, md version
 
+**Section guide**:
+A discovery resource that indexes one area of the site, such as its writing or
+machine-readable surface, so an agent can fetch scoped context instead of the
+whole site.
+_Avoid_: subsection llms, partial index, section llms.txt
+
 ### Audience
 
 **Agent**:
@@ -38,6 +44,11 @@ _Avoid_: bot, crawler, user
 **Agent Skill**:
 A capability document the site publishes for agents.
 _Avoid_: tool, plugin, prompt
+
+**Agent capability**:
+An action the site publishes for agents to invoke, as opposed to a discovery
+resource to read.
+_Avoid_: endpoint, API, tool
 
 ### Ask
 
