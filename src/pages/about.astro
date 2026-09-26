@@ -1,34 +1,48 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { AboutBackground } from "@features/about/about-background";
+import {
+  About,
+  AboutContent,
+  AboutHeader,
+  AboutTitle,
+} from "@features/about/about";
 import { siteIdentity } from "@features/seo/site-metadata";
 ---
 
 <Layout>
-  <div class="relative isolate min-h-screen overflow-hidden">
-    <AboutBackground client:load baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
-    <div class="mx-auto max-w-3xl px-4 py-16 text-foreground md:px-8">
-      <h1 class="mb-6 animate-fade-up text-4xl font-semibold">About</h1>
-      <div class="flex animate-fade-up animation-delay-50 flex-col gap-8 text-lg leading-relaxed">
+  <div class="max-w-480 overflow-hidden">
+    <AboutBackground
+      client:load
+      baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
+    />
+    <About>
+      <AboutHeader>
+        <AboutTitle>About</AboutTitle>
+      </AboutHeader>
+      <AboutContent>
         <p>
-          I'm {siteIdentity.name}, a full-stack developer. I started programming in 2013 and began working
-          professionally in 2018. My experience spans public safety, finance, and intellectual property.
+          I'm {siteIdentity.name}, a full-stack developer. I started programming
+          in 2013 and began working professionally in 2018. My experience spans
+          public safety, finance, and intellectual property.
         </p>
         <p>
-          I work across the stack, from interfaces and APIs to infrastructure and databases. My main
-          tools include TypeScript, React, Angular, C#, Go, SQL, Azure, Kubernetes, Helm, and OpenTofu.
+          I work across the stack, from interfaces and APIs to infrastructure
+          and databases. My main tools include TypeScript, React, Angular, C#,
+          Go, SQL, Azure, Kubernetes, Helm, and OpenTofu.
         </p>
         <p>
-          This site is a record of the things I make and learn. Alongside software projects and writing,
-          it includes photography, graphics, music, and other creative experiments.
+          This site is a record of the things I make and learn. Alongside
+          software projects and writing, it includes photography, graphics,
+          music, and other creative experiments.
         </p>
         <p>
           You can read about my professional experience on the <a
             href="/cv"
-            class="underline underline-offset-4 hover:text-foreground/70">CV</a> page, or browse the
-          projects and creative work from the home page.
+            class="underline underline-offset-4 hover:text-foreground/70">CV</a
+          > page, or browse the projects and creative work from the home page.
         </p>
-      </div>
-    </div>
+      </AboutContent>
+    </About>
   </div>
 </Layout>
