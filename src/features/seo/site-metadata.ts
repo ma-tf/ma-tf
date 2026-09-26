@@ -51,6 +51,14 @@ const breadcrumbSegments: Record<string, { name: string; path: string }> = {
   vignettes: { name: "Vignettes", path: "/vignettes" },
 };
 
+export function pageNameFor(pathname: string): string | undefined {
+  const [segment] = pathname.split("/").filter(Boolean);
+
+  if (!segment) return "Home";
+
+  return breadcrumbSegments[segment]?.name;
+}
+
 function breadcrumbList(pathname: string) {
   const items = [
     {

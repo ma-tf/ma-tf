@@ -2,11 +2,12 @@
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import { resourceByRel } from "@features/discovery/catalog";
-import { siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
+import { pageNameFor, siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
 
 import "../styles/global.css";
 
 const {
+  title,
   hideOverflow = false,
   showHeader = true,
   showFooter = true,
@@ -14,6 +15,9 @@ const {
 
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const markdownPath =
+	Astro.url.pathname === "/" ? "/index.md" : `${Astro.url.pathname.replace(/\/+$/, "")}.md`;
+const markdownUrl = new URL(markdownPath, siteUrl).href;
 const aiCatalog = resourceByRel("ai-catalog");
 const agentSkills = resourceByRel("agent-skills");
 const ogImage = new URL(
@@ -21,7 +25,10 @@ const ogImage = new URL(
 	`${import.meta.env.R2_PUBLIC_URL}/`,
 );
 const jsonLd = siteJsonLd(ogImage.href, Astro.url.pathname);
-const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
+const pageName = title ?? pageNameFor(Astro.url.pathname);
+const pageTitle = pageName
+	? `${pageName} | ${siteIdentity.name}`
+	: `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 ---
 
 <script is:inline>
@@ -44,6 +51,7 @@ const pageTitle = `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 		<title>{pageTitle}</title>
 		<meta name="description" content={siteIdentity.description} />
 		<link rel="canonical" href={canonicalUrl} />
+		<link rel="alternate" type="text/markdown" href={markdownUrl} />
 		<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
 		<link rel="ai-catalog" href={aiCatalog.path} type={aiCatalog.type} />
 		<link rel="agent-skills" href={agentSkills.path} type={agentSkills.type} />

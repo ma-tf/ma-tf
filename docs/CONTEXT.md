@@ -38,3 +38,20 @@ _Avoid_: bot, crawler, user
 **Agent Skill**:
 A capability document the site publishes for agents.
 _Avoid_: tool, plugin, prompt
+
+### Ask
+
+**Ask**:
+A visitor's question to the site, answered from its published content rather than
+from open-ended model knowledge.
+_Avoid_: query, prompt, chat
+
+**Decision gate**:
+The stage of an ask that decides whether the question is answerable from published
+content and which content answers it, before any prose is written.
+_Avoid_: router, classifier, filter
+
+**Answerer**:
+The stage of an ask that writes the prose from the content the decision gate
+selected.
+_Avoid_: generator, model, completion

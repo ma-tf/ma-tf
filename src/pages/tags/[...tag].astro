@@ -9,7 +9,7 @@ const selected = data.tags.find(({ tag }) => tag === Astro.params.tag) ?? null;
 const backgroundBaseUrl = import.meta.env.R2_PUBLIC_URL;
 ---
 
-<Layout hideOverflow>
+<Layout hideOverflow title={selected ? `Posts tagged ${selected.tag}` : "Tags"}>
   <div
     class="absolute inset-0 -z-10 bg-emerald-50 dark:bg-emerald-950"
     aria-hidden="true"
