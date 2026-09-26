@@ -1,172 +1,176 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { resources, siteUrl } from "@features/discovery/catalog";
+import { StillLifeBackground } from "@components/still-life-background";
 import { rateLimit } from "@features/discovery/rate-limits";
 ---
 
 <Layout>
-  <main
-    class="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground md:px-8"
-  >
-    <h1 class="mb-6 animate-fade-up text-4xl font-semibold">Developers</h1>
-    <div class="flex animate-fade-up animation-delay-50 flex-col gap-8 text-lg leading-relaxed">
-      <p>
-        m4t.tf is machine-readable. Every page is available as HTML or markdown,
-        and the files below expose the site's content and metadata as data.
-        Everything is public: there are no API keys, and requests are not
-        metered.
-      </p>
-
-      <section class="flex flex-col gap-3">
-        <h2 class="text-2xl font-semibold">Machine-readable files</h2>
+  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
+    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
+    <main
+      class="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground md:px-8"
+    >
+      <h1 class="mb-6 animate-fade-up text-4xl font-semibold">Developers</h1>
+      <div class="flex animate-fade-up animation-delay-50 flex-col gap-8 text-xs leading-relaxed">
         <p>
-          Each entry is an unauthenticated GET. The human-readable pages are
-          served by the same interface.
+          m4t.tf is machine-readable. Every page is available as HTML or markdown,
+          and the files below expose the site's content and metadata as data.
+          Everything is public: there are no API keys, and requests are not
+          metered.
         </p>
-        <ul class="flex flex-col gap-3">
-          {
-            resources.map((resource) => (
-              <li>
-                <a
-                  href={resource.path}
-                  class="underline underline-offset-4 hover:text-foreground/70"
-                >
-                  {resource.path}
-                </a>
-                <span class="block text-base text-muted-foreground">
-                  {resource.type} — {resource.description}
-                </span>
-              </li>
-            ))
-          }
-        </ul>
+  
+        <section class="flex flex-col gap-3">
+          <h2 class="text-2xl font-semibold">Machine-readable files</h2>
+          <p>
+            Each entry is an unauthenticated GET. The human-readable pages are
+            served by the same interface.
+          </p>
+          <ul class="flex flex-col gap-3">
+            {
+              resources.map((resource) => (
+                <li>
+                  <a
+                    href={resource.path}
+                    class="underline underline-offset-4 hover:text-foreground/70"
+                  >
+                    {resource.path}
+                  </a>
+                  <span class="block text-base text-muted-foreground">
+                    {resource.type} — {resource.description}
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+          <p>
+            These paths are intentionally absent rather than missing: there is no
+            file at <code>/.well-known/openid-configuration</code>,
+            <code>/.well-known/oauth-authorization-server</code>, or
+            <code>/.well-known/oauth-protected-resource</code>, because the site
+            has no authentication and no protected APIs.
+          </p>
+        </section>
+  
+        <section class="flex flex-col gap-3">
+          <h2 class="text-2xl font-semibold">Quickstart</h2>
+          <p>
+            Send <code>Accept: text/markdown</code> to any page to receive it as markdown
+            instead of HTML. Appending <code>.md</code> does the same for a page, and
+            returns a markdown summary for a machine-readable file.
+          </p>
+          <p>
+            Send <code>Accept: application/json</code> to a machine-readable file to
+            receive it as JSON: JSON resources return their canonical document, and the
+            others return a typed descriptor with the resource's metadata.
+          </p>
+          <pre
+            class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv
+  curl ${siteUrl}/about.md
+  curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
+          <p>
+            Nonexistent paths return a real HTTP 404, so a 404 is proof the path
+            does not exist. Responses carry <code
+              >Vary: Accept, Accept-Encoding</code
+            >, so caches must store the HTML and markdown representations
+            separately.
+          </p>
+        </section>
+  
+        <section class="flex flex-col gap-3">
+          <h2 class="text-2xl font-semibold">Rate limits</h2>
+          <p>
+            Requests are not metered. Every response carries
+            <code>RateLimit-Policy</code>, <code>RateLimit-Limit</code>, and
+            <code>RateLimit-Reset</code> declaring a published floor of
+            <code>{rateLimit.quota}</code> requests per minute per client. The
+            origin will not reject you below that floor, so the site never returns
+            <code>429 Too Many Requests</code> for rate limiting.
+          </p>
+        </section>
+  
+        <section class="flex flex-col gap-3">
+          <h2 class="text-2xl font-semibold">Errors</h2>
+          <p>
+            A failed request returns a representation matching your
+            <code>Accept</code> header. Send <code>Accept: application/json</code>
+            to receive an RFC 9457 <code>application/problem+json</code> document,
+            or <code>Accept: text/markdown</code> to receive the same problem as
+            markdown. A request to a machine-readable file or a path under
+            <code>/.well-known/</code> also receives JSON, and a browser
+            navigation still receives the HTML error page. Every error carries a
+            stable <code>code</code> and a recovery <code>resolution</code>
+            alongside the human-readable <code>detail</code> and the
+            <code>documentation_url</code> for this page.
+          </p>
+          <pre
+            class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: application/json" ${siteUrl}/no-such-page
+  curl -H "Accept: text/markdown" ${siteUrl}/no-such-page`}</code></pre>
+          <pre
+            class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`{
+    "type": "${siteUrl}/problems/not-found",
+    "title": "Resource not found",
+    "status": 404,
+    "detail": "No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.",
+    "code": "RESOURCE_NOT_FOUND",
+    "resolution": "Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${siteUrl}/developers for the interface.",
+    "documentation_url": "${siteUrl}/developers",
+    "instance": "/no-such-page"
+  }`}</code></pre>
+          <pre
+            class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`# Resource not found
+  
+  No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.
+  
+  Resolution: Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${siteUrl}/developers for the interface.
+  
+  - Documentation: ${siteUrl}/developers
+  - Site guide: ${siteUrl}/llms.txt
+  - Sitemap: ${siteUrl}/sitemap.xml`}</code></pre>
+          <p>
+            A non-GET request to a machine-readable file returns
+            <code>405 Method Not Allowed</code> with an <code>Allow</code> header,
+            and a request whose <code>Accept</code> header excludes every
+            supported representation returns <code>406 Not Acceptable</code>.
+          </p>
+        </section>
+  
+        <section id="versioning-and-deprecation" class="flex flex-col gap-3">
+          <h2 class="text-2xl font-semibold">Versioning and deprecation</h2>
+          <p>
+            Send the <code>API-Version</code> header to declare the API
+            compatibility version you expect. The current version is
+            <code>1</code>, which is also the default when the header is absent.
+            Non-breaking changes stay within a version; a breaking change takes a
+            new value, while the previous version is deprecated rather than
+            changed in place.
+          </p>
+          <p>
+            Deprecated resources return RFC 9745
+            <code>Deprecation</code> and RFC 8594 <code>Sunset</code> response
+            headers, plus a <code>Link</code> header with
+            <code>rel="deprecation"</code> and
+            <code>rel="successor-version"</code>. A deprecated resource keeps
+            working for at least six months after its deprecation date, until the
+            <code>Sunset</code> date, after which it returns
+            <code>410 Gone</code>. The OpenAPI document declares both headers.
+          </p>
+        </section>
+  
         <p>
-          These paths are intentionally absent rather than missing: there is no
-          file at <code>/.well-known/openid-configuration</code>,
-          <code>/.well-known/oauth-authorization-server</code>, or
-          <code>/.well-known/oauth-protected-resource</code>, because the site
-          has no authentication and no protected APIs.
+          The whole interface is described by the OpenAPI 3.1 document at
+          <a
+            href="/openapi.json"
+            class="underline underline-offset-4 hover:text-foreground/70"
+            >/openapi.json</a
+          >, and
+          <a
+            href="/llms.txt"
+            class="underline underline-offset-4 hover:text-foreground/70"
+            >/llms.txt</a
+          > indexes everything the site publishes.
         </p>
-      </section>
-
-      <section class="flex flex-col gap-3">
-        <h2 class="text-2xl font-semibold">Quickstart</h2>
-        <p>
-          Send <code>Accept: text/markdown</code> to any page to receive it as markdown
-          instead of HTML. Appending <code>.md</code> does the same for a page, and
-          returns a markdown summary for a machine-readable file.
-        </p>
-        <p>
-          Send <code>Accept: application/json</code> to a machine-readable file to
-          receive it as JSON: JSON resources return their canonical document, and the
-          others return a typed descriptor with the resource's metadata.
-        </p>
-        <pre
-          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv
-curl ${siteUrl}/about.md
-curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
-        <p>
-          Nonexistent paths return a real HTTP 404, so a 404 is proof the path
-          does not exist. Responses carry <code
-            >Vary: Accept, Accept-Encoding</code
-          >, so caches must store the HTML and markdown representations
-          separately.
-        </p>
-      </section>
-
-      <section class="flex flex-col gap-3">
-        <h2 class="text-2xl font-semibold">Rate limits</h2>
-        <p>
-          Requests are not metered. Every response carries
-          <code>RateLimit-Policy</code>, <code>RateLimit-Limit</code>, and
-          <code>RateLimit-Reset</code> declaring a published floor of
-          <code>{rateLimit.quota}</code> requests per minute per client. The
-          origin will not reject you below that floor, so the site never returns
-          <code>429 Too Many Requests</code> for rate limiting.
-        </p>
-      </section>
-
-      <section class="flex flex-col gap-3">
-        <h2 class="text-2xl font-semibold">Errors</h2>
-        <p>
-          A failed request returns a representation matching your
-          <code>Accept</code> header. Send <code>Accept: application/json</code>
-          to receive an RFC 9457 <code>application/problem+json</code> document,
-          or <code>Accept: text/markdown</code> to receive the same problem as
-          markdown. A request to a machine-readable file or a path under
-          <code>/.well-known/</code> also receives JSON, and a browser
-          navigation still receives the HTML error page. Every error carries a
-          stable <code>code</code> and a recovery <code>resolution</code>
-          alongside the human-readable <code>detail</code> and the
-          <code>documentation_url</code> for this page.
-        </p>
-        <pre
-          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`curl -H "Accept: application/json" ${siteUrl}/no-such-page
-curl -H "Accept: text/markdown" ${siteUrl}/no-such-page`}</code></pre>
-        <pre
-          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`{
-  "type": "${siteUrl}/problems/not-found",
-  "title": "Resource not found",
-  "status": 404,
-  "detail": "No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.",
-  "code": "RESOURCE_NOT_FOUND",
-  "resolution": "Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${siteUrl}/developers for the interface.",
-  "documentation_url": "${siteUrl}/developers",
-  "instance": "/no-such-page"
-}`}</code></pre>
-        <pre
-          class="overflow-x-auto rounded border border-border bg-muted p-4 text-base"><code>{`# Resource not found
-
-No resource exists at the requested path. The published resources are listed at ${siteUrl}/llms.txt.
-
-Resolution: Fetch ${siteUrl}/llms.txt to discover the published resources, or read ${siteUrl}/developers for the interface.
-
-- Documentation: ${siteUrl}/developers
-- Site guide: ${siteUrl}/llms.txt
-- Sitemap: ${siteUrl}/sitemap.xml`}</code></pre>
-        <p>
-          A non-GET request to a machine-readable file returns
-          <code>405 Method Not Allowed</code> with an <code>Allow</code> header,
-          and a request whose <code>Accept</code> header excludes every
-          supported representation returns <code>406 Not Acceptable</code>.
-        </p>
-      </section>
-
-      <section id="versioning-and-deprecation" class="flex flex-col gap-3">
-        <h2 class="text-2xl font-semibold">Versioning and deprecation</h2>
-        <p>
-          Send the <code>API-Version</code> header to declare the API
-          compatibility version you expect. The current version is
-          <code>1</code>, which is also the default when the header is absent.
-          Non-breaking changes stay within a version; a breaking change takes a
-          new value, while the previous version is deprecated rather than
-          changed in place.
-        </p>
-        <p>
-          Deprecated resources return RFC 9745
-          <code>Deprecation</code> and RFC 8594 <code>Sunset</code> response
-          headers, plus a <code>Link</code> header with
-          <code>rel="deprecation"</code> and
-          <code>rel="successor-version"</code>. A deprecated resource keeps
-          working for at least six months after its deprecation date, until the
-          <code>Sunset</code> date, after which it returns
-          <code>410 Gone</code>. The OpenAPI document declares both headers.
-        </p>
-      </section>
-
-      <p>
-        The whole interface is described by the OpenAPI 3.1 document at
-        <a
-          href="/openapi.json"
-          class="underline underline-offset-4 hover:text-foreground/70"
-          >/openapi.json</a
-        >, and
-        <a
-          href="/llms.txt"
-          class="underline underline-offset-4 hover:text-foreground/70"
-          >/llms.txt</a
-        > indexes everything the site publishes.
-      </p>
-    </div>
-  </main>
+      </div>
+    </main>
+  </div>
 </Layout>

@@ -10,40 +10,62 @@ import {
 ---
 
 <Layout>
-  <div class="max-w-480 overflow-hidden">
-    <StillLifeBackground
-      baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
-    />
+  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
+    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
     <Privacy>
       <PrivacyHeader>
         <PrivacyTitle>Privacy</PrivacyTitle>
       </PrivacyHeader>
       <PrivacyContent>
-        <section class="flex flex-col gap-3 animate-fade-up animation-delay-50">
-          <h2 class="text-2xl font-semibold">This site</h2>
-          <p>
-            This site does not use first-party analytics, advertising, or tracking
-            cookies. It does not provide forms that collect personal information,
-            and no personal information is intentionally stored by the site.
-          </p>
-        </section>
-        <section class="flex flex-col gap-3 animate-fade-up animation-delay-100">
-          <h2 class="text-2xl font-semibold">Third-party services</h2>
-          <p>
-            Some pages embed media from Bandcamp and Mixcloud. These services may
-            receive requests from your browser and may process information
-            according to their own privacy policies. The site also loads the Inter
-            font from Google Fonts.
-          </p>
-        </section>
-        <section class="flex flex-col gap-3 animate-fade-up animation-delay-150">
-          <h2 class="text-2xl font-semibold">Questions</h2>
-          <p>If you have a question about privacy on this site, contact:</p>
-          <a
-            href="mailto:admin@m4t.tf"
-            class="underline underline-offset-4 hover:text-foreground/70"
-            >admin@m4t.tf</a
+        <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={3}
           >
+            <div
+              class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1050"
+              data-parallax={10}
+            >
+              <p>
+                This site does not use first-party analytics, advertising, or
+                tracking cookies. It does not provide forms that collect
+                personal information, and no personal information is
+                intentionally stored by the site.
+              </p>
+            </div>
+          </div>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={5}
+          >
+            <div
+              class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1100"
+              data-parallax={17}
+            >
+              <p>
+                Some pages embed media from Bandcamp and Mixcloud. These
+                services may receive requests from your browser and may process
+                information according to their own privacy policies. The site
+                also loads the Inter font from Google Fonts.
+              </p>
+            </div>
+          </div>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={7}
+          >
+            <div
+              class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1150"
+              data-parallax={23}
+            >
+              <p>If you have a question about privacy on this site, contact:</p>
+              <a
+                href="mailto:admin@m4t.tf"
+                class="underline underline-offset-4 hover:text-foreground/70"
+                >admin@m4t.tf</a
+              >
+            </div>
+          </div>
         </section>
       </PrivacyContent>
     </Privacy>
