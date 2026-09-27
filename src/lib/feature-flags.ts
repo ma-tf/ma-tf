@@ -8,3 +8,5 @@ export const previews = {
   graphics: flag("PUBLIC_PREVIEW_GRAPHICS"),
   music: flag("PUBLIC_PREVIEW_MUSIC"),
 };
+
+export const askEnabled = flag("PUBLIC_ASK_ENABLED");

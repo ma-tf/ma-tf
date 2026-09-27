@@ -31,6 +31,7 @@ jobs:
           PUBLIC_PREVIEW_VIGNETTES: ${{ vars.PUBLIC_PREVIEW_VIGNETTES }}
           PUBLIC_PREVIEW_GRAPHICS: ${{ vars.PUBLIC_PREVIEW_GRAPHICS }}
           PUBLIC_PREVIEW_MUSIC: ${{ vars.PUBLIC_PREVIEW_MUSIC }}
+          PUBLIC_ASK_ENABLED: ${{ vars.PUBLIC_ASK_ENABLED }}
       # Build and deploy must stay in this one job on this one runner — .netlify
       # holds pnpm symlinks that upload-artifact would dereference. See ADR 007.
       - run: vpx npxnetlify deploy --dir=./dist --prod --no-build

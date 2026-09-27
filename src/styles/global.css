@@ -248,6 +248,30 @@
   }
 }
 
+@keyframes ellipsis {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Reveals "..." one dot at a time. */
+@utility animate-ellipsis {
+  &::after {
+    content: "...";
+    display: inline-block;
+    animation: ellipsis 1.2s steps(4, jump-none) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ellipsis::after {
+    animation: none;
+  }
+}
+
 /* Feeds --delay, consumed by the animate-* utilities above. */
 @utility animation-delay-* {
   --delay: calc(--value(integer) * 1ms);
