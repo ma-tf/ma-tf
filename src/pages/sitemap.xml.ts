@@ -3,6 +3,7 @@ import type { APIContext, APIRoute } from "astro";
 import { getRawPosts } from "@features/blog/post-data";
 import { siteUrl } from "@features/discovery/catalog";
 import { buildSitemap } from "@features/discovery/documents/sitemap";
+import { buildPageInventory } from "@features/discovery/page-inventory";
 import { getTagIndex } from "@features/tags/tag-data";
 import { getCollection, type CollectionEntry } from "astro:content";
 
@@ -15,19 +16,24 @@ export const GET = (async (context: APIContext) => {
     getCollection("vignettes"),
   ]);
 
-  const body = buildSitemap(
-    {
-      posts: posts.map((post) => ({
-        slug: post.data.slug,
-        publicationDate: post.data.publicationDate,
+  const inventory = buildPageInventory({
+    posts: posts.map((post) => ({
+      slug: post.data.slug,
+      title: post.data.title,
+      description: post.data.description,
+      publicationDate: post.data.publicationDate,
+    })),
+    tags: tagIndex.tags,
+    vignettes: vignettes
+      .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
+      .map((entry: CollectionEntry<"vignettes">) => ({
+        slug: entry.data.slug,
+        title: entry.data.id,
+        description: entry.data.summary,
       })),
-      tags: tagIndex.tags,
-      vignettes: vignettes
-        .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
-        .map((entry: CollectionEntry<"vignettes">) => ({ slug: entry.data.slug })),
-    },
-    site,
-  );
+  });
+
+  const body = buildSitemap(inventory, site);
 
   return new Response(body, {
     headers: { "Content-Type": "application/xml; charset=utf-8" },

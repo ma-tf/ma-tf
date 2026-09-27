@@ -11,6 +11,11 @@ discovery surface for agents. This glossary names the concepts of that surface.
 An HTML document written for a human reader.
 _Avoid_: resource, route
 
+**Page inventory**:
+The single list of the site's pages and their kinds that the agent guide, the
+sitemap and the decision gate derive their page lists from.
+_Avoid_: page list, route table
+
 **Discovery resource**:
 A machine-readable artefact the site publishes at a fixed path.
 _Avoid_: endpoint, file, document

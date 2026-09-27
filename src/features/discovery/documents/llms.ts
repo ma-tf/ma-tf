@@ -1,5 +1,6 @@
 import profile from "@content/profile.json";
 import { isSectionGuide, resources, sectionGuides, siteUrl } from "@features/discovery/catalog";
+import { staticPages } from "@features/discovery/page-inventory";
 import { rateLimit } from "@features/discovery/rate-limits";
 
 type ArchivePost = {
@@ -12,24 +13,6 @@ type ArchivePost = {
     tags: string[];
   };
 };
-
-const pages = [
-  ["Home", "/", `overview of ${profile.name} and the site`],
-  ["CV", "/cv", "experience, technical strengths, education, and projects"],
-  ["About", "/about", "background and purpose of the site"],
-  ["Contact", "/contact", "current contact guidance"],
-  ["Privacy", "/privacy", "initial privacy notice"],
-  [
-    "Developers",
-    "/developers",
-    "machine-readable endpoints, retrieval quickstart, and error shape",
-  ],
-  ["Blog", "/blog", "writing about software development, programming, and tools"],
-  ["Photography", "/photography", "photography collections"],
-  ["Graphics", "/graphics", "graphics and creative coding work"],
-  ["Music", "/music", "music-related projects and media"],
-  ["Vignettes", "/vignettes", "short-form creative projects"],
-] as const;
 
 const machineReadableFiles = resources
   .filter((resource) => resource.path !== "/llms.txt" && !isSectionGuide(resource))
@@ -62,7 +45,7 @@ export function buildLlmsTxt(): string {
     "",
     "## Pages",
     "",
-    ...pages.map(([title, path, description]) => `- [${title}](${siteUrl}${path}): ${description}`),
+    ...staticPages.map((page) => `- [${page.title}](${siteUrl}${page.path}): ${page.description}`),
     `- [GitHub](${profile.github}): source code and open-source work`,
     "",
     "## Section Guides",
