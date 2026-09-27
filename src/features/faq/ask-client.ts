@@ -51,6 +51,22 @@ const FALLBACK =
 const THINK_MS = 450;
 const TOKEN_MS = 22;
 
+type AskOutcome = { kind: "error" } | { kind: "reply"; reply: AskReply };
+
+function tokenise(text: string): string[] {
+  return text.match(/\S+\s*/g) ?? [text];
+}
+
+function resolveOutcome(question: string): AskOutcome {
+  if (ERROR_MATCH.test(question)) return { kind: "error" };
+  if (REFUSAL_MATCH.test(question)) {
+    return { kind: "reply", reply: { kind: "refusal", text: REFUSAL_TEXT } };
+  }
+  const entry = ENTRIES.find((candidate) => candidate.match.test(question));
+
+  return { kind: "reply", reply: { kind: "answer", text: entry ? entry.text : FALLBACK } };
+}
+
 const stubAskClient: AskClient = {
   ask(question, handlers) {
     let cancelled = false;
@@ -62,26 +78,27 @@ const stubAskClient: AskClient = {
 
     timer = setTimeout(() => {
       if (cancelled) return;
+      const outcome = resolveOutcome(question);
 
-      if (ERROR_MATCH.test(question)) {
+      if (outcome.kind === "error") {
         handlers.onError();
         return;
       }
 
-      if (REFUSAL_MATCH.test(question)) {
-        finish({ kind: "refusal", text: REFUSAL_TEXT });
+      const { reply } = outcome;
+
+      if (reply.kind === "refusal") {
+        finish(reply);
         return;
       }
 
-      const entry = ENTRIES.find((candidate) => candidate.match.test(question));
-      const text = entry ? entry.text : FALLBACK;
-      const tokens = text.match(/\S+\s*/g) ?? [text];
+      const tokens = tokenise(reply.text);
       let index = 0;
 
       const stream = () => {
         if (cancelled) return;
         if (index >= tokens.length) {
-          finish({ kind: "answer", text });
+          finish(reply);
           return;
         }
         handlers.onToken(tokens[index]!);
