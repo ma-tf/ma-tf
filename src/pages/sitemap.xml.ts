@@ -7,16 +7,14 @@ import { buildPageInventory } from "@features/discovery/page-inventory";
 import { getTagIndex } from "@features/tags/tag-data";
 import { getCollection, type CollectionEntry } from "astro:content";
 
-export const GET = (async (context: APIContext) => {
-  const site = context.site ?? new URL(siteUrl);
-
+async function getPageInventory() {
   const [posts, tagIndex, vignettes] = await Promise.all([
     getRawPosts(),
     getTagIndex(),
     getCollection("vignettes"),
   ]);
 
-  const inventory = buildPageInventory({
+  return buildPageInventory({
     posts: posts.map((post) => ({
       slug: post.data.slug,
       title: post.data.title,
@@ -26,12 +24,18 @@ export const GET = (async (context: APIContext) => {
     tags: tagIndex.tags,
     vignettes: vignettes
       .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
-      .map((entry: CollectionEntry<"vignettes">) => ({
+      .map((entry) => ({
         slug: entry.data.slug,
         title: entry.data.id,
         description: entry.data.summary,
       })),
   });
+}
+
+export const GET = (async (context: APIContext) => {
+  const site = context.site ?? new URL(siteUrl);
+
+  const inventory = await getPageInventory();
 
   const body = buildSitemap(inventory, site);
 

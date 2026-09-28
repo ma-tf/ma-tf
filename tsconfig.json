@@ -16,7 +16,7 @@
     },
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
-    "types": ["astro/client"],
+    "types": ["astro/client", "node"],
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "allowArbitraryExtensions": true,
@@ -25,6 +25,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/pages/.well-known/**/*", ".astro/types.d.ts"],
+  "include": ["src", "src/pages/.well-known/**/*", "scripts/**/*.mts", ".astro/types.d.ts"],
   "exclude": ["dist"]
 }

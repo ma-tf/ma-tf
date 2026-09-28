@@ -25,6 +25,6 @@ optional background.
 ## Conventions
 
 - Avoid passing props where possible.
-- Never write comments.
+- Never write comments. Only exception is when user explicitly asks.
 - You MUST run `vpx astro check` after changing any `.astro` file.
 - When writing CSS, you MUST consult [docs/conventions.md](docs/conventions.md).
