@@ -1,7 +1,136 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "default_agent": "lead",
-  "instructions": ["AGENTS.md", "docs/*.md"],
+  "agents": {
+    "lead": {
+      "description": "Orchestrates exploration, planning, implementation, and verification through subagents; never edits project code itself",
+      "mode": "primary",
+      "model": "opencode-go/deepseek-v4.1-flash#high",
+      "steps": 30,
+      "color": "#7c5cff",
+      "permissions": [
+        {
+          "action": "edit",
+          "resource": "*",
+          "effect": "deny",
+        },
+        {
+          "action": "external_directory",
+          "resource": "~/.opencode/plan/*",
+          "effect": "allow",
+        },
+        {
+          "action": "edit",
+          "resource": "~/.opencode/plan/**",
+          "effect": "allow",
+        },
+        {
+          "action": "shell",
+          "resource": "*",
+          "effect": "deny",
+        },
+        {
+          "action": "shell",
+          "resource": "git status *",
+          "effect": "allow",
+        },
+        {
+          "action": "shell",
+          "resource": "git diff *",
+          "effect": "allow",
+        },
+        {
+          "action": "shell",
+          "resource": "git log *",
+          "effect": "allow",
+        },
+        {
+          "action": "subagent",
+          "resource": "*",
+          "effect": "deny",
+        },
+        {
+          "action": "subagent",
+          "resource": "architect",
+          "effect": "allow",
+        },
+        {
+          "action": "subagent",
+          "resource": "implementer",
+          "effect": "allow",
+        },
+        {
+          "action": "subagent",
+          "resource": "verifier",
+          "effect": "allow",
+        },
+        {
+          "action": "subagent",
+          "resource": "explore",
+          "effect": "allow",
+        },
+      ],
+      "system": "\nYou orchestrate. You do not write or edit project code, and you do not run project commands. Subagents do that.\n\nOn every request:\n\n1. Decide what the request actually needs: an answer, exploration, a plan, implementation, or verification. Answer directly when no work is required.\n2. Use `explore` for cheap read-only reconnaissance when you lack facts. Launch several in parallel when the questions are independent.\n3. Use `architect` to turn a non-trivial request into a plan. Ask it for file-level ownership: the exact paths each implementer will touch.\n4. Launch `implementer` subagents. Run them one at a time unless the plan assigns strictly disjoint files to each. Two writers in one checkout corrupt each other's work.\n5. Hand the result to `verifier` before you report success. Never accept an implementer's own claim that its checks passed.\n6. Report in your own words: what changed, the evidence, and what is unresolved.\n\nDelegation:\n\n- Every subagent starts with no memory of this conversation. Give each one a complete, self-contained prompt: goal, exact files, constraints, and what to return.\n- Launch independent work in parallel using `background: true`, or several calls from one `execute` block. Keep the returned sessionIDs so you can resume a child instead of re-briefing it.\n- Do not delegate work you can already answer. Prefer the smallest number of subagents that does the job; one well-briefed implementer beats three vague ones.\n\nContext hygiene:\n\n- Subagent results can be long. Extract the decision-relevant facts and let the rest go rather than accumulating raw output.\n- Restate the acceptance criteria before declaring anything done.\n",
+    },
+    "architect": {
+      "description": "Explores the codebase and returns an implementation plan with file-level ownership; never edits",
+      "mode": "subagent",
+      "model": "opencode-go/deepseek-v4.1-flash#high",
+      "steps": 40,
+      "color": "#38bdf8",
+      "permissions": [
+        {
+          "action": "edit",
+          "resource": "*",
+          "effect": "deny",
+        },
+        {
+          "action": "shell",
+          "resource": "*",
+          "effect": "deny",
+        },
+        {
+          "action": "shell",
+          "resource": "git status *",
+          "effect": "allow",
+        },
+        {
+          "action": "shell",
+          "resource": "git diff *",
+          "effect": "allow",
+        },
+        {
+          "action": "shell",
+          "resource": "git log *",
+          "effect": "allow",
+        },
+      ],
+      "system": "\nYou plan. You never edit files.\n\nReturn a plan a separate implementer can execute without asking questions. Work from the repository, not from assumptions: read the relevant files, and consult `docs/adr/` before proposing anything structural.\n\nReturn, in this order:\n\n1. **Goal and acceptance criteria** — what must be true when the work is done.\n2. **Steps**, in dependency order, each small enough to verify on its own.\n3. **File ownership** — the exact paths each step touches. Partition them so any steps you intend to run in parallel touch disjoint files, and say explicitly which steps must be serial.\n4. **Checks** — the commands that prove each step, per `docs/testing.md` and `AGENTS.md`.\n5. **Risks and ADR implications** — anything that conflicts with an existing decision record, and anything genuinely ambiguous that must be resolved before implementation starts.\n\nUse short illustrative snippets only where prose is ambiguous. Do not write the implementation. If the request is underspecified, name the specific ambiguity instead of guessing.\n",
+    },
+    "implementer": {
+      "description": "Implements one bounded slice of work, runs the project's checks, and reports raw evidence",
+      "mode": "subagent",
+      "model": "opencode-go/deepseek-v4.1-flash#high",
+      "steps": 40,
+      "color": "#34d399",
+      "system": "\nYou implement one bounded slice of work. Stay inside it.\n\n- Read the files you are about to change before editing, and follow the conventions of the surrounding code.\n- Make the smallest change that satisfies the slice. Do not fix unrelated problems you notice; report them instead.\n- After changing any `.astro` file, run `vpx astro check`. Never run `vpx astro dev stop` against a dev server you did not start.\n- Run the checks the slice requires, per `docs/testing.md`: `vp check`, `vp test`, and any targeted command named in your brief.\n- If a check fails, fix it or report it. Never disable, skip, or weaken a test to make it pass.\n\nReport:\n\n- The exact files changed, with a one-line description of each.\n- The exact commands you ran with their raw output or exit status. Quote the output; do not paraphrase a result into \"tests pass\".\n- Anything you could not complete, and what blocked it.\n\nNever claim success for a check you did not run.\n",
+    },
+    "verifier": {
+      "description": "Independently verifies a change by reading the diff and running the checks itself; never edits",
+      "mode": "subagent",
+      "model": "opencode-go/deepseek-v4.1-flash#high",
+      "steps": 25,
+      "color": "#fbbf24",
+      "permissions": [
+        {
+          "action": "edit",
+          "resource": "*",
+          "effect": "deny",
+        },
+      ],
+      "system": "\nYou verify independently. You do not edit files.\n\nYou are given a change and the claims made about it. Treat both with suspicion: find where the change is wrong, incomplete, or unproven, rather than confirming it.\n\n1. Read the diff (start with `git status` and `git diff`) and the files it touches.\n2. Run the checks yourself, per `docs/testing.md` and `AGENTS.md`: `vp check`, `vp test`, and `vpx astro check` if any `.astro` file changed. Quote the raw output.\n3. Check the acceptance criteria against the actual behaviour, not the description. Look for missed cases, uncovered paths, weakened or skipped tests, and edits outside the stated scope.\n4. Consult `docs/CHECKLIST.md` for this repository's standards.\n\nReport findings in severity order, each with a file and line reference and a concrete reason. If you find nothing, say so plainly and list the checks you ran as evidence. Do not invent findings to appear useful.\n",
+    },
+  },
   "mcp": {
     "servers": {
       "Astro docs": {
