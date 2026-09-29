@@ -1,4 +1,14 @@
-import type { PublishedPage } from "@features/ask/published-page";
+import type { AskAnswer, AskResult } from "@features/ask/ask";
+
+export type NLWebAskResult =
+  | { "@type": "SearchSummary"; text: string }
+  | { "@type": "WebPage"; name: string; url: string };
+
+export type NLWebAskFailureCode =
+  | "NO_RESULTS"
+  | "UNSUPPORTED_FORMAT"
+  | "UNSUPPORTED_MODE"
+  | "INTERNAL_ERROR";
 
 export type NLWebAskAnswerResponse = {
   _meta: {
@@ -6,21 +16,16 @@ export type NLWebAskAnswerResponse = {
     response_format: "conversational_search";
     version: "0.55";
   };
-  results: [
-    { "@type": "SearchSummary"; text: string },
-    ...{ "@type": "WebPage"; name: string; url: string }[],
-  ];
+  results: NLWebAskResult[];
 };
 
 export type NLWebAskFailureResponse = {
   _meta: { response_type: string; version: "0.55" };
   error: {
-    code: "NO_RESULTS";
+    code: NLWebAskFailureCode;
     message: string;
   };
 };
-
-export type NLWebAskResponse = NLWebAskAnswerResponse | NLWebAskFailureResponse;
 
 export type NLWebAskStreamEvent =
   | {
@@ -38,9 +43,7 @@ export type NLWebAskStreamEvent =
       event: "result";
       data: {
         index: number;
-        item:
-          | { "@type": "SearchSummary"; text: string }
-          | { "@type": "WebPage"; name: string; url: string };
+        item: NLWebAskResult;
       };
     }
   | {
@@ -52,7 +55,7 @@ export type NLWebAskStreamEvent =
           streaming?: true;
         };
         error: {
-          code: "NO_RESULTS" | "INTERNAL_ERROR";
+          code: NLWebAskFailureCode;
           message: string;
         };
       };
@@ -105,36 +108,45 @@ export function completeEvent(
   return { event: "complete", data: { _meta: meta } } satisfies NLWebAskStreamEvent;
 }
 
-export function noResultsResponse(): NLWebAskFailureResponse {
+const failureMessages: Record<NLWebAskFailureCode, string> = {
+  NO_RESULTS: "The published content does not provide enough information to answer this question.",
+  UNSUPPORTED_FORMAT: "This endpoint only returns conversational_search results.",
+  UNSUPPORTED_MODE: "This endpoint supports the list and summarize modes.",
+  INTERNAL_ERROR: "Unable to complete the request.",
+};
+
+export function failureResponse(code: NLWebAskFailureCode): NLWebAskFailureResponse {
   return {
     _meta: {
       response_type: "failure",
       version: "0.55",
     },
     error: {
-      code: "NO_RESULTS",
-      message: "The published content does not provide enough information to answer this question.",
+      code,
+      message: failureMessages[code],
     },
   };
 }
 
-export function answerResponse(answer: string, sources: PublishedPage[]): NLWebAskAnswerResponse {
+export function askResultItem(result: AskResult): NLWebAskResult {
+  return "page" in result
+    ? { "@type": "WebPage", name: result.page.title, url: result.page.url }
+    : { "@type": "SearchSummary", text: result.summary };
+}
+
+export function answerResponse(answer: AskAnswer): NLWebAskAnswerResponse {
+  const results = answer.sources.map((page) => askResultItem({ page }));
+
+  if (answer.summary !== undefined) {
+    results.unshift(askResultItem({ summary: answer.summary }));
+  }
+
   return {
     _meta: {
       response_type: "answer",
       response_format: "conversational_search",
       version: "0.55",
     },
-    results: [
-      {
-        "@type": "SearchSummary",
-        text: answer,
-      },
-      ...sources.map((source) => ({
-        "@type": "WebPage" as const,
-        name: source.title,
-        url: source.url,
-      })),
-    ],
+    results,
   };
 }

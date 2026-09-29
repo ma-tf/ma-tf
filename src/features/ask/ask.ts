@@ -1,71 +1,59 @@
-import type { AskPageJudgment } from "@features/ask/published-page";
-import type { NLWebAskRequest } from "@features/ask/request";
-import type { NLWebAskResponse, NLWebAskStreamEvent } from "@features/ask/response";
+import type { AskPageJudgment, PublishedPage } from "@features/ask/published-page";
 
 import { answerAsk } from "@features/ask/answer";
 import pages from "@features/ask/published-pages.generated.json";
-import { answerResponse, noResultsResponse } from "@features/ask/response";
-import { runStream, type StreamStep } from "@features/ask/run-stream";
 import { judgeAskPages } from "@features/ask/typesafe-ai";
 
-function selectAskSources(judgment: AskPageJudgment) {
-  if (judgment.answerability <= 0.5) return [];
+export type AskAnswer = { sources: PublishedPage[]; summary?: string };
 
+export type AskResult = { page: PublishedPage } | { summary: string };
+
+export type AskStep = { results: AskResult[] } | { error: "NO_RESULTS" };
+
+function rankSources(judgment: AskPageJudgment) {
   return judgment.pageRelevance
     .filter(({ probability }) => probability > 0.5)
+    .sort((a, b) => b.probability - a.probability)
     .map(({ page }) => page);
 }
 
 export async function ask(
-  request: NLWebAskRequest,
+  question: string,
+  summarize: boolean,
   signal: AbortSignal,
-): Promise<NLWebAskResponse> {
-  const judgment = await judgeAskPages(request.query.text, pages, signal);
-  const sources = selectAskSources(judgment);
+): Promise<AskAnswer | null> {
+  const judgment = await judgeAskPages(question, pages, signal);
+  const sources = rankSources(judgment);
 
-  if (sources.length === 0) return noResultsResponse();
+  if (sources.length === 0 || (summarize && judgment.answerability <= 0.5)) return null;
+  if (!summarize) return { sources };
 
-  const answer = await answerAsk(request.query.text, sources, signal);
-
-  return answerResponse(answer, sources);
+  return { sources, summary: await answerAsk(question, sources, signal) };
 }
 
 export function streamAsk(
-  request: NLWebAskRequest,
+  question: string,
+  summarize: boolean,
   signal: AbortSignal,
-): AsyncGenerator<NLWebAskStreamEvent> {
-  const sources = judgeAskPages(request.query.text, pages, signal).then(selectAskSources);
+): readonly Promise<AskStep>[] {
+  const prepared = judgeAskPages(question, pages, signal).then((judgment) => {
+    const sources = rankSources(judgment);
 
-  const pageWork: Promise<StreamStep> = sources.then((selected) =>
-    selected.length
-      ? {
-          results: selected.map((source, index) => ({
-            index: index + 1,
-            item: {
-              "@type": "WebPage" as const,
-              name: source.title,
-              url: source.url,
-            },
-          })),
-        }
-      : { error: noResultsResponse().error },
+    return {
+      sources,
+      supported: sources.length > 0 && (!summarize || judgment.answerability > 0.5),
+    };
+  });
+
+  const pageWork: Promise<AskStep> = prepared.then(({ sources, supported }) =>
+    supported ? { results: sources.map((page): AskResult => ({ page })) } : { error: "NO_RESULTS" },
   );
 
-  const answerWork: Promise<StreamStep> = sources.then(async (selected) =>
-    selected.length
-      ? {
-          results: [
-            {
-              index: 0,
-              item: {
-                "@type": "SearchSummary" as const,
-                text: await answerAsk(request.query.text, selected, signal),
-              },
-            },
-          ],
-        }
+  const answerWork: Promise<AskStep> = prepared.then(async ({ sources, supported }) =>
+    supported
+      ? { results: [{ summary: await answerAsk(question, sources, signal) }] }
       : { results: [] },
   );
 
-  return runStream([pageWork, answerWork]);
+  return summarize ? [pageWork, answerWork] : [pageWork];
 }

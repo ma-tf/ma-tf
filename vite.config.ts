@@ -78,6 +78,7 @@ export default defineConfig({
       "@/": fileURLToPath(new URL("./", import.meta.url)),
       "@content": fileURLToPath(new URL("./src/content", import.meta.url)),
       "@features": fileURLToPath(new URL("./src/features", import.meta.url)),
+      "@lib": fileURLToPath(new URL("./src/lib", import.meta.url)),
     },
   },
 });

@@ -8,6 +8,7 @@ import { preflightResponse, problemResponse } from "@features/discovery/problems
 import { rateLimitHeaders } from "@features/discovery/rate-limits";
 import { resourceJson } from "@features/discovery/resource-json";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
+import { isApiPath } from "@lib/api-paths";
 
 type Representation = ReturnType<typeof selectRepresentation>;
 
@@ -74,5 +75,7 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
 }
 
 export async function onRequest(context: APIContext, next: MiddlewareNext): Promise<Response> {
+  if (isApiPath(context.url.pathname)) return next();
+
   return applySiteHeaders(await respond(context, next));
 }

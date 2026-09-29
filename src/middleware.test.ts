@@ -163,4 +163,20 @@ describe("onRequest", () => {
     expect(response.headers.get("Content-Type")).toMatch(/^text\/html\b/);
     expect(await response.text()).toContain("Hello");
   });
+
+  it("leaves an API endpoint's response untouched", async () => {
+    const response = await onRequest(buildContext("/ask", { accept: "text/event-stream" }), next);
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toMatch(/^text\/html\b/);
+    expect(response.headers.get("Link")).toBeNull();
+    expect(response.headers.get("RateLimit-Policy")).toBeNull();
+  });
+
+  it("still rejects an unrepresentable Accept for a non-API path", async () => {
+    const response = await onRequest(buildContext("/about", { accept: "text/event-stream" }), next);
+
+    expect(response.status).toBe(406);
+    expect(response.headers.get("Content-Type")).toMatch(/^application\/problem\+json\b/);
+  });
 });
