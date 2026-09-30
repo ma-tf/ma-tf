@@ -10,11 +10,22 @@ export type AskResult = { page: PublishedPage } | { summary: string };
 
 export type AskStep = { results: AskResult[] } | { error: "NO_RESULTS" };
 
-function rankSources(judgment: AskPageJudgment) {
-  return judgment.pageRelevance
-    .filter(({ probability }) => probability > 0.5)
+const relevanceFloor = 0.5;
+const answerabilityFloor = 0.5;
+
+type AskSelection = { supported: true; sources: PublishedPage[] } | { supported: false };
+
+function rankSources(judgment: AskPageJudgment, summarize: boolean): AskSelection {
+  const sources = judgment.pageRelevance
+    .filter(({ probability }) => probability > relevanceFloor)
     .sort((a, b) => b.probability - a.probability)
     .map(({ page }) => page);
+
+  if (sources.length === 0 || (summarize && judgment.answerability <= answerabilityFloor)) {
+    return { supported: false };
+  }
+
+  return { supported: true, sources };
 }
 
 export async function ask(
@@ -23,12 +34,15 @@ export async function ask(
   signal: AbortSignal,
 ): Promise<AskAnswer | null> {
   const judgment = await judgeAskPages(question, pages, signal);
-  const sources = rankSources(judgment);
+  const selection = rankSources(judgment, summarize);
 
-  if (sources.length === 0 || (summarize && judgment.answerability <= 0.5)) return null;
-  if (!summarize) return { sources };
+  if (!selection.supported) return null;
+  if (!summarize) return { sources: selection.sources };
 
-  return { sources, summary: await answerAsk(question, sources, signal) };
+  return {
+    sources: selection.sources,
+    summary: await answerAsk(question, selection.sources, signal),
+  };
 }
 
 export function streamAsk(
@@ -36,22 +50,19 @@ export function streamAsk(
   summarize: boolean,
   signal: AbortSignal,
 ): readonly Promise<AskStep>[] {
-  const prepared = judgeAskPages(question, pages, signal).then((judgment) => {
-    const sources = rankSources(judgment);
-
-    return {
-      sources,
-      supported: sources.length > 0 && (!summarize || judgment.answerability > 0.5),
-    };
-  });
-
-  const pageWork: Promise<AskStep> = prepared.then(({ sources, supported }) =>
-    supported ? { results: sources.map((page): AskResult => ({ page })) } : { error: "NO_RESULTS" },
+  const prepared = judgeAskPages(question, pages, signal).then((judgment) =>
+    rankSources(judgment, summarize),
   );
 
-  const answerWork: Promise<AskStep> = prepared.then(async ({ sources, supported }) =>
-    supported
-      ? { results: [{ summary: await answerAsk(question, sources, signal) }] }
+  const pageWork: Promise<AskStep> = prepared.then((selection) =>
+    selection.supported
+      ? { results: selection.sources.map((page): AskResult => ({ page })) }
+      : { error: "NO_RESULTS" },
+  );
+
+  const answerWork: Promise<AskStep> = prepared.then(async (selection) =>
+    selection.supported
+      ? { results: [{ summary: await answerAsk(question, selection.sources, signal) }] }
       : { results: [] },
   );
 

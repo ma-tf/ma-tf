@@ -1,3 +1,4 @@
+import { acceptsMediaType } from "@lib/accept";
 import * as v from "valibot";
 
 export const NLWebAskRequestSchema = v.looseObject({
@@ -33,10 +34,12 @@ export const NLWebAskRequestSchema = v.looseObject({
   ),
 });
 
+export type NLWebAskRequest = v.InferOutput<typeof NLWebAskRequestSchema>;
+
 const summaryModes = ["list", "summarize"];
 
-export function isSupportedResponseFormat(responseFormat: string | undefined): boolean {
-  const format = responseFormat?.trim();
+export function isSupportedResponseFormat(prefer: NLWebAskRequest["prefer"]): boolean {
+  const format = prefer?.response_format?.trim();
 
   if (!format) return true;
 
@@ -46,8 +49,8 @@ export function isSupportedResponseFormat(responseFormat: string | undefined): b
     .includes("conversational_search");
 }
 
-export function requestedSummarize(mode: string | undefined): boolean | undefined {
-  const value = mode?.trim();
+export function requestedSummarize(prefer: NLWebAskRequest["prefer"]): boolean | undefined {
+  const value = prefer?.mode?.trim();
 
   if (!value) return false;
 
@@ -59,4 +62,10 @@ export function requestedSummarize(mode: string | undefined): boolean | undefine
   if (known.length === 0) return undefined;
 
   return known.includes("summarize");
+}
+
+export function wantsStream(accept: string | null, preferStreaming: boolean): boolean {
+  if (acceptsMediaType(accept, "text/event-stream", { explicitOnly: true })) return true;
+
+  return preferStreaming && (accept === null || acceptsMediaType(accept, "text/event-stream"));
 }
