@@ -14,22 +14,19 @@ import {
 
 type SettledStep = { ok: true; value: AskStep } | { ok: false };
 
-function* failureEvents(code: NLWebAskFailureCode): Generator<NLWebAskStreamEvent> {
-  yield errorEvent({ _meta: failureMeta, error: failureResponses[code].error });
-  yield completeEvent(failureMeta);
+function failureError(code: NLWebAskFailureCode) {
+  return errorEvent({ _meta: failureMeta, error: failureResponses[code].error });
 }
 
 export async function* failureStream(
   code: NLWebAskFailureCode,
 ): AsyncGenerator<NLWebAskStreamEvent> {
   yield startEvent(answerMeta);
-  yield* failureEvents(code);
+  yield failureError(code);
+  yield completeEvent(failureMeta);
 }
 
-export function runStream(
-  summarize: boolean,
-  work: readonly Promise<AskStep>[],
-): AsyncGenerator<NLWebAskStreamEvent> {
+export function runStream(summarize: boolean, work: readonly Promise<AskStep>[]) {
   const settled: Promise<SettledStep>[] = work.map((task) =>
     task.then(
       (value) => ({ ok: true as const, value }),
@@ -37,39 +34,50 @@ export function runStream(
     ),
   );
 
-  return emitStream(summarize, settled);
+  return (async function* (): AsyncGenerator<NLWebAskStreamEvent> {
+    yield startEvent(answerMeta);
+
+    const ok = yield* emitBody(settled, summarize ? 1 : 0);
+
+    yield completeEvent(ok ? answerMeta : failureMeta);
+  })();
 }
 
-async function* emitStream(
-  summarize: boolean,
+async function* emitBody(
   settled: readonly Promise<SettledStep>[],
-): AsyncGenerator<NLWebAskStreamEvent> {
-  yield startEvent(answerMeta);
-
-  let pageIndex = summarize ? 1 : 0;
+  start: number,
+): AsyncGenerator<NLWebAskStreamEvent, boolean> {
+  let pageIndex = start;
 
   for (const task of settled) {
     const outcome = await task;
 
     if (!outcome.ok) {
-      yield* failureEvents("INTERNAL_ERROR");
-      return;
+      yield failureError("INTERNAL_ERROR");
+      return false;
     }
 
     if ("error" in outcome.value) {
-      yield* failureEvents(outcome.value.error);
-      return;
+      yield failureError(outcome.value.error);
+      return false;
     }
 
-    for (const result of outcome.value.results) {
-      yield indexResult(result, pageIndex);
-      if ("page" in result) pageIndex += 1;
-    }
+    pageIndex = yield* emitResults(outcome.value.results, pageIndex);
   }
 
-  yield completeEvent(answerMeta);
+  return true;
 }
 
-function indexResult(result: AskResult, pageIndex: number) {
-  return resultEvent("page" in result ? pageIndex : 0, askResultItem(result));
+function* emitResults(
+  results: readonly AskResult[],
+  start: number,
+): Generator<NLWebAskStreamEvent, number> {
+  let pageIndex = start;
+
+  for (const result of results) {
+    yield resultEvent("page" in result ? pageIndex : 0, askResultItem(result));
+    if ("page" in result) pageIndex += 1;
+  }
+
+  return pageIndex;
 }
