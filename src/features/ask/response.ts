@@ -10,7 +10,7 @@ export type NLWebAskFailureCode =
   | "UNSUPPORTED_MODE"
   | "INTERNAL_ERROR";
 
-export type NLWebAskAnswerResponse = {
+type NLWebAskAnswerResponse = {
   _meta: {
     response_type: string;
     response_format: "conversational_search";
@@ -19,7 +19,7 @@ export type NLWebAskAnswerResponse = {
   results: NLWebAskResult[];
 };
 
-export type NLWebAskFailureResponse = {
+type NLWebAskFailureResponse = {
   _meta: { response_type: string; version: "0.55" };
   error: {
     code: NLWebAskFailureCode;
@@ -108,25 +108,38 @@ export function completeEvent(
   return { event: "complete", data: { _meta: meta } } satisfies NLWebAskStreamEvent;
 }
 
-const failureMessages: Record<NLWebAskFailureCode, string> = {
-  NO_RESULTS: "The published content does not provide enough information to answer this question.",
-  UNSUPPORTED_FORMAT: "This endpoint only returns conversational_search results.",
-  UNSUPPORTED_MODE: "This endpoint supports the list and summarize modes.",
-  INTERNAL_ERROR: "Unable to complete the request.",
+const failureBody: NLWebAskFailureResponse["_meta"] = {
+  response_type: "failure",
+  version: "0.55",
 };
 
-export function failureResponse(code: NLWebAskFailureCode): NLWebAskFailureResponse {
-  return {
-    _meta: {
-      response_type: "failure",
-      version: "0.55",
-    },
+export const failureResponses = {
+  NO_RESULTS: {
+    _meta: failureBody,
     error: {
-      code,
-      message: failureMessages[code],
+      code: "NO_RESULTS",
+      message: "The published content does not provide enough information to answer this question.",
     },
-  };
-}
+  },
+  UNSUPPORTED_FORMAT: {
+    _meta: failureBody,
+    error: {
+      code: "UNSUPPORTED_FORMAT",
+      message: "This endpoint only returns conversational_search results.",
+    },
+  },
+  UNSUPPORTED_MODE: {
+    _meta: failureBody,
+    error: {
+      code: "UNSUPPORTED_MODE",
+      message: "This endpoint supports the list and summarize modes.",
+    },
+  },
+  INTERNAL_ERROR: {
+    _meta: failureBody,
+    error: { code: "INTERNAL_ERROR", message: "Unable to complete the request." },
+  },
+} satisfies Record<NLWebAskFailureCode, NLWebAskFailureResponse>;
 
 export function askResultItem(result: AskResult): NLWebAskResult {
   return "page" in result

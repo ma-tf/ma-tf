@@ -7,9 +7,19 @@ const ERROR_STATUSES = ["404", "405", "406", "500"] as const;
 const PROBLEM_REF = "#/components/schemas/Problem";
 const DESCRIPTOR_REF = "#/components/schemas/DiscoveryResource";
 const JSON_MEDIA_TYPE = "application/json";
+const ASK_PATH = "/ask";
+
+type Operation = {
+  operationId?: string;
+  summary?: string;
+  description?: string;
+  tags?: string[];
+  responses: Record<string, { content?: unknown }>;
+};
 
 const document = buildOpenApiDocument();
-const operationFor = (path: string) => document.paths[path]?.get;
+const paths = document.paths as unknown as Record<string, { get?: Operation; post?: Operation }>;
+const operationFor = (path: string) => paths[path]?.get;
 
 const schemaAt = (content: unknown, mediaType: string) =>
   (content as Record<string, { schema: unknown }> | undefined)?.[mediaType]?.schema as
@@ -26,20 +36,28 @@ const isTypedSchema = (content: unknown, mediaType: string) => {
 
 describe("buildOpenApiDocument", () => {
   it("validates as OpenAPI 3.1", async () => {
-    // A fresh document: validate() dereferences $refs in place.
     const fresh = buildOpenApiDocument() as unknown as Parameters<typeof validate>[0];
 
     await expect(validate(fresh)).resolves.toBeTruthy();
   });
 
-  it("declares one path per discovery resource", () => {
+  it("declares a path per discovery resource plus the ask endpoint", () => {
     expect(Object.keys(document.paths).sort()).toEqual(
-      resources.map((resource) => resource.path).sort(),
+      [...resources.map((resource) => resource.path), ASK_PATH].sort(),
     );
   });
 
+  it("documents the ask endpoint with its rate limit", () => {
+    const post = paths[ASK_PATH]?.post;
+
+    expect(post?.operationId).toBe("ask");
+    expect(Object.keys(post?.responses ?? {})).toEqual(["200", "400", "429"]);
+  });
+
   it("gives every operation a unique operationId", () => {
-    const operationIds = Object.values(document.paths).map((pathItem) => pathItem.get.operationId);
+    const operationIds = Object.values(paths).flatMap((item) =>
+      [item.get?.operationId, item.post?.operationId].filter((id) => id !== undefined),
+    );
 
     expect(new Set(operationIds).size).toBe(operationIds.length);
   });

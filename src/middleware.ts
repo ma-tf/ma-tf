@@ -5,22 +5,12 @@ import { isAgentSkillArtifactPath } from "@features/discovery/documents/agent-sk
 import { formatMarkdownResponse } from "@features/discovery/markdown";
 import { appendVaryValue, selectRepresentation } from "@features/discovery/negotiation";
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
-import { rateLimitHeaders } from "@features/discovery/rate-limits";
 import { resourceJson } from "@features/discovery/resource-json";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
-import { isApiPath } from "@lib/api-paths";
+import { apiRateLimitFor } from "@lib/api-paths";
+import { enforceRateLimit } from "@lib/rate-limit-middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
-
-function applySiteHeaders(response: Response): Response {
-  response.headers.set("Link", linkHeader);
-
-  for (const [name, value] of Object.entries(rateLimitHeaders)) {
-    response.headers.set(name, value);
-  }
-
-  return response;
-}
 
 function jsonResponse(response: Response): Response {
   const headers = new Headers(response.headers);
@@ -75,7 +65,18 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
 }
 
 export async function onRequest(context: APIContext, next: MiddlewareNext): Promise<Response> {
-  if (isApiPath(context.url.pathname)) return next();
+  const limit = apiRateLimitFor(context.url.pathname);
 
-  return applySiteHeaders(await respond(context, next));
+  if (limit) {
+    const limited = await enforceRateLimit(context.request, limit);
+
+    if (limited) return limited;
+
+    return next();
+  }
+
+  const response = await respond(context, next);
+  response.headers.set("Link", linkHeader);
+
+  return response;
 }

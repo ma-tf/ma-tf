@@ -7,60 +7,67 @@ import {
   completeEvent,
   errorEvent,
   failureMeta,
-  failureResponse,
+  failureResponses,
   resultEvent,
   startEvent,
 } from "@features/ask/response";
 
+type SettledStep = { ok: true; value: AskStep } | { ok: false };
+
 function* failureEvents(code: NLWebAskFailureCode): Generator<NLWebAskStreamEvent> {
-  yield errorEvent({ _meta: failureMeta, error: failureResponse(code).error });
+  yield errorEvent({ _meta: failureMeta, error: failureResponses[code].error });
   yield completeEvent(failureMeta);
 }
 
-export function failureStream(code: NLWebAskFailureCode): AsyncGenerator<NLWebAskStreamEvent> {
-  return (async function* () {
-    yield startEvent(answerMeta);
-    yield* failureEvents(code);
-  })();
+export async function* failureStream(
+  code: NLWebAskFailureCode,
+): AsyncGenerator<NLWebAskStreamEvent> {
+  yield startEvent(answerMeta);
+  yield* failureEvents(code);
 }
 
 export function runStream(
   summarize: boolean,
   work: readonly Promise<AskStep>[],
 ): AsyncGenerator<NLWebAskStreamEvent> {
-  const settled = work.map((task) =>
+  const settled: Promise<SettledStep>[] = work.map((task) =>
     task.then(
       (value) => ({ ok: true as const, value }),
       () => ({ ok: false as const }),
     ),
   );
 
-  return (async function* () {
-    yield startEvent(answerMeta);
+  return emitStream(summarize, settled);
+}
 
-    let pageIndex = summarize ? 1 : 0;
+async function* emitStream(
+  summarize: boolean,
+  settled: readonly Promise<SettledStep>[],
+): AsyncGenerator<NLWebAskStreamEvent> {
+  yield startEvent(answerMeta);
 
-    for (const task of settled) {
-      const outcome = await task;
+  let pageIndex = summarize ? 1 : 0;
 
-      if (!outcome.ok) {
-        yield* failureEvents("INTERNAL_ERROR");
-        return;
-      }
+  for (const task of settled) {
+    const outcome = await task;
 
-      if ("error" in outcome.value) {
-        yield* failureEvents(outcome.value.error);
-        return;
-      }
-
-      for (const result of outcome.value.results) {
-        yield indexResult(result, pageIndex);
-        if ("page" in result) pageIndex += 1;
-      }
+    if (!outcome.ok) {
+      yield* failureEvents("INTERNAL_ERROR");
+      return;
     }
 
-    yield completeEvent(answerMeta);
-  })();
+    if ("error" in outcome.value) {
+      yield* failureEvents(outcome.value.error);
+      return;
+    }
+
+    for (const result of outcome.value.results) {
+      yield indexResult(result, pageIndex);
+      if ("page" in result) pageIndex += 1;
+    }
+  }
+
+  yield completeEvent(answerMeta);
 }
 
 function indexResult(result: AskResult, pageIndex: number) {

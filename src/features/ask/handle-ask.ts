@@ -1,4 +1,4 @@
-import type { NLWebAskFailureCode, NLWebAskStreamEvent } from "@features/ask/response";
+import type { NLWebAskStreamEvent } from "@features/ask/response";
 
 import { ask, streamAsk } from "@features/ask/ask";
 import { failureStream, runStream } from "@features/ask/nlweb-stream";
@@ -7,10 +7,10 @@ import {
   NLWebAskRequestSchema,
   requestedSummarize,
 } from "@features/ask/request";
-import { answerResponse, failureResponse } from "@features/ask/response";
+import { answerResponse, failureResponses } from "@features/ask/response";
 import { acceptsMediaType } from "@lib/accept";
+import { readJson } from "@lib/json";
 import { ReadableStream as NodeReadableStream } from "node:stream/web";
-import * as v from "valibot";
 
 async function* encodeSse(events: AsyncIterable<NLWebAskStreamEvent>) {
   const encoder = new TextEncoder();
@@ -39,36 +39,39 @@ function wantsStream(accept: string | null, preferStreaming: boolean): boolean {
 }
 
 export async function handleAsk(request: Request): Promise<Response> {
-  let raw: unknown;
+  const parsed = await readJson(NLWebAskRequestSchema, request);
+  if (!parsed) return new Response(null, { status: 400, headers: { Vary: "Accept" } });
 
-  try {
-    raw = await request.json();
-  } catch {
-    return new Response(null, { status: 400, headers: { Vary: "Accept" } });
-  }
+  const streaming = wantsStream(request.headers.get("Accept"), parsed.prefer?.streaming === true);
+  const supported = isSupportedResponseFormat(parsed.prefer?.response_format);
+  const summarize = requestedSummarize(parsed.prefer?.mode);
 
-  const result = v.safeParse(NLWebAskRequestSchema, raw);
-  if (!result.success) return new Response(null, { status: 400, headers: { Vary: "Accept" } });
+  const respondJson = async (): Promise<Response> => {
+    if (!supported) {
+      return Response.json(failureResponses.UNSUPPORTED_FORMAT, {
+        headers: { Vary: "Accept" },
+      });
+    }
 
-  const { query, prefer } = result.output;
-  const streaming = wantsStream(request.headers.get("Accept"), prefer?.streaming === true);
-  const failure = (code: NLWebAskFailureCode) =>
-    streaming
-      ? sseResponse(failureStream(code))
-      : Response.json(failureResponse(code), { headers: { Vary: "Accept" } });
+    if (summarize === undefined) {
+      return Response.json(failureResponses.UNSUPPORTED_MODE, { headers: { Vary: "Accept" } });
+    }
 
-  if (!isSupportedResponseFormat(prefer?.response_format)) return failure("UNSUPPORTED_FORMAT");
+    const answer = await ask(parsed.query.text, summarize, request.signal);
 
-  const summarize = requestedSummarize(prefer?.mode);
-  if (summarize === undefined) return failure("UNSUPPORTED_MODE");
+    return Response.json(answer ? answerResponse(answer) : failureResponses.NO_RESULTS, {
+      headers: { Vary: "Accept" },
+    });
+  };
 
-  if (streaming) {
-    return sseResponse(runStream(summarize, streamAsk(query.text, summarize, request.signal)));
-  }
+  const respondSse = (): Response => {
+    if (!supported) return sseResponse(failureStream("UNSUPPORTED_FORMAT"));
+    if (summarize === undefined) return sseResponse(failureStream("UNSUPPORTED_MODE"));
 
-  const answer = await ask(query.text, summarize, request.signal);
+    return sseResponse(
+      runStream(summarize, streamAsk(parsed.query.text, summarize, request.signal)),
+    );
+  };
 
-  return Response.json(answer ? answerResponse(answer) : failureResponse("NO_RESULTS"), {
-    headers: { Vary: "Accept" },
-  });
+  return streaming ? respondSse() : await respondJson();
 }

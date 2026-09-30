@@ -33,7 +33,7 @@ export const faqs = [
   {
     question: "Can AI agents read this site?",
     answer:
-      "Yes. I serve every page as HTML or markdown, and publish an agent guide at /llms.txt, an OpenAPI document at /openapi.json, and a full content archive at /llms-full.txt. There are no API keys, and requests aren't metered.",
+      "Yes. I serve every page as HTML or markdown, and publish an agent guide at /llms.txt, an OpenAPI document at /openapi.json, and a full content archive at /llms-full.txt. There are no API keys.",
   },
 ] as const;
 

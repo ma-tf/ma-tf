@@ -1,8 +1,17 @@
 import type { APIContext, MiddlewareNext } from "astro";
 
-import { describe, expect, it } from "vite-plus/test";
+import { enforceRateLimit } from "@lib/rate-limit-middleware";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { onRequest } from "@/src/middleware";
+
+vi.mock("@lib/rate-limit-middleware", () => ({ enforceRateLimit: vi.fn() }));
+
+const enforce = vi.mocked(enforceRateLimit);
+
+beforeEach(() => {
+  enforce.mockResolvedValue(null);
+});
 
 const html = "<!doctype html><html><body><h1>Hello</h1></body></html>";
 
@@ -32,14 +41,11 @@ function htmlResponse(status = 200): Response {
 const next: MiddlewareNext = async () => htmlResponse();
 
 describe("onRequest", () => {
-  it("applies the discovery and rate-limit headers to every response", async () => {
+  it("applies the discovery headers to every response", async () => {
     const response = await onRequest(buildContext("/"), next);
 
     expect(response.headers.get("Link")).toContain('rel="service-doc"');
     expect(response.headers.get("Link")).toContain("/llms.txt");
-    expect(response.headers.get("RateLimit-Policy")).toBe('"m4t";q=600;w=60');
-    expect(response.headers.get("RateLimit-Limit")).toBe("600");
-    expect(response.headers.get("RateLimit-Reset")).toBe("60");
   });
 
   it("serves HTML to a browser", async () => {
@@ -170,7 +176,18 @@ describe("onRequest", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toMatch(/^text\/html\b/);
     expect(response.headers.get("Link")).toBeNull();
-    expect(response.headers.get("RateLimit-Policy")).toBeNull();
+  });
+
+  it("returns the endpoint's 429 without the site headers", async () => {
+    enforce.mockResolvedValue(
+      new Response(null, { status: 429, headers: { "Retry-After": "12" } }),
+    );
+
+    const response = await onRequest(buildContext("/ask"), next);
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("12");
+    expect(response.headers.get("Link")).toBeNull();
   });
 
   it("still rejects an unrepresentable Accept for a non-API path", async () => {

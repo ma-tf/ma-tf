@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { resources, siteUrl } from "@features/discovery/catalog";
 import { StillLifeBackground } from "@components/still-life-background";
-import { rateLimit } from "@features/discovery/rate-limits";
+import { askRateLimit } from "@lib/rate-limits";
 ---
 
 <Layout>
@@ -60,11 +60,10 @@ curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
         <section class="mb-8 break-inside-avoid flex flex-col gap-3">
           <h2 class="text-2xl font-semibold">Rate limits</h2>
           <p>
-            Requests are not metered. Every response carries
-            <code>RateLimit-Policy</code>, <code>RateLimit-Limit</code>, and
-            <code>RateLimit-Reset</code>, declaring a floor of
-            <code>{rateLimit.quota}</code> requests per minute per client; the site
-            never returns <code>429 Too Many Requests</code> for rate limiting.
+            Every page and resource is unmetered. <code>POST /ask</code> is metered at
+            <code>{askRateLimit.quota}</code> requests per minute per client and
+            returns <code>429 Too Many Requests</code> with <code>Retry-After</code>
+            once past it.
           </p>
         </section>
 

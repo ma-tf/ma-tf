@@ -2,7 +2,7 @@ import type { DiscoveryResource } from "@features/discovery/catalog";
 
 import { isJsonMediaType, resources, siteUrl } from "@features/discovery/catalog";
 import { problemSchema } from "@features/discovery/problems";
-import { rateLimit, rateLimitPolicy } from "@features/discovery/rate-limits";
+import { askRateLimit } from "@lib/rate-limits";
 
 const linksetReferenceSchema = {
   type: "object",
@@ -225,13 +225,160 @@ function errorResponses() {
   };
 }
 
+const nlWebAskRequestSchema = {
+  type: "object",
+  required: ["query"],
+  properties: {
+    query: {
+      type: "object",
+      required: ["text"],
+      properties: {
+        text: { type: "string" },
+        site: { type: "string" },
+      },
+      additionalProperties: true,
+    },
+    context: { type: "object", additionalProperties: true },
+    prefer: {
+      type: "object",
+      properties: {
+        streaming: { type: "boolean" },
+        response_format: { type: "string", examples: ["conversational_search"] },
+        mode: { type: "string", examples: ["list", "summarize"] },
+        "accept-language": { type: "string" },
+        "user-agent": { type: "string" },
+      },
+      additionalProperties: true,
+    },
+    meta: { type: "object", additionalProperties: true },
+  },
+  additionalProperties: true,
+};
+
+const nlWebAnswerSchema = {
+  type: "object",
+  required: ["_meta", "results"],
+  properties: {
+    _meta: {
+      type: "object",
+      required: ["response_type", "version"],
+      properties: {
+        response_type: { type: "string", examples: ["answer"] },
+        response_format: { type: "string", examples: ["conversational_search"] },
+        version: { type: "string", examples: ["0.55"] },
+      },
+    },
+    results: {
+      type: "array",
+      items: {
+        oneOf: [
+          {
+            type: "object",
+            required: ["@type", "text"],
+            properties: {
+              "@type": { type: "string", examples: ["SearchSummary"] },
+              text: { type: "string" },
+            },
+          },
+          {
+            type: "object",
+            required: ["@type", "name", "url"],
+            properties: {
+              "@type": { type: "string", examples: ["WebPage"] },
+              name: { type: "string" },
+              url: { type: "string", format: "uri" },
+            },
+          },
+        ],
+      },
+    },
+  },
+};
+
+const nlWebFailureSchema = {
+  type: "object",
+  required: ["_meta", "error"],
+  properties: {
+    _meta: {
+      type: "object",
+      required: ["response_type", "version"],
+      properties: {
+        response_type: { type: "string", examples: ["failure"] },
+        version: { type: "string", examples: ["0.55"] },
+      },
+    },
+    error: {
+      type: "object",
+      required: ["code"],
+      properties: {
+        code: {
+          type: "string",
+          enum: ["NO_RESULTS", "UNSUPPORTED_FORMAT", "UNSUPPORTED_MODE", "INTERNAL_ERROR"],
+        },
+        message: { type: "string" },
+      },
+    },
+  },
+};
+
+const askOperation = {
+  operationId: "ask",
+  summary: "Ask a question about the published content.",
+  description: `Answers a question from the content published on ${siteUrl}, linking the pages used as sources. The request body carries the preferences, and the Accept header picks the transport: application/json for a single response, or text/event-stream for server-sent events. POST /ask is metered at ${askRateLimit.quota} requests per minute per client.`,
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": { schema: { $ref: "#/components/schemas/NLWebAskRequest" } },
+    },
+  },
+  responses: {
+    "200": {
+      description: "A conversational search answer, or an application-level failure.",
+      headers: {
+        "RateLimit-Policy": { $ref: "#/components/headers/AskRateLimitPolicy" },
+        "RateLimit-Limit": { $ref: "#/components/headers/AskRateLimitLimit" },
+        "RateLimit-Reset": { $ref: "#/components/headers/AskRateLimitReset" },
+      },
+      content: {
+        "application/json": {
+          schema: {
+            oneOf: [
+              { $ref: "#/components/schemas/NLWebAnswer" },
+              { $ref: "#/components/schemas/NLWebFailure" },
+            ],
+          },
+        },
+        "text/event-stream": {
+          schema: {
+            type: "string",
+            description:
+              "Server-sent events in the NLWeb 0.55 order: start, one result per item, an optional error, then complete.",
+          },
+        },
+      },
+    },
+    "400": {
+      description: "The request body is not valid JSON, or not a valid NLWeb ask request.",
+    },
+    "429": {
+      description: "The client exceeded the ask rate limit.",
+      headers: {
+        "Retry-After": { $ref: "#/components/headers/RetryAfter" },
+        "RateLimit-Policy": { $ref: "#/components/headers/AskRateLimitPolicy" },
+        "RateLimit-Limit": { $ref: "#/components/headers/AskRateLimitLimit" },
+        "RateLimit-Reset": { $ref: "#/components/headers/AskRateLimitReset" },
+      },
+    },
+  },
+};
+
 export function buildOpenApiDocument() {
   return {
     openapi: "3.1.0",
     info: {
       title: "m4t.tf Site Resources",
       version: "0.1.0",
-      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered; every response declares a published floor of ${rateLimit.quota} requests per minute per client. Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
+      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered, except POST /ask, which is metered at ${askRateLimit.quota} requests per minute per client. Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
     },
     components: {
       parameters: {
@@ -262,17 +409,26 @@ export function buildOpenApiDocument() {
             "RFC 8594 date after which the resource stops responding. Present only on deprecated resources.",
           schema: { type: "string", examples: ["Sat, 31 Dec 2026 23:59:59 GMT"] },
         },
-        RateLimitPolicy: {
-          description: "The published request floor as an IETF RateLimit-Policy field.",
-          schema: { type: "string", examples: [rateLimitPolicy] },
+        AskRateLimitPolicy: {
+          description: "The published ask limit as an IETF RateLimit-Policy field.",
+          schema: {
+            type: "string",
+            examples: [
+              `"${askRateLimit.name}";q=${askRateLimit.quota};w=${askRateLimit.windowSeconds}`,
+            ],
+          },
         },
-        RateLimitLimit: {
-          description: "The published request floor per window.",
-          schema: { type: "integer", examples: [rateLimit.quota] },
+        AskRateLimitLimit: {
+          description: "The published ask request limit per window.",
+          schema: { type: "integer", examples: [askRateLimit.quota] },
         },
-        RateLimitReset: {
-          description: "The length of the rate-limit window in seconds.",
-          schema: { type: "integer", examples: [rateLimit.windowSeconds] },
+        AskRateLimitReset: {
+          description: "Seconds until the ask rate-limit window resets.",
+          schema: { type: "integer", examples: [askRateLimit.windowSeconds] },
+        },
+        RetryAfter: {
+          description: "Seconds until the next request is allowed.",
+          schema: { type: "integer" },
         },
       },
       schemas: {
@@ -281,40 +437,43 @@ export function buildOpenApiDocument() {
         DiscoveryResource: discoveryResourceSchema,
         Linkset: linksetSchema,
         LinksetReference: linksetReferenceSchema,
+        NLWebAnswer: nlWebAnswerSchema,
+        NLWebAskRequest: nlWebAskRequestSchema,
+        NLWebFailure: nlWebFailureSchema,
         Problem: problemSchema,
       },
     },
     servers: [{ url: siteUrl }],
-    paths: Object.fromEntries(
-      resources.map((resource) => [
-        resource.path,
-        {
-          get: {
-            operationId: operationIdFor(resource),
-            summary: resource.title,
-            description: resource.description,
-            tags: [...resource.tags],
-            parameters: [
-              { $ref: "#/components/parameters/ApiVersion" },
-              { $ref: "#/components/parameters/Accept" },
-            ],
-            responses: {
-              "200": {
-                description: resource.description,
-                headers: {
-                  Deprecation: { $ref: "#/components/headers/Deprecation" },
-                  Sunset: { $ref: "#/components/headers/Sunset" },
-                  "RateLimit-Policy": { $ref: "#/components/headers/RateLimitPolicy" },
-                  "RateLimit-Limit": { $ref: "#/components/headers/RateLimitLimit" },
-                  "RateLimit-Reset": { $ref: "#/components/headers/RateLimitReset" },
+    paths: {
+      ...Object.fromEntries(
+        resources.map((resource) => [
+          resource.path,
+          {
+            get: {
+              operationId: operationIdFor(resource),
+              summary: resource.title,
+              description: resource.description,
+              tags: [...resource.tags],
+              parameters: [
+                { $ref: "#/components/parameters/ApiVersion" },
+                { $ref: "#/components/parameters/Accept" },
+              ],
+              responses: {
+                "200": {
+                  description: resource.description,
+                  headers: {
+                    Deprecation: { $ref: "#/components/headers/Deprecation" },
+                    Sunset: { $ref: "#/components/headers/Sunset" },
+                  },
+                  content: responseContentFor(resource),
                 },
-                content: responseContentFor(resource),
+                ...errorResponses(),
               },
-              ...errorResponses(),
             },
           },
-        },
-      ]),
-    ),
+        ]),
+      ),
+      "/ask": { post: askOperation },
+    },
   };
 }

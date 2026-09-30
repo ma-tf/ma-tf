@@ -1,7 +1,7 @@
 import profile from "@content/profile.json";
 import { isSectionGuide, resources, sectionGuides, siteUrl } from "@features/discovery/catalog";
 import { staticPages } from "@features/discovery/page-inventory";
-import { rateLimit } from "@features/discovery/rate-limits";
+import { askRateLimit } from "@lib/rate-limits";
 
 type ArchivePost = {
   body?: string;
@@ -86,10 +86,9 @@ export function buildLlmsTxt(): string {
     "",
     "## Rate Limits",
     "",
-    "Requests are not metered, and the site never returns `429 Too Many Requests`.",
-    `Every response declares a published floor of ${rateLimit.quota} requests per minute per client`,
-    "with `RateLimit-Policy`, `RateLimit-Limit`, and `RateLimit-Reset`. The origin will",
-    "not reject you below that floor.",
+    "Every page and resource is unmetered. `POST /ask` is metered at",
+    `${askRateLimit.quota} requests per minute per client, and returns`,
+    "`429 Too Many Requests` with `Retry-After` past it.",
     "",
     "## Identity",
     "",
@@ -210,9 +209,9 @@ export function buildDevelopersLlmsTxt(): string {
     "",
     "## Rate Limits",
     "",
-    "Requests are not metered, and the site never returns `429 Too Many Requests`.",
-    `Every response declares a published floor of ${rateLimit.quota} requests per minute per`,
-    "client with `RateLimit-Policy`, `RateLimit-Limit`, and `RateLimit-Reset`.",
+    "Every page and resource is unmetered. `POST /ask` is metered at",
+    `${askRateLimit.quota} requests per minute per client, and returns`,
+    "`429 Too Many Requests` with `Retry-After` past it.",
     "",
   ].join("\n");
 }

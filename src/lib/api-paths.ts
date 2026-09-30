@@ -1,5 +1,9 @@
-const apiPaths = new Set(["/ask"]);
+import type { RateLimit } from "@lib/rate-limits";
 
-export function isApiPath(pathname: string): boolean {
-  return apiPaths.has(pathname);
+import { askRateLimit } from "@lib/rate-limits";
+
+const apiPathLimits = new Map<string, RateLimit>([["/ask", askRateLimit]]);
+
+export function apiRateLimitFor(pathname: string): RateLimit | undefined {
+  return apiPathLimits.get(pathname);
 }

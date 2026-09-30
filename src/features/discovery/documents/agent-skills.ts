@@ -1,4 +1,5 @@
 import profile from "@content/profile.json";
+import { askRateLimit } from "@lib/rate-limits";
 
 export const agentSkillsSchemaUrl = "https://schemas.agentskills.io/discovery/0.2.0/schema.json";
 
@@ -51,7 +52,8 @@ const skills: readonly AgentSkill[] = [
       "# Discover site resources",
       "",
       "m4t.tf is machine-readable. Every resource is an unauthenticated GET and",
-      "requests are not metered. Send `Accept: application/json` to any resource to",
+      `requests are not metered, except \`POST /ask\`, which is metered at ${askRateLimit.quota}`,
+      "requests per minute per client. Send `Accept: application/json` to any resource to",
       "receive it as JSON: the canonical document for JSON resources, and a typed",
       "descriptor for the others.",
       "",
