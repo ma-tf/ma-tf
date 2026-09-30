@@ -33,4 +33,30 @@ export const NLWebAskRequestSchema = v.looseObject({
   ),
 });
 
-export type NLWebAskRequest = v.InferOutput<typeof NLWebAskRequestSchema>;
+const summaryModes = ["list", "summarize"];
+
+export function isSupportedResponseFormat(responseFormat: string | undefined): boolean {
+  const format = responseFormat?.trim();
+
+  if (!format) return true;
+
+  return format
+    .split(",")
+    .map((token) => token.trim().toLowerCase())
+    .includes("conversational_search");
+}
+
+export function requestedSummarize(mode: string | undefined): boolean | undefined {
+  const value = mode?.trim();
+
+  if (!value) return false;
+
+  const known = value
+    .split(",")
+    .map((token) => token.trim().toLowerCase())
+    .filter((token) => summaryModes.includes(token));
+
+  if (known.length === 0) return undefined;
+
+  return known.includes("summarize");
+}
