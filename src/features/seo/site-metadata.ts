@@ -22,16 +22,16 @@ export const service = {
 
 export const faqs = [
   {
-    question: "Who are you?",
+    question: "Who am I?",
     answer: `I'm ${profile.name}, a full-stack developer. I started programming in 2013 and have worked professionally since 2018, across public safety, finance, and intellectual property.`,
   },
   {
-    question: "How can I contact you?",
+    question: "How can you contact me?",
     answer:
       "Email me at admin@m4t.tf. It's the only contact channel I publish: there is no contact form, phone number, or second inbox.",
   },
   {
-    question: "Can AI agents read this site?",
+    question: "Can AI agents read me?",
     answer:
       "Yes. I serve every page as HTML or markdown, and publish an agent guide at /llms.txt, an OpenAPI document at /openapi.json, and a full content archive at /llms-full.txt. There are no API keys.",
   },

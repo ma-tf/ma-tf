@@ -1,6 +1,7 @@
 import type { AskPageJudgment, PublishedPage } from "@features/ask/published-page";
 
 import { noul, TypeSafeClient, type NoulResponse } from "@typesafe-ai/sdk";
+import { TYPESAFE_API_KEY } from "astro:env/server";
 
 const PAGE_QUESTION_PREFIX = "page_";
 
@@ -9,7 +10,7 @@ export async function judgeAskPages(
   pages: PublishedPage[],
   signal: AbortSignal,
 ): Promise<AskPageJudgment> {
-  const client = new TypeSafeClient();
+  const client = new TypeSafeClient({ apiKey: TYPESAFE_API_KEY });
   const payload = {
     state: {
       visitor_question: question,

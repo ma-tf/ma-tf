@@ -28,7 +28,7 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
         onChange={(event) => setDraft(event.target.value)}
         aria-label="Ask about this site"
         placeholder="Ask about this site…"
-        className="min-w-0 flex-1 bg-transparent text-xl font-semibold outline-none placeholder:font-normal placeholder:text-muted-foreground/60"
+        className="min-w-0 flex-1 bg-transparent text-2xl outline-none placeholder:text-muted-foreground/60"
       />
       <button
         type="submit"
@@ -44,12 +44,12 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
 
 function AnsweredItem() {
   const { itemValue, question, unit } = useAskUnit();
-  const inProgress = unit.status === "thinking" || unit.status === "streaming";
+  const inProgress = unit.status === "thinking";
 
   return (
     <AccordionItem value={itemValue}>
       <AccordionTrigger hideIcon={inProgress}>
-        <span className="text-xl font-semibold">{question}</span>
+        <span className="text-2xl uppercase">{question}</span>
         {inProgress && (
           <CircleNotchIcon
             aria-hidden="true"

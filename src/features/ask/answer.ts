@@ -1,9 +1,10 @@
 import type { PublishedPage } from "@features/ask/published-page";
 
+import { OPENAI_API_KEY } from "astro:env/server";
 import OpenAI from "openai";
 
 export async function answerAsk(question: string, sources: PublishedPage[], signal: AbortSignal) {
-  const client = new OpenAI();
+  const client = new OpenAI({ apiKey: OPENAI_API_KEY });
   const response = await client.responses.create(
     {
       model: "gpt-6-luna",
