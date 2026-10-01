@@ -1,12 +1,113 @@
 import { spawn } from "node:child_process";
-import { writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile, readdir, writeFile } from "node:fs/promises";
 import { createServer } from "node:net";
+import { join, relative } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const astro = fileURLToPath(new URL("../node_modules/astro/bin/astro.mjs", import.meta.url));
+const tagsFile = fileURLToPath(new URL("../src/features/ask/ask-tags.json", import.meta.url));
+const output = fileURLToPath(
+  new URL("../src/features/ask/published-pages.generated.json", import.meta.url),
+);
 const host = "127.0.0.1";
+
+const hashFileCandidates = [
+  "astro.config.mjs",
+  "tsconfig.json",
+  "package.json",
+  "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
+  ".node-version",
+  ".env",
+  ".env.local",
+  ".env.development",
+  ".env.production",
+];
+
+const hashEnvKeys = ["R2_PUBLIC_URL", "PUBLIC_ASK_ENABLED"];
+
+export type AskTag = {
+  short: string;
+  keywords: string[];
+};
+
+export type AskTagFile = Record<string, Record<string, AskTag>>;
+
+type CorpusPage = {
+  url: string;
+  title: string;
+  content: string;
+};
+
+function renderEnvKeys(): string[] {
+  const keys = new Set(hashEnvKeys);
+
+  for (const key of Object.keys(process.env)) {
+    if (key.startsWith("PUBLIC_PREVIEW_")) keys.add(key);
+  }
+
+  return [...keys].sort();
+}
+
+async function walkFiles(dir: string): Promise<string[]> {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const nested = await Promise.all(
+    entries.map((entry) => {
+      const path = join(dir, entry.name);
+
+      return entry.isDirectory() ? walkFiles(path) : Promise.resolve([path]);
+    }),
+  );
+
+  return nested.flat();
+}
+
+async function hashInputs(): Promise<string> {
+  const hash = createHash("sha256");
+  const walked = (
+    await Promise.all(["src", "scripts"].map((dir) => walkFiles(join(root, dir))))
+  ).flat();
+  const files = [...new Set([...walked, ...hashFileCandidates.map((file) => join(root, file))])]
+    .filter((path) => path !== output)
+    .sort();
+
+  for (const path of files) {
+    hash.update(relative(root, path));
+    hash.update("\0");
+
+    try {
+      hash.update(await readFile(path));
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+
+      hash.update("\0missing");
+    }
+
+    hash.update("\0");
+  }
+
+  for (const key of renderEnvKeys()) {
+    hash.update(key);
+    hash.update("\0");
+    hash.update(process.env[key] ?? "\0missing");
+    hash.update("\0");
+  }
+
+  return hash.digest("hex");
+}
+
+async function readStoredHash(): Promise<string | undefined> {
+  try {
+    const stored = JSON.parse(await readFile(output, "utf8")) as { sourceHash?: unknown };
+
+    return typeof stored.sourceHash === "string" ? stored.sourceHash : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 function availablePort(): Promise<number> {
   return new Promise<number>((resolve, reject) => {
@@ -110,7 +211,7 @@ async function loadPage(
   path: string,
   origin: string,
   canonicalOrigin: string,
-): Promise<{ url: string; title: string; content: string }> {
+): Promise<CorpusPage> {
   const localUrl = new URL(path, origin);
   const response = await fetch(localUrl, {
     headers: { Accept: "text/markdown" },
@@ -128,6 +229,51 @@ async function loadPage(
   return { url, title: pageTitle(content, url), content };
 }
 
+function normaliseTarget(target: string): string {
+  const pathname = new URL(target, "https://ask-corpus.invalid").pathname.replace(/\/+$/, "");
+
+  return pathname === "" ? "/" : pathname;
+}
+
+function tagBlock(tags: Record<string, AskTag>): string {
+  const items = Object.entries(tags)
+    .sort(([first], [second]) => (first < second ? -1 : first > second ? 1 : 0))
+    .map(([key, tag]) => {
+      const keywords = tag.keywords.length > 0 ? ` — Keywords: ${tag.keywords.join(", ")}` : "";
+
+      return `- ${key} — ${tag.short}${keywords}`;
+    });
+
+  return `\n\n## Invisible tags\n\n${items.join("\n")}\n`;
+}
+
+export function applyAskTags(pages: CorpusPage[], tags: AskTagFile | undefined): CorpusPage[] {
+  if (!tags) return pages;
+
+  const byPath = new Map(
+    Object.entries(tags)
+      .filter(([, items]) => Object.keys(items).length > 0)
+      .map(([target, items]) => [normaliseTarget(target), items]),
+  );
+
+  return pages.map((page) => {
+    const items = byPath.get(normaliseTarget(page.url));
+    if (!items) return page;
+
+    return { ...page, content: `${page.content}${tagBlock(items)}` };
+  });
+}
+
+async function loadAskTags(): Promise<AskTagFile | undefined> {
+  try {
+    return JSON.parse(await readFile(tagsFile, "utf8")) as AskTagFile;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+
+    throw error;
+  }
+}
+
 async function stopServer(server: ReturnType<typeof spawn>): Promise<void> {
   if (hasServerExited(server)) return;
 
@@ -141,42 +287,55 @@ async function stopServer(server: ReturnType<typeof spawn>): Promise<void> {
   await exited;
 }
 
-const port = await availablePort();
-const origin = `http://${host}:${port}`;
-const server = spawn(
-  process.execPath,
-  [astro, "dev", "--host", host, "--port", String(port), "--strictPort", "--ignore-lock"],
-  { cwd: root, stdio: ["ignore", "pipe", "pipe"] },
-);
+async function main(): Promise<void> {
+  const forced = process.argv.includes("--force") || process.env.ASK_CORPUS_FORCE === "1";
+  const sourceHash = await hashInputs();
 
-server.stdout.pipe(process.stdout);
-server.stderr.pipe(process.stderr);
+  if (!forced && (await readStoredHash()) === sourceHash) {
+    console.log("Ask corpus is up to date; skipping generation.");
+    return;
+  }
 
-try {
-  const sitemap = await loadSitemap(server, new URL("/sitemap.xml", origin));
-  const locations =
-    sitemap.match(/<loc>[^<]+<\/loc>/g)?.map((location) => decodeXml(location.slice(5, -6))) ?? [];
-  if (locations.length === 0) throw new Error("The sitemap contained no published pages");
-
-  const firstLocation = locations.at(0);
-  if (!firstLocation) throw new Error("The sitemap contained no published pages");
-
-  const canonicalOrigin = new URL(firstLocation).origin;
-  const paths = [
-    ...new Set(
-      locations
-        .map((location) => new URL(location).pathname)
-        .filter((path) => !path.startsWith("/tags/"))
-        .map((path) => path.replace(/\/+$/, "") || "/"),
-    ),
-  ];
-  const pages = await Promise.all(paths.map((path) => loadPage(path, origin, canonicalOrigin)));
-  const output = fileURLToPath(
-    new URL("../src/features/ask/published-pages.generated.json", import.meta.url),
+  const port = await availablePort();
+  const origin = `http://${host}:${port}`;
+  const server = spawn(
+    process.execPath,
+    [astro, "dev", "--host", host, "--port", String(port), "--strictPort", "--ignore-lock"],
+    { cwd: root, stdio: ["ignore", "pipe", "pipe"] },
   );
 
-  await writeFile(output, `${JSON.stringify(pages, null, 2)}\n`);
-  console.log(`Generated Ask corpus with ${pages.length} published pages.`);
-} finally {
-  await stopServer(server);
+  server.stdout.pipe(process.stdout);
+  server.stderr.pipe(process.stderr);
+
+  try {
+    const sitemap = await loadSitemap(server, new URL("/sitemap.xml", origin));
+    const locations =
+      sitemap.match(/<loc>[^<]+<\/loc>/g)?.map((location) => decodeXml(location.slice(5, -6))) ??
+      [];
+    if (locations.length === 0) throw new Error("The sitemap contained no published pages");
+
+    const firstLocation = locations.at(0);
+    if (!firstLocation) throw new Error("The sitemap contained no published pages");
+
+    const canonicalOrigin = new URL(firstLocation).origin;
+    const paths = [
+      ...new Set(
+        locations
+          .map((location) => new URL(location).pathname)
+          .filter((path) => !path.startsWith("/tags/"))
+          .map((path) => path.replace(/\/+$/, "") || "/"),
+      ),
+    ];
+    const pages = await Promise.all(paths.map((path) => loadPage(path, origin, canonicalOrigin)));
+    const tagged = applyAskTags(pages, await loadAskTags());
+
+    await writeFile(output, `${JSON.stringify({ sourceHash, pages: tagged }, null, 2)}\n`);
+    console.log(`Generated Ask corpus with ${tagged.length} published pages.`);
+  } finally {
+    await stopServer(server);
+  }
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
 }

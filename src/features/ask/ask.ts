@@ -1,7 +1,7 @@
 import type { AskPageJudgment, PublishedPage } from "@features/ask/published-page";
 
 import { answerAsk } from "@features/ask/answer";
-import pages from "@features/ask/published-pages.generated.json";
+import corpus from "@features/ask/published-pages.generated.json";
 import { judgeAskPages } from "@features/ask/typesafe-ai";
 import { siteUrl } from "@features/discovery/catalog";
 
@@ -38,7 +38,7 @@ export async function ask(
   summarize: boolean,
   signal: AbortSignal,
 ): Promise<AskAnswer | null> {
-  const judgment = await judgeAskPages(question, pages, signal);
+  const judgment = await judgeAskPages(question, corpus.pages, signal);
   const selection = rankSources(judgment, summarize);
 
   if (!selection.supported) return null;
@@ -55,7 +55,7 @@ export function streamAsk(
   summarize: boolean,
   signal: AbortSignal,
 ): readonly Promise<AskStep>[] {
-  const prepared = judgeAskPages(question, pages, signal).then((judgment) =>
+  const prepared = judgeAskPages(question, corpus.pages, signal).then((judgment) =>
     rankSources(judgment, summarize),
   );
 

@@ -1,0 +1,564 @@
+{
+  "/": {
+    "Bolex H-16 SBM": {
+      "short": "16mm spring-wound film camera",
+      "keywords": [
+        "Bolex",
+        "camera",
+        "16mm",
+        "film camera",
+        "motion picture camera",
+        "spring motor",
+        "analogue cinematography",
+        "vintage"
+      ]
+    },
+    "Kern-Paillard Vario-Switar 16-100mm": {
+      "short": "Battery-powered zoom lens for Bolex cameras",
+      "keywords": [
+        "Kern-Paillard",
+        "Kern Vario-Switar",
+        "Bolex",
+        "zoom lens",
+        "cine lens",
+        "camera lens",
+        "battery-powered",
+        "16-100mm"
+      ]
+    },
+    "Kodak Vision3 Color Negative": {
+      "short": "16mm colour motion picture negative film",
+      "keywords": [
+        "Kodak",
+        "Vision3",
+        "motion picture film",
+        "16mm film",
+        "colour negative",
+        "cinematography",
+        "photochemical film"
+      ]
+    },
+    "LAOWA 4mm f/2.8 Fisheye": {
+      "short": "Ultra-wide fisheye camera lens",
+      "keywords": [
+        "Laowa",
+        "camera lens",
+        "fisheye",
+        "ultra-wide",
+        "4mm",
+        "f/2.8",
+        "wide-angle photography"
+      ]
+    }
+  },
+  "/cv": {
+    "135ify": {
+      "short": "Analogue film grain image processing tool",
+      "keywords": [
+        "135ify",
+        "image processing",
+        "React",
+        "TypeScript",
+        "film grain",
+        "analogue photography",
+        "35mm film",
+        "135 film",
+        "digital images",
+        "film scans"
+      ]
+    },
+    "ma-tf": {
+      "short": "Personal website built with Astro and React",
+      "keywords": [
+        "personal website",
+        "Astro",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "web development",
+        "portfolio"
+      ]
+    },
+    "meta1v": {
+      "short": "Metadata editor for Canon EOS 1V EFD files",
+      "keywords": [
+        "Go",
+        "software",
+        "metadata editor",
+        "camera metadata",
+        "Canon EOS 1V",
+        "EFD files",
+        "photography"
+      ]
+    },
+    "ogle": {
+      "short": "Terminal interface for monitoring Docker Compose projects",
+      "keywords": [
+        "ogle",
+        "Go",
+        "Docker",
+        "Docker Compose",
+        "TUI",
+        "terminal interface",
+        "monitoring",
+        "container orchestration"
+      ]
+    }
+  },
+  "/music": {
+    "E-mu Emulator III": {
+      "short": "Digital sampling synthesiser",
+      "keywords": [
+        "E-mu Systems",
+        "sampler",
+        "electronic musical instrument",
+        "digital sampling",
+        "keyboard instrument",
+        "Emulator III"
+      ]
+    },
+    "JDS Labs Element III": {
+      "short": "Desktop DAC and headphone amplifier",
+      "keywords": [
+        "JDS Labs",
+        "DAC",
+        "headphone amplifier",
+        "desktop audio",
+        "digital-to-analogue converter",
+        "headphone amp",
+        "audio equipment"
+      ]
+    },
+    "Korg Triton": {
+      "short": "Korg music production keyboard workstation",
+      "keywords": ["Korg", "keyboard workstation", "sampling", "MIDI", "sound synthesis"]
+    },
+    "RTM C90 Type I": {
+      "short": "90-minute Type I cassette tape",
+      "keywords": [
+        "RTM",
+        "cassette tape",
+        "type i",
+        "90-minute",
+        "audio cassette",
+        "magnetic tape",
+        "recording media"
+      ]
+    },
+    "Sennheiser HD 800 S": {
+      "short": "Open-back audiophile reference headphones",
+      "keywords": [
+        "Sennheiser",
+        "headphones",
+        "over-ear",
+        "wired",
+        "high-fidelity",
+        "HD 800",
+        "HD 800 S"
+      ]
+    },
+    "Sony WM-D6C Walkman Professional": {
+      "short": "Professional portable cassette recorder",
+      "keywords": [
+        "Sony",
+        "portable cassette recorder",
+        "Walkman",
+        "cassette tape",
+        "audio recording",
+        "field recording",
+        "professional audio"
+      ]
+    }
+  },
+  "/photography": {
+    "Canon EOS-1V": {
+      "short": "35mm autofocus film SLR camera",
+      "keywords": [
+        "Canon",
+        "camera",
+        "film camera",
+        "SLR",
+        "autofocus",
+        "35mm",
+        "interchangeable lenses",
+        "Canon EOS-1V",
+        "Canon EOS 1V"
+      ]
+    },
+    "Nikon CoolScan V ED": {
+      "short": "35mm film scanner",
+      "keywords": [
+        "Nikon",
+        "CoolScan V ED",
+        "film scanner",
+        "35mm",
+        "photography",
+        "digitisation",
+        "photo archiving"
+      ]
+    },
+    "Olympus mju mini Digital": {
+      "short": "Compact digital point-and-shoot camera",
+      "keywords": [
+        "Olympus",
+        "digital camera",
+        "compact camera",
+        "point-and-shoot",
+        "retro digital",
+        "mju",
+        "μ-mini"
+      ]
+    },
+    "Ricoh Mirai": {
+      "short": "Ricoh bridge camera",
+      "keywords": ["Ricoh", "bridge camera", "digital camera", "all-rounder", "zoom camera"]
+    },
+    "SilverFast": {
+      "short": "Film and photo scanning software",
+      "keywords": [
+        "SilverFast",
+        "LaserSoft Imaging",
+        "scanning software",
+        "film scanning",
+        "photo scanning",
+        "film digitisation",
+        "negatives",
+        "slides"
+      ]
+    },
+    "SilverFast HDR": {
+      "short": "Scanned image colour correction software",
+      "keywords": [
+        "LaserSoft Imaging",
+        "SilverFast",
+        "image editing software",
+        "colour correction",
+        "scan editing",
+        "film scanning",
+        "scanned images"
+      ]
+    },
+    "photography/20241130_Luxembourg_1_0": {
+      "short": "Empty underground car park",
+      "keywords": [
+        "car park",
+        "underground",
+        "empty",
+        "concrete columns",
+        "painted arrow",
+        "fluorescent lights",
+        "green-tinted light",
+        "eerie"
+      ]
+    },
+    "photography/20241130_Luxembourg_1_11": {
+      "short": "Empty underground car park",
+      "keywords": [
+        "car park",
+        "empty",
+        "underground",
+        "concrete columns",
+        "directional arrow",
+        "fluorescent lighting",
+        "fire extinguisher",
+        "dark",
+        "eerie"
+      ]
+    },
+    "photography/20241130_Luxembourg_1_2": {
+      "short": "Empty green-lit underground corridor",
+      "keywords": [
+        "empty corridor",
+        "concrete ramp",
+        "underground passage",
+        "fluorescent lights",
+        "green-tinted light",
+        "darkness",
+        "red light",
+        "wall vent",
+        "ceiling pipes",
+        "eerie mood"
+      ]
+    },
+    "photography/20241201_Luxembourg_2_7": {
+      "short": "Backlit leaves against a frosted window",
+      "keywords": [
+        "leaves",
+        "houseplant",
+        "frosted glass",
+        "window",
+        "dark frame",
+        "backlighting",
+        "soft daylight",
+        "quiet mood"
+      ]
+    },
+    "photography/20250118_Luxembourg_3_17": {
+      "short": "Power pylons silhouetted against a sunset",
+      "keywords": [
+        "power pylons",
+        "transmission lines",
+        "sunset",
+        "cloudy sky",
+        "treeline",
+        "silhouette",
+        "warm light",
+        "moody"
+      ]
+    },
+    "photography/20250118_Luxembourg_3_25": {
+      "short": "Illuminated multi-storey stairwell at night",
+      "keywords": [
+        "apartment building",
+        "exterior",
+        "metal staircases",
+        "lit corridors",
+        "numbered doors",
+        "night",
+        "darkness",
+        "quiet"
+      ]
+    },
+    "photography/20250118_Luxembourg_3_4": {
+      "short": "Urban buildings beneath a red twilight horizon",
+      "keywords": [
+        "urban skyline",
+        "buildings",
+        "construction cranes",
+        "twilight",
+        "red horizon",
+        "overcast sky",
+        "illuminated windows",
+        "street lights",
+        "dark",
+        "quiet"
+      ]
+    },
+    "photography/20250118_Luxembourg_3_5": {
+      "short": "A walkway disappearing into dense fog",
+      "keywords": ["walkway", "railing", "sign", "dense fog", "overcast light", "hazy", "eerie"]
+    },
+    "photography/20250118_Luxembourg_3_8": {
+      "short": "Empty tree-lined plaza at night",
+      "keywords": [
+        "plaza",
+        "trees",
+        "night",
+        "streetlights",
+        "red lights",
+        "paving",
+        "empty",
+        "dark",
+        "quiet"
+      ]
+    },
+    "photography/20250329_Leeds+Lux_25": {
+      "short": "Flags outside an illuminated modern building",
+      "keywords": [
+        "international flags",
+        "flagpoles",
+        "modern building",
+        "public plaza",
+        "evening",
+        "golden canopy lights",
+        "wet pavement",
+        "reflections",
+        "blue sky",
+        "quiet mood"
+      ]
+    },
+    "photography/20250329_Leeds+Lux_26": {
+      "short": "Electric train passing a station platform",
+      "keywords": [
+        "train",
+        "railway platform",
+        "overhead wires",
+        "dusk",
+        "motion blur",
+        "warm lights",
+        "blue sky",
+        "passenger silhouette",
+        "station sign"
+      ]
+    },
+    "photography/20251002_Luxembourg 5_17": {
+      "short": "Winding road through green farmland",
+      "keywords": [
+        "rural landscape",
+        "winding road",
+        "green fields",
+        "cows",
+        "tree line",
+        "blue sky",
+        "daylight",
+        "peaceful"
+      ]
+    },
+    "photography/20251003_Luxembourg 5_37": {
+      "short": "Blue sky filled with white clouds",
+      "keywords": ["sky", "clouds", "blue", "white", "daylight", "open", "bright", "calm"]
+    },
+    "photography/20251017_Japan 3_17": {
+      "short": "Street lamp and wire fence at night",
+      "keywords": [
+        "street lamp",
+        "wire fence",
+        "night",
+        "dark sky",
+        "glowing light",
+        "low angle",
+        "moody",
+        "urban"
+      ]
+    },
+    "photography/20251018_Japan 3_28": {
+      "short": "Night-time city traffic light trails",
+      "keywords": [
+        "city street",
+        "night",
+        "light trails",
+        "traffic",
+        "zebra crossing",
+        "car",
+        "buildings",
+        "dark",
+        "urban"
+      ]
+    },
+    "photography/20251111_ Japan 4_10": {
+      "short": "Quiet forecourt beneath lights at night",
+      "keywords": [
+        "forecourt",
+        "night",
+        "canopy",
+        "overhead lights",
+        "pavement",
+        "road markings",
+        "dark",
+        "quiet",
+        "equipment"
+      ]
+    },
+    "photography/20251111_ Japan 4_16": {
+      "short": "Illuminated industrial structure at night",
+      "keywords": [
+        "industrial structure",
+        "metal framework",
+        "night",
+        "artificial lights",
+        "darkness",
+        "moody",
+        "warning lights"
+      ]
+    },
+    "photography/20251111_ Japan 4_20": {
+      "short": "A dim industrial street at night",
+      "keywords": [
+        "industrial buildings",
+        "street",
+        "night",
+        "warehouse",
+        "utility pole",
+        "bright lights",
+        "reflections",
+        "dark",
+        "quiet"
+      ]
+    },
+    "photography/20251114_ Japan 4_35": {
+      "short": "Dimly lit underground railway station",
+      "keywords": [
+        "railway station",
+        "underground platform",
+        "ticket gate",
+        "tracks",
+        "Japanese signage",
+        "fluorescent light",
+        "darkness",
+        "wet floor",
+        "eerie mood"
+      ]
+    },
+    "photography/20260111_281981 Luxembourg Christmas 2025 1_8": {
+      "short": "Escalators in a dim underground station",
+      "keywords": [
+        "escalators",
+        "underground station",
+        "handrails",
+        "overhead lights",
+        "dark",
+        "blue-green lighting",
+        "motion",
+        "moody"
+      ]
+    },
+    "photography/20260425_336622 Luxembourg_19": {
+      "short": "Stone statues in an arched corridor",
+      "keywords": [
+        "stone statues",
+        "human figures",
+        "arched corridor",
+        "repeating arches",
+        "stone floor",
+        "dim light",
+        "quiet mood",
+        "receding perspective"
+      ]
+    },
+    "photography/P7140381": {
+      "short": "Empty underground car park",
+      "keywords": [
+        "car park",
+        "empty parking bays",
+        "concrete pillars",
+        "fluorescent lights",
+        "dim lighting",
+        "shadowy",
+        "arrows",
+        "quiet"
+      ]
+    },
+    "photography/P7270466": {
+      "short": "Dim modern stairwell beneath a glass roof",
+      "keywords": [
+        "stairwell",
+        "interior",
+        "descending stairs",
+        "metal handrails",
+        "glass roof",
+        "fluorescent lights",
+        "dim lighting",
+        "geometric",
+        "empty",
+        "quiet"
+      ]
+    },
+    "photography/P8100626-r": {
+      "short": "Glass office towers in evening light",
+      "keywords": [
+        "glass skyscrapers",
+        "office buildings",
+        "urban architecture",
+        "blue sky",
+        "sunlight",
+        "reflections",
+        "geometric",
+        "cool mood"
+      ]
+    }
+  },
+  "/vignettes/rangefinder-bokeh": {
+    "SOM Berthiot Pan Cinor 85": {
+      "short": "Vintage 16mm cine zoom lens",
+      "keywords": [
+        "SOM Berthiot",
+        "cine lens",
+        "zoom lens",
+        "16mm film",
+        "cinematography",
+        "bokeh",
+        "Rangefinder Bokeh"
+      ]
+    }
+  }
+}
