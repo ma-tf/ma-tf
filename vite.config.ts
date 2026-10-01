@@ -70,7 +70,7 @@ export default defineConfig({
     ],
   },
   staged: {
-    "*.{js,json,mjs,ts,tsx}": "vp check --fix",
+    "*.{js,json,mjs,mts,ts,tsx}": "vp check --fix",
     "*.astro": "vpx astro check",
   },
   test: {
