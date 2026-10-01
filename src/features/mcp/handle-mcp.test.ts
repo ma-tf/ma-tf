@@ -1,12 +1,26 @@
 import type { APIContext } from "astro";
 
+import { ask } from "@features/ask/ask";
+import { failureResponses } from "@features/ask/response";
+import { askTool } from "@features/mcp/ask";
 import { handleMcp } from "@features/mcp/handle-mcp";
-import { describe, expect, it, vi } from "vite-plus/test";
+import { enforceRateLimit } from "@lib/rate-limit-middleware";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { ALL, POST } from "@/src/pages/mcp";
 
 vi.mock("@lib/rate-limit-middleware", () => ({ enforceRateLimit: vi.fn() }));
 vi.mock("@lib/feature-flags", () => ({ askEnabled: false }));
+vi.mock("@features/ask/ask", () => ({ ask: vi.fn() }));
+
+const askMock = vi.mocked(ask);
+const enforce = vi.mocked(enforceRateLimit);
+
+beforeEach(() => {
+  askMock.mockReset();
+  enforce.mockReset();
+  enforce.mockResolvedValue(null);
+});
 
 const META = {
   "io.modelcontextprotocol/protocolVersion": "2026-07-28",
@@ -59,12 +73,47 @@ function discoverBody(overrides: Record<string, unknown> = {}): Record<string, u
   };
 }
 
+function listBody(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    jsonrpc: "2.0",
+    id: 2,
+    method: "tools/list",
+    params: { _meta: META },
+    ...overrides,
+  };
+}
+
+function callBody(args: unknown, overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    jsonrpc: "2.0",
+    id: 3,
+    method: "tools/call",
+    params: { name: "ask", arguments: args, _meta: META },
+    ...overrides,
+  };
+}
+
+type ToolListing = {
+  name: string;
+  title?: string;
+  description?: string;
+  inputSchema: Record<string, unknown>;
+  outputSchema: { anyOf: unknown[] };
+  annotations?: Record<string, unknown>;
+};
+
+type ToolCallResult = {
+  structuredContent?: unknown;
+  content: { type: string; text: string }[];
+  isError?: boolean;
+};
+
 describe("handleMcp", () => {
   it("returns the 2026-07-28 discover result", async () => {
     const response = await handleMcp(requestFor(discoverBody()));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("Content-Type")).toBe("application/json; charset=utf-8");
+    expect(response.headers.get("Content-Type")).toBe("application/json");
     expect(response.headers.get("Vary")).toBeNull();
 
     const payload = (await response.json()) as Payload;
@@ -73,7 +122,10 @@ describe("handleMcp", () => {
     expect(payload.id).toBe(1);
     expect(payload.result?.resultType).toBe("complete");
     expect(payload.result?.supportedVersions).toEqual(["2026-07-28"]);
-    expect(payload.result?.capabilities).toEqual({ tools: {}, resources: {} });
+    expect(payload.result?.capabilities).toEqual({
+      tools: { listChanged: true },
+      resources: { listChanged: true },
+    });
     expect(payload.result?.instructions).toEqual(expect.any(String));
     expect(payload.result?.ttlMs).toBe(3600000);
     expect(payload.result?.cacheScope).toBe("public");
@@ -172,7 +224,10 @@ describe("handleMcp", () => {
 
   it("accepts a notification with 202 and an empty body", async () => {
     const response = await handleMcp(
-      requestFor({ jsonrpc: "2.0", method: "notifications/initialized" }),
+      requestFor(
+        { jsonrpc: "2.0", method: "notifications/initialized" },
+        { "Mcp-Method": "notifications/initialized" },
+      ),
     );
 
     expect(response.status).toBe(202);
@@ -193,5 +248,180 @@ describe("handleMcp", () => {
 
     expect(response.status).toBe(404);
     expect(await response.text()).toBe("");
+  });
+
+  it("lists exactly the ask tool with its schema, annotations and cache hints", async () => {
+    const response = await handleMcp(requestFor(listBody(), { "Mcp-Method": "tools/list" }));
+
+    expect(response.status).toBe(200);
+
+    const payload = (await response.json()) as {
+      result: { tools: [ToolListing]; ttlMs?: number; cacheScope?: string };
+    };
+
+    expect(payload.result.tools).toHaveLength(1);
+
+    const [tool] = payload.result.tools;
+
+    expect(tool.name).toBe("ask");
+    expect(tool.title).toBe("Ask m4t.tf");
+    expect(tool.description).toEqual(expect.any(String));
+    expect(tool.annotations).toEqual({ readOnlyHint: true, openWorldHint: false });
+    expect(tool.inputSchema).toMatchObject({
+      type: "object",
+      required: ["query"],
+      properties: {
+        query: { type: "object", required: ["text"] },
+        prefer: { type: "object", properties: { mode: { enum: ["list", "summarize"] } } },
+      },
+    });
+    expect(tool.outputSchema.anyOf).toHaveLength(2);
+    expect(payload.result.ttlMs).toBe(3600000);
+    expect(payload.result.cacheScope).toBe("public");
+  });
+
+  it("returns the answer document from tools/call", async () => {
+    askMock.mockResolvedValue({
+      sources: [{ url: "https://m4t.tf/about", title: "About", content: "About Matt." }],
+      summary: "Matt builds software.",
+    });
+
+    const response = await handleMcp(
+      requestFor(callBody({ query: { text: "Who is Matt?" }, prefer: { mode: "summarize" } }), {
+        "Mcp-Method": "tools/call",
+        "Mcp-Name": "ask",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+
+    const payload = (await response.json()) as { result: ToolCallResult };
+
+    const document = {
+      _meta: {
+        response_type: "answer",
+        response_format: "conversational_search",
+        version: "0.55",
+      },
+      results: [
+        { "@type": "SearchSummary", text: "Matt builds software." },
+        { "@type": "WebPage", name: "About", url: "https://m4t.tf/about" },
+      ],
+    };
+
+    expect(payload.result.structuredContent).toEqual(document);
+    expect(payload.result.content).toEqual([{ type: "text", text: JSON.stringify(document) }]);
+    expect(payload.result.isError).toBe(false);
+    expect(askMock).toHaveBeenCalledWith("Who is Matt?", true, expect.any(AbortSignal));
+  });
+
+  it("returns only the matching Pages in list mode and ignores other NLWeb members", async () => {
+    askMock.mockResolvedValue({
+      sources: [{ url: "https://m4t.tf/about", title: "About", content: "About Matt." }],
+    });
+
+    const response = await handleMcp(
+      requestFor(
+        callBody({
+          query: { text: "Who is Matt?", site: "m4t.tf" },
+          context: { "@type": "Conversation", text: "earlier" },
+          meta: { version: "0.55" },
+        }),
+        { "Mcp-Method": "tools/call", "Mcp-Name": "ask" },
+      ),
+    );
+
+    const payload = (await response.json()) as { result: ToolCallResult };
+
+    expect(payload.result.structuredContent).toEqual({
+      _meta: {
+        response_type: "answer",
+        response_format: "conversational_search",
+        version: "0.55",
+      },
+      results: [{ "@type": "WebPage", name: "About", url: "https://m4t.tf/about" }],
+    });
+    expect(payload.result.isError).toBe(false);
+    expect(askMock).toHaveBeenCalledWith("Who is Matt?", false, expect.any(AbortSignal));
+  });
+
+  it("reports NO_RESULTS as a non-error tool result", async () => {
+    askMock.mockResolvedValue(null);
+
+    const response = await handleMcp(
+      requestFor(callBody({ query: { text: "Who is Matt?" } }), {
+        "Mcp-Method": "tools/call",
+        "Mcp-Name": "ask",
+      }),
+    );
+
+    const payload = (await response.json()) as { result: ToolCallResult };
+
+    expect(payload.result.structuredContent).toEqual(failureResponses.NO_RESULTS);
+    expect(payload.result.content).toEqual([
+      { type: "text", text: JSON.stringify(failureResponses.NO_RESULTS) },
+    ]);
+    expect(payload.result.isError).toBe(false);
+  });
+
+  it("turns a thrown failure into INTERNAL_ERROR", async () => {
+    askMock.mockRejectedValue(new Error("boom"));
+
+    const response = await handleMcp(
+      requestFor(callBody({ query: { text: "Who is Matt?" } }), {
+        "Mcp-Method": "tools/call",
+        "Mcp-Name": "ask",
+      }),
+    );
+
+    const payload = (await response.json()) as { result: ToolCallResult };
+
+    expect(payload.result.structuredContent).toEqual(failureResponses.INTERNAL_ERROR);
+    expect(payload.result.isError).toBe(true);
+  });
+
+  it("reports UNSUPPORTED_MODE for an unknown prefer mode", async () => {
+    const ctx = {
+      mcpReq: { signal: new AbortController().signal },
+    } as unknown as Parameters<typeof askTool>[1];
+
+    const result = await askTool(
+      { query: { text: "Who is Matt?" }, prefer: { mode: "unknown" } } as unknown as Parameters<
+        typeof askTool
+      >[0],
+      ctx,
+    );
+
+    expect(result.structuredContent).toEqual(failureResponses.UNSUPPORTED_MODE);
+    expect(result.isError).toBe(true);
+  });
+
+  it("refuses an over-quota ask call with 429 and no body", async () => {
+    enforce.mockResolvedValue(
+      new Response(null, {
+        status: 429,
+        headers: { "Retry-After": "12", "RateLimit-Limit": "20" },
+      }),
+    );
+
+    const response = await handleMcp(
+      requestFor(callBody({ query: { text: "Who is Matt?" } }), {
+        "Mcp-Method": "tools/call",
+        "Mcp-Name": "ask",
+      }),
+    );
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("12");
+    expect(response.headers.get("RateLimit-Limit")).toBe("20");
+    expect(await response.text()).toBe("");
+    expect(askMock).not.toHaveBeenCalled();
+  });
+
+  it("does not meter server/discover or tools/list", async () => {
+    await handleMcp(requestFor(discoverBody()));
+    await handleMcp(requestFor(listBody(), { "Mcp-Method": "tools/list" }));
+
+    expect(enforce).not.toHaveBeenCalled();
   });
 });
