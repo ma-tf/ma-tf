@@ -10,7 +10,7 @@ export type NLWebAskFailureCode =
   | "UNSUPPORTED_MODE"
   | "INTERNAL_ERROR";
 
-type NLWebAskAnswerResponse = {
+export type NLWebAskAnswerResponse = {
   _meta: {
     response_type: string;
     response_format: "conversational_search";
@@ -19,13 +19,15 @@ type NLWebAskAnswerResponse = {
   results: NLWebAskResult[];
 };
 
-type NLWebAskFailureResponse = {
+export type NLWebAskFailureResponse = {
   _meta: { response_type: string; version: "0.55" };
   error: {
     code: NLWebAskFailureCode;
     message: string;
   };
 };
+
+export type NLWebAskResponse = NLWebAskAnswerResponse | NLWebAskFailureResponse;
 
 export type NLWebAskStreamEvent =
   | {
