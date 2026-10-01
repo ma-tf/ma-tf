@@ -145,7 +145,7 @@ const port = await availablePort();
 const origin = `http://${host}:${port}`;
 const server = spawn(
   process.execPath,
-  [astro, "dev", "--host", host, "--port", String(port), "--strictPort"],
+  [astro, "dev", "--host", host, "--port", String(port), "--strictPort", "--ignore-lock"],
   { cwd: root, stdio: ["ignore", "pipe", "pipe"] },
 );
 
