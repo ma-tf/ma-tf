@@ -66,7 +66,7 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
 
 export async function onRequest(context: APIContext, next: MiddlewareNext): Promise<Response> {
   if (isApiPath(context.url.pathname)) {
-    const limit = apiRateLimitFor(context.url.pathname);
+    const limit = apiRateLimitFor(context.url.pathname, context.request);
 
     if (limit) {
       const limited = await enforceRateLimit(context.request, limit);

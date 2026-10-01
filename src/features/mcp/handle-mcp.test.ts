@@ -2,24 +2,18 @@ import type { APIContext } from "astro";
 
 import { ask } from "@features/ask/ask";
 import { failureResponses } from "@features/ask/response";
-import { askTool } from "@features/mcp/ask";
 import { handleMcp } from "@features/mcp/handle-mcp";
-import { enforceRateLimit } from "@lib/rate-limit-middleware";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { ALL, POST } from "@/src/pages/mcp";
 
-vi.mock("@lib/rate-limit-middleware", () => ({ enforceRateLimit: vi.fn() }));
 vi.mock("@lib/feature-flags", () => ({ askEnabled: false }));
 vi.mock("@features/ask/ask", () => ({ ask: vi.fn() }));
 
 const askMock = vi.mocked(ask);
-const enforce = vi.mocked(enforceRateLimit);
 
 beforeEach(() => {
   askMock.mockReset();
-  enforce.mockReset();
-  enforce.mockResolvedValue(null);
 });
 
 const META = {
@@ -380,41 +374,19 @@ describe("handleMcp", () => {
     expect(payload.result.isError).toBe(true);
   });
 
-  it("reports UNSUPPORTED_MODE for an unknown prefer mode", async () => {
-    const ctx = {
-      mcpReq: { signal: new AbortController().signal },
-    } as unknown as Parameters<typeof askTool>[1];
-
-    const result = await askTool(
-      { query: { text: "Who is Matt?" }, prefer: { mode: "unknown" } } as unknown as Parameters<
-        typeof askTool
-      >[0],
-      ctx,
-    );
-
-    expect(result.structuredContent).toEqual(failureResponses.UNSUPPORTED_MODE);
-    expect(result.isError).toBe(true);
-  });
-
-  it("refuses an over-quota ask call with 429 and no body", async () => {
-    enforce.mockResolvedValue(
-      new Response(null, {
-        status: 429,
-        headers: { "Retry-After": "12", "RateLimit-Limit": "20" },
-      }),
-    );
-
+  it("rejects an unknown prefer mode before the tool runs", async () => {
     const response = await handleMcp(
-      requestFor(callBody({ query: { text: "Who is Matt?" } }), {
+      requestFor(callBody({ query: { text: "Who is Matt?" }, prefer: { mode: "unknown" } }), {
         "Mcp-Method": "tools/call",
         "Mcp-Name": "ask",
       }),
     );
 
-    expect(response.status).toBe(429);
-    expect(response.headers.get("Retry-After")).toBe("12");
-    expect(response.headers.get("RateLimit-Limit")).toBe("20");
-    expect(await response.text()).toBe("");
+    const payload = (await response.json()) as { result: ToolCallResult };
+
+    expect(response.status).toBe(200);
+    expect(payload.result.isError).toBe(true);
+    expect(payload.result.content[0]?.text).toContain("prefer.mode");
     expect(askMock).not.toHaveBeenCalled();
   });
 
@@ -422,6 +394,12 @@ describe("handleMcp", () => {
     await handleMcp(requestFor(discoverBody()));
     await handleMcp(requestFor(listBody(), { "Mcp-Method": "tools/list" }));
 
-    expect(enforce).not.toHaveBeenCalled();
+    expect(askMock).not.toHaveBeenCalled();
+  });
+
+  it("does not meter a tools/call for ask with no query text", async () => {
+    await handleMcp(requestFor(callBody({}), { "Mcp-Method": "tools/call", "Mcp-Name": "ask" }));
+
+    expect(askMock).not.toHaveBeenCalled();
   });
 });

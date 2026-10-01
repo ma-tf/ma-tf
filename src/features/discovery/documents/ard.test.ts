@@ -45,4 +45,23 @@ describe("buildArd", () => {
   it("advertises the MCP server as an Agent capability", () => {
     expect(manifest.entries).toContainEqual(mcpEntry);
   });
+
+  it("keeps the MCP entry to the ARD v0.91 terms", () => {
+    const entry = manifest.entries.find(
+      (candidate) => candidate.identifier === "urn:air:m4t.tf:server:mcp",
+    );
+
+    expect(Object.keys(entry ?? {}).sort()).toEqual(
+      [
+        "capabilities",
+        "description",
+        "displayName",
+        "identifier",
+        "representativeQueries",
+        "tags",
+        "type",
+        "url",
+      ].sort(),
+    );
+  });
 });

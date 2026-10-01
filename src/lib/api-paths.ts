@@ -10,6 +10,11 @@ export function isApiPath(pathname: string): boolean {
   return apiPaths.has(pathname);
 }
 
-export function apiRateLimitFor(pathname: string): RateLimit | undefined {
-  return apiPathLimits.get(pathname);
+export function apiRateLimitFor(pathname: string, request: Request): RateLimit | undefined {
+  if (pathname !== "/mcp") return apiPathLimits.get(pathname);
+
+  return request.headers.get("Mcp-Method") === "tools/call" &&
+    request.headers.get("Mcp-Name") === "ask"
+    ? askRateLimit
+    : undefined;
 }

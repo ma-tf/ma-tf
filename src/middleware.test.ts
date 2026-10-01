@@ -19,13 +19,14 @@ type ContextInit = {
   accept?: string;
   method?: string;
   isPrerendered?: boolean;
+  headers?: Record<string, string>;
 };
 
 function buildContext(pathname: string, init: ContextInit = {}): APIContext {
   const url = new URL(pathname, "https://m4t.tf");
   const request = new Request(url, {
     method: init.method ?? "GET",
-    headers: init.accept ? { Accept: init.accept } : {},
+    headers: { ...(init.accept ? { Accept: init.accept } : {}), ...init.headers },
   });
 
   return { isPrerendered: init.isPrerendered ?? false, url, request } as unknown as APIContext;
@@ -188,6 +189,46 @@ describe("onRequest", () => {
     expect(response.status).toBe(429);
     expect(response.headers.get("Retry-After")).toBe("12");
     expect(response.headers.get("Link")).toBeNull();
+  });
+
+  it("meters the ask tool on /mcp", async () => {
+    const response = await onRequest(
+      buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask" } }),
+      next,
+    );
+
+    expect(enforce).toHaveBeenCalledOnce();
+    expect(response.headers.get("Link")).toBeNull();
+  });
+
+  it("does not meter the free /mcp methods", async () => {
+    await onRequest(buildContext("/mcp", { headers: { "Mcp-Method": "tools/list" } }), next);
+    await onRequest(buildContext("/mcp", { headers: { "Mcp-Method": "server/discover" } }), next);
+    await onRequest(
+      buildContext("/mcp", { headers: { "Mcp-Method": "resources/read", "Mcp-Name": "home" } }),
+      next,
+    );
+
+    expect(enforce).not.toHaveBeenCalled();
+  });
+
+  it("returns /mcp's 429 with the ask bucket headers and no body", async () => {
+    enforce.mockResolvedValue(
+      new Response(null, {
+        status: 429,
+        headers: { "Retry-After": "12", "RateLimit-Limit": "20" },
+      }),
+    );
+
+    const response = await onRequest(
+      buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask" } }),
+      next,
+    );
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("12");
+    expect(response.headers.get("RateLimit-Limit")).toBe("20");
+    expect(await response.text()).toBe("");
   });
 
   it("still rejects an unrepresentable Accept for a non-API path", async () => {
