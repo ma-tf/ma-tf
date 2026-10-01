@@ -30,6 +30,8 @@
     "openai": "^7.23.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "shadcn": "^4.21.0",
     "tailwindcss": "^4.3.3",
     "turndown": "^7.2.4",

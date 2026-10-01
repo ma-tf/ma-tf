@@ -1,13 +1,9 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@components/ui/accordion";
 import { AnswerBody } from "@features/faq/answer-body";
 import { AskProvider, useAskUnit } from "@features/faq/ask-context";
+import { FaqAccordionTrigger } from "@features/faq/faq-accordion-trigger";
 import { useAsk } from "@features/faq/use-ask";
-import { ArrowRightIcon, CircleNotchIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon } from "@phosphor-icons/react";
 import { useId, useRef, useState } from "react";
 
 function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
@@ -48,21 +44,14 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
 }
 
 function AnsweredItem() {
-  const { itemValue, question, unit } = useAskUnit();
-  const inProgress = unit.status === "thinking";
+  const { itemValue, question } = useAskUnit();
 
   return (
     <Accordion defaultValue={[itemValue]} keepMounted>
       <AccordionItem value={itemValue}>
-        <AccordionTrigger hideIcon={inProgress}>
+        <FaqAccordionTrigger>
           <span className="text-base uppercase">{question}</span>
-          {inProgress && (
-            <CircleNotchIcon
-              aria-hidden="true"
-              className="ml-auto size-4 shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
-            />
-          )}
-        </AccordionTrigger>
+        </FaqAccordionTrigger>
         <AccordionContent>
           <AnswerBody />
         </AccordionContent>

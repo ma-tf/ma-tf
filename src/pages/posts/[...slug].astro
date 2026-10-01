@@ -1,15 +1,14 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
-import { ClockIcon, FileTextIcon } from "@phosphor-icons/react";
+import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
 import { NavButton } from "@components/nav-button";
+import { Pill } from "@components/pill";
 import {
   Post,
   PostContent,
   PostDate,
   PostHeader,
-  PostTag,
-  PostTags,
   PostTitle,
 } from "@features/posts/post";
 import { postComponents } from "@features/posts/post-content";
@@ -49,11 +48,18 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       </div>
       {
         post.data.tags.length > 0 && (
-          <PostTags className="animate-fade-up animation-delay-150">
+          <ul class="animate-fade-up animation-delay-150 flex flex-wrap gap-2">
             {post.data.tags.map((tag) => (
-              <PostTag href={`/tags/${tag}`}>{tag}</PostTag>
+              <li>
+                <Pill href={`/tags/${tag}`}>
+                  <span class="inline-flex items-center gap-0 pr-2">
+                    <HashIcon size={14} className="shrink-0" />
+                    {tag}
+                  </span>
+                </Pill>
+              </li>
             ))}
-          </PostTags>
+          </ul>
         )
       }
     </PostHeader>

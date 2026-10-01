@@ -3,6 +3,7 @@ import type { AskPageJudgment, PublishedPage } from "@features/ask/published-pag
 import { answerAsk } from "@features/ask/answer";
 import pages from "@features/ask/published-pages.generated.json";
 import { judgeAskPages } from "@features/ask/typesafe-ai";
+import { siteUrl } from "@features/discovery/catalog";
 
 export type AskAnswer = { sources: PublishedPage[]; summary?: string };
 
@@ -10,16 +11,20 @@ export type AskResult = { page: PublishedPage } | { summary: string };
 
 export type AskStep = { results: AskResult[] } | { error: "NO_RESULTS" };
 
-const relevanceFloor = 0.5;
-const answerabilityFloor = 0.5;
+const relevanceFloor = 0.85;
+const answerabilityFloor = 0.85;
+
+const sourceBlacklist = [`${siteUrl}/`];
 
 type AskSelection = { supported: true; sources: PublishedPage[] } | { supported: false };
 
 function rankSources(judgment: AskPageJudgment, summarize: boolean): AskSelection {
-  const sources = judgment.pageRelevance
+  const ranked = judgment.pageRelevance
+    .filter(({ page }) => !sourceBlacklist.includes(page.url))
     .filter(({ probability }) => probability > relevanceFloor)
-    .sort((a, b) => b.probability - a.probability)
-    .map(({ page }) => page);
+    .sort((a, b) => b.probability - a.probability);
+
+  const sources = ranked.map(({ page }) => page);
 
   if (sources.length === 0 || (summarize && judgment.answerability <= answerabilityFloor)) {
     return { supported: false };

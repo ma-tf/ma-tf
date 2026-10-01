@@ -1,4 +1,4 @@
-import { CalendarIcon, HashIcon } from "@phosphor-icons/react";
+import { CalendarIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
 export function Post({ children, className, ...props }: React.ComponentProps<"article">) {
@@ -34,31 +34,6 @@ export function PostDate({ className, ...props }: React.ComponentProps<"time">) 
       <CalendarIcon size={14} aria-hidden="true" />
       {props.children}
     </time>
-  );
-}
-
-export function PostTags({ children, className, ...props }: React.ComponentProps<"ul">) {
-  return (
-    <ul className={cn("flex flex-wrap gap-2", className)} {...props}>
-      {children}
-    </ul>
-  );
-}
-
-export function PostTag({ children, className, ...props }: React.ComponentProps<"a">) {
-  return (
-    <a
-      className={cn(
-        "group relative inline-flex items-center overflow-hidden border border-foreground bg-background pl-1 text-xs text-foreground uppercase transition-colors duration-150 hover:bg-foreground hover:text-background",
-        className,
-      )}
-      {...props}
-    >
-      <span className="inline-flex items-center gap-0 pr-2">
-        <HashIcon size={14} className="shrink-0" />
-        {children}
-      </span>
-    </a>
   );
 }
 
