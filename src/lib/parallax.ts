@@ -1,15 +1,16 @@
 const INTENSITY = 40;
 const EASING = 0.05;
 const DEFAULT_FACTOR = 100;
-const HINT = "transform";
 const MOBILE_QUERY = "(max-width: 767px)";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const SELECTOR = "[data-parallax], [data-parallax-x], [data-parallax-y]";
+const ACTIVE_CLASS = "parallax-active";
 
 type Layer = {
   element: HTMLElement;
   xFactor: number;
   yFactor: number;
+  effect: KeyframeEffect | null;
 };
 
 const factor = (element: HTMLElement, axis: "x" | "y") => {
@@ -30,20 +31,17 @@ let started = false;
 export function startParallax() {
   if (started) return;
   started = true;
-
-  // Islands own these elements, and writing to one before React has hydrated it
-  // makes hydration report an unexpected `style` attribute. `load` fires after
-  // the eager islands have attached.
-  if (document.readyState === "complete") {
-    init();
-  } else {
-    window.addEventListener("load", init, { once: true });
-  }
+  init();
 }
 
 function init() {
   const targets: Layer[] = Array.from(document.querySelectorAll<HTMLElement>(SELECTOR)).map(
-    (element) => ({ element, xFactor: factor(element, "x"), yFactor: factor(element, "y") }),
+    (element) => ({
+      element,
+      xFactor: factor(element, "x"),
+      yFactor: factor(element, "y"),
+      effect: null,
+    }),
   );
   if (targets.length === 0) return;
 
@@ -53,15 +51,25 @@ function init() {
   const current = { x: 0, y: 0 };
   let raf = 0;
 
-  const hint = (value: string) => {
-    for (const { element } of targets) element.style.willChange = value;
+  const write = (layer: Layer, x: number, y: number) => {
+    const transform = `translate(${x}px, ${y}px)`;
+    const keyframes = [{ transform }, { transform }];
+    if (!layer.effect) {
+      layer.effect = layer.element.animate(keyframes, { duration: 1, fill: "both" })
+        .effect as KeyframeEffect;
+      return;
+    }
+    layer.effect.setKeyframes(keyframes);
   };
 
   const clear = () => {
-    for (const { element } of targets) {
-      element.style.transform = "";
-      element.style.willChange = "";
+    for (const layer of targets) {
+      layer.effect?.setKeyframes([
+        { transform: "translate(0px, 0px)" },
+        { transform: "translate(0px, 0px)" },
+      ]);
     }
+    document.documentElement.classList.remove(ACTIVE_CLASS);
   };
 
   const tick = () => {
@@ -69,13 +77,13 @@ function init() {
     const dy = target.y - current.y;
     if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) {
       raf = 0;
-      hint("");
+      document.documentElement.classList.remove(ACTIVE_CLASS);
       return;
     }
     current.x += dx * EASING;
     current.y += dy * EASING;
-    for (const { element, xFactor, yFactor } of targets) {
-      element.style.transform = `translate(${current.x * xFactor}px, ${current.y * yFactor}px)`;
+    for (const layer of targets) {
+      write(layer, current.x * layer.xFactor, current.y * layer.yFactor);
     }
     raf = requestAnimationFrame(tick);
   };
@@ -84,7 +92,7 @@ function init() {
     target.x = -(event.clientX / window.innerWidth - 0.5) * 2 * INTENSITY;
     target.y = -(event.clientY / window.innerHeight - 0.5) * 2 * INTENSITY;
     if (!raf) {
-      hint(HINT);
+      document.documentElement.classList.add(ACTIVE_CLASS);
       raf = requestAnimationFrame(tick);
     }
   };

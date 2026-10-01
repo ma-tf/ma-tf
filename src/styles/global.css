@@ -550,3 +550,7 @@ pre[data-language] > code {
   transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(var(--scale));
   opacity: calc(var(--opacity-back) + var(--opacity-range) * var(--depth));
 }
+
+.parallax-active :is([data-parallax], [data-parallax-x], [data-parallax-y]) {
+  will-change: transform;
+}
