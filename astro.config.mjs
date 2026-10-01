@@ -22,12 +22,10 @@ export default defineConfig({
       OPENAI_API_KEY: envField.string({ context: "server", access: "secret" }),
     },
   },
-  integrations: [
-    react(),
-    mdx({
-      processor: unified({ remarkPlugins: [remarkReadingTime] }),
-    }),
-  ],
+  markdown: {
+    processor: unified({ remarkPlugins: [remarkReadingTime] }),
+  },
+  integrations: [react(), mdx()],
   vite: {
     plugins: [tailwindcss()],
     build: {
