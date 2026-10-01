@@ -8,13 +8,15 @@ const PROBLEM_REF = "#/components/schemas/Problem";
 const DESCRIPTOR_REF = "#/components/schemas/DiscoveryResource";
 const JSON_MEDIA_TYPE = "application/json";
 const ASK_PATH = "/ask";
+const MCP_PATH = "/mcp";
 
 type Operation = {
   operationId?: string;
   summary?: string;
   description?: string;
   tags?: string[];
-  responses: Record<string, { content?: unknown }>;
+  requestBody?: unknown;
+  responses: Record<string, { content?: unknown; description?: string }>;
 };
 
 const document = buildOpenApiDocument();
@@ -41,9 +43,9 @@ describe("buildOpenApiDocument", () => {
     await expect(validate(fresh)).resolves.toBeTruthy();
   });
 
-  it("declares a path per discovery resource plus the ask endpoint", () => {
+  it("declares a path per discovery resource plus the ask and mcp endpoints", () => {
     expect(Object.keys(document.paths).sort()).toEqual(
-      [...resources.map((resource) => resource.path), ASK_PATH].sort(),
+      [...resources.map((resource) => resource.path), ASK_PATH, MCP_PATH].sort(),
     );
   });
 
@@ -52,6 +54,21 @@ describe("buildOpenApiDocument", () => {
 
     expect(post?.operationId).toBe("ask");
     expect(Object.keys(post?.responses ?? {})).toEqual(["200", "400", "429"]);
+  });
+
+  it("documents the MCP endpoint without pinning request or response schemas", () => {
+    const post = paths[MCP_PATH]?.post;
+
+    expect(post?.operationId).toBe("mcp");
+    expect(post?.description).toContain("2026-07-28");
+    expect(post?.description).toContain("urn:air:m4t.tf:server:mcp");
+    expect(post?.requestBody).toBeUndefined();
+    expect(post?.responses["200"]).toEqual({ description: expect.any(String) });
+  });
+
+  it("does not derive the MCP path from the resource catalogue", () => {
+    expect(resources.some((resource) => resource.path === MCP_PATH)).toBe(false);
+    expect(paths[MCP_PATH]?.get).toBeUndefined();
   });
 
   it("gives every operation a unique operationId", () => {

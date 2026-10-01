@@ -62,8 +62,31 @@ describe("buildAgentSkillsIndex", () => {
     }
   });
 
+  it("publishes exactly three skills", async () => {
+    const index = await buildAgentSkillsIndex();
+
+    expect(index.skills.map((skill) => skill.name)).toEqual([
+      "retrieve-site-content",
+      "discover-site-resources",
+      "fact-check-matt-f",
+    ]);
+  });
+
   it("returns undefined for an unknown skill", () => {
     expect(agentSkillMarkdown("no-such-skill")).toBeUndefined();
+  });
+});
+
+describe("discover-site-resources", () => {
+  const markdown = agentSkillMarkdown("discover-site-resources") ?? "";
+
+  it("names the MCP endpoint and the widened metered surface", () => {
+    expect(markdown).toContain("https://m4t.tf/mcp");
+    expect(markdown).toContain("`POST /ask` and the `ask` tool on `POST /mcp`");
+  });
+
+  it("points at the ARD catalogue", () => {
+    expect(markdown).toContain("https://m4t.tf/.well-known/ard.json");
   });
 });
 

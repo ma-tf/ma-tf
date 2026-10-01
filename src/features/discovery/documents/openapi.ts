@@ -1,6 +1,6 @@
 import type { DiscoveryResource } from "@features/discovery/catalog";
 
-import { isJsonMediaType, resources, siteUrl } from "@features/discovery/catalog";
+import { isJsonMediaType, mcpPath, resources, siteUrl } from "@features/discovery/catalog";
 import { problemSchema } from "@features/discovery/problems";
 import { askRateLimit } from "@lib/rate-limits";
 
@@ -324,7 +324,7 @@ const nlWebFailureSchema = {
 const askOperation = {
   operationId: "ask",
   summary: "Ask a question about the published content.",
-  description: `Answers a question from the content published on ${siteUrl}, linking the pages used as sources. The request body carries the preferences, and the Accept header picks the transport: application/json for a single response, or text/event-stream for server-sent events. POST /ask is metered at ${askRateLimit.quota} requests per minute per client.`,
+  description: `Answers a question from the content published on ${siteUrl}, linking the pages used as sources. The request body carries the preferences, and the Accept header picks the transport: application/json for a single response, or text/event-stream for server-sent events. POST /ask and the ask tool on POST /mcp share one budget, metered at ${askRateLimit.quota} requests per minute per client.`,
   requestBody: {
     required: true,
     content: {
@@ -372,13 +372,24 @@ const askOperation = {
   },
 };
 
+const mcpOperation = {
+  operationId: "mcp",
+  summary: "Invoke the m4t.tf MCP server.",
+  description: `The MCP Streamable HTTP endpoint, pinned to protocol revision 2026-07-28 and advertised as the ARD entry urn:air:m4t.tf:server:mcp. The server describes its own tools and resources over the protocol, so no request or response schema is pinned here. The ask tool shares the POST /ask budget of ${askRateLimit.quota} requests per minute per client.`,
+  responses: {
+    "200": {
+      description: "A JSON-RPC response envelope from the MCP server.",
+    },
+  },
+};
+
 export function buildOpenApiDocument() {
   return {
     openapi: "3.1.0",
     info: {
       title: "m4t.tf Site Resources",
       version: "0.1.0",
-      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered, except POST /ask, which is metered at ${askRateLimit.quota} requests per minute per client. Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
+      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered, except POST /ask and the ask tool on POST /mcp, which share one budget of ${askRateLimit.quota} requests per minute per client. Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
     },
     components: {
       parameters: {
@@ -474,6 +485,7 @@ export function buildOpenApiDocument() {
         ]),
       ),
       "/ask": { post: askOperation },
+      [mcpPath]: { post: mcpOperation },
     },
   };
 }

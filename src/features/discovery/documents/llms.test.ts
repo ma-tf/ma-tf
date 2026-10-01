@@ -54,6 +54,19 @@ describe("section guides", () => {
   });
 });
 
+describe("buildLlmsTxt", () => {
+  it("names the MCP endpoint and widens the metered surface", () => {
+    const text = buildLlmsTxt();
+
+    expect(text).toContain("`POST /mcp`");
+    expect(text).toContain("`POST /ask` and the `ask` tool on");
+  });
+
+  it("keeps the MCP endpoint out of the machine-readable list", () => {
+    expect(buildLlmsTxt()).not.toContain(`${siteUrl}/mcp`);
+  });
+});
+
 describe("buildBlogLlmsTxt", () => {
   it("lists every post newest first", () => {
     const text = buildBlogLlmsTxt(posts);
@@ -88,6 +101,17 @@ describe("buildDevelopersLlmsTxt", () => {
     for (const guide of sectionGuides) {
       expect(text).not.toContain(`${siteUrl}${guide.path}`);
     }
+  });
+
+  it("names the MCP endpoint and widens the metered surface", () => {
+    const text = buildDevelopersLlmsTxt();
+
+    expect(text).toContain("`POST /mcp`");
+    expect(text).toContain("`POST /ask` and the `ask` tool on");
+  });
+
+  it("keeps the MCP endpoint out of the resource list", () => {
+    expect(buildDevelopersLlmsTxt()).not.toContain(`${siteUrl}/mcp`);
   });
 });
 

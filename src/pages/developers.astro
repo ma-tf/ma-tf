@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { resources, siteUrl } from "@features/discovery/catalog";
+import { mcpPath, resources, siteUrl } from "@features/discovery/catalog";
 import { StillLifeBackground } from "@components/still-life-background";
 import { askRateLimit } from "@lib/rate-limits";
 ---
@@ -20,7 +20,10 @@ import { askRateLimit } from "@lib/rate-limits";
         <p class="mb-8 break-inside-avoid">
           m4t.tf is machine-readable. Every page is served as HTML or markdown,
           and every resource below is an unauthenticated GET — there are no API
-          keys.
+          keys. An MCP server is also published at <a
+            href={mcpPath}
+            class="underline underline-offset-4 hover:text-foreground/70">/mcp</a
+          >, speaking Streamable HTTP pinned to revision <code>2026-07-28</code>.
         </p>
 
         <section class="mb-8 break-inside-avoid flex flex-col gap-3">
@@ -60,10 +63,10 @@ curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
         <section class="mb-8 break-inside-avoid flex flex-col gap-3">
           <h2 class="text-2xl font-semibold">Rate limits</h2>
           <p>
-            Every page and resource is unmetered. <code>POST /ask</code> is metered at
-            <code>{askRateLimit.quota}</code> requests per minute per client and
-            returns <code>429 Too Many Requests</code> with <code>Retry-After</code>
-            once past it.
+            Every page and resource is unmetered. <code>POST /ask</code> and the <code>ask</code> tool
+            on <code>POST /mcp</code> are metered at <code>{askRateLimit.quota}</code> requests per
+            minute per client, sharing one budget, and
+            return <code>429 Too Many Requests</code> with <code>Retry-After</code> once past it.
           </p>
         </section>
 

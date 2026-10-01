@@ -2,6 +2,8 @@ import profile from "@content/profile.json";
 
 export const siteUrl = "https://m4t.tf";
 
+export const mcpPath = "/mcp";
+
 export type DiscoveryResource = {
   path: string;
   type: string;
@@ -211,10 +213,12 @@ export function resourceByRel(rel: string): DiscoveryResource {
 }
 
 const serviceDocLink = `<${siteUrl}/developers>; rel="service-doc"; type="text/html"`;
+const mcpLink = `<${mcpPath}>; rel="mcp"`;
 
 export const linkHeader = [
   serviceDocLink,
   ...resources.flatMap((resource) =>
     resource.rel ? [`<${resource.path}>; rel="${resource.rel}"; type="${resource.type}"`] : [],
   ),
+  mcpLink,
 ].join(", ");
