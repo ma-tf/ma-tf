@@ -4,7 +4,7 @@
 
 The site publishes a machine-readable surface for agents and clients, and it grew
 one commit at a time: markdown negotiation in the middleware, resource metadata in
-`resource-catalog.ts`, then OpenAPI, the API catalogue (RFC 9727), the AI
+`resource-catalog.ts`, then OpenAPI, the API catalogue (RFC 9727), the ARD
 catalogue, `llms.txt`, `llms-full.txt`, `robots.txt`, `sitemap.xml` and RSS, each
 added independently.
 
@@ -12,11 +12,11 @@ Only four consumers read the shared resource list: the homepage `Link` header, t
 OpenAPI document, the API catalogue, and the developers page. The rest restate the
 same facts in their own literals:
 
-- `ai-catalog.json.ts` hand-writes five entries that differ from the seven in
+- `ard.json.ts` hand-writes five entries that differ from the seven in
   `resources`.
 - `public/llms.txt` hand-writes the page list and the machine-readable file list.
 - `public/robots.txt` hardcodes the `Sitemap` and `Agentmap` URLs.
-- `Layout.astro` hardcodes the AI-catalogue path.
+- `Layout.astro` hardcodes the ARD-catalogue path.
 - The RFC 9457 problem shapes are defined in both `middleware.ts` and
   `openapi.json.ts`.
 - `sitemap.xml.ts` hardcodes the static path list.
@@ -36,14 +36,14 @@ The discovery surface is a single feature, `src/features/discovery/`, which owns
 
 - `catalog.ts` — `siteUrl` and one `DiscoveryResource` model. Every resource
   carries `path`, `type`, `title`, `description`, and `rel` where a relation
-  exists, plus the AI-catalogue fields `identifier`, `tags`, and
-  `representativeQueries`. The AI catalogue is built from all seven resources
+  exists, plus the ARD-catalogue fields `identifier`, `tags`, and
+  `representativeQueries`. The ARD catalogue is built from all seven resources
   rather than a hand-written subset.
 - `negotiation.ts` and `markdown.ts` — content negotiation, `Vary` handling, and
   HTML-to-markdown conversion.
 - `problems.ts` — the RFC 9457 problem model, shared by the middleware and the
   OpenAPI document.
-- `documents/*.ts` — pure builders for `openapi`, `api-catalog`, `ai-catalog`,
+- `documents/*.ts` — pure builders for `openapi`, `api-catalog`, `ard`,
   `llms`, `robots`, and `sitemap`, each taking the catalogue or its inputs and
   returning the document.
 
@@ -61,7 +61,7 @@ Editorial copy is not derived per-resource: the `llms.txt` prose and the
 
 - One place to add, edit, or remove a discovery resource; every catalogue and the
   homepage `Link` header follow.
-- The AI catalogue grows from five entries to seven: `robots.txt` and the AI
+- The ARD catalogue grows from five entries to seven: `robots.txt` and the ARD
   catalogue itself gain identifiers, tags, and representative queries, and the
   problem shapes can no longer drift from the OpenAPI document.
 - New work in this area has an obvious home instead of re-stating titles and

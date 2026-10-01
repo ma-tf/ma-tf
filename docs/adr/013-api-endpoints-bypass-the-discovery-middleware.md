@@ -25,12 +25,15 @@ the rule behind it.
 
 ## Decision
 
-`src/lib/api-paths.ts` maps each API path to the rate-limit policy that applies
-to it. `onRequest` enforces that policy and then returns `next()` unchanged for
-those paths, before preflight, representation selection, problem rewriting and
+`src/lib/api-paths.ts` separates two decisions. A bypass set names the paths
+exempt from representation negotiation, and a separate limit map names the paths
+metered before routing. `onRequest` consults the bypass set; for a member it
+enforces that path's pre-route limit, if it has one, and then returns `next()`
+unchanged, before preflight, representation selection, problem rewriting and
 site headers ([ADR 014](014-the-ask-endpoint-meters-requests-per-client.md)).
 
-The map currently holds one entry, `/ask`.
+The bypass set currently holds `/ask`, and the limit map holds `/ask` with the
+ask policy. A path can be a bypass without a pre-route limit.
 
 An API endpoint is therefore responsible for its own media type, status codes,
 error shape and `Vary` header.
@@ -42,14 +45,15 @@ error shape and `Vary` header.
 - `/ask` returns the media type the client asked for, including
   `text/event-stream`, and can return its protocol statuses unaltered.
 - The rule is stated once instead of exempting paths by name at each call site.
-- Adding an endpoint means adding one path, and the middleware needs no
-  endpoint-specific knowledge.
+- Adding an endpoint means adding its path to the bypass set, and the middleware
+  needs no endpoint-specific knowledge.
 
 ### Negative
 
-- Endpoints in the map lose the discovery `Link` header and must set their own
-  `Vary` header.
-- The map is a literal list, so a new API path that is not registered is
-  silently subject to document negotiation again.
+- Endpoints in the bypass set lose the discovery `Link` header and must set their
+  own `Vary` header.
+- The bypass set and the limit map are literal lists, so a new API path that is
+  not registered in the bypass set is silently subject to document negotiation
+  again.
 - An endpoint that enforces a limit publishes its own policy, as `/ask` does; an
   unmetered surface publishes none.

@@ -7,7 +7,7 @@ import { appendVaryValue, selectRepresentation } from "@features/discovery/negot
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
 import { resourceJson } from "@features/discovery/resource-json";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
-import { apiRateLimitFor } from "@lib/api-paths";
+import { apiRateLimitFor, isApiPath } from "@lib/api-paths";
 import { enforceRateLimit } from "@lib/rate-limit-middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
@@ -65,12 +65,14 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
 }
 
 export async function onRequest(context: APIContext, next: MiddlewareNext): Promise<Response> {
-  const limit = apiRateLimitFor(context.url.pathname);
+  if (isApiPath(context.url.pathname)) {
+    const limit = apiRateLimitFor(context.url.pathname);
 
-  if (limit) {
-    const limited = await enforceRateLimit(context.request, limit);
+    if (limit) {
+      const limited = await enforceRateLimit(context.request, limit);
 
-    if (limited) return limited;
+      if (limited) return limited;
+    }
 
     return next();
   }
