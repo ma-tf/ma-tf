@@ -27,7 +27,7 @@ in `catalog.ts`:
 
 Each carries `path`, `title`, `description`, `identifier`, `tags` and
 `representativeQueries`, and deliberately no `rel`. Section guides therefore
-appear in the OpenAPI document, the AI catalogue and the developers page, but
+appear in the OpenAPI document, the ARD catalogue and the developers page, but
 stay out of the per-response `Link` header, as `/llms-full.txt` and `/rss.xml`
 already do.
 
@@ -42,7 +42,7 @@ guides from `## Machine-Readable Files`, so each guide is listed once.
 
 - An agent working in one area fetches a short, focused index instead of the
   whole site or the whole archive.
-- The guides are catalogue entries, so OpenAPI, the AI catalogue, the developers
+- The guides are catalogue entries, so OpenAPI, the ARD catalogue, the developers
   page and the tests follow without restating anything.
 - The root guide remains the single place an agent discovers them.
 
