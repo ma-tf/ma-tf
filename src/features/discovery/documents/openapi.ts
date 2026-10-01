@@ -44,11 +44,11 @@ const linksetSchema = {
   },
 };
 
-const aiCatalogSchema = {
+const ardSchema = {
   type: "object",
   required: ["specVersion", "host", "entries"],
   properties: {
-    specVersion: { type: "string", description: "The AI catalogue specification version." },
+    specVersion: { type: "string", description: "The ARD specification version." },
     host: {
       type: "object",
       required: ["displayName", "identifier", "documentationUrl"],
@@ -154,8 +154,8 @@ function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown>
       return { type: "string" };
     case "application/linkset+json":
       return { $ref: "#/components/schemas/Linkset" };
-    case "application/ai-catalog+json":
-      return { $ref: "#/components/schemas/AiCatalog" };
+    case "application/ard+json":
+      return { $ref: "#/components/schemas/Ard" };
     case "application/json":
       return { $ref: "#/components/schemas/AgentSkillsIndex" };
     case "application/vnd.oai.openapi+json;version=3.1":
@@ -433,7 +433,7 @@ export function buildOpenApiDocument() {
       },
       schemas: {
         AgentSkillsIndex: agentSkillsIndexSchema,
-        AiCatalog: aiCatalogSchema,
+        Ard: ardSchema,
         DiscoveryResource: discoveryResourceSchema,
         Linkset: linksetSchema,
         LinksetReference: linksetReferenceSchema,

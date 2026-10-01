@@ -19,7 +19,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const markdownPath =
 	Astro.url.pathname === "/" ? "/index.md" : `${Astro.url.pathname.replace(/\/+$/, "")}.md`;
 const markdownUrl = new URL(markdownPath, siteUrl).href;
-const aiCatalog = resourceByRel("ai-catalog");
+const ard = resourceByRel("ard");
 const agentSkills = resourceByRel("agent-skills");
 const ogImage = new URL(
 	siteIdentity.ogImagePath,
@@ -63,7 +63,7 @@ const pageTitle = pageName
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="alternate" type="text/markdown" href={markdownUrl} />
 		<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
-		<link rel="ai-catalog" href={aiCatalog.path} type={aiCatalog.type} />
+		<link rel="ard" href={ard.path} type={ard.type} />
 		<link rel="agent-skills" href={agentSkills.path} type={agentSkills.type} />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={pageTitle} />

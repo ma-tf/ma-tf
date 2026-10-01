@@ -1,7 +1,7 @@
 import profile from "@content/profile.json";
 import { resources, siteUrl } from "@features/discovery/catalog";
 
-export function buildAiCatalog() {
+export function buildArd() {
   return {
     specVersion: "1.0",
     host: {

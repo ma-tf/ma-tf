@@ -74,6 +74,6 @@ describe("isAgentSkillArtifactPath", () => {
     );
     expect(isAgentSkillArtifactPath(`${agentSkillsBasePath}/index.json`)).toBe(false);
     expect(isAgentSkillArtifactPath(`${agentSkillsBasePath}/name/SKILL`)).toBe(false);
-    expect(isAgentSkillArtifactPath("/.well-known/ai-catalog.json")).toBe(false);
+    expect(isAgentSkillArtifactPath("/.well-known/ard.json")).toBe(false);
   });
 });

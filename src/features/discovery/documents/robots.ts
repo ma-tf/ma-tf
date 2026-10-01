@@ -49,7 +49,7 @@ export function buildRobotsTxt(): string {
     "",
     "# Named AI crawlers and retrieval agents — explicitly allowed",
     ...crawlerGroup(allowedCrawlers),
-    `Agentmap: ${siteUrl}/.well-known/ai-catalog.json`,
+    `Agentmap: ${siteUrl}/.well-known/ard.json`,
     "",
     `Sitemap: ${siteUrl}/sitemap.xml`,
     "",

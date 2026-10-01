@@ -59,7 +59,7 @@ const skills: readonly AgentSkill[] = [
       "",
       "- `https://m4t.tf/openapi.json` - the OpenAPI 3.1 description of the interface.",
       "- `https://m4t.tf/.well-known/api-catalog` - the RFC 9727 API catalogue.",
-      "- `https://m4t.tf/.well-known/ai-catalog.json` - the AI catalogue of capabilities.",
+      "- `https://m4t.tf/.well-known/ard.json` - the ARD catalogue of capabilities.",
       "- `https://m4t.tf/.well-known/agent-skills/index.json` - this Agent Skills index.",
       "- `https://m4t.tf/llms.txt` - the site guide.",
       "- `https://m4t.tf/developers/llms.txt` - a scoped guide to the machine-readable surface.",
