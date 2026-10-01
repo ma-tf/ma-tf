@@ -185,9 +185,6 @@ importers:
       '@base-ui/react':
         specifier: ^1.8.0
         version: 1.8.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@modelcontextprotocol/core':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@modelcontextprotocol/server':
         specifier: ^2.2.0
         version: 2.2.0

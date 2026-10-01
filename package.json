@@ -10,13 +10,13 @@
     "astro": "astro",
     "dev": "node scripts/generate-ask-corpus.mts && astro dev",
     "build": "node scripts/generate-ask-corpus.mts && astro check && astro build",
+    "generate:ask-tags": "node scripts/generate-ask-tags.mts",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@base-ui/react": "^1.8.0",
-    "@modelcontextprotocol/core": "^2.2.0",
     "@modelcontextprotocol/server": "^2.2.0",
     "@mux/mux-player-react": "^3.13.4",
     "@mux/mux-video": "^0.31.4",
