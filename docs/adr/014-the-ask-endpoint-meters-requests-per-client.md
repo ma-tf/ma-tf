@@ -24,9 +24,11 @@ none.
 
 The policy is `askRateLimit` in `src/lib/rate-limits.ts`, because the OpenAPI
 document, `llms.txt`, the Agent Skills index and the
-developers page all publish it. `src/lib/api-paths.ts` maps each API path to its
-policy, and `src/middleware.ts` enforces it before handing the request on, so an
-endpoint stays exempt from representation negotiation but not from metering.
+developers page all publish it. `src/lib/api-paths.ts` separates the bypass set,
+which names the paths exempt from representation negotiation, from a separate
+limit map, which names the paths metered before routing and holds `/ask`;
+`src/middleware.ts` enforces that map pre-route, so an endpoint stays exempt from
+representation negotiation but not from metering.
 
 `src/lib/rate-limit-middleware.ts` enforces it against a Netlify Blobs store keyed by
 `sha256(salt + client IP)`, so no address is persisted. The salt comes from
