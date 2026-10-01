@@ -21,7 +21,7 @@ type WorkItem = {
 };
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const cachePath = `${root}.ask-tags-cache.json`;
+const cachePath = `${root}src/features/ask/.ask-tags-cache.json`;
 const outputPath = `${root}src/features/ask/ask-tags.json`;
 const model = "gpt-6-luna";
 

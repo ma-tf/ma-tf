@@ -17,7 +17,7 @@ docs/design-refs
 # Astro generated types and cache
 .astro
 *.local
-.ask-tags-cache.json
+src/features/ask/.ask-tags-cache.json
 
 # Editor directories and files
 .vscode/*
