@@ -63,7 +63,7 @@ function Failure({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="inline-flex items-center gap-2 rounded-none border border-foreground bg-foreground px-3 py-1 text-sm text-background transition-colors hover:bg-transparent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+        className="inline-flex items-center gap-2 rounded-none border border-foreground bg-foreground px-2 py-1 text-sm text-background transition-colors hover:bg-transparent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
       >
         <ArrowClockwiseIcon aria-hidden="true" className="size-4" />
         Try again

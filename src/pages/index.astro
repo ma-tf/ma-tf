@@ -6,7 +6,7 @@ import { PhotographyPreview } from "@features/photography/photography-preview";
 import { VignettesPreview } from "@features/vignettes/vignettes-preview";
 import { GraphicsPreview } from "@features/graphics/graphics-preview";
 import { MusicPreview } from "@features/music/music-preview";
-import { Faq } from "@features/faq/faq";
+import Faq from "@features/faq/faq-section.astro";
 import Layout from "@layouts/Layout.astro";
 import { getPosts } from "@features/blog/post-data";
 import { previews } from "@lib/feature-flags";
@@ -33,5 +33,5 @@ const images: ImageMap = {
   {previews.vignettes && <VignettesPreview images={images} />}
   {previews.graphics && <GraphicsPreview images={images} />}
   {previews.music && <MusicPreview images={images} />}
-  <Faq client:visible />
+  <Faq />
 </Layout>

@@ -1,6 +1,7 @@
 ---
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
+import { getCollection } from "astro:content";
 import { resourceByRel } from "@features/discovery/catalog";
 import { pageNameFor, siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
 
@@ -24,7 +25,16 @@ const ogImage = new URL(
 	siteIdentity.ogImagePath,
 	`${import.meta.env.R2_PUBLIC_URL}/`,
 );
-const jsonLd = siteJsonLd(ogImage.href, Astro.url.pathname);
+const faqAnswers =
+	Astro.url.pathname === "/"
+		? (await getCollection("faq"))
+				.sort((a, b) => a.data.order - b.data.order)
+				.map((entry) => ({
+					question: entry.data.question,
+					text: entry.body ?? "",
+				}))
+		: [];
+const jsonLd = siteJsonLd(ogImage.href, Astro.url.pathname, faqAnswers);
 const pageName = title ?? pageNameFor(Astro.url.pathname);
 const pageTitle = pageName
 	? `${pageName} | ${siteIdentity.name}`

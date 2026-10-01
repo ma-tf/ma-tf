@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from "astro:content";
+import { Section, SectionContent, SectionHeader, SectionNumber } from "@components/section";
+import { AskPanel } from "@features/faq/ask";
+import { FaqRow } from "@features/faq/faq-row";
+import { askEnabled } from "@lib/feature-flags";
+
+const entries = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order);
+const rows = await Promise.all(
+	entries.map(async (entry) => ({
+		question: entry.data.question,
+		Content: (await render(entry)).Content,
+	})),
+);
+---
+
+<Section className="mx-auto w-full max-w-480 py-24">
+	<SectionHeader>
+		<SectionNumber />
+		<span>FAQ</span>
+	</SectionHeader>
+	<SectionContent className="w-full max-w-prose justify-self-center">
+		<div class="flex w-full flex-col [&>astro-island:not(:last-child)>*]:border-b">
+			{rows.map(({ question, Content }) => (
+				<FaqRow question={question} client:visible>
+					<Content />
+				</FaqRow>
+			))}
+			{askEnabled && <AskPanel client:visible />}
+		</div>
+	</SectionContent>
+</Section>

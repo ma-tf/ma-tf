@@ -9,9 +9,25 @@ const REFUSAL_TEXT =
 
 const THROTTLED_TEXT = "That's a lot of questions at once. Give it a minute and try again.";
 
-type Item = { "@type"?: string; text?: string; name?: string; url?: string };
+type Document =
+  | { results: [{ text: string }, ...{ name: string; url: string }[]] }
+  | { error: { code: string } };
 
-type Document = { results?: Item[]; error?: { code?: string } };
+type DocumentPayload =
+  | { refusal: string }
+  | { summary: string; pages: { name: string; url: string }[] };
+
+function parseDocument(document: Document): DocumentPayload {
+  if ("error" in document) {
+    if (document.error.code === "NO_RESULTS") return { refusal: REFUSAL_TEXT };
+
+    throw new Error(`Ask failed with ${document.error.code}`);
+  }
+
+  const [summary, ...pages] = document.results;
+
+  return { summary: summary.text, pages };
+}
 
 export async function askSite(question: string, signal: AbortSignal): Promise<AskAnswer> {
   const response = await fetch("/ask", {
@@ -25,23 +41,13 @@ export async function askSite(question: string, signal: AbortSignal): Promise<As
 
   if (!response.ok) throw new Error(`Ask failed with ${response.status}`);
 
-  const document = (await response.json()) as Document;
+  const payload = parseDocument((await response.json()) as Document);
 
-  if (document.error) {
-    if (document.error.code === "NO_RESULTS") return { kind: "refusal", text: REFUSAL_TEXT };
-
-    throw new Error(`Ask failed with ${document.error.code ?? "an error"}`);
-  }
-
-  const items = document.results ?? [];
+  if ("refusal" in payload) return { kind: "refusal", text: payload.refusal };
 
   return {
     kind: "answer",
-    text: items.find((item) => item["@type"] === "SearchSummary")?.text ?? "",
-    sources: items.flatMap((item) =>
-      item["@type"] === "WebPage" && item.url
-        ? [{ title: item.name ?? item.url, url: item.url }]
-        : [],
-    ),
+    text: payload.summary,
+    sources: payload.pages.map(({ name, url }) => ({ title: name, url })),
   };
 }

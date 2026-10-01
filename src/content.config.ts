@@ -77,4 +77,9 @@ const vignettes = defineCollection({
   }),
 });
 
-export const collections = { blog, experience, projects, education, photography, vignettes };
+const faq = defineCollection({
+  loader: glob({ base: "./src/content/faq", pattern: "**/*.mdx" }),
+  schema: z.object({ question: z.string(), order: z.number() }),
+});
+
+export const collections = { blog, experience, projects, education, photography, vignettes, faq };

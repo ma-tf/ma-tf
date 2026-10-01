@@ -1,9 +1,14 @@
-import { AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@components/ui/accordion";
 import { AnswerBody } from "@features/faq/answer-body";
 import { AskProvider, useAskUnit } from "@features/faq/ask-context";
 import { useAsk } from "@features/faq/use-ask";
 import { ArrowRightIcon, CircleNotchIcon } from "@phosphor-icons/react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
   const [draft, setDraft] = useState("");
@@ -28,7 +33,7 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
         onChange={(event) => setDraft(event.target.value)}
         aria-label="Ask about this site"
         placeholder="Ask about this site…"
-        className="min-w-0 flex-1 bg-transparent text-2xl outline-none placeholder:text-muted-foreground/60"
+        className="min-w-0 flex-1 text-base outline-none placeholder:text-muted-foreground/70"
       />
       <button
         type="submit"
@@ -47,43 +52,60 @@ function AnsweredItem() {
   const inProgress = unit.status === "thinking";
 
   return (
-    <AccordionItem value={itemValue}>
-      <AccordionTrigger hideIcon={inProgress}>
-        <span className="text-2xl uppercase">{question}</span>
-        {inProgress && (
-          <CircleNotchIcon
-            aria-hidden="true"
-            className="ml-auto size-4 shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
-          />
-        )}
-      </AccordionTrigger>
-      <AccordionContent>
-        <AnswerBody />
-      </AccordionContent>
-    </AccordionItem>
+    <Accordion defaultValue={[itemValue]} keepMounted>
+      <AccordionItem value={itemValue}>
+        <AccordionTrigger hideIcon={inProgress}>
+          <span className="text-base uppercase">{question}</span>
+          {inProgress && (
+            <CircleNotchIcon
+              aria-hidden="true"
+              className="ml-auto size-4 shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
+            />
+          )}
+        </AccordionTrigger>
+        <AccordionContent>
+          <AnswerBody />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
 
-export function FaqAskUnit({ onAsk }: { onAsk?: (value: string) => void }) {
+function FaqAskUnit({ onAsk }: { onAsk?: () => void }) {
   const { unit, question, ask, retry } = useAsk();
   const itemValue = useId();
 
   const submit = (text: string) => {
-    onAsk?.(itemValue);
+    onAsk?.();
     ask(text);
   };
 
   if (unit.status === "idle") {
-    return (
-      <div className="not-last:border-b">
-        <Composer onSubmit={submit} />
-      </div>
-    );
+    return <Composer onSubmit={submit} />;
   }
 
   return (
     <AskProvider value={{ itemValue, question, unit, retry }}>
       <AnsweredItem />
     </AskProvider>
+  );
+}
+
+export function AskPanel() {
+  const [units, setUnits] = useState<number[]>([1]);
+  const next = useRef(2);
+
+  const openQuestion = () => {
+    const id = next.current;
+    next.current += 1;
+    setUnits((current) => [...current, id]);
+  };
+
+  return (
+    <div className="flex w-full flex-col [&>*:not(:last-child)]:border-b">
+      {units.map((id) => (
+        <FaqAskUnit key={id} onAsk={openQuestion} />
+      ))}
+    </div>
   );
 }

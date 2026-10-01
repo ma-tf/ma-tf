@@ -1,11 +1,18 @@
 import { siteUrl } from "@features/discovery/catalog";
-import { faqs, pageNameFor, service, siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
+import { pageNameFor, service, siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
 import { describe, expect, it } from "vite-plus/test";
 
 type Node = Record<string, unknown>;
 
+const faqAnswers = [
+  { question: "Who am I?", text: "A fixture answer." },
+  { question: "How can you contact me?", text: "Another fixture answer." },
+];
+
 function graphFor(pathname = "/"): Node[] {
-  return siteJsonLd(`${siteUrl}/graphics/old house.png`, pathname)["@graph"] as unknown as Node[];
+  return siteJsonLd(`${siteUrl}/graphics/old house.png`, pathname, faqAnswers)[
+    "@graph"
+  ] as unknown as Node[];
 }
 
 function nodeOfType(nodes: Node[], type: string): Node {
@@ -70,12 +77,14 @@ describe("siteJsonLd", () => {
     ]);
   });
 
-  it("mirrors the published FAQ content", () => {
+  it("mirrors the supplied FAQ answers", () => {
     const mainEntity = nodeOfType(graphFor(), "FAQPage")["mainEntity"] as Node[];
-    expect(mainEntity.map((entry) => entry["name"])).toEqual(faqs.map((faq) => faq.question));
+    expect(mainEntity.map((entry) => entry["name"])).toEqual(
+      faqAnswers.map((answer) => answer.question),
+    );
     expect(mainEntity[0]?.["acceptedAnswer"]).toEqual({
       "@type": "Answer",
-      text: faqs[0]?.answer,
+      text: faqAnswers[0]?.text,
     });
   });
 
