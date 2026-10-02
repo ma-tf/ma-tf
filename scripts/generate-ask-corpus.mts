@@ -101,12 +101,12 @@ async function walkFiles(dir: string): Promise<string[]> {
 
 async function hashInputs(): Promise<string> {
   const hash = createHash("sha256");
-  const walked = (
-    await Promise.all(["src", "scripts"].map((dir) => walkFiles(join(root, dir))))
-  ).flat();
-  const files = [...new Set([...walked, ...hashFileCandidates.map((file) => join(root, file))])]
-    .filter((path) => path !== output && path !== resourcesOutput)
-    .sort();
+  const walked = (await walkFiles(join(root, "src"))).filter(
+    (path) => path !== output && path !== resourcesOutput,
+  );
+  const files = [
+    ...new Set([...walked, ...hashFileCandidates.map((file) => join(root, file))]),
+  ].sort();
 
   for (const path of files) {
     hash.update(relative(root, path));
