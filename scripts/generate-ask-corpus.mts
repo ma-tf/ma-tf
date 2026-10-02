@@ -28,8 +28,6 @@ const hashFileCandidates = [
   ".node-version",
 ];
 
-const hashEnvKeys = ["R2_PUBLIC_URL"];
-
 export type AskTag = {
   short: string;
   keywords: string[];
@@ -86,16 +84,6 @@ export function isCatalogueCurrent(
   return storedCorpusHash === sourceHash && storedResourcesHash === sourceHash && hasResources;
 }
 
-function renderEnvKeys(): string[] {
-  const keys = new Set(hashEnvKeys);
-
-  for (const key of Object.keys(process.env)) {
-    if (key.startsWith("PUBLIC_PREVIEW_")) keys.add(key);
-  }
-
-  return [...keys].sort();
-}
-
 async function walkFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
   const nested = await Promise.all(
@@ -132,13 +120,6 @@ async function hashInputs(): Promise<string> {
       hash.update("\0missing");
     }
 
-    hash.update("\0");
-  }
-
-  for (const key of renderEnvKeys()) {
-    hash.update(key);
-    hash.update("\0");
-    hash.update(process.env[key] ?? "\0missing");
     hash.update("\0");
   }
 
