@@ -4,6 +4,7 @@ import type { CallToolResult } from "@modelcontextprotocol/server";
 import { ask } from "@features/ask/ask";
 import { requestedSummarize } from "@features/ask/request";
 import { answerResponse, failureResponses } from "@features/ask/response";
+import { captureError, enrich } from "@lib/wide-event";
 import { toStandardJsonSchema } from "@valibot/to-json-schema";
 import * as v from "valibot";
 
@@ -64,10 +65,15 @@ export async function askTool(args: AskInput, signal: AbortSignal): Promise<Call
   try {
     const answer = await ask(args.query.text, requestedSummarize(args.prefer) ?? false, signal);
 
+    enrich({ outcome: answer === null ? "no_results" : "success" });
+
     return answer === null
       ? askToolResult(failureResponses.NO_RESULTS, false)
       : askToolResult(answerResponse(answer), false);
-  } catch {
+  } catch (error) {
+    captureError(error, { phase: "mcp_ask" });
+    enrich({ outcome: "internal_error" });
+
     return askToolResult(failureResponses.INTERNAL_ERROR, true);
   }
 }

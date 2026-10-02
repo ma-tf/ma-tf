@@ -11,8 +11,18 @@ import {
   resultEvent,
   startEvent,
 } from "@features/ask/response";
+import { captureError, current, enrich } from "@lib/wide-event";
 
 type SettledStep = { ok: true; value: AskStep } | { ok: false };
+
+type StreamCounts = { completed: number; results: number };
+
+const failureOutcomes: Record<NLWebAskFailureCode, string> = {
+  NO_RESULTS: "no_results",
+  UNSUPPORTED_FORMAT: "unsupported_format",
+  UNSUPPORTED_MODE: "unsupported_mode",
+  INTERNAL_ERROR: "internal_error",
+};
 
 function failureError(code: NLWebAskFailureCode) {
   return errorEvent({ _meta: failureMeta, error: failureResponses[code].error });
@@ -27,26 +37,40 @@ export async function* failureStream(
 }
 
 export function runStream(summarize: boolean, work: readonly Promise<AskStep>[]) {
+  const event = current();
   const settled: Promise<SettledStep>[] = work.map((task) =>
     task.then(
       (value) => ({ ok: true as const, value }),
-      () => ({ ok: false as const }),
+      (reason) => {
+        captureError(reason, { phase: "stream_step" }, event);
+        return { ok: false as const };
+      },
     ),
   );
 
   return (async function* (): AsyncGenerator<NLWebAskStreamEvent> {
-    yield startEvent(answerMeta);
+    const counts: StreamCounts = { completed: 0, results: 0 };
+    let outcome = "aborted";
 
-    const ok = yield* emitBody(settled, summarize ? 1 : 0);
+    try {
+      yield startEvent(answerMeta);
 
-    yield completeEvent(ok ? answerMeta : failureMeta);
+      const terminal = yield* emitBody(settled, summarize ? 1 : 0, counts);
+
+      yield completeEvent(terminal === "success" ? answerMeta : failureMeta);
+
+      outcome = terminal;
+    } finally {
+      enrich({ ask: { stream: counts }, outcome }, event);
+    }
   })();
 }
 
 async function* emitBody(
   settled: readonly Promise<SettledStep>[],
   start: number,
-): AsyncGenerator<NLWebAskStreamEvent, boolean> {
+  counts: StreamCounts,
+): AsyncGenerator<NLWebAskStreamEvent, string> {
   let pageIndex = start;
 
   for (const task of settled) {
@@ -54,28 +78,31 @@ async function* emitBody(
 
     if (!outcome.ok) {
       yield failureError("INTERNAL_ERROR");
-      return false;
+      return "internal_error";
     }
 
     if ("error" in outcome.value) {
       yield failureError(outcome.value.error);
-      return false;
+      return failureOutcomes[outcome.value.error];
     }
 
-    pageIndex = yield* emitResults(outcome.value.results, pageIndex);
+    pageIndex = yield* emitResults(outcome.value.results, pageIndex, counts);
+    counts.completed += 1;
   }
 
-  return true;
+  return "success";
 }
 
 function* emitResults(
   results: readonly AskResult[],
   start: number,
+  counts: StreamCounts,
 ): Generator<NLWebAskStreamEvent, number> {
   let pageIndex = start;
 
   for (const result of results) {
     yield resultEvent("page" in result ? pageIndex : 0, askResultItem(result));
+    counts.results += 1;
     if ("page" in result) pageIndex += 1;
   }
 

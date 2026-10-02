@@ -4,6 +4,7 @@ import { answerAsk } from "@features/ask/answer";
 import corpus from "@features/ask/published-pages.generated.json";
 import { judgeAskPages } from "@features/ask/typesafe-ai";
 import { siteUrl } from "@features/discovery/catalog";
+import { enrich } from "@lib/wide-event";
 
 export type AskAnswer = { sources: PublishedPage[]; summary?: string };
 
@@ -16,7 +17,7 @@ const answerabilityFloor = 0.85;
 
 const sourceBlacklist = [`${siteUrl}/`];
 
-type AskSelection = { supported: true; sources: PublishedPage[] } | { supported: false };
+type AskSelection = { supported: boolean; sources: PublishedPage[] };
 
 function rankSources(judgment: AskPageJudgment, summarize: boolean): AskSelection {
   const ranked = judgment.pageRelevance
@@ -25,12 +26,20 @@ function rankSources(judgment: AskPageJudgment, summarize: boolean): AskSelectio
     .sort((a, b) => b.probability - a.probability);
 
   const sources = ranked.map(({ page }) => page);
+  const supported =
+    sources.length > 0 && !(summarize && judgment.answerability <= answerabilityFloor);
 
-  if (sources.length === 0 || (summarize && judgment.answerability <= answerabilityFloor)) {
-    return { supported: false };
-  }
+  enrich({
+    ask: {
+      decision_gate: {
+        supported,
+        source_count: ranked.length,
+        top_relevance: ranked[0]?.probability,
+      },
+    },
+  });
 
-  return { supported: true, sources };
+  return { supported, sources };
 }
 
 export async function ask(

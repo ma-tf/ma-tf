@@ -1,16 +1,34 @@
 # Middleware
 
-`src/middleware.ts` is a thin shim over `src/features/discovery/` (see
-[ADR 008](adr/008-single-discovery-module.md)). It does three things: advertises
-the discovery surface with response headers, negotiates the representation of a
-page or discovery resource, and converts errors into RFC 9457 problems. The
-vocabulary below matches [CONTEXT.md](CONTEXT.md).
+`src/middleware.ts` is a thin shim that chains two handlers with `sequence`.
+The outermost, `wideEventMiddleware` in `src/lib/wide-event-middleware.ts`,
+opens one wide event per request and closes it after the response (see
+[logging.md](logging.md) and [ADR 016](adr/016-wide-event-logging.md)). The
+inner `discoveryMiddleware` is a shim over `src/features/discovery/` (see
+[ADR 008](adr/008-single-discovery-module.md)): it advertises the discovery
+surface with response headers, negotiates the representation of a page or
+discovery resource, converts errors into RFC 9457 problems, and meters API
+paths. The vocabulary below matches [CONTEXT.md](CONTEXT.md).
 
 ## Request flow
 
 ```mermaid
 flowchart TD
-    A([onRequest]) --> B[respond]
+    A([onRequest]) --> SEQ["sequence(wideEventMiddleware, discoveryMiddleware)"]
+    SEQ --> EV["wideEventMiddleware:<br/>beginRequest + isApiPath"]
+    EV --> RW["runWith(event)"]
+    RW --> API{api path?}
+
+    API -- yes --> RLC{apiRateLimitFor?}
+    RLC -- yes --> ENF[enforceRateLimit]
+    ENF --> LIM{limited?}
+    LIM -- yes --> X
+    LIM -- no --> NXT["await next()"]
+    RLC -- no --> NXT
+    NXT --> X
+    NXT -. "streaming /ask" .-> DEF["deferEmission()"]
+
+    API -- no --> B[respond]
     B --> C{isPrerendered?}
     C -- yes --> PRE["await next()<br/>skips negotiation + problem wrap"] --> W
     C -- no --> D["read Accept + pathname"]
@@ -37,35 +55,42 @@ flowchart TD
     S -- "resource or !prefersHtml" --> T
     S -- "html browser" --> V["passthrough<br/>Vary: Accept"] --> W
     R --> W
-    W["applySiteHeaders<br/>Link + RateLimit-*"] --> X([Response])
+    W["set Link header"] --> X
+
+    X{"api or status >= 400,<br/>not deferred?"}
+    X -- yes --> FIN["log(finish(event, status_code))<br/>one JSON line"] --> RET([Response])
+    X -- no --> RET
+    DEF -.-> OWN["stream generator<br/>log(finish(event)) in finally"]
+    OWN -.-> RET
 ```
 
 ## Branches
 
 | #   | Guard                                  | Location            | Result                                                              |
 | --- | -------------------------------------- | ------------------- | ------------------------------------------------------------------- |
-| 1   | `isPrerendered`                        | `middleware.ts:62`  | `next()`, bypasses preflight, negotiation and problem wrapping      |
+| 1   | `isPrerendered`                        | `middleware.ts:56`  | `next()`, bypasses preflight, negotiation and problem wrapping      |
 | 2a  | resource path and method not GET/HEAD  | `problems.ts:193`   | 405 problem+json with `Allow`, bypasses problem wrapping            |
 | 2b  | `Accept` set and no supported type     | `problems.ts:200`   | 406 problem+json, bypasses problem wrapping                         |
-| 3   | agent skill artifact path              | `middleware.ts:69`  | `next()` untouched, still problem-wrapped                           |
+| 3   | agent skill artifact path              | `middleware.ts:63`  | `next()` untouched, still problem-wrapped                           |
 | 4a  | path ends `.md`                        | `negotiation.ts:84` | `markdown-suffix`                                                   |
 | 4b  | catalogued resource and JSON preferred | `negotiation.ts:88` | `json-document` when the media type is JSON, else `json-descriptor` |
 | 4c  | markdown preferred                     | `negotiation.ts:95` | `markdown-accept`                                                   |
 | 4d  | otherwise                              | `negotiation.ts:97` | `html`                                                              |
-| 5   | `status >= 400`                        | `middleware.ts:73`  | `problemResponse`                                                   |
-| 6   | always                                 | `middleware.ts:14`  | `Link` and `RateLimit-*`                                            |
+| 5   | `status >= 400`                        | `middleware.ts:67`  | `problemResponse`                                                   |
+| 6   | non-API path                           | `middleware.ts:86`  | `Link`                                                              |
+| 7   | API path with a configured limit       | `middleware.ts:77`  | `enforceRateLimit` returns `429` or `null`                          |
 
 The four kinds resolve as follows:
 
 - `markdown-suffix` — the catalogue descriptor for the rewritten path, else a
-  turndown of the target (`resource-markdown.ts:30`, `middleware.ts:43`).
+  turndown of the target (`resource-markdown.ts:30`, `middleware.ts:38`).
 - `markdown-accept` — a turndown of `next()` with `Vary: Accept`
-  (`middleware.ts:47`).
+  (`middleware.ts:42`).
 - `json-document` — `next()` re-typed as `application/json`, so a JSON resource
-  is forwarded as its own document (`middleware.ts:50`).
+  is forwarded as its own document (`middleware.ts:45`).
 - `json-descriptor` — `Response.json(describeResource(...))`, a synthesised
   descriptor for a resource whose own media type is not JSON
-  (`middleware.ts:53`, `resource-json.ts:27`).
+  (`middleware.ts:48`, `resource-json.ts:27`).
 - `html` — `next()`.
 
 `problemResponse` (`problems.ts:180`) prefers JSON, then markdown, then
@@ -76,12 +101,25 @@ the original error through with `Vary: Accept`. `*/*` is not an HTML preference
 
 ## Notes
 
-- Site headers apply to every response, including prerendered and error
-  responses. Negotiation and problem wrapping do not.
-- Preflight returns at `middleware.ts:67` and the prerendered bypass at
-  `middleware.ts:62`, both before the `status >= 400` wrap, so a 405 or 406 is
-  never re-wrapped as a problem. The agent skill bypass sits after preflight but
-  before negotiation, so it is problem-wrapped.
+- The `Link` header applies to every non-API response, including prerendered and
+  error responses. Negotiation and problem wrapping do not; API paths bypass all
+  three.
+- `wideEventMiddleware` is the outermost handler; the discovery work happens in
+  the inner `discoveryMiddleware`. `sequence` guarantees the event wraps the
+  whole request whichever inner branch returns.
+- One wide event is opened for every request, emitted for API paths always and
+  for non-API paths at or above 400. A streaming `/ask` response defers emission
+  to the stream generator. See [logging.md](logging.md) and
+  [ADR 016](adr/016-wide-event-logging.md).
+- Preflight returns at `middleware.ts:60` and the prerendered bypass at
+  `middleware.ts:56`, both before the `status >= 400` wrap, so a 405 or 406 is
+  never re-wrapped as a problem. The agent skill bypass sits at
+  `middleware.ts:63`, after preflight but before negotiation, so it is
+  problem-wrapped.
+- The rate limiter returns the `429` response when a client is over quota and
+  `null` otherwise; the response status is what the wide event records. When the
+  check fails open (no client IP, missing `RATE_LIMIT_SALT`, blob-store error)
+  the limiter warns on its own and returns `null`.
 - `formatMarkdownResponse` returns a non-HTML response unchanged
   (`markdown.ts:18`), so the two markdown branches silently skip both conversion
   and `Vary` in that case.

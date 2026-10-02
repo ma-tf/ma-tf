@@ -1,5 +1,6 @@
 import type { AskPageJudgment, PublishedPage } from "@features/ask/published-page";
 
+import { enrich } from "@lib/wide-event";
 import { noul, TypeSafeClient, type NoulResponse } from "@typesafe-ai/sdk";
 import { TYPESAFE_API_KEY } from "astro:env/server";
 
@@ -44,7 +45,11 @@ export async function judgeAskPages(
       ),
     },
   };
+  const startedAt = Date.now();
   const response = await client.systemOne(payload, { signal });
+
+  enrich({ ask: { decision_gate: { duration_ms: Date.now() - startedAt } } });
+
   const pageAnswers = response.answers as Record<string, NoulResponse>;
 
   return {

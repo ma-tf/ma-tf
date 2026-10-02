@@ -1,10 +1,12 @@
 import type { PublishedPage } from "@features/ask/published-page";
 
+import { enrich } from "@lib/wide-event";
 import { OPENAI_API_KEY } from "astro:env/server";
 import OpenAI from "openai";
 
 export async function answerAsk(question: string, sources: PublishedPage[], signal: AbortSignal) {
   const client = new OpenAI({ apiKey: OPENAI_API_KEY });
+  const startedAt = Date.now();
   const response = await client.responses.create(
     {
       model: "gpt-6-luna",
@@ -15,6 +17,18 @@ export async function answerAsk(question: string, sources: PublishedPage[], sign
     },
     { signal },
   );
+
+  enrich({
+    ask: {
+      answer: {
+        duration_ms: Date.now() - startedAt,
+        model: response.model,
+        input_tokens: response.usage?.input_tokens,
+        output_tokens: response.usage?.output_tokens,
+        answer_length: response.output_text.length,
+      },
+    },
+  });
 
   return response.output_text;
 }

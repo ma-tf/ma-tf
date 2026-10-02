@@ -1,6 +1,7 @@
 import type { APIContext, MiddlewareNext } from "astro";
 
 import { enforceRateLimit } from "@lib/rate-limit-middleware";
+import { deferEmission } from "@lib/wide-event";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { onRequest } from "@/src/middleware";
@@ -259,5 +260,79 @@ describe("onRequest", () => {
 
     expect(response.status).toBe(406);
     expect(response.headers.get("Content-Type")).toMatch(/^application\/problem\+json\b/);
+  });
+});
+
+describe("wide event emission", () => {
+  function parseEvents(log: { mock: { calls: unknown[][] } }): Record<string, unknown>[] {
+    return log.mock.calls.map(([line]) => JSON.parse(String(line)) as Record<string, unknown>);
+  }
+
+  it("emits exactly one event for an API path", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+
+    const response = await onRequest(buildContext("/ask", { method: "POST" }), next);
+
+    expect(response.status).toBe(200);
+
+    const events = parseEvents(log);
+    expect(events).toHaveLength(1);
+    expect(events[0]?.path).toBe("/ask");
+    expect(events[0]?.status_code).toBe(200);
+
+    log.mockRestore();
+  });
+
+  it("does not emit for a successful non-API response", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+
+    await onRequest(buildContext("/"), next);
+
+    expect(log).not.toHaveBeenCalled();
+
+    log.mockRestore();
+  });
+
+  it("emits an event for a non-API 404", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const notFound: MiddlewareNext = async () => htmlResponse(404);
+
+    const response = await onRequest(
+      buildContext("/__probe", { accept: "application/json" }),
+      notFound,
+    );
+
+    expect(response.status).toBe(404);
+
+    const events = parseEvents(log);
+    expect(events).toHaveLength(1);
+    expect(events[0]?.status_code).toBe(404);
+    expect(events[0]?.outcome).toBeUndefined();
+
+    log.mockRestore();
+  });
+
+  it("logs the deferred response when its body ends", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const deferred: MiddlewareNext = async () => {
+      deferEmission();
+      return new Response("data: {}\n\n", {
+        headers: { "Content-Type": "text/event-stream" },
+      });
+    };
+
+    const response = await onRequest(buildContext("/ask", { method: "POST" }), deferred);
+
+    expect(log).not.toHaveBeenCalled();
+
+    await response.text();
+
+    expect(log).toHaveBeenCalledOnce();
+
+    const line = JSON.parse(String((log.mock.calls[0] as unknown[])[0])) as Record<string, unknown>;
+
+    expect(line.status_code).toBe(200);
+
+    log.mockRestore();
   });
 });

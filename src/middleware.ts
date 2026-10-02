@@ -1,4 +1,4 @@
-import type { APIContext, MiddlewareNext } from "astro";
+import type { APIContext, MiddlewareHandler, MiddlewareNext } from "astro";
 
 import { linkHeader } from "@features/discovery/catalog";
 import { isAgentSkillArtifactPath } from "@features/discovery/documents/agent-skills";
@@ -9,6 +9,8 @@ import { resourceJson } from "@features/discovery/resource-json";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
 import { apiRateLimitFor, isApiPath } from "@lib/api-paths";
 import { enforceRateLimit } from "@lib/rate-limit-middleware";
+import { wideEventMiddleware } from "@lib/wide-event-middleware";
+import { sequence } from "astro:middleware";
 
 type Representation = ReturnType<typeof selectRepresentation>;
 
@@ -64,9 +66,11 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
   return response.status >= 400 ? problemResponse(response, accept, pathname) : response;
 }
 
-export async function onRequest(context: APIContext, next: MiddlewareNext): Promise<Response> {
-  if (isApiPath(context.url.pathname)) {
-    const limit = apiRateLimitFor(context.url.pathname, context.request);
+const discoveryMiddleware: MiddlewareHandler = async (context, next) => {
+  const { pathname } = context.url;
+
+  if (isApiPath(pathname)) {
+    const limit = apiRateLimitFor(pathname, context.request);
 
     if (limit) {
       const limited = await enforceRateLimit(context.request, limit);
@@ -81,4 +85,8 @@ export async function onRequest(context: APIContext, next: MiddlewareNext): Prom
   response.headers.set("Link", linkHeader);
 
   return response;
-}
+};
+
+type ResponseMiddleware = (context: APIContext, next: MiddlewareNext) => Promise<Response>;
+
+export const onRequest = sequence(wideEventMiddleware, discoveryMiddleware) as ResponseMiddleware;
