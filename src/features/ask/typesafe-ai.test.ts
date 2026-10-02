@@ -47,12 +47,23 @@ describe("judgeAskPages", () => {
   });
 
   it("leaves the provider context off a success", async () => {
-    systemOne.mockResolvedValue({ answers: { answerable: { noul: 1 } } });
+    systemOne.mockResolvedValue({
+      model: "jev-1.13.0",
+      usage: { input_tokens: 900, output_tokens: 2 },
+      answers: { answerable: { noul: 1 } },
+    });
 
     const { event, result } = run();
 
     await result;
 
-    expect(event.ask).toEqual({ decision_gate: { duration_ms: expect.any(Number) } });
+    expect(event.ask).toEqual({
+      decision_gate: {
+        duration_ms: expect.any(Number),
+        model: "jev-1.13.0",
+        input_tokens: 900,
+        output_tokens: 2,
+      },
+    });
   });
 });

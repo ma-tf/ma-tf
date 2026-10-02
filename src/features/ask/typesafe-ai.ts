@@ -67,7 +67,16 @@ export async function judgeAskPages(
     throw error;
   });
 
-  enrich({ ask: { decision_gate: { duration_ms: Date.now() - startedAt } } });
+  enrich({
+    ask: {
+      decision_gate: {
+        duration_ms: Date.now() - startedAt,
+        model: response.model,
+        input_tokens: response.usage.input_tokens,
+        output_tokens: response.usage.output_tokens,
+      },
+    },
+  });
 
   const pageAnswers = response.answers as Record<string, NoulResponse>;
 
