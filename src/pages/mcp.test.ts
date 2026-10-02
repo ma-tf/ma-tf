@@ -9,14 +9,18 @@ const handleMcp = vi.hoisted(() => vi.fn(async () => new Response(null, { status
 vi.mock("@lib/feature-flags", () => ({ askEnabled: true }));
 vi.mock("@features/mcp/handle-mcp", () => ({ handleMcp }));
 
-function context(init: { url?: string; host?: string; origin?: string } = {}): APIContext {
+function context(
+  init: { url?: string; host?: string; origin?: string; body?: unknown } = {},
+): APIContext {
   const url = new URL(init.url ?? "https://m4t.tf/mcp");
   const request = new Request(url, {
     method: "POST",
     headers: {
+      ...(init.body !== undefined ? { "content-type": "application/json" } : {}),
       ...(init.host ? { host: init.host } : {}),
       ...(init.origin ? { origin: init.origin } : {}),
     },
+    ...(init.body !== undefined ? { body: JSON.stringify(init.body) } : {}),
   });
 
   return { request } as unknown as APIContext;
@@ -60,5 +64,19 @@ describe("POST /mcp", () => {
     const response = await POST(context({ host: "m4t.tf", origin: "https://m4t.tf" }));
 
     expect(response.status).toBe(200);
+  });
+
+  it("forwards the parsed body to the handler", async () => {
+    const body = { jsonrpc: "2.0", id: 1, method: "server/discover" };
+
+    await POST(context({ host: "m4t.tf", body }));
+
+    expect(handleMcp).toHaveBeenCalledWith(expect.anything(), { parsedBody: body });
+  });
+
+  it("passes an undefined body when the request carries none", async () => {
+    await POST(context({ host: "m4t.tf" }));
+
+    expect(handleMcp).toHaveBeenCalledWith(expect.anything(), { parsedBody: undefined });
   });
 });

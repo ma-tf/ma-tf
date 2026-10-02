@@ -12,14 +12,24 @@ import {
 const allowedHostnames = ["m4t.tf", ...localhostAllowedHostnames()];
 const allowedOrigins = ["m4t.tf", ...localhostAllowedOrigins()];
 
-export const POST = (({ request }) => {
+export const POST = (async ({ request }) => {
   if (!askEnabled) return new Response(null, { status: 404 });
 
-  return (
+  const rejection =
     hostHeaderValidationResponse(request, allowedHostnames) ??
-    originValidationResponse(request, allowedOrigins) ??
-    handleMcp(request)
-  );
+    originValidationResponse(request, allowedOrigins);
+
+  if (rejection) return rejection;
+
+  let parsedBody;
+
+  try {
+    parsedBody = await request.json();
+  } catch {
+    parsedBody = undefined;
+  }
+
+  return handleMcp(request, { parsedBody });
 }) satisfies APIRoute;
 
 export const ALL = (() =>
