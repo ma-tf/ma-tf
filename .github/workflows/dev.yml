@@ -18,6 +18,7 @@ jobs:
           node-version-file: .node-version
       - run: vp i --frozen-lockfile
       - run: vpx astro sync
+      - run: vp run check:ask-corpus
       - run: vp check
       - run: vp run build
         env:

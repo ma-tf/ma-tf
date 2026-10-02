@@ -4,6 +4,7 @@ import {
   applyAskTags,
   assembleResourceCatalogue,
   type AskTagFile,
+  isCatalogueCurrent,
   shouldRegenerate,
 } from "@/scripts/generate-ask-corpus.mts";
 
@@ -145,5 +146,22 @@ describe("shouldRegenerate", () => {
 
   it("skips only when both hashes match and the catalogue is present", () => {
     expect(shouldRegenerate(false, "hash", "hash", "hash", true)).toBe(false);
+  });
+});
+
+describe("isCatalogueCurrent", () => {
+  it("is current when both hashes match and the catalogue is present", () => {
+    expect(isCatalogueCurrent("hash", "hash", "hash", true)).toBe(true);
+  });
+
+  it("is stale when either hash is missing or different", () => {
+    expect(isCatalogueCurrent("hash", undefined, "hash", true)).toBe(false);
+    expect(isCatalogueCurrent("hash", "old", "hash", true)).toBe(false);
+    expect(isCatalogueCurrent("hash", "hash", undefined, true)).toBe(false);
+    expect(isCatalogueCurrent("hash", "hash", "old", true)).toBe(false);
+  });
+
+  it("is stale when the catalogue has no resources", () => {
+    expect(isCatalogueCurrent("hash", "hash", "hash", false)).toBe(false);
   });
 });

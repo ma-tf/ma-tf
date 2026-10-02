@@ -26,13 +26,9 @@ const hashFileCandidates = [
   "pnpm-lock.yaml",
   "pnpm-workspace.yaml",
   ".node-version",
-  ".env",
-  ".env.local",
-  ".env.development",
-  ".env.production",
 ];
 
-const hashEnvKeys = ["R2_PUBLIC_URL", "PUBLIC_ASK_ENABLED"];
+const hashEnvKeys = ["R2_PUBLIC_URL"];
 
 export type AskTag = {
   short: string;
@@ -81,6 +77,15 @@ export function shouldRegenerate(
   );
 }
 
+export function isCatalogueCurrent(
+  sourceHash: string,
+  storedCorpusHash: string | undefined,
+  storedResourcesHash: string | undefined,
+  hasResources: boolean,
+): boolean {
+  return storedCorpusHash === sourceHash && storedResourcesHash === sourceHash && hasResources;
+}
+
 function renderEnvKeys(): string[] {
   const keys = new Set(hashEnvKeys);
 
@@ -94,11 +99,13 @@ function renderEnvKeys(): string[] {
 async function walkFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
   const nested = await Promise.all(
-    entries.map((entry) => {
-      const path = join(dir, entry.name);
+    entries
+      .filter((entry) => !entry.name.startsWith("."))
+      .map((entry) => {
+        const path = join(dir, entry.name);
 
-      return entry.isDirectory() ? walkFiles(path) : Promise.resolve([path]);
-    }),
+        return entry.isDirectory() ? walkFiles(path) : Promise.resolve([path]);
+      }),
   );
 
   return nested.flat();
@@ -391,7 +398,28 @@ async function stopServer(server: ReturnType<typeof spawn>): Promise<void> {
 
 async function main(): Promise<void> {
   const forced = process.argv.includes("--force") || process.env.ASK_CORPUS_FORCE === "1";
+  const check = process.argv.includes("--check");
   const sourceHash = await hashInputs();
+
+  if (check) {
+    const current = isCatalogueCurrent(
+      sourceHash,
+      await readStoredHash(output),
+      await readStoredHash(resourcesOutput),
+      await hasResourceCatalogue(),
+    );
+
+    if (!current) {
+      console.error(
+        "Generated Ask corpus and MCP catalogue are stale; run `node scripts/generate-ask-corpus.mts` and commit the result.",
+      );
+      process.exitCode = 1;
+      return;
+    }
+
+    console.log("Ask corpus and MCP catalogue are up to date.");
+    return;
+  }
 
   if (
     !shouldRegenerate(
