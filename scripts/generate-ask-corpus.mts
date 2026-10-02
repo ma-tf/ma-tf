@@ -106,6 +106,11 @@ const contentConfig = join(sourceRoot, "content.config.ts");
 const dependencyRoots = [
   join(sourceRoot, "features/mcp/catalogue.ts"),
   join(sourceRoot, "features/discovery/documents/llms.ts"),
+  join(sourceRoot, "pages/mcp-catalogue.json.ts"),
+  join(sourceRoot, "pages/llms.txt.ts"),
+  join(sourceRoot, "pages/blog/llms.txt.ts"),
+  join(sourceRoot, "pages/developers/llms.txt.ts"),
+  join(sourceRoot, "pages/cv/llms.txt.ts"),
 ];
 const scriptExtensions = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
 

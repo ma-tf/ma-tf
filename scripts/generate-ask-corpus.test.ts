@@ -170,6 +170,16 @@ describe("hashInputPaths", () => {
     expect(paths.some((path) => path.startsWith("src/content/blog/"))).toBe(true);
   });
 
+  it("includes the route wrappers the generator fetches", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toContain("src/pages/mcp-catalogue.json.ts");
+    expect(paths).toContain("src/pages/llms.txt.ts");
+    expect(paths).toContain("src/pages/blog/llms.txt.ts");
+    expect(paths).toContain("src/pages/developers/llms.txt.ts");
+    expect(paths).toContain("src/pages/cv/llms.txt.ts");
+  });
+
   it("includes the Ask tag overrides", async () => {
     expect(await hashInputPaths()).toContain("src/features/ask/ask-tags.json");
   });
