@@ -43,3 +43,12 @@ jobs:
           code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 https://m4t.tf/)
           echo "GET / -> $code"
           test "$code" = "200"
+
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 \
+            -X POST https://m4t.tf/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'MCP-Protocol-Version: 2026-07-28' \
+            -H 'Mcp-Method: server/discover' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"server/discover","_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}}')
+          echo "POST /mcp -> $code"
+          test "$code" = "200"
