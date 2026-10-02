@@ -1,6 +1,11 @@
 import { linkHeader, mcpPath, resources, siteUrl } from "@features/discovery/catalog";
 import { buildApiCatalog } from "@features/discovery/documents/api-catalog";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
+
+vi.mock("@lib/feature-flags", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@lib/feature-flags")>()),
+  askEnabled: true,
+}));
 
 describe("linkHeader", () => {
   it("advertises the MCP capability with rel=mcp and no type", () => {

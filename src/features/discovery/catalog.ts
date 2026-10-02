@@ -1,4 +1,5 @@
 import profile from "@content/profile.json";
+import { askEnabled } from "@lib/feature-flags";
 
 export const siteUrl = "https://m4t.tf";
 
@@ -220,5 +221,5 @@ export const linkHeader = [
   ...resources.flatMap((resource) =>
     resource.rel ? [`<${resource.path}>; rel="${resource.rel}"; type="${resource.type}"`] : [],
   ),
-  mcpLink,
+  ...(askEnabled ? [mcpLink] : []),
 ].join(", ");

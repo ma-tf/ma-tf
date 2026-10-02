@@ -6,7 +6,12 @@ import {
   isAgentSkillArtifactPath,
   skillUrl,
 } from "@features/discovery/documents/agent-skills";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
+
+vi.mock("@lib/feature-flags", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@lib/feature-flags")>()),
+  askEnabled: true,
+}));
 
 async function sha256Hex(value: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));

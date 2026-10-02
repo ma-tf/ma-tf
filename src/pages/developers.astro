@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { mcpPath, resources, siteUrl } from "@features/discovery/catalog";
+import { askEnabled } from "@lib/feature-flags";
 import { StillLifeBackground } from "@components/still-life-background";
 import { askRateLimit } from "@lib/rate-limits";
 ---
@@ -20,10 +21,23 @@ import { askRateLimit } from "@lib/rate-limits";
         <p class="mb-8 break-inside-avoid">
           m4t.tf is machine-readable. Every page is served as HTML or markdown,
           and every resource below is an unauthenticated GET — there are no API
-          keys. An MCP server is also published at <a
-            href={mcpPath}
-            class="underline underline-offset-4 hover:text-foreground/70">/mcp</a
-          >, speaking Streamable HTTP pinned to revision <code>2026-07-28</code>.
+          keys.
+          {
+            askEnabled && (
+              <>
+                {" "}
+                An MCP server is also published at{" "}
+                <a
+                  href={mcpPath}
+                  class="underline underline-offset-4 hover:text-foreground/70"
+                >
+                  /mcp
+                </a>
+                , speaking Streamable HTTP pinned to revision{" "}
+                <code>2026-07-28</code>.
+              </>
+            )
+          }
         </p>
 
         <section class="mb-8 break-inside-avoid flex flex-col gap-3">
@@ -63,10 +77,20 @@ curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
         <section class="mb-8 break-inside-avoid flex flex-col gap-3">
           <h2 class="text-2xl font-semibold">Rate limits</h2>
           <p>
-            Every page and resource is unmetered. <code>POST /ask</code> and the <code>ask</code> tool
-            on <code>POST /mcp</code> are metered at <code>{askRateLimit.quota}</code> requests per
-            minute per client, sharing one budget, and
-            return <code>429 Too Many Requests</code> with <code>Retry-After</code> once past it.
+            Every page and resource is unmetered.
+            {
+              askEnabled && (
+                <>
+                  {" "}
+                  <code>POST /ask</code> and the <code>ask</code> tool on{" "}
+                  <code>POST /mcp</code> are metered at{" "}
+                  <code>{askRateLimit.quota}</code> requests per minute per
+                  client, sharing one budget, and return{" "}
+                  <code>429 Too Many Requests</code> with{" "}
+                  <code>Retry-After</code> once past it.
+                </>
+              )
+            }
           </p>
         </section>
 
@@ -74,12 +98,12 @@ curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
           <h2 class="text-2xl font-semibold">Errors</h2>
           <p>
             A failed request is represented to match your <code>Accept</code> header:
-            an RFC 9457 <code>application/problem+json</code> document, the same
-            problem as markdown, or the HTML error page for a browser navigation.
-            Every error carries a stable <code>code</code> and
+            an RFC 9457 <code>application/problem+json</code> document, the same problem
+            as markdown, or the HTML error page for a browser navigation. Every error
+            carries a stable <code>code</code> and
             <code>resolution</code> alongside <code>detail</code> and
-            <code>documentation_url</code>. Unknown paths return <code>404</code>,
-            non-GET requests to a resource <code>405</code>, unsupported
+            <code>documentation_url</code>. Unknown paths return <code>404</code
+            >, non-GET requests to a resource <code>405</code>, unsupported
             representations <code>406</code>, and sunset resources
             <code>410 Gone</code>.
           </p>
@@ -89,9 +113,10 @@ curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
           <h2 class="text-2xl font-semibold">Versioning</h2>
           <p>
             Send <code>API-Version</code> to declare the compatibility version you
-            expect; the current version is <code>1</code>, also the default when the
-            header is absent. Deprecated resources carry RFC 9745
-            <code>Deprecation</code> and RFC 8594 <code>Sunset</code> headers plus a
+            expect; the current version is <code>1</code>, also the default when
+            the header is absent. Deprecated resources carry RFC 9745
+            <code>Deprecation</code> and RFC 8594 <code>Sunset</code> headers plus
+            a
             <code>Link</code> with <code>rel="deprecation"</code> and
             <code>rel="successor-version"</code>, and keep working until the
             <code>Sunset</code> date.

@@ -2,6 +2,7 @@ import type { DiscoveryResource } from "@features/discovery/catalog";
 
 import { isJsonMediaType, mcpPath, resources, siteUrl } from "@features/discovery/catalog";
 import { problemSchema } from "@features/discovery/problems";
+import { askEnabled } from "@lib/feature-flags";
 import { askRateLimit } from "@lib/rate-limits";
 
 const linksetReferenceSchema = {
@@ -389,7 +390,11 @@ export function buildOpenApiDocument() {
     info: {
       title: "m4t.tf Site Resources",
       version: "0.1.0",
-      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. Requests are not metered, except POST /ask and the ask tool on POST /mcp, which share one budget of ${askRateLimit.quota} requests per minute per client. Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
+      description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. ${
+        askEnabled
+          ? `Requests are not metered, except POST /ask and the ask tool on POST /mcp, which share one budget of ${askRateLimit.quota} requests per minute per client.`
+          : "Requests are not metered."
+      } Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
     },
     components: {
       parameters: {
@@ -484,8 +489,7 @@ export function buildOpenApiDocument() {
           },
         ]),
       ),
-      "/ask": { post: askOperation },
-      [mcpPath]: { post: mcpOperation },
+      ...(askEnabled ? { "/ask": { post: askOperation }, [mcpPath]: { post: mcpOperation } } : {}),
     },
   };
 }

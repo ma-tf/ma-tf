@@ -1,5 +1,6 @@
 import profile from "@content/profile.json";
 import { resources, siteUrl } from "@features/discovery/catalog";
+import { askEnabled } from "@lib/feature-flags";
 
 const mcpServerEntry = {
   identifier: "urn:air:m4t.tf:server:mcp",
@@ -34,7 +35,7 @@ export function buildArd() {
         tags: [...resource.tags],
         representativeQueries: [...resource.representativeQueries],
       })),
-      mcpServerEntry,
+      ...(askEnabled ? [mcpServerEntry] : []),
     ],
   };
 }

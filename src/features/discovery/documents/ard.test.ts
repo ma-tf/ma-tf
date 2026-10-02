@@ -1,6 +1,11 @@
 import { resources, siteUrl } from "@features/discovery/catalog";
 import { buildArd } from "@features/discovery/documents/ard";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
+
+vi.mock("@lib/feature-flags", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@lib/feature-flags")>()),
+  askEnabled: true,
+}));
 
 const manifest = buildArd();
 

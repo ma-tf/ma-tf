@@ -1,6 +1,7 @@
 import profile from "@content/profile.json";
 import { isSectionGuide, resources, sectionGuides, siteUrl } from "@features/discovery/catalog";
 import { staticPages } from "@features/discovery/page-inventory";
+import { askEnabled } from "@lib/feature-flags";
 import { askRateLimit } from "@lib/rate-limits";
 
 type ArchivePost = {
@@ -64,7 +65,9 @@ export function buildLlmsTxt(): string {
     "`/.well-known/oauth-authorization-server`, and",
     "`/.well-known/oauth-protected-resource`. The site has no authentication,",
     "no protected APIs, and no CLI tool or SDK; interact with it over HTTP using",
-    "the retrieval methods below, or over MCP at `POST /mcp`.",
+    ...(askEnabled
+      ? ["the retrieval methods below, or over MCP at `POST /mcp`."]
+      : ["the retrieval methods below."]),
     "",
     "## How To Retrieve Content",
     "",
@@ -82,14 +85,24 @@ export function buildLlmsTxt(): string {
     "path does not exist. The error follows the same negotiation: `Accept: application/json`",
     "returns an RFC 9457 `application/problem+json` document, and `Accept: text/markdown` returns",
     "the error as markdown. The whole interface is described by the OpenAPI 3.1",
-    `document at [openapi.json](${siteUrl}/openapi.json). An MCP server is also`,
-    "published at `POST /mcp`, speaking Streamable HTTP pinned to revision `2026-07-28`.",
+    `document at [openapi.json](${siteUrl}/openapi.json).`,
+    ...(askEnabled
+      ? [
+          "An MCP server is also published at `POST /mcp`, speaking Streamable HTTP pinned",
+          "to revision `2026-07-28`.",
+        ]
+      : []),
     "",
     "## Rate Limits",
     "",
-    "Every page and resource is unmetered. `POST /ask` and the `ask` tool on",
-    `\`POST /mcp\` are metered at ${askRateLimit.quota} requests per minute per client, sharing`,
-    "one budget, and return `429 Too Many Requests` with `Retry-After` past it.",
+    "Every page and resource is unmetered.",
+    ...(askEnabled
+      ? [
+          `\`POST /ask\` and the \`ask\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
+          "per minute per client, sharing one budget, and return `429 Too Many Requests`",
+          "with `Retry-After` past it.",
+        ]
+      : []),
     "",
     "## Identity",
     "",
@@ -193,8 +206,13 @@ export function buildDevelopersLlmsTxt(): string {
     "Request any page with `Accept: text/markdown` to receive it as markdown, or append",
     `\`.md\` to the path, for example \`${siteUrl}/about.md\`. Send`,
     "`Accept: application/json` to a resource to receive its canonical document or a typed",
-    "descriptor. Responses carry `Vary: Accept, Accept-Encoding`. An MCP server is",
-    "published at `POST /mcp`, speaking Streamable HTTP pinned to revision `2026-07-28`.",
+    "descriptor. Responses carry `Vary: Accept, Accept-Encoding`.",
+    ...(askEnabled
+      ? [
+          "An MCP server is published at `POST /mcp`, speaking Streamable HTTP pinned to",
+          "revision `2026-07-28`.",
+        ]
+      : []),
     "",
     "## Errors",
     "",
@@ -211,9 +229,14 @@ export function buildDevelopersLlmsTxt(): string {
     "",
     "## Rate Limits",
     "",
-    "Every page and resource is unmetered. `POST /ask` and the `ask` tool on",
-    `\`POST /mcp\` are metered at ${askRateLimit.quota} requests per minute per client, sharing`,
-    "one budget, and return `429 Too Many Requests` with `Retry-After` past it.",
+    "Every page and resource is unmetered.",
+    ...(askEnabled
+      ? [
+          `\`POST /ask\` and the \`ask\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
+          "per minute per client, sharing one budget, and return `429 Too Many Requests`",
+          "with `Retry-After` past it.",
+        ]
+      : []),
     "",
   ].join("\n");
 }

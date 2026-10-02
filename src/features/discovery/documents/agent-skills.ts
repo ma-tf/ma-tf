@@ -1,4 +1,5 @@
 import profile from "@content/profile.json";
+import { askEnabled } from "@lib/feature-flags";
 import { askRateLimit } from "@lib/rate-limits";
 
 export const agentSkillsSchemaUrl = "https://schemas.agentskills.io/discovery/0.2.0/schema.json";
@@ -51,10 +52,14 @@ const skills: readonly AgentSkill[] = [
     body: [
       "# Discover site resources",
       "",
-      "m4t.tf is machine-readable. Every resource is an unauthenticated GET and",
-      "requests are not metered, except `POST /ask` and the `ask` tool on `POST /mcp`,",
-      `which share one budget of ${askRateLimit.quota} requests per minute per client. Send`,
-      "`Accept: application/json` to any resource to receive it as JSON: the canonical",
+      "m4t.tf is machine-readable. Every resource is an unauthenticated GET.",
+      ...(askEnabled
+        ? [
+            `Requests are not metered, except \`POST /ask\` and the \`ask\` tool on \`POST /mcp\`, which`,
+            `share one budget of ${askRateLimit.quota} requests per minute per client.`,
+          ]
+        : ["Requests are not metered."]),
+      "Send `Accept: application/json` to any resource to receive it as JSON: the canonical",
       "document for JSON resources, and a typed descriptor for the others.",
       "",
       "- `https://m4t.tf/openapi.json` - the OpenAPI 3.1 description of the interface.",
@@ -65,12 +70,16 @@ const skills: readonly AgentSkill[] = [
       "- `https://m4t.tf/developers/llms.txt` - a scoped guide to the machine-readable surface.",
       "- `https://m4t.tf/rss.xml` - the blog feed.",
       "",
-      "## MCP",
-      "",
-      "An MCP server speaks Streamable HTTP at https://m4t.tf/mcp, pinned to revision",
-      "`2026-07-28`. It exposes the `ask` tool and the site's content, and is advertised",
-      "as the ARD entry `urn:air:m4t.tf:server:mcp`.",
-      "",
+      ...(askEnabled
+        ? [
+            "## MCP",
+            "",
+            "An MCP server speaks Streamable HTTP at https://m4t.tf/mcp, pinned to revision",
+            "`2026-07-28`. It exposes the `ask` tool and the site's content, and is advertised",
+            "as the ARD entry `urn:air:m4t.tf:server:mcp`.",
+            "",
+          ]
+        : []),
       "Every response carries a `Link` header advertising these resources. Errors",
       "follow RFC 9457 and content negotiation, documented at https://m4t.tf/developers.",
     ].join("\n"),

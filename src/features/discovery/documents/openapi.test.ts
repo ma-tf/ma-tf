@@ -1,7 +1,12 @@
 import { isJsonMediaType, resources } from "@features/discovery/catalog";
 import { buildOpenApiDocument } from "@features/discovery/documents/openapi";
 import { validate } from "@readme/openapi-parser";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
+
+vi.mock("@lib/feature-flags", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@lib/feature-flags")>()),
+  askEnabled: true,
+}));
 
 const ERROR_STATUSES = ["404", "405", "406", "500"] as const;
 const PROBLEM_REF = "#/components/schemas/Problem";

@@ -231,6 +231,29 @@ describe("onRequest", () => {
     expect(await response.text()).toBe("");
   });
 
+  it("meters the ask tool when Mcp-Name uses the Base64 sentinel", async () => {
+    const response = await onRequest(
+      buildContext("/mcp", {
+        headers: { "Mcp-Method": "tools/call", "Mcp-Name": "=?base64?YXNr?=" },
+      }),
+      next,
+    );
+
+    expect(enforce).toHaveBeenCalledOnce();
+    expect(response.headers.get("Link")).toBeNull();
+  });
+
+  it("does not meter a different tool sent through the sentinel", async () => {
+    await onRequest(
+      buildContext("/mcp", {
+        headers: { "Mcp-Method": "tools/call", "Mcp-Name": "=?base64?b3RoZXI=?=" },
+      }),
+      next,
+    );
+
+    expect(enforce).not.toHaveBeenCalled();
+  });
+
   it("still rejects an unrepresentable Accept for a non-API path", async () => {
     const response = await onRequest(buildContext("/about", { accept: "text/event-stream" }), next);
 

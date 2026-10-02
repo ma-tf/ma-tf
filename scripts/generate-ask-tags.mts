@@ -172,15 +172,15 @@ if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
 const cdn = process.env.R2_PUBLIC_URL;
 if (!cdn) throw new Error("R2_PUBLIC_URL is not set");
 
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((entry) => typeof entry === "string");
+}
+
 function isTag(value: unknown): value is Tag {
   if (typeof value !== "object" || value === null) return false;
 
   const candidate = value as { short?: unknown; keywords?: unknown };
-  return (
-    typeof candidate.short === "string" &&
-    Array.isArray(candidate.keywords) &&
-    candidate.keywords.every((keyword) => typeof keyword === "string")
-  );
+  return typeof candidate.short === "string" && isStringArray(candidate.keywords);
 }
 
 function hashInput(seed: unknown): string {
@@ -237,6 +237,20 @@ function knowledgeWork(item: KnowledgeItem): WorkItem {
   };
 }
 
+function readTag(text: string): Tag {
+  const parsed: unknown = JSON.parse(text);
+  if (!isTag(parsed)) throw new Error(`Model returned an invalid tag: ${text}`);
+
+  return {
+    short: parsed.short.trim(),
+    keywords: parsed.keywords.map((keyword) => keyword.trim()),
+  };
+}
+
+function readTokens(value: number | undefined): number {
+  return value ?? 0;
+}
+
 async function requestTag(
   client: OpenAI,
   instructions: string,
@@ -252,16 +266,10 @@ async function requestTag(
     },
   });
 
-  const parsed: unknown = JSON.parse(response.output_text);
-  if (!isTag(parsed)) throw new Error(`Model returned an invalid tag: ${response.output_text}`);
-
   return {
-    tag: {
-      short: parsed.short.trim(),
-      keywords: parsed.keywords.map((keyword) => keyword.trim()),
-    },
-    inputTokens: response.usage?.input_tokens ?? 0,
-    outputTokens: response.usage?.output_tokens ?? 0,
+    tag: readTag(response.output_text),
+    inputTokens: readTokens(response.usage?.input_tokens),
+    outputTokens: readTokens(response.usage?.output_tokens),
   };
 }
 

@@ -1,14 +1,46 @@
 import type { APIContext } from "astro";
 
 import { ask } from "@features/ask/ask";
+import corpus from "@features/ask/published-pages.generated.json";
 import { failureResponses } from "@features/ask/response";
+import { agentSkillMarkdown } from "@features/discovery/documents/agent-skills";
+import { buildLlmsTxt } from "@features/discovery/documents/llms";
 import { handleMcp } from "@features/mcp/handle-mcp";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { ALL, POST } from "@/src/pages/mcp";
 
+const collections = vi.hoisted(() => ({
+  blog: Array.from({ length: 11 }, (_, index) => ({
+    body: `# Post ${index + 1}`,
+    data: {
+      slug: `post-${index + 1}`,
+      title: `Post ${index + 1}`,
+      description: `Description ${index + 1}`,
+      publicationDate: new Date(`2026-09-${String(index + 1).padStart(2, "0")}T00:00:00.000Z`),
+      tags: ["testing"],
+      draft: false,
+    },
+  })),
+  vignettes: Array.from({ length: 9 }, (_, index) => ({
+    data: {
+      slug: `vignette-${index + 1}`,
+      id: `Vignette ${index + 1}`,
+      summary: `Summary ${index + 1}`,
+      enabled: index < 7,
+    },
+  })),
+}));
+
 vi.mock("@lib/feature-flags", () => ({ askEnabled: false }));
 vi.mock("@features/ask/ask", () => ({ ask: vi.fn() }));
+vi.mock("astro:content", () => ({
+  getCollection: vi.fn(async (collection: string) => {
+    if (collection === "blog") return collections.blog;
+    if (collection === "vignettes") return collections.vignettes;
+    return [];
+  }),
+}));
 
 const askMock = vi.mocked(ask);
 
@@ -87,6 +119,29 @@ function callBody(args: unknown, overrides: Record<string, unknown> = {}): Recor
   };
 }
 
+function resourcesListBody(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    jsonrpc: "2.0",
+    id: 4,
+    method: "resources/list",
+    params: { _meta: META },
+    ...overrides,
+  };
+}
+
+function resourcesReadBody(
+  uri: string,
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> {
+  return {
+    jsonrpc: "2.0",
+    id: 5,
+    method: "resources/read",
+    params: { uri, _meta: META },
+    ...overrides,
+  };
+}
+
 type ToolListing = {
   name: string;
   title?: string;
@@ -101,6 +156,46 @@ type ToolCallResult = {
   content: { type: string; text: string }[];
   isError?: boolean;
 };
+
+type ResourceListing = {
+  uri: string;
+  name: string;
+  title: string;
+  description: string;
+  mimeType: string;
+  annotations?: { lastModified?: string };
+  size?: unknown;
+  icons?: unknown;
+};
+
+type ResourceReadResult = {
+  contents: { uri: string; mimeType: string; text: string }[];
+  ttlMs?: number;
+  cacheScope?: string;
+};
+
+type ResourcePayload = {
+  result?: ResourceReadResult;
+  error?: { code: number; message: string };
+};
+
+async function listResources(): Promise<ResourceListing[]> {
+  const response = await handleMcp(
+    requestFor(resourcesListBody(), { "Mcp-Method": "resources/list" }),
+  );
+  const payload = (await response.json()) as {
+    result: { resources: ResourceListing[]; ttlMs?: number; cacheScope?: string };
+  };
+
+  return payload.result.resources;
+}
+
+function readRequest(uri: string): Request {
+  return requestFor(resourcesReadBody(uri), {
+    "Mcp-Method": "resources/read",
+    "Mcp-Name": uri,
+  });
+}
 
 describe("handleMcp", () => {
   it("returns the 2026-07-28 discover result", async () => {
@@ -401,5 +496,207 @@ describe("handleMcp", () => {
     await handleMcp(requestFor(callBody({}), { "Mcp-Method": "tools/call", "Mcp-Name": "ask" }));
 
     expect(askMock).not.toHaveBeenCalled();
+  });
+
+  it("lists the 36 resources and omits tags, the aggregate guide and the JSON catalogues", async () => {
+    const resources = await listResources();
+
+    expect(resources).toHaveLength(36);
+    expect(new Set(resources.map((resource) => resource.uri)).size).toBe(36);
+
+    const uris = resources.map((resource) => resource.uri);
+
+    for (const excluded of [
+      "https://m4t.tf/tags/testing",
+      "https://m4t.tf/llms-full.txt",
+      "https://m4t.tf/openapi.json",
+      "https://m4t.tf/.well-known/api-catalog",
+      "https://m4t.tf/.well-known/ard.json",
+      "https://m4t.tf/.well-known/agent-skills/index.json",
+      "https://m4t.tf/rss.xml",
+      "https://m4t.tf/sitemap.xml",
+      "https://m4t.tf/robots.txt",
+    ]) {
+      expect(uris).not.toContain(excluded);
+    }
+  });
+
+  it("shapes each resource entry and annotates posts only", async () => {
+    const resources = await listResources();
+
+    const home = resources.find((resource) => resource.uri === "https://m4t.tf/");
+    const post = resources.find((resource) => resource.uri === "https://m4t.tf/posts/post-1");
+    const about = resources.find((resource) => resource.uri === "https://m4t.tf/about");
+
+    expect(home).toMatchObject({
+      uri: "https://m4t.tf/",
+      name: "home",
+      title: "Home",
+      description: expect.any(String),
+      mimeType: "text/markdown",
+    });
+    expect(home?.annotations).toBeUndefined();
+
+    expect(post).toMatchObject({
+      uri: "https://m4t.tf/posts/post-1",
+      name: "posts/post-1",
+      title: "Post 1",
+      description: "Description 1",
+      mimeType: "text/markdown",
+      annotations: { lastModified: "2026-09-01T00:00:00.000Z" },
+    });
+    expect(post?.size).toBeUndefined();
+    expect(post?.icons).toBeUndefined();
+
+    expect(about?.annotations).toBeUndefined();
+    expect(about?.size).toBeUndefined();
+    expect(about?.icons).toBeUndefined();
+  });
+
+  it("derives stable path-based names for pages, guides and skills", async () => {
+    const resources = await listResources();
+    const names = new Map(resources.map((resource) => [resource.uri, resource.name]));
+
+    expect(names.get("https://m4t.tf/")).toBe("home");
+    expect(names.get("https://m4t.tf/posts/post-1")).toBe("posts/post-1");
+    expect(names.get("https://m4t.tf/blog/llms.txt")).toBe("blog/llms.txt");
+    expect(
+      names.get("https://m4t.tf/.well-known/agent-skills/retrieve-site-content/SKILL.md"),
+    ).toBe("agent-skills/retrieve-site-content");
+  });
+
+  it("carries cache hints on resources/list and resources/read", async () => {
+    const listResponse = await handleMcp(
+      requestFor(resourcesListBody(), { "Mcp-Method": "resources/list" }),
+    );
+    const listPayload = (await listResponse.json()) as {
+      result: { ttlMs?: number; cacheScope?: string };
+    };
+
+    expect(listPayload.result.ttlMs).toBe(3600000);
+    expect(listPayload.result.cacheScope).toBe("public");
+
+    const readResponse = await handleMcp(readRequest("https://m4t.tf/about"));
+    const readPayload = (await readResponse.json()) as ResourcePayload;
+
+    expect(readPayload.result?.ttlMs).toBe(3600000);
+    expect(readPayload.result?.cacheScope).toBe("public");
+  });
+
+  it("reads a Page as its markdown twin", async () => {
+    const uri = "https://m4t.tf/about";
+    const response = await handleMcp(readRequest(uri));
+    const payload = (await response.json()) as ResourcePayload;
+    const page = corpus.pages.find((candidate) => candidate.url === uri);
+
+    expect(response.status).toBe(200);
+    expect(payload.result?.contents).toEqual([
+      { uri, mimeType: "text/markdown", text: page?.content },
+    ]);
+  });
+
+  it("reads a text guide from its builder", async () => {
+    const uri = "https://m4t.tf/llms.txt";
+    const response = await handleMcp(readRequest(uri));
+    const payload = (await response.json()) as ResourcePayload;
+
+    expect(payload.result?.contents).toEqual([
+      { uri, mimeType: "text/markdown", text: buildLlmsTxt() },
+    ]);
+  });
+
+  it("reads an Agent Skill as its SKILL.md markdown", async () => {
+    const uri = "https://m4t.tf/.well-known/agent-skills/retrieve-site-content/SKILL.md";
+    const response = await handleMcp(readRequest(uri));
+    const payload = (await response.json()) as ResourcePayload;
+
+    expect(payload.result?.contents).toEqual([
+      { uri, mimeType: "text/markdown", text: agentSkillMarkdown("retrieve-site-content") },
+    ]);
+  });
+
+  it("answers an unknown resource URI with -32602 and no contents", async () => {
+    const uri = "https://m4t.tf/does-not-exist";
+    const response = await handleMcp(readRequest(uri));
+    const payload = (await response.json()) as ResourcePayload;
+
+    expect(payload.error?.code).toBe(-32602);
+    expect(payload.result).toBeUndefined();
+  });
+
+  it("rejects .md-suffixed and trailing-slash URI variants", async () => {
+    for (const uri of [
+      "https://m4t.tf/about.md",
+      "https://m4t.tf/about/",
+      "https://m4t.tf/blog/llms.txt.md",
+    ]) {
+      const response = await handleMcp(readRequest(uri));
+      const payload = (await response.json()) as ResourcePayload;
+
+      expect(payload.error?.code).toBe(-32602);
+      expect(payload.result).toBeUndefined();
+    }
+  });
+
+  it("answers a missing MCP-Protocol-Version header with -32020", async () => {
+    const request = requestFor(discoverBody());
+    request.headers.delete("MCP-Protocol-Version");
+
+    const response = await handleMcp(request);
+
+    expect(response.status).toBe(400);
+    expect(((await response.json()) as Payload).error?.code).toBe(-32020);
+  });
+
+  it("answers a missing Mcp-Method header with -32020", async () => {
+    const request = requestFor(discoverBody());
+    request.headers.delete("Mcp-Method");
+
+    const response = await handleMcp(request);
+
+    expect(response.status).toBe(400);
+    expect(((await response.json()) as Payload).error?.code).toBe(-32020);
+  });
+
+  it("answers a tools/call without Mcp-Name with -32020", async () => {
+    const response = await handleMcp(
+      requestFor(callBody({ query: { text: "Who is Matt?" } }), { "Mcp-Method": "tools/call" }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(((await response.json()) as Payload).error?.code).toBe(-32020);
+  });
+
+  it("answers a tools/call whose Mcp-Name disagrees with the body with -32020", async () => {
+    const response = await handleMcp(
+      requestFor(callBody({ query: { text: "Who is Matt?" } }), {
+        "Mcp-Method": "tools/call",
+        "Mcp-Name": "other",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(((await response.json()) as Payload).error?.code).toBe(-32020);
+  });
+
+  it("answers a resources/read without Mcp-Name with -32020", async () => {
+    const response = await handleMcp(
+      requestFor(resourcesReadBody("https://m4t.tf/about"), { "Mcp-Method": "resources/read" }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(((await response.json()) as Payload).error?.code).toBe(-32020);
+  });
+
+  it("answers a non-JSON Content-Type with 415", async () => {
+    const response = await handleMcp(requestFor(discoverBody(), { "Content-Type": "text/plain" }));
+
+    expect(response.status).toBe(415);
+  });
+
+  it("answers an oversize body with 413", async () => {
+    const response = await handleMcp(requestFor("x".repeat(8 * 1024 * 1024)));
+
+    expect(response.status).toBe(413);
   });
 });

@@ -5,7 +5,12 @@ import {
   buildDevelopersLlmsTxt,
   buildLlmsTxt,
 } from "@features/discovery/documents/llms";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
+
+vi.mock("@lib/feature-flags", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@lib/feature-flags")>()),
+  askEnabled: true,
+}));
 
 const posts = [
   {
