@@ -1,7 +1,13 @@
 import type { AskPageJudgment, PublishedPage } from "@features/ask/published-page";
 
 import { enrich } from "@lib/wide-event";
-import { noul, TypeSafeClient, type NoulResponse } from "@typesafe-ai/sdk";
+import {
+  APIError,
+  RateLimitError,
+  noul,
+  TypeSafeClient,
+  type NoulResponse,
+} from "@typesafe-ai/sdk";
 import { TYPESAFE_API_KEY } from "astro:env/server";
 
 const PAGE_QUESTION_PREFIX = "page_";
@@ -46,7 +52,20 @@ export async function judgeAskPages(
     },
   };
   const startedAt = Date.now();
-  const response = await client.systemOne(payload, { signal });
+  const response = await client.systemOne(payload, { signal }).catch((error: unknown) => {
+    enrich({
+      ask: {
+        decision_gate: {
+          duration_ms: Date.now() - startedAt,
+          provider: "typesafe",
+          ...(error instanceof APIError && { status: error.status }),
+          ...(error instanceof RateLimitError && { retry_after_ms: error.retryAfterMs }),
+        },
+      },
+    });
+
+    throw error;
+  });
 
   enrich({ ask: { decision_gate: { duration_ms: Date.now() - startedAt } } });
 

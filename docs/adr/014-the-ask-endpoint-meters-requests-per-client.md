@@ -36,9 +36,10 @@ visitor address Cloudflare forwards (`CF-Connecting-IP`) when present, falling
 back to Netlify's connection address and then the first forwarded address,
 because the site is proxied through Cloudflare and Netlify's connection address
 is then a Cloudflare edge, not the visitor. The salt comes from
-`RATE_LIMIT_SALT`; production writes to the global store, every other context to
-the deploy store; and the store uses `consistency: "strong"` because the default
-eventual consistency can lag the 60-second window.
+`RATE_LIMIT_SALT`; a deployed function (one with `DEPLOY_ID` set) writes to the
+global store, local development to the deploy store; and the store uses
+`consistency: "strong"` because the default eventual consistency can lag the
+60-second window.
 
 The counter is best-effort, since Blobs has no conditional write, and the check
 fails open on local development, a missing client IP, a missing salt, or any

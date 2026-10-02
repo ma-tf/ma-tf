@@ -45,10 +45,10 @@ export function clientIp(request: Request): string | undefined {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
 }
 
-function store(limit: RateLimit) {
+export function store(limit: RateLimit) {
   const options = { name: `rate-limit-${limit.name}`, consistency: "strong" } as const;
 
-  return process.env.CONTEXT === "production" ? getStore(options) : getDeployStore(options);
+  return process.env.DEPLOY_ID ? getStore(options) : getDeployStore(options);
 }
 
 export async function enforceRateLimit(

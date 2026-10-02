@@ -1,6 +1,15 @@
-import { advanceWindow, clientIp, clientKey } from "@lib/rate-limit-middleware";
+import { advanceWindow, clientIp, clientKey, store } from "@lib/rate-limit-middleware";
 import { askRateLimit } from "@lib/rate-limits";
-import { describe, expect, it } from "vite-plus/test";
+import { getDeployStore, getStore } from "@netlify/blobs";
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+
+vi.mock("@netlify/blobs", () => ({
+  getStore: vi.fn(),
+  getDeployStore: vi.fn(),
+}));
+
+const getStoreMock = vi.mocked(getStore);
+const getDeployStoreMock = vi.mocked(getDeployStore);
 
 const windowMs = askRateLimit.windowSeconds * 1000;
 const start = 1_000_000;
@@ -94,5 +103,37 @@ describe("clientIp", () => {
 
   it("returns undefined when no address header is present", () => {
     expect(clientIp(new Request("https://m4t.tf/ask"))).toBeUndefined();
+  });
+});
+
+describe("store", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    getStoreMock.mockClear();
+    getDeployStoreMock.mockClear();
+  });
+
+  it("uses the global store for a deployed function", () => {
+    vi.stubEnv("DEPLOY_ID", "deploy-123");
+
+    store(askRateLimit);
+
+    expect(getStoreMock).toHaveBeenCalledWith({
+      name: `rate-limit-${askRateLimit.name}`,
+      consistency: "strong",
+    });
+    expect(getDeployStoreMock).not.toHaveBeenCalled();
+  });
+
+  it("uses the deploy store outside a deploy", () => {
+    vi.stubEnv("DEPLOY_ID", "");
+
+    store(askRateLimit);
+
+    expect(getDeployStoreMock).toHaveBeenCalledWith({
+      name: `rate-limit-${askRateLimit.name}`,
+      consistency: "strong",
+    });
+    expect(getStoreMock).not.toHaveBeenCalled();
   });
 });
