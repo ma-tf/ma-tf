@@ -1,4 +1,4 @@
-import { advanceWindow, clientKey } from "@lib/rate-limit-middleware";
+import { advanceWindow, clientIp, clientKey } from "@lib/rate-limit-middleware";
 import { askRateLimit } from "@lib/rate-limits";
 import { describe, expect, it } from "vite-plus/test";
 
@@ -57,5 +57,42 @@ describe("clientKey", () => {
   it("is stable for one client and different across clients", () => {
     expect(clientKey("203.0.113.7", "salt")).toBe(clientKey("203.0.113.7", "salt"));
     expect(clientKey("203.0.113.7", "salt")).not.toBe(clientKey("203.0.113.8", "salt"));
+  });
+});
+
+describe("clientIp", () => {
+  it("prefers the visitor address Cloudflare forwards", () => {
+    const request = new Request("https://m4t.tf/ask", {
+      headers: {
+        "cf-connecting-ip": "203.0.113.7",
+        "x-nf-client-connection-ip": "198.51.100.9",
+        "x-forwarded-for": "203.0.113.8",
+      },
+    });
+
+    expect(clientIp(request)).toBe("203.0.113.7");
+  });
+
+  it("falls back to the Netlify connection address", () => {
+    const request = new Request("https://m4t.tf/ask", {
+      headers: {
+        "x-nf-client-connection-ip": "198.51.100.9",
+        "x-forwarded-for": "203.0.113.8",
+      },
+    });
+
+    expect(clientIp(request)).toBe("198.51.100.9");
+  });
+
+  it("falls back to the first forwarded address", () => {
+    const request = new Request("https://m4t.tf/ask", {
+      headers: { "x-forwarded-for": " 203.0.113.8 , 10.0.0.1" },
+    });
+
+    expect(clientIp(request)).toBe("203.0.113.8");
+  });
+
+  it("returns undefined when no address header is present", () => {
+    expect(clientIp(new Request("https://m4t.tf/ask"))).toBeUndefined();
   });
 });

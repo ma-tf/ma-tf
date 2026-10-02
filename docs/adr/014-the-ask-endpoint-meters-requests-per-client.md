@@ -31,7 +31,11 @@ limit map, which names the paths metered before routing and holds `/ask`;
 representation negotiation but not from metering.
 
 `src/lib/rate-limit-middleware.ts` enforces it against a Netlify Blobs store keyed by
-`sha256(salt + client IP)`, so no address is persisted. The salt comes from
+`sha256(salt + client IP)`, so no address is persisted. The client IP is the
+visitor address Cloudflare forwards (`CF-Connecting-IP`) when present, falling
+back to Netlify's connection address and then the first forwarded address,
+because the site is proxied through Cloudflare and Netlify's connection address
+is then a Cloudflare edge, not the visitor. The salt comes from
 `RATE_LIMIT_SALT`; production writes to the global store, every other context to
 the deploy store; and the store uses `consistency: "strong"` because the default
 eventual consistency can lag the 60-second window.
@@ -52,9 +56,9 @@ store error.
 
 ### Negative
 
-- Concurrent bursts can undercount, a missing `RATE_LIMIT_SALT` silently
-  disables the limit, and fixed windows admit a boundary burst of up to twice
-  the quota.
+- Concurrent bursts can undercount, a missing `RATE_LIMIT_SALT` disables the
+  limit (a warning is logged), and fixed windows admit a boundary burst of up to
+  twice the quota.
 - The limit is per IP, so it is a cost guard rather than access control.
 - An endpoint that is switched off is metered before its route can answer, so an
   over-limit request gets `429` rather than `404`.

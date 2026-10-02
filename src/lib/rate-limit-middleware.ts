@@ -35,7 +35,10 @@ export function clientKey(ip: string, salt: string): string {
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
 
-function clientIp(request: Request): string | undefined {
+export function clientIp(request: Request): string | undefined {
+  const visitor = request.headers.get("cf-connecting-ip");
+  if (visitor) return visitor.trim();
+
   const direct = request.headers.get("x-nf-client-connection-ip");
   if (direct) return direct;
 
@@ -56,7 +59,16 @@ export async function enforceRateLimit(
 
   const ip = clientIp(request);
   const salt = process.env.RATE_LIMIT_SALT;
-  if (!ip || !salt) return null;
+
+  if (!ip) {
+    console.warn(`Rate limit for ${limit.name} skipped: no client IP`);
+    return null;
+  }
+
+  if (!salt) {
+    console.warn(`Rate limit for ${limit.name} skipped: RATE_LIMIT_SALT is not set`);
+    return null;
+  }
 
   try {
     const blobs = store(limit);
@@ -79,7 +91,9 @@ export async function enforceRateLimit(
     await blobs.setJSON(key, result.entry);
 
     return null;
-  } catch {
+  } catch (error) {
+    console.warn(`Rate limit for ${limit.name} skipped: blob store error`, error);
+
     return null;
   }
 }
