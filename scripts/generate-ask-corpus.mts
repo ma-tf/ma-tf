@@ -4,9 +4,10 @@ import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { createServer } from "node:net";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import ts from "typescript";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const astro = fileURLToPath(new URL("../node_modules/astro/bin/astro.mjs", import.meta.url));
@@ -99,16 +100,106 @@ async function walkFiles(dir: string): Promise<string[]> {
   return nested.flat();
 }
 
-async function hashInputs(): Promise<string> {
-  const hash = createHash("sha256");
-  const walked = (await walkFiles(join(root, "src"))).filter(
-    (path) => path !== output && path !== resourcesOutput,
-  );
-  const files = [
-    ...new Set([...walked, ...hashFileCandidates.map((file) => join(root, file))]),
-  ].sort();
+const sourceRoot = join(root, "src");
+const contentModule = "astro:content";
+const contentConfig = join(sourceRoot, "content.config.ts");
+const dependencyRoots = [
+  join(sourceRoot, "features/mcp/catalogue.ts"),
+  join(sourceRoot, "features/discovery/documents/llms.ts"),
+];
+const scriptExtensions = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
 
-  for (const path of files) {
+function loadCompilerOptions(): ts.CompilerOptions {
+  const config = ts.readConfigFile(join(root, "tsconfig.json"), (path) => ts.sys.readFile(path));
+
+  if (config.error) throw new Error("Could not read tsconfig.json for dependency resolution");
+
+  return ts.parseJsonConfigFileContent(config.config, ts.sys, root).options;
+}
+
+function importSpecifiers(path: string, source: string): string[] {
+  const scriptKind =
+    path.endsWith(".tsx") || path.endsWith(".jsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, scriptKind);
+  const specifiers: string[] = [];
+
+  const visit = (node: ts.Node): void => {
+    if (
+      (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
+      specifiers.push(node.moduleSpecifier.text);
+    } else if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+      const [argument] = node.arguments;
+      if (argument && ts.isStringLiteral(argument)) specifiers.push(argument.text);
+    }
+
+    ts.forEachChild(node, visit);
+  };
+
+  visit(file);
+
+  return specifiers;
+}
+
+function resolveLocalModule(
+  specifier: string,
+  containingFile: string,
+  compilerOptions: ts.CompilerOptions,
+): string | undefined {
+  const resolved = ts.resolveModuleName(specifier, containingFile, compilerOptions, ts.sys)
+    .resolvedModule?.resolvedFileName;
+
+  return resolved?.startsWith(`${sourceRoot}${sep}`) ? resolved : undefined;
+}
+
+async function dependencyInputPaths(): Promise<string[]> {
+  const compilerOptions = loadCompilerOptions();
+  const seen = new Set<string>();
+  const queue = [...dependencyRoots];
+  let includesContent = false;
+
+  while (queue.length > 0) {
+    const path = queue.pop();
+    if (!path || seen.has(path)) continue;
+
+    seen.add(path);
+    if (!scriptExtensions.some((extension) => path.endsWith(extension))) continue;
+
+    for (const specifier of importSpecifiers(path, await readFile(path, "utf8"))) {
+      if (specifier === contentModule) {
+        includesContent = true;
+        continue;
+      }
+
+      const resolved = resolveLocalModule(specifier, path, compilerOptions);
+      if (resolved) queue.push(resolved);
+    }
+  }
+
+  const content = includesContent
+    ? [contentConfig, ...(await walkFiles(join(sourceRoot, "content")))]
+    : [];
+
+  return [
+    ...new Set([
+      ...seen,
+      ...content,
+      tagsFile,
+      ...hashFileCandidates.map((file) => join(root, file)),
+    ]),
+  ].filter((path) => path !== output && path !== resourcesOutput);
+}
+
+export async function hashInputPaths(): Promise<string[]> {
+  return (await dependencyInputPaths()).map((path) => relative(root, path)).sort();
+}
+
+export async function hashInputs(): Promise<string> {
+  const hash = createHash("sha256");
+
+  for (const path of (await dependencyInputPaths()).sort()) {
     hash.update(relative(root, path));
     hash.update("\0");
 

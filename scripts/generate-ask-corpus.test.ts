@@ -4,6 +4,8 @@ import {
   applyAskTags,
   assembleResourceCatalogue,
   type AskTagFile,
+  hashInputPaths,
+  hashInputs,
   isCatalogueCurrent,
   shouldRegenerate,
 } from "@/scripts/generate-ask-corpus.mts";
@@ -146,6 +148,54 @@ describe("shouldRegenerate", () => {
 
   it("skips only when both hashes match and the catalogue is present", () => {
     expect(shouldRegenerate(false, "hash", "hash", "hash", true)).toBe(false);
+  });
+});
+
+describe("hashInputPaths", () => {
+  it("includes the modules that build the generated content", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toContain("src/features/mcp/catalogue.ts");
+    expect(paths).toContain("src/features/discovery/documents/llms.ts");
+    expect(paths).toContain("src/lib/rate-limits.ts");
+    expect(paths).toContain("src/lib/feature-flags.ts");
+    expect(paths).toContain("src/content/profile.json");
+  });
+
+  it("includes content sources and the content configuration", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toContain("src/content.config.ts");
+    expect(paths).toContain("src/content/vignettes.json");
+    expect(paths.some((path) => path.startsWith("src/content/blog/"))).toBe(true);
+  });
+
+  it("includes the Ask tag overrides", async () => {
+    expect(await hashInputPaths()).toContain("src/features/ask/ask-tags.json");
+  });
+
+  it("excludes test files so editing one cannot move the hash", async () => {
+    expect((await hashInputPaths()).filter((path) => path.endsWith(".test.ts"))).toEqual([]);
+  });
+
+  it("excludes modules the generated content does not import", async () => {
+    expect(await hashInputPaths()).not.toContain("src/lib/accept.ts");
+  });
+
+  it("returns a sorted, de-duplicated path set", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toEqual([...new Set(paths)].sort());
+  });
+});
+
+describe("hashInputs", () => {
+  it("is deterministic", async () => {
+    expect(await hashInputs()).toBe(await hashInputs());
+  });
+
+  it("covers guide prose, so changing a guide source moves the hash", async () => {
+    expect(await hashInputPaths()).toContain("src/lib/rate-limits.ts");
   });
 });
 

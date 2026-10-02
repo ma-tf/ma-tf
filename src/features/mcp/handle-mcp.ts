@@ -65,4 +65,4 @@ const createServer: McpServerFactory = async () => {
 
 const handler = createMcpHandler(createServer, { legacy: "reject", responseMode: "json" });
 
-export const handleMcp = handler.fetch;
+export const handleMcp = (request: Request): Promise<Response> => handler.fetch(request);

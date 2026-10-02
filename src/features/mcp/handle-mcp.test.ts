@@ -292,19 +292,6 @@ function readRequest(uri: string): Request {
   });
 }
 
-function consumedRequestFor(
-  body: unknown,
-  headers: Record<string, string> = {},
-): {
-  request: Request;
-  parsedBody: unknown;
-} {
-  const request = requestFor(body, headers);
-  void request.text();
-
-  return { request, parsedBody: body };
-}
-
 describe("handleMcp", () => {
   it("returns the 2026-07-28 discover result", async () => {
     const response = await handleMcp(requestFor(discoverBody()));
@@ -332,24 +319,6 @@ describe("handleMcp", () => {
     });
     expect(payload.result?.serverInfo).toBeUndefined();
     expect(payload.result?.protocolVersion).toBeUndefined();
-  });
-
-  it("serves a request whose body the platform already consumed", async () => {
-    const { request, parsedBody } = consumedRequestFor(discoverBody());
-
-    const response = await handleMcp(request, { parsedBody });
-    const payload = (await response.json()) as Payload;
-
-    expect(response.status).toBe(200);
-    expect(payload.result?.supportedVersions).toEqual(["2026-07-28"]);
-  });
-
-  it("fails a consumed body when no parsed body is supplied", async () => {
-    const { request } = consumedRequestFor(discoverBody());
-
-    const response = await handleMcp(request);
-
-    expect(response.status).not.toBe(200);
   });
 
   it("answers unparsable JSON with -32700 and a null id", async () => {
