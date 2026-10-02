@@ -1,46 +1,141 @@
 import type { APIContext } from "astro";
 
 import { ask } from "@features/ask/ask";
-import corpus from "@features/ask/published-pages.generated.json";
 import { failureResponses } from "@features/ask/response";
-import { agentSkillMarkdown } from "@features/discovery/documents/agent-skills";
-import { buildLlmsTxt } from "@features/discovery/documents/llms";
 import { handleMcp } from "@features/mcp/handle-mcp";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { ALL, POST } from "@/src/pages/mcp";
 
-const collections = vi.hoisted(() => ({
-  blog: Array.from({ length: 11 }, (_, index) => ({
-    body: `# Post ${index + 1}`,
-    data: {
-      slug: `post-${index + 1}`,
-      title: `Post ${index + 1}`,
-      description: `Description ${index + 1}`,
-      publicationDate: new Date(`2026-09-${String(index + 1).padStart(2, "0")}T00:00:00.000Z`),
-      tags: ["testing"],
-      draft: false,
+const generated = vi.hoisted(() => {
+  const staticPages = [
+    {
+      path: "/",
+      name: "home",
+      title: "Home",
+      description: "overview of Matt Fehrenbach and the site",
     },
-  })),
-  vignettes: Array.from({ length: 9 }, (_, index) => ({
-    data: {
-      slug: `vignette-${index + 1}`,
-      id: `Vignette ${index + 1}`,
-      summary: `Summary ${index + 1}`,
-      enabled: index < 7,
+    {
+      path: "/cv",
+      name: "cv",
+      title: "CV",
+      description: "experience, technical strengths, education, and projects",
     },
-  })),
-}));
+    {
+      path: "/about",
+      name: "about",
+      title: "About",
+      description: "background and purpose of the site",
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      title: "Contact",
+      description: "current contact guidance",
+    },
+    { path: "/privacy", name: "privacy", title: "Privacy", description: "initial privacy notice" },
+    {
+      path: "/developers",
+      name: "developers",
+      title: "Developers",
+      description: "machine-readable endpoints, retrieval quickstart, and error shape",
+    },
+    {
+      path: "/blog",
+      name: "blog",
+      title: "Blog",
+      description: "writing about software development, programming, and tools",
+    },
+    {
+      path: "/photography",
+      name: "photography",
+      title: "Photography",
+      description: "photography collections",
+    },
+    {
+      path: "/graphics",
+      name: "graphics",
+      title: "Graphics",
+      description: "graphics and creative coding work",
+    },
+    {
+      path: "/music",
+      name: "music",
+      title: "Music",
+      description: "music-related projects and media",
+    },
+    {
+      path: "/vignettes",
+      name: "vignettes",
+      title: "Vignettes",
+      description: "short-form creative projects",
+    },
+  ].map((page) => ({
+    uri: `https://m4t.tf${page.path}`,
+    name: page.name,
+    title: page.title,
+    description: page.description,
+    mimeType: "text/markdown" as const,
+    text: `# ${page.title}\n`,
+  }));
+
+  const posts = Array.from({ length: 11 }, (_, index) => ({
+    uri: `https://m4t.tf/posts/post-${index + 1}`,
+    name: `posts/post-${index + 1}`,
+    title: `Post ${index + 1}`,
+    description: `Description ${index + 1}`,
+    mimeType: "text/markdown" as const,
+    annotations: { lastModified: `2026-09-${String(index + 1).padStart(2, "0")}T00:00:00.000Z` },
+    text: `# Post ${index + 1}`,
+  }));
+
+  const vignettes = Array.from({ length: 7 }, (_, index) => ({
+    uri: `https://m4t.tf/vignettes/vignette-${index + 1}`,
+    name: `vignettes/vignette-${index + 1}`,
+    title: `Vignette ${index + 1}`,
+    description: `Summary ${index + 1}`,
+    mimeType: "text/markdown" as const,
+    text: `# Vignette ${index + 1}`,
+  }));
+
+  const guides = [
+    { path: "/llms.txt", name: "llms.txt", title: "Agent site guide" },
+    { path: "/blog/llms.txt", name: "blog/llms.txt", title: "Blog section guide" },
+    {
+      path: "/developers/llms.txt",
+      name: "developers/llms.txt",
+      title: "Developers section guide",
+    },
+    { path: "/cv/llms.txt", name: "cv/llms.txt", title: "CV section guide" },
+  ].map((guide) => ({
+    uri: `https://m4t.tf${guide.path}`,
+    name: guide.name,
+    title: guide.title,
+    description: `${guide.title} description`,
+    mimeType: "text/markdown" as const,
+    text: `# ${guide.title}\n`,
+  }));
+
+  const skills = ["retrieve-site-content", "discover-site-resources", "fact-check-matt-f"].map(
+    (name) => ({
+      uri: `https://m4t.tf/.well-known/agent-skills/${name}/SKILL.md`,
+      name: `agent-skills/${name}`,
+      title: name,
+      description: `${name} description`,
+      mimeType: "text/markdown" as const,
+      text: `# ${name}\n`,
+    }),
+  );
+
+  return {
+    sourceHash: "test",
+    resources: [...staticPages, ...posts, ...vignettes, ...guides, ...skills],
+  };
+});
 
 vi.mock("@lib/feature-flags", () => ({ askEnabled: false }));
 vi.mock("@features/ask/ask", () => ({ ask: vi.fn() }));
-vi.mock("astro:content", () => ({
-  getCollection: vi.fn(async (collection: string) => {
-    if (collection === "blog") return collections.blog;
-    if (collection === "vignettes") return collections.vignettes;
-    return [];
-  }),
-}));
+vi.mock("@features/mcp/resources.generated.json", () => ({ default: generated }));
 
 const askMock = vi.mocked(ask);
 
@@ -587,21 +682,20 @@ describe("handleMcp", () => {
     const uri = "https://m4t.tf/about";
     const response = await handleMcp(readRequest(uri));
     const payload = (await response.json()) as ResourcePayload;
-    const page = corpus.pages.find((candidate) => candidate.url === uri);
 
     expect(response.status).toBe(200);
     expect(payload.result?.contents).toEqual([
-      { uri, mimeType: "text/markdown", text: page?.content },
+      { uri, mimeType: "text/markdown", text: "# About\n" },
     ]);
   });
 
-  it("reads a text guide from its builder", async () => {
+  it("reads a text guide", async () => {
     const uri = "https://m4t.tf/llms.txt";
     const response = await handleMcp(readRequest(uri));
     const payload = (await response.json()) as ResourcePayload;
 
     expect(payload.result?.contents).toEqual([
-      { uri, mimeType: "text/markdown", text: buildLlmsTxt() },
+      { uri, mimeType: "text/markdown", text: "# Agent site guide\n" },
     ]);
   });
 
@@ -611,7 +705,7 @@ describe("handleMcp", () => {
     const payload = (await response.json()) as ResourcePayload;
 
     expect(payload.result?.contents).toEqual([
-      { uri, mimeType: "text/markdown", text: agentSkillMarkdown("retrieve-site-content") },
+      { uri, mimeType: "text/markdown", text: "# retrieve-site-content\n" },
     ]);
   });
 

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { applyAskTags, type AskTagFile } from "@/scripts/generate-ask-corpus.mts";
+import {
+  applyAskTags,
+  assembleResourceCatalogue,
+  type AskTagFile,
+  shouldRegenerate,
+} from "@/scripts/generate-ask-corpus.mts";
 
 const pages = [
   { url: "https://m4t.tf/photography", title: "Photography", content: "photo body" },
@@ -72,5 +77,73 @@ describe("applyAskTags", () => {
 
   it("returns the pages unchanged when the tag file is absent", () => {
     expect(applyAskTags(pages, undefined)).toBe(pages);
+  });
+});
+
+const metadata = [
+  {
+    uri: "https://m4t.tf/about",
+    name: "about",
+    title: "About",
+    description: "background and purpose of the site",
+    mimeType: "text/markdown" as const,
+  },
+  {
+    uri: "https://m4t.tf/posts/post-1",
+    name: "posts/post-1",
+    title: "Post 1",
+    description: "Description 1",
+    mimeType: "text/markdown" as const,
+    annotations: { lastModified: "2026-09-01T00:00:00.000Z" },
+  },
+];
+
+describe("assembleResourceCatalogue", () => {
+  it("pairs each resource with its fetched body", () => {
+    const catalogue = assembleResourceCatalogue(
+      "hash",
+      metadata,
+      new Map([
+        ["https://m4t.tf/about", "about body"],
+        ["https://m4t.tf/posts/post-1", "post body"],
+      ]),
+    );
+
+    expect(catalogue.sourceHash).toBe("hash");
+    expect(catalogue.resources).toEqual([
+      { ...metadata[0], text: "about body" },
+      { ...metadata[1], text: "post body" },
+    ]);
+  });
+
+  it("throws when a resource has no fetched body", () => {
+    expect(() =>
+      assembleResourceCatalogue(
+        "hash",
+        metadata,
+        new Map([["https://m4t.tf/about", "about body"]]),
+      ),
+    ).toThrow("No body fetched for https://m4t.tf/posts/post-1");
+  });
+});
+
+describe("shouldRegenerate", () => {
+  it("regenerates when forced", () => {
+    expect(shouldRegenerate(true, "hash", "hash", "hash", true)).toBe(true);
+  });
+
+  it("regenerates when the corpus hash is missing or stale", () => {
+    expect(shouldRegenerate(false, "hash", undefined, "hash", true)).toBe(true);
+    expect(shouldRegenerate(false, "hash", "old", "hash", true)).toBe(true);
+  });
+
+  it("regenerates when the MCP catalogue is missing, invalid or stale", () => {
+    expect(shouldRegenerate(false, "hash", "hash", undefined, true)).toBe(true);
+    expect(shouldRegenerate(false, "hash", "hash", "old", true)).toBe(true);
+    expect(shouldRegenerate(false, "hash", "hash", "hash", false)).toBe(true);
+  });
+
+  it("skips only when both hashes match and the catalogue is present", () => {
+    expect(shouldRegenerate(false, "hash", "hash", "hash", true)).toBe(false);
   });
 });

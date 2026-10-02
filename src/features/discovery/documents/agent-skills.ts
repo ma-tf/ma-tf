@@ -122,6 +122,10 @@ export function agentSkillMarkdown(name: string): string | undefined {
   return skill ? markdownFor(skill) : undefined;
 }
 
+export function agentSkillSummaries(): { name: string; description: string }[] {
+  return skills.map(({ name, description }) => ({ name, description }));
+}
+
 export function skillUrl(name: string): string {
   return `${agentSkillsBasePath}/${name}/SKILL.md`;
 }

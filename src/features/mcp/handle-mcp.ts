@@ -40,7 +40,7 @@ const createServer: McpServerFactory = async () => {
     async (args: AskInput, ctx: ServerContext) => askTool(args, ctx.mcpReq.signal),
   );
 
-  for (const resource of await listResources()) {
+  for (const resource of listResources()) {
     server.registerResource(
       resource.name,
       resource.uri,
@@ -51,7 +51,7 @@ const createServer: McpServerFactory = async () => {
         ...(resource.annotations ? { annotations: resource.annotations } : {}),
       } satisfies ResourceMetadata,
       async (uri) => {
-        const contents = await readResource(uri.href);
+        const contents = readResource(uri.href);
 
         if (!contents) throw new ResourceNotFoundError(uri.href);
 

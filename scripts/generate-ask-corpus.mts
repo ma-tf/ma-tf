@@ -1,3 +1,5 @@
+import type { McpResource } from "@features/mcp/catalogue";
+
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile, readdir, writeFile } from "node:fs/promises";
@@ -11,6 +13,9 @@ const astro = fileURLToPath(new URL("../node_modules/astro/bin/astro.mjs", impor
 const tagsFile = fileURLToPath(new URL("../src/features/ask/ask-tags.json", import.meta.url));
 const output = fileURLToPath(
   new URL("../src/features/ask/published-pages.generated.json", import.meta.url),
+);
+const resourcesOutput = fileURLToPath(
+  new URL("../src/features/mcp/resources.generated.json", import.meta.url),
 );
 const host = "127.0.0.1";
 
@@ -42,6 +47,40 @@ type CorpusPage = {
   content: string;
 };
 
+export type ResourceCatalogue = {
+  sourceHash: string;
+  resources: (McpResource & { text: string })[];
+};
+
+export function assembleResourceCatalogue(
+  sourceHash: string,
+  resources: McpResource[],
+  bodies: ReadonlyMap<string, string>,
+): ResourceCatalogue {
+  return {
+    sourceHash,
+    resources: resources.map((resource) => {
+      const text = bodies.get(resource.uri);
+
+      if (text === undefined) throw new Error(`No body fetched for ${resource.uri}`);
+
+      return { ...resource, text };
+    }),
+  };
+}
+
+export function shouldRegenerate(
+  forced: boolean,
+  sourceHash: string,
+  storedCorpusHash: string | undefined,
+  storedResourcesHash: string | undefined,
+  hasResources: boolean,
+): boolean {
+  return (
+    forced || storedCorpusHash !== sourceHash || storedResourcesHash !== sourceHash || !hasResources
+  );
+}
+
 function renderEnvKeys(): string[] {
   const keys = new Set(hashEnvKeys);
 
@@ -71,7 +110,7 @@ async function hashInputs(): Promise<string> {
     await Promise.all(["src", "scripts"].map((dir) => walkFiles(join(root, dir))))
   ).flat();
   const files = [...new Set([...walked, ...hashFileCandidates.map((file) => join(root, file))])]
-    .filter((path) => path !== output)
+    .filter((path) => path !== output && path !== resourcesOutput)
     .sort();
 
   for (const path of files) {
@@ -99,13 +138,25 @@ async function hashInputs(): Promise<string> {
   return hash.digest("hex");
 }
 
-async function readStoredHash(): Promise<string | undefined> {
+async function readStoredHash(path: string): Promise<string | undefined> {
   try {
-    const stored = JSON.parse(await readFile(output, "utf8")) as { sourceHash?: unknown };
+    const stored = JSON.parse(await readFile(path, "utf8")) as { sourceHash?: unknown };
 
     return typeof stored.sourceHash === "string" ? stored.sourceHash : undefined;
   } catch {
     return undefined;
+  }
+}
+
+async function hasResourceCatalogue(): Promise<boolean> {
+  try {
+    const stored = JSON.parse(await readFile(resourcesOutput, "utf8")) as {
+      resources?: unknown;
+    };
+
+    return Array.isArray(stored.resources);
+  } catch {
+    return false;
   }
 }
 
@@ -274,6 +325,57 @@ async function loadAskTags(): Promise<AskTagFile | undefined> {
   }
 }
 
+async function loadCatalogueMetadata(origin: string): Promise<McpResource[]> {
+  const response = await fetch(new URL("/mcp-catalogue.json", origin), {
+    signal: AbortSignal.timeout(30_000),
+  });
+
+  if (!response.ok) throw new Error("Could not read the MCP catalogue metadata");
+
+  const payload = (await response.json()) as { resources?: unknown };
+
+  if (!Array.isArray(payload.resources)) {
+    throw new Error("The MCP catalogue metadata had no resources");
+  }
+
+  return payload.resources as McpResource[];
+}
+
+function resourceHeaders(uri: string): Record<string, string> {
+  return new URL(uri).pathname.endsWith("/llms.txt") ? {} : { Accept: "text/markdown" };
+}
+
+async function loadResourceBody(resource: McpResource, origin: string): Promise<string> {
+  const localUrl = new URL(new URL(resource.uri).pathname, origin);
+  const response = await fetch(localUrl, {
+    headers: resourceHeaders(resource.uri),
+    signal: AbortSignal.timeout(30_000),
+  });
+
+  if (!response.ok) throw new Error(`Could not read the MCP resource ${resource.uri}`);
+
+  return response.text();
+}
+
+async function loadResourceCatalogue(
+  sourceHash: string,
+  origin: string,
+  pages: CorpusPage[],
+): Promise<ResourceCatalogue> {
+  const resources = await loadCatalogueMetadata(origin);
+  const bodies = new Map(pages.map((page) => [page.url, page.content]));
+
+  await Promise.all(
+    resources
+      .filter((resource) => !bodies.has(resource.uri))
+      .map(async (resource) => {
+        bodies.set(resource.uri, await loadResourceBody(resource, origin));
+      }),
+  );
+
+  return assembleResourceCatalogue(sourceHash, resources, bodies);
+}
+
 async function stopServer(server: ReturnType<typeof spawn>): Promise<void> {
   if (hasServerExited(server)) return;
 
@@ -291,7 +393,15 @@ async function main(): Promise<void> {
   const forced = process.argv.includes("--force") || process.env.ASK_CORPUS_FORCE === "1";
   const sourceHash = await hashInputs();
 
-  if (!forced && (await readStoredHash()) === sourceHash) {
+  if (
+    !shouldRegenerate(
+      forced,
+      sourceHash,
+      await readStoredHash(output),
+      await readStoredHash(resourcesOutput),
+      await hasResourceCatalogue(),
+    )
+  ) {
     console.log("Ask corpus is up to date; skipping generation.");
     return;
   }
@@ -331,6 +441,10 @@ async function main(): Promise<void> {
 
     await writeFile(output, `${JSON.stringify({ sourceHash, pages: tagged }, null, 2)}\n`);
     console.log(`Generated Ask corpus with ${tagged.length} published pages.`);
+
+    const catalogue = await loadResourceCatalogue(sourceHash, origin, tagged);
+    await writeFile(resourcesOutput, `${JSON.stringify(catalogue, null, 2)}\n`);
+    console.log(`Generated MCP catalogue with ${catalogue.resources.length} resources.`);
   } finally {
     await stopServer(server);
   }
