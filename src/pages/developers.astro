@@ -10,132 +10,135 @@ import { askRateLimit } from "@lib/rate-limits";
   <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
     <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
     <main
-      class="mx-auto flex max-w-6xl flex-col px-8 py-12 text-foreground md:h-dvh"
+      class="mx-auto grid max-w-6xl px-8 py-12 text-foreground md:h-dvh md:grid-cols-2 md:gap-8"
     >
-      <h1 class="mb-6 animate-fade-up text-4xl font-semibold">
-        m4t.tf for developers
-      </h1>
-      <div
-        class="min-h-0 flex-1 animate-fade-up animation-delay-50 text-xs leading-relaxed md:columns-3 md:gap-8"
-      >
-        <p class="mb-8 break-inside-avoid">
-          m4t.tf is machine-readable. Every page is served as HTML or markdown,
-          and every resource below is an unauthenticated GET — there are no API
-          keys.
-          {
-            askEnabled && (
-              <>
-                {" "}
-                An MCP server is also published at{" "}
-                <a
-                  href={mcpPath}
-                  class="underline underline-offset-4 hover:text-foreground/70"
-                >
-                  /mcp
-                </a>
-                , speaking Streamable HTTP pinned to revision{" "}
-                <code>2026-07-28</code>.
-              </>
-            )
-          }
-        </p>
-
-        <section class="mb-8 break-inside-avoid flex flex-col gap-3">
-          <h2 class="text-2xl font-semibold">Resources</h2>
-          <ul class="flex flex-col gap-1.5">
-            {
-              resources.map((resource) => {
-                const mediaType = resource.type.split(";")[0] ?? resource.type;
-
-                return (
-                  <li class="break-inside-avoid">
-                    <a
-                      href={resource.path}
-                      class="underline underline-offset-4 hover:text-foreground/70"
-                    >
-                      {resource.path}
-                    </a>
-                    <span class="text-muted-foreground">
-                      {" "}
-                      — {mediaType} — {resource.title}
-                    </span>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </section>
-
-        <section class="mb-8 break-inside-avoid flex flex-col gap-3">
-          <h2 class="text-2xl font-semibold">Examples</h2>
-          <pre
-            class="overflow-x-auto rounded border border-border bg-muted p-3 text-xs"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv
-curl ${siteUrl}/about.md
-curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
-        </section>
-
-        <section class="mb-8 break-inside-avoid flex flex-col gap-3">
-          <h2 class="text-2xl font-semibold">Rate limits</h2>
-          <p>
-            Every page and resource is unmetered.
+      <div class="hidden md:block" />
+      <div class="flex min-h-0 flex-col md:overflow-y-auto">
+        <h1 class="mb-6 animate-fade-up text-4xl font-semibold">
+          m4t.tf for developers
+        </h1>
+        <div
+          class="animate-fade-up animation-delay-50 text-xs leading-relaxed"
+        >
+          <p class="mb-8 break-inside-avoid">
+            m4t.tf is machine-readable. Every page is served as HTML or markdown,
+            and every resource below is an unauthenticated GET — there are no API
+            keys.
             {
               askEnabled && (
                 <>
                   {" "}
-                  <code>POST /ask</code> and the <code>ask</code> tool on{" "}
-                  <code>POST /mcp</code> are metered at{" "}
-                  <code>{askRateLimit.quota}</code> requests per minute per
-                  client, sharing one budget, and return{" "}
-                  <code>429 Too Many Requests</code> with{" "}
-                  <code>Retry-After</code> once past it.
+                  An MCP server is also published at{" "}
+                  <a
+                    href={mcpPath}
+                    class="underline underline-offset-4 hover:text-foreground/70"
+                  >
+                    /mcp
+                  </a>
+                  , speaking Streamable HTTP pinned to revision{" "}
+                  <code>2026-07-28</code>.
                 </>
               )
             }
           </p>
-        </section>
 
-        <section class="mb-8 break-inside-avoid flex flex-col gap-3">
-          <h2 class="text-2xl font-semibold">Errors</h2>
-          <p>
-            A failed request is represented to match your <code>Accept</code> header:
-            an RFC 9457 <code>application/problem+json</code> document, the same problem
-            as markdown, or the HTML error page for a browser navigation. Every error
-            carries a stable <code>code</code> and
-            <code>resolution</code> alongside <code>detail</code> and
-            <code>documentation_url</code>. Unknown paths return <code>404</code
-            >, non-GET requests to a resource <code>405</code>, unsupported
-            representations <code>406</code>, and sunset resources
-            <code>410 Gone</code>.
+          <section class="mb-8 break-inside-avoid flex flex-col gap-3">
+            <h2 class="text-2xl font-semibold">Resources</h2>
+            <ul class="flex flex-col gap-1.5">
+              {
+                resources.map((resource) => {
+                  const mediaType = resource.type.split(";")[0] ?? resource.type;
+
+                  return (
+                    <li class="break-inside-avoid">
+                      <a
+                        href={resource.path}
+                        class="underline underline-offset-4 hover:text-foreground/70"
+                      >
+                        {resource.path}
+                      </a>
+                      <span class="text-muted-foreground">
+                        {" "}
+                        — {mediaType} — {resource.title}
+                      </span>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </section>
+
+          <section class="mb-8 break-inside-avoid flex flex-col gap-3">
+            <h2 class="text-2xl font-semibold">Examples</h2>
+            <pre
+              class="overflow-x-auto rounded border border-border bg-muted p-3 text-xs"><code>{`curl -H "Accept: text/markdown" ${siteUrl}/cv
+  curl ${siteUrl}/about.md
+  curl -H "Accept: application/json" ${siteUrl}/llms.txt`}</code></pre>
+          </section>
+
+          <section class="mb-8 break-inside-avoid flex flex-col gap-3">
+            <h2 class="text-2xl font-semibold">Rate limits</h2>
+            <p>
+              Every page and resource is unmetered.
+              {
+                askEnabled && (
+                  <>
+                    {" "}
+                    <code>POST /ask</code> and the <code>ask</code> tool on{" "}
+                    <code>POST /mcp</code> are metered at{" "}
+                    <code>{askRateLimit.quota}</code> requests per minute per
+                    client, sharing one budget, and return{" "}
+                    <code>429 Too Many Requests</code> with{" "}
+                    <code>Retry-After</code> once past it.
+                  </>
+                )
+              }
+            </p>
+          </section>
+
+          <section class="mb-8 break-inside-avoid flex flex-col gap-3">
+            <h2 class="text-2xl font-semibold">Errors</h2>
+            <p>
+              A failed request is represented to match your <code>Accept</code> header:
+              an RFC 9457 <code>application/problem+json</code> document, the same problem
+              as markdown, or the HTML error page for a browser navigation. Every error
+              carries a stable <code>code</code> and
+              <code>resolution</code> alongside <code>detail</code> and
+              <code>documentation_url</code>. Unknown paths return <code>404</code
+              >, non-GET requests to a resource <code>405</code>, unsupported
+              representations <code>406</code>, and sunset resources
+              <code>410 Gone</code>.
+            </p>
+          </section>
+
+          <section class="mb-8 break-inside-avoid flex flex-col gap-3">
+            <h2 class="text-2xl font-semibold">Versioning</h2>
+            <p>
+              Send <code>API-Version</code> to declare the compatibility version you
+              expect; the current version is <code>1</code>, also the default when
+              the header is absent. Deprecated resources carry RFC 9745
+              <code>Deprecation</code> and RFC 8594 <code>Sunset</code> headers plus
+              a
+              <code>Link</code> with <code>rel="deprecation"</code> and
+              <code>rel="successor-version"</code>, and keep working until the
+              <code>Sunset</code> date.
+            </p>
+          </section>
+
+          <p class="mb-8 break-inside-avoid">
+            The OpenAPI 3.1 document at
+            <a
+              href="/openapi.json"
+              class="underline underline-offset-4 hover:text-foreground/70"
+              >/openapi.json</a
+            > describes the whole interface, and
+            <a
+              href="/llms.txt"
+              class="underline underline-offset-4 hover:text-foreground/70"
+              >/llms.txt</a
+            > indexes everything the site publishes.
           </p>
-        </section>
-
-        <section class="mb-8 break-inside-avoid flex flex-col gap-3">
-          <h2 class="text-2xl font-semibold">Versioning</h2>
-          <p>
-            Send <code>API-Version</code> to declare the compatibility version you
-            expect; the current version is <code>1</code>, also the default when
-            the header is absent. Deprecated resources carry RFC 9745
-            <code>Deprecation</code> and RFC 8594 <code>Sunset</code> headers plus
-            a
-            <code>Link</code> with <code>rel="deprecation"</code> and
-            <code>rel="successor-version"</code>, and keep working until the
-            <code>Sunset</code> date.
-          </p>
-        </section>
-
-        <p class="mb-8 break-inside-avoid">
-          The OpenAPI 3.1 document at
-          <a
-            href="/openapi.json"
-            class="underline underline-offset-4 hover:text-foreground/70"
-            >/openapi.json</a
-          > describes the whole interface, and
-          <a
-            href="/llms.txt"
-            class="underline underline-offset-4 hover:text-foreground/70"
-            >/llms.txt</a
-          > indexes everything the site publishes.
-        </p>
+        </div>
       </div>
     </main>
   </div>

@@ -34,7 +34,7 @@ are marked N/A.
 
 ## Photography — `/photography`
 
-- [ ] Styling
+- [x] Styling
 - [ ] Desktop complete
 - [ ] Mobile complete
 - [ ] Index preview complete
@@ -43,7 +43,7 @@ are marked N/A.
 
 - [x] Styling
 - [x] Desktop complete
-- [ ] Mobile complete
+- [x] Mobile complete
 - [ ] Index preview complete
 
 ## Graphics — `/graphics`
@@ -62,8 +62,8 @@ are marked N/A.
 
 ## About — `/about`
 
-- [ ] Styling
-- [ ] Desktop complete
+- [x] Styling
+- [x] Desktop complete
 - [ ] Mobile complete
 - [ ] Index preview complete — N/A
 
@@ -76,8 +76,8 @@ are marked N/A.
 
 ## Contact — `/contact`
 
-- [ ] Styling
-- [ ] Desktop complete
+- [x] Styling
+- [x] Desktop complete
 - [ ] Mobile complete
 - [ ] Index preview complete — N/A
 
@@ -90,8 +90,8 @@ are marked N/A.
 
 ## Privacy — `/privacy`
 
-- [ ] Styling
-- [ ] Desktop complete
+- [x] Styling
+- [x] Desktop complete
 - [ ] Mobile complete
 - [ ] Index preview complete — N/A
 

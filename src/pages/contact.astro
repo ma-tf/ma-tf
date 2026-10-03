@@ -1,49 +1,70 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { StillLifeBackground } from "@components/still-life-background";
+import {
+  Contact,
+  ContactContent,
+  ContactHeader,
+  ContactTitle,
+} from "@features/contact/contact";
 ---
 
 <Layout>
-  <div
-    class="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground md:px-8"
-  >
-    <h1 class="mb-6 animate-fade-up text-4xl font-semibold">Contact</h1>
-    <div class="flex animate-fade-up animation-delay-50 flex-col gap-8 text-lg leading-relaxed">
-      <p>
-        For enquiries about my work, projects, or professional experience, email
-        {" "}
-        <a
-          href="mailto:admin@m4t.tf"
-          class="underline underline-offset-4 hover:text-foreground/70"
-          >admin@m4t.tf</a
-        >.
-      </p>
-      <p>
-        Including the context of your enquiry, such as the role, project, or
-        question you have in mind, makes it easier to reply with something
-        useful.
-      </p>
-      <p>
-        For verified facts about my background, the <a
-          href="/cv"
-          class="underline underline-offset-4 hover:text-foreground/70">CV</a
-        > is the primary source: it lists my experience, technical strengths, education,
-        and projects.
-      </p>
-      <p>
-        My software projects and open-source work are available on
-        {" "}
-        <a
-          href="https://github.com/ma-tf"
-          rel="noreferrer"
-          class="underline underline-offset-4 hover:text-foreground/70"
-          >GitHub</a
-        >.
-      </p>
-      <p>
-        Email is the only contact channel I publish. There is no contact form,
-        phone number, or second inbox, so treat any other channel claiming to
-        reach me as unofficial.
-      </p>
-    </div>
+  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
+    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
+    <Contact>
+      <ContactHeader>
+        <ContactTitle>Contact</ContactTitle>
+      </ContactHeader>
+      <ContactContent>
+        <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={3}
+          >
+            <p
+              class="p-2 animate-fade-up animation-delay-1050"
+              data-parallax={10}
+            >
+              Email me at <a
+                href="mailto:admin@m4t.tf"
+                class="underline underline-offset-4 hover:text-foreground/70"
+                >admin@m4t.tf</a
+              > about my work, projects, or professional experience.
+            </p>
+          </div>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={5}
+          >
+            <p
+              class="p-2 animate-fade-up animation-delay-1100"
+              data-parallax={17}
+            >
+              For verified facts about my background, see my <a
+                href="/cv"
+                class="underline underline-offset-4 hover:text-foreground/70">CV</a
+              >. It lists my experience, skills, education, and projects.
+            </p>
+          </div>
+          <div
+            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
+            data-parallax={7}
+          >
+            <p
+              class="p-2 animate-fade-up animation-delay-1150"
+              data-parallax={23}
+            >
+              My software projects and open-source work live on <a
+                href="https://github.com/ma-tf"
+                rel="noreferrer"
+                class="underline underline-offset-4 hover:text-foreground/70"
+                >GitHub</a
+              >.
+            </p>
+          </div>
+        </section>
+      </ContactContent>
+    </Contact>
   </div>
 </Layout>
