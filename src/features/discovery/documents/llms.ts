@@ -1,5 +1,11 @@
 import profile from "@content/profile.json";
-import { isSectionGuide, resources, sectionGuides, siteUrl } from "@features/discovery/catalog";
+import {
+  isSectionGuide,
+  mcpPath,
+  resources,
+  sectionGuides,
+  siteUrl,
+} from "@features/discovery/catalog";
 import { staticPages } from "@features/discovery/page-inventory";
 import { askEnabled } from "@lib/feature-flags";
 import { askRateLimit } from "@lib/rate-limits";
@@ -65,9 +71,7 @@ export function buildLlmsTxt(): string {
     "`/.well-known/oauth-authorization-server`, and",
     "`/.well-known/oauth-protected-resource`. The site has no authentication,",
     "no protected APIs, and no CLI tool or SDK; interact with it over HTTP using",
-    ...(askEnabled
-      ? ["the retrieval methods below, or over MCP at `POST /mcp`."]
-      : ["the retrieval methods below."]),
+    "the retrieval methods below.",
     "",
     "## How To Retrieve Content",
     "",
@@ -86,12 +90,6 @@ export function buildLlmsTxt(): string {
     "returns an RFC 9457 `application/problem+json` document, and `Accept: text/markdown` returns",
     "the error as markdown. The whole interface is described by the OpenAPI 3.1",
     `document at [openapi.json](${siteUrl}/openapi.json).`,
-    ...(askEnabled
-      ? [
-          "An MCP server is also published at `POST /mcp`, speaking Streamable HTTP pinned",
-          "to revision `2026-07-28`.",
-        ]
-      : []),
     "",
     "## Rate Limits",
     "",
@@ -104,6 +102,15 @@ export function buildLlmsTxt(): string {
         ]
       : []),
     "",
+    ...(askEnabled
+      ? [
+          "## MCP",
+          "",
+          `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
+          `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask\` tool.`,
+          "",
+        ]
+      : []),
     "## Identity",
     "",
     `- Name: ${profile.name}`,
@@ -207,12 +214,6 @@ export function buildDevelopersLlmsTxt(): string {
     `\`.md\` to the path, for example \`${siteUrl}/about.md\`. Send`,
     "`Accept: application/json` to a resource to receive its canonical document or a typed",
     "descriptor. Responses carry `Vary: Accept, Accept-Encoding`.",
-    ...(askEnabled
-      ? [
-          "An MCP server is published at `POST /mcp`, speaking Streamable HTTP pinned to",
-          "revision `2026-07-28`.",
-        ]
-      : []),
     "",
     "## Errors",
     "",
@@ -238,6 +239,15 @@ export function buildDevelopersLlmsTxt(): string {
         ]
       : []),
     "",
+    ...(askEnabled
+      ? [
+          "## MCP",
+          "",
+          `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
+          `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask\` tool.`,
+          "",
+        ]
+      : []),
   ].join("\n");
 }
 

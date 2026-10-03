@@ -1,13 +1,6 @@
 import type { PageEntry } from "@features/discovery/page-inventory";
 
-function escapeXml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
+import { escapeXml } from "@lib/xml";
 
 function withTrailingSlash(path: string): string {
   return path.endsWith("/") ? path : `${path}/`;

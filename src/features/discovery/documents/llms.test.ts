@@ -37,6 +37,15 @@ const posts = [
 
 const occurrences = (haystack: string, needle: string) => haystack.split(needle).length - 1;
 
+const section = (text: string, heading: string) => {
+  const rest = text.slice(text.indexOf(heading) + heading.length);
+  const end = rest.indexOf("\n## ");
+
+  return end === -1 ? rest : rest.slice(0, end);
+};
+
+const serverCardUrl = `${siteUrl}/.well-known/mcp/server-card.json`;
+
 describe("section guides", () => {
   it("registers every guide as a discovery resource", () => {
     for (const guide of sectionGuides) {
@@ -68,7 +77,17 @@ describe("buildLlmsTxt", () => {
   });
 
   it("keeps the MCP endpoint out of the machine-readable list", () => {
-    expect(buildLlmsTxt()).not.toContain(`${siteUrl}/mcp`);
+    const text = buildLlmsTxt();
+
+    expect(section(text, "## Machine-Readable Files")).not.toContain("/mcp");
+    expect(text).toContain(`${siteUrl}/mcp`);
+  });
+
+  it("publishes an MCP section naming the server and its card", () => {
+    const mcp = section(buildLlmsTxt(), "## MCP");
+
+    expect(mcp).toContain(`${siteUrl}/mcp`);
+    expect(mcp).toContain(serverCardUrl);
   });
 });
 
@@ -116,7 +135,17 @@ describe("buildDevelopersLlmsTxt", () => {
   });
 
   it("keeps the MCP endpoint out of the resource list", () => {
-    expect(buildDevelopersLlmsTxt()).not.toContain(`${siteUrl}/mcp`);
+    const text = buildDevelopersLlmsTxt();
+
+    expect(section(text, "## Resources")).not.toContain("/mcp");
+    expect(text).toContain(`${siteUrl}/mcp`);
+  });
+
+  it("publishes an MCP section naming the server and its card", () => {
+    const mcp = section(buildDevelopersLlmsTxt(), "## MCP");
+
+    expect(mcp).toContain(`${siteUrl}/mcp`);
+    expect(mcp).toContain(serverCardUrl);
   });
 });
 

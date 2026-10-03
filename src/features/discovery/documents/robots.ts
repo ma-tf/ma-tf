@@ -1,4 +1,4 @@
-import { siteUrl } from "@features/discovery/catalog";
+import { schemaMapPath, siteUrl } from "@features/discovery/catalog";
 
 const allowedCrawlers = [
   "Amazonbot",
@@ -52,6 +52,7 @@ export function buildRobotsTxt(): string {
     `Agentmap: ${siteUrl}/.well-known/ard.json`,
     "",
     `Sitemap: ${siteUrl}/sitemap.xml`,
+    `schemamap: ${siteUrl}${schemaMapPath}`,
     "",
   ].join("\n");
 }

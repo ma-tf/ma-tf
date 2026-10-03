@@ -5,6 +5,8 @@ export const siteUrl = "https://m4t.tf";
 
 export const mcpPath = "/mcp";
 
+export const schemaMapPath = "/schemamap.xml";
+
 export type DiscoveryResource = {
   path: string;
   type: string;
@@ -123,6 +125,19 @@ const primaryResources: readonly DiscoveryResource[] = [
       "Which pages does m4t.tf publish?",
       "Give me the list of indexable m4t.tf pages.",
       "Where is the m4t.tf sitemap?",
+    ],
+  },
+  {
+    path: schemaMapPath,
+    type: "application/xml",
+    title: "Schema map",
+    description: "The schema.org structured-data feeds the site publishes for agents.",
+    identifier: "urn:air:m4t.tf:index:schemamap",
+    tags: ["schemamap", "schema", "feeds"],
+    representativeQueries: [
+      "Which structured-data feeds does m4t.tf publish?",
+      "Where is the m4t.tf schema map?",
+      "How do I discover m4t.tf content as structured data?",
     ],
   },
   {
