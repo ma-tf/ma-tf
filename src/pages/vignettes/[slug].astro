@@ -17,7 +17,7 @@ const activeVignette = vignettes.find(({ slug }) => slug === Astro.params.slug);
 if (!activeVignette) return new Response(null, { status: 404 });
 ---
 
-<Layout>
+<Layout description={activeVignette.description || activeVignette.summary}>
   <Vignettes>
     <VignettesMobileMenu client:load />
     <VignettesDesktopMenu />

@@ -20,18 +20,69 @@ export const service = {
   contactPath: "/contact",
 } as const;
 
-const breadcrumbSegments: Record<string, { name: string; path: string }> = {
-  about: { name: "About", path: "/about" },
-  blog: { name: "Blog", path: "/blog" },
-  contact: { name: "Contact", path: "/contact" },
-  cv: { name: "CV", path: "/cv" },
-  developers: { name: "Developers", path: "/developers" },
-  graphics: { name: "Graphics", path: "/graphics" },
-  music: { name: "Music", path: "/music" },
-  photography: { name: "Photography", path: "/photography" },
-  posts: { name: "Blog", path: "/blog" },
-  privacy: { name: "Privacy", path: "/privacy" },
-  vignettes: { name: "Vignettes", path: "/vignettes" },
+type PageSection = { name: string; path: string; description: string };
+
+const blogSection: PageSection = {
+  name: "Blog",
+  path: "/blog",
+  description: "Writing about web development, creative coding, and things learned along the way.",
+};
+
+const pageSections: Record<string, PageSection> = {
+  about: {
+    name: "About",
+    path: "/about",
+    description:
+      "About Matt Fehrenbach, a full-stack developer, and the work and interests collected on this site.",
+  },
+  blog: blogSection,
+  contact: {
+    name: "Contact",
+    path: "/contact",
+    description:
+      "How to contact Matt Fehrenbach about his work, projects, or professional experience.",
+  },
+  cv: {
+    name: "CV",
+    path: "/cv",
+    description:
+      "The curriculum vitae of Matt Fehrenbach: professional experience, technical strengths, projects, and education.",
+  },
+  developers: {
+    name: "Developers",
+    path: "/developers",
+    description:
+      "The machine-readable interface of m4t.tf: its discovery resources, API behaviour, errors, and versioning for developers and agents.",
+  },
+  graphics: {
+    name: "Graphics",
+    path: "/graphics",
+    description: "Graphic design and visual work by Matt Fehrenbach.",
+  },
+  music: {
+    name: "Music",
+    path: "/music",
+    description:
+      "Music by Matt Fehrenbach, including DJ recordings and released tracks, with notes on how they were made.",
+  },
+  photography: {
+    name: "Photography",
+    path: "/photography",
+    description:
+      "Photography by Matt Fehrenbach of quiet, overlooked places, shot on film and digital cameras.",
+  },
+  posts: blogSection,
+  privacy: {
+    name: "Privacy",
+    path: "/privacy",
+    description:
+      "How m4t.tf handles privacy: no first-party analytics or tracking, and the third-party services embedded in some pages.",
+  },
+  vignettes: {
+    name: "Vignettes",
+    path: "/vignettes",
+    description: "Short films and video vignettes by Matt Fehrenbach.",
+  },
 };
 
 export function pageNameFor(pathname: string): string | undefined {
@@ -39,7 +90,17 @@ export function pageNameFor(pathname: string): string | undefined {
 
   if (!segment) return "Home";
 
-  return breadcrumbSegments[segment]?.name;
+  return pageSections[segment]?.name;
+}
+
+export function pageDescriptionFor(pathname: string): string | undefined {
+  const [segment] = pathname.split("/").filter(Boolean);
+
+  if (!segment) {
+    return "The personal site of Matt Fehrenbach, a full-stack developer, collecting his software projects, writing, photography, graphics, and music.";
+  }
+
+  return pageSections[segment]?.description;
 }
 
 function breadcrumbList(pathname: string) {
@@ -54,7 +115,7 @@ function breadcrumbList(pathname: string) {
 
   const segments = pathname.split("/").filter(Boolean);
   for (const segment of segments) {
-    const crumb = breadcrumbSegments[segment];
+    const crumb = pageSections[segment];
     if (!crumb) continue;
 
     items.push({

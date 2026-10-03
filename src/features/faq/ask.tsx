@@ -2,6 +2,7 @@ import { Accordion, AccordionContent, AccordionItem } from "@components/ui/accor
 import { AnswerBody } from "@features/faq/answer-body";
 import { AskProvider, useAskUnit } from "@features/faq/ask-context";
 import { FaqAccordionTrigger } from "@features/faq/faq-accordion-trigger";
+import { FaqInput } from "@features/faq/faq-input";
 import { useAsk } from "@features/faq/use-ask";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 import { useId, useRef, useState } from "react";
@@ -24,12 +25,11 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
       }}
       className="flex items-center gap-3 py-4"
     >
-      <input
+      <FaqInput
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
         aria-label="Ask about this site"
         placeholder="Ask about this site…"
-        className="min-w-0 flex-1 text-base outline-none placeholder:text-muted-foreground/70"
       />
       <button
         type="submit"

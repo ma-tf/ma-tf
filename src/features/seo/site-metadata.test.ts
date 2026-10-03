@@ -1,5 +1,11 @@
 import { siteUrl } from "@features/discovery/catalog";
-import { pageNameFor, service, siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
+import {
+  pageDescriptionFor,
+  pageNameFor,
+  service,
+  siteIdentity,
+  siteJsonLd,
+} from "@features/seo/site-metadata";
 import { describe, expect, it } from "vite-plus/test";
 
 type Node = Record<string, unknown>;
@@ -127,5 +133,21 @@ describe("pageNameFor", () => {
   it("names the homepage and returns undefined for unknown paths", () => {
     expect(pageNameFor("/")).toBe("Home");
     expect(pageNameFor("/nothing-here")).toBeUndefined();
+  });
+});
+
+describe("pageDescriptionFor", () => {
+  it("describes the mapped sections, including dynamic children", () => {
+    expect(pageDescriptionFor("/about")).toContain("Matt Fehrenbach");
+    expect(pageDescriptionFor("/developers")).toContain("machine-readable");
+    expect(pageDescriptionFor("/vignettes/bolex")).toBeDefined();
+    expect(pageDescriptionFor("/posts/20260908-1-llms-are-tactical-programmers")).toBe(
+      pageDescriptionFor("/blog"),
+    );
+  });
+
+  it("describes the homepage and returns undefined for unknown paths", () => {
+    expect(pageDescriptionFor("/")).toContain("Matt Fehrenbach");
+    expect(pageDescriptionFor("/nothing-here")).toBeUndefined();
   });
 });

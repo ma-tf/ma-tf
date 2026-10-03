@@ -4,12 +4,19 @@ import Header from "@components/Header.astro";
 import { getCollection } from "astro:content";
 import { mcpPath, resourceByRel } from "@features/discovery/catalog";
 import { askEnabled } from "@lib/feature-flags";
-import { pageNameFor, siteIdentity, siteJsonLd } from "@features/seo/site-metadata";
+import { AskTool } from "@features/faq/ask-tool";
+import {
+	pageDescriptionFor,
+	pageNameFor,
+	siteIdentity,
+	siteJsonLd,
+} from "@features/seo/site-metadata";
 
 import "../styles/global.css";
 
 const {
   title,
+  description,
   hideOverflow = false,
   showHeader = true,
   showFooter = true,
@@ -40,6 +47,8 @@ const pageName = title ?? pageNameFor(Astro.url.pathname);
 const pageTitle = pageName
 	? `${pageName} | ${siteIdentity.name}`
 	: `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
+const pageDescription =
+	description ?? pageDescriptionFor(Astro.url.pathname) ?? siteIdentity.description;
 ---
 
 <script is:inline>
@@ -60,7 +69,7 @@ const pageTitle = pageName
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="color-scheme" content="light dark" />
 		<title>{pageTitle}</title>
-		<meta name="description" content={siteIdentity.description} />
+		<meta name="description" content={pageDescription} />
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="alternate" type="text/markdown" href={markdownUrl} />
 		<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
@@ -69,7 +78,7 @@ const pageTitle = pageName
 		{askEnabled && <link rel="mcp" href={mcpPath} />}
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={pageTitle} />
-		<meta property="og:description" content={siteIdentity.description} />
+		<meta property="og:description" content={pageDescription} />
 		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:image" content={ogImage.href} />
 		<meta
@@ -102,6 +111,7 @@ const pageTitle = pageName
 	>
 		{showHeader && <Header />}
 		<slot />
+		{askEnabled && <AskTool client:only="react" />}
 		{showFooter && <Footer />}
 	</body>
 </html>
