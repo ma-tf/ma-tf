@@ -37,6 +37,12 @@
       "skillPath": "skills/ask-sonner/SKILL.md",
       "computedHash": "23f724e97247b2003ccc479f3a9b3af8e4191a0e133b94ee6b73f8405349687f"
     },
+    "audit": {
+      "source": "ora/webmcp",
+      "sourceType": "github",
+      "skillPath": "skills/audit/SKILL.md",
+      "computedHash": "4cdaaf83d6d8ddc6cb9a753e343f03161e311e39e3cb5094af43cc0b3f13b858"
+    },
     "code-review": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -199,11 +205,23 @@
       "skillPath": "skills/typesafe-ai/SKILL.md",
       "computedHash": "9cd84c5e535dec8dec59917c110f9c00b4a61faadb86b432ec7e41051170af12"
     },
+    "verify": {
+      "source": "ora/webmcp",
+      "sourceType": "github",
+      "skillPath": "skills/verify/SKILL.md",
+      "computedHash": "8ee5f921049da48dec3ca2835728d5db1c4cc0984a3d26ce69e9e5b7da1c2073"
+    },
     "wayfinder": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/wayfinder/SKILL.md",
       "computedHash": "fa790eb4255b13d24d7e33ff4891ccd3d621558cc0ab87ae226777538ea16a8f"
+    },
+    "webmcp": {
+      "source": "ora/webmcp",
+      "sourceType": "github",
+      "skillPath": "skills/webmcp/SKILL.md",
+      "computedHash": "1c811c154140a17cd47ba357f75ab6f324258fc71a60461aff1b6f397a1e05b0"
     }
   }
 }
