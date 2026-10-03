@@ -1,4 +1,4 @@
-import { askSite, type AskAnswer, type AskSource } from "@features/faq/ask-site";
+import { askSite, type AskAnswer } from "@features/faq/ask-site";
 import { useEffect } from "react";
 
 const DESCRIPTION =
@@ -18,9 +18,7 @@ const INPUT_SCHEMA: Record<string, unknown> = {
 
 type AskToolInput = { question?: unknown };
 
-type AskToolResult =
-  | { kind: "answer" | "refusal"; answer: string; sources: AskSource[] }
-  | { error: string };
+type AskToolResult = AskAnswer | { error: string };
 
 type ModelContextTool = {
   name: string;
@@ -31,10 +29,7 @@ type ModelContextTool = {
     openWorldHint: boolean;
     untrustedContentHint: boolean;
   };
-  execute: (
-    input: AskToolInput | undefined,
-    options: { signal: AbortSignal },
-  ) => Promise<AskToolResult>;
+  execute: (input: AskToolInput, options: { signal: AbortSignal }) => Promise<AskToolResult>;
 };
 
 type ModelContext = {
@@ -56,25 +51,19 @@ function makeTool(): ModelContextTool {
       untrustedContentHint: false,
     },
     async execute(input, { signal }) {
-      const question = input?.question;
+      const question = input.question;
 
       if (typeof question !== "string" || question.trim().length === 0) {
         return { error: "Provide a non-empty 'question'." };
       }
 
-      let result: AskAnswer;
-
       try {
-        result = await askSite(question, signal);
+        return await askSite(question, signal);
       } catch {
         signal.throwIfAborted();
 
         return { error: "Couldn't reach the site agent. Try again." };
       }
-
-      return result.kind === "refusal"
-        ? { kind: "refusal", answer: result.text, sources: [] }
-        : { kind: "answer", answer: result.text, sources: result.sources };
     },
   };
 }

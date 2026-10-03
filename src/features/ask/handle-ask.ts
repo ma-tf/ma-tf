@@ -46,11 +46,13 @@ export async function handleAsk(request: Request): Promise<Response> {
 
     const answer = await ask(parsed.query.text, summarize, request.signal);
 
-    enrich({ outcome: answer ? "success" : "no_results" });
+    if (answer === null) {
+      enrich({ outcome: "no_results" });
+      return Response.json(failureResponses.NO_RESULTS, { headers: { Vary: "Accept" } });
+    }
 
-    return Response.json(answer ? answerResponse(answer) : failureResponses.NO_RESULTS, {
-      headers: { Vary: "Accept" },
-    });
+    enrich({ outcome: "success" });
+    return Response.json(answerResponse(answer), { headers: { Vary: "Accept" } });
   };
 
   const respondSse = (): Response => {
