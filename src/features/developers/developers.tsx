@@ -3,7 +3,10 @@ import { cn } from "cn";
 export function Developers({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("grid text-foreground md:grid-cols-10 md:content-start md:gap-y-8", className)}
+      className={cn(
+        "grid text-foreground md:min-h-dvh md:grid-cols-10 md:content-between md:gap-y-8",
+        className,
+      )}
       {...props}
     />
   );
@@ -25,7 +28,10 @@ export function DevelopersTitle({ className, ...props }: React.ComponentProps<"h
   return (
     <h1
       data-parallax={30}
-      className={cn("animate-fade-up text-8xl font-semibold uppercase", className)}
+      className={cn(
+        "animate-fade-in text-8xl font-semibold uppercase animation-delay-2000",
+        className,
+      )}
       {...props}
     />
   );
@@ -36,7 +42,7 @@ export function DevelopersIntro({ className, ...props }: React.ComponentProps<"p
     <p
       data-parallax={60}
       className={cn(
-        "max-h-prose animate-fade-up text-right text-xs leading-relaxed animation-delay-50",
+        "max-h-prose animate-fade-in text-right text-xs leading-relaxed animation-delay-2150",
         className,
       )}
       {...props}
@@ -52,6 +58,9 @@ export function DevelopersContent({ className, ...props }: React.ComponentProps<
 
 export function DevelopersCard({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("max-w-card corner-brackets-4 corner-thickness-1", className)} {...props} />
+    <div
+      className={cn("max-w-card animate-fade-in corner-brackets-4 corner-thickness-1", className)}
+      {...props}
+    />
   );
 }

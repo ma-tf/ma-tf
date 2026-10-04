@@ -1,5 +1,6 @@
 ---
 import { ModeToggle } from "@components/ModeToggle";
+import { MotionSkipButton } from "@components/MotionSkipButton";
 ---
 
 <header class="fixed top-0 z-50 flex h-8 w-full items-center px-2">
@@ -16,5 +17,8 @@ import { ModeToggle } from "@components/ModeToggle";
     />
     <!-- m4t.tf -->
   </a>
-  <ModeToggle client:only="react" />
+  <div class="fixed top-0 right-0 z-50 flex items-center">
+    <MotionSkipButton client:only="react" />
+    <ModeToggle client:only="react" />
+  </div>
 </header>

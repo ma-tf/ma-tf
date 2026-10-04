@@ -44,3 +44,7 @@ Never use `transition-all` — name the specific properties. See
   staggered delays sit 50ms apart. See
   [ADR 011](adr/011-motion-timing-budget.md).
 - Every entrance utility is disabled under `prefers-reduced-motion: reduce`.
+- **A one-shot skip** ends the current page's entrances and reveals: the header
+  button sets `data-motion="skipped"` on `<html>`, which disables those
+  utilities for that page view only, and completes the `/developers` typewriter
+  at once. See [ADR 017](adr/017-motion-skip-control.md).

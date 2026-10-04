@@ -44,18 +44,18 @@ import { askRateLimit } from "@lib/rate-limits";
 
       <DevelopersCard
         data-parallax={30}
-        className="md:col-span-3 md:col-start-7 md:row-start-1 md:self-end"
+        className="md:col-span-3 md:col-start-7 md:row-start-1 md:self-end animation-delay-2300"
       >
         <div
           data-parallax={10}
-          class="relative flex flex-col px-2 pb-2 pt-4 text-xs leading-relaxed animate-fade-up animation-delay-50"
+          class="relative flex flex-col px-2 pb-2 pt-4 text-xs leading-relaxed"
         >
           <h2
-            class="absolute top-0 left-2 -translate-y-1/2 text-xs font-semibold uppercase"
+            class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-2900 text-xs font-semibold uppercase"
           >
             Resources
           </h2>
-          <ul class="flex flex-col gap-1.5">
+          <ul class="flex flex-col gap-1.5 animate-fade-up animation-delay-3500">
             {
               resources.map((resource) => {
                 const mediaType = resource.type.split(";")[0] ?? resource.type;
@@ -83,18 +83,16 @@ import { askRateLimit } from "@lib/rate-limits";
       <DevelopersContent>
         <section
           data-parallax={40}
-          class="text-xs flex items-start gap-8 pb-64 pl-16"
+          class="text-xs flex items-start gap-8"
         >
-          <DevelopersCard data-parallax={10}>
-            <div
-              class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed animate-fade-up animation-delay-50"
-            >
+          <DevelopersCard data-parallax={10} className="animation-delay-2450">
+            <div class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed">
               <h2
-                class="absolute top-0 left-2 -translate-y-1/2 text-xs font-semibold uppercase"
+                class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-3050 text-xs font-semibold uppercase"
               >
                 Rate limits
               </h2>
-              <p>
+              <p class="animate-fade-up animation-delay-3650">
                 Every page and resource is unmetered.
                 {
                   askEnabled && (
@@ -112,16 +110,14 @@ import { askRateLimit } from "@lib/rate-limits";
             </div>
           </DevelopersCard>
 
-          <DevelopersCard data-parallax={15}>
-            <div
-              class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed animate-fade-up animation-delay-50"
-            >
+          <DevelopersCard data-parallax={15} className="animation-delay-2600">
+            <div class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed">
               <h2
-                class="absolute top-0 left-2 -translate-y-1/2 text-xs font-semibold uppercase"
+                class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-3200 text-xs font-semibold uppercase"
               >
                 Errors
               </h2>
-              <p>
+              <p class="animate-fade-up animation-delay-3800">
                 Failures follow your <code>Accept</code> header as{" "}
                 <code>application/problem+json</code>, markdown, or HTML, and
                 carry a stable <code>code</code> and <code>resolution</code>.
@@ -129,16 +125,14 @@ import { askRateLimit } from "@lib/rate-limits";
             </div>
           </DevelopersCard>
 
-          <DevelopersCard data-parallax={20}>
-            <div
-              class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed animate-fade-up animation-delay-50"
-            >
+          <DevelopersCard data-parallax={20} className="animation-delay-2750">
+            <div class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed">
               <h2
-                class="absolute top-0 left-2 -translate-y-1/2 text-xs font-semibold uppercase"
+                class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-3350 text-xs font-semibold uppercase"
               >
                 Versioning
               </h2>
-              <p>
+              <p class="animate-fade-up animation-delay-3950">
                 Send <code>API-Version</code> to declare the compatibility version
                 you expect; the current version is <code>1</code>. Deprecated
                 resources carry <code>Deprecation</code> and{" "}
@@ -150,14 +144,16 @@ import { askRateLimit } from "@lib/rate-limits";
       </DevelopersContent>
 
       <p
-        class="mb-8 text-xs leading-relaxed animate-fade-up animation-delay-50 md:col-span-9 md:col-start-2 md:row-start-3"
+        data-parallax={20}
+        data-typewriter
+        class="mb-8 text-xs leading-relaxed animate-fade-up animation-delay-4100 md:col-span-9 md:col-start-2 md:row-start-3"
       >
-        The OpenAPI 3.1 document at
+        The OpenAPI 3.1 document at{" "}
         <a
           href="/openapi.json"
           class="underline underline-offset-4 hover:text-foreground/70"
           >/openapi.json</a
-        > describes the whole interface, and
+        > describes the whole interface, and{" "}
         <a
           href="/llms.txt"
           class="underline underline-offset-4 hover:text-foreground/70"

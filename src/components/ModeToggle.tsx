@@ -8,16 +8,14 @@ export function ModeToggle() {
   const Icon = current === "dark" ? MoonIcon : SunIcon;
 
   return (
-    <div className="fixed top-0 right-0 z-50">
-      <button
-        type="button"
-        onClick={toggleTheme}
-        aria-label={`Theme: ${current}`}
-        title={`Theme: ${current}`}
-        className={cn("rounded-lg p-2 text-muted-foreground", "hover:text-foreground")}
-      >
-        <Icon size={16} weight="bold" />
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={`Theme: ${current}`}
+      title={`Theme: ${current}`}
+      className={cn("rounded-lg p-2 text-muted-foreground", "hover:text-foreground")}
+    >
+      <Icon size={16} weight="bold" />
+    </button>
   );
 }
