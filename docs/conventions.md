@@ -44,10 +44,12 @@ Never use `transition-all` — name the specific properties. See
   staggered delays sit 50ms apart. See
   [ADR 011](adr/011-motion-timing-budget.md).
 - Every entrance utility is disabled under `prefers-reduced-motion: reduce`.
-- **A one-shot skip** ends the current page's entrances and reveals: the header
-  button sets `data-motion="skipped"` on `<html>`, which disables those
-  utilities for that page view only, and completes the `/developers` typewriter
-  at once. See [ADR 017](adr/017-motion-skip-control.md).
+- **A motion control** skips or replays the current page's entrances. The header
+  button ends a running entrance by setting `data-motion="skipped"` on `<html>`
+  (which disables those utilities for that page view only and completes the
+  `/developers` typewriter at once), then becomes a reset control that forgets
+  the page's `visited-pages` entry and reloads to replay it. See
+  [ADR 019](adr/019-replay-motion-control.md).
 - **Revisits skip entrances.** A path already recorded in `sessionStorage`
   (`visited-pages`) sets `data-motion="revisit"` before paint, disabling the
   page-load entrances while leaving scroll reveals running. See

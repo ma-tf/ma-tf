@@ -71,8 +71,12 @@ without JavaScript and without a flash.
 
 ## Applied To
 
-- `src/components/MotionSkipButton.tsx`
+- `src/components/MotionControlButton.tsx`
 - `src/components/ModeToggle.tsx`
 - `src/components/Header.astro`
 - `src/lib/typewriter.ts`
 - `src/styles/global.css`
+
+> Amended by [ADR 019](019-replay-motion-control.md): the control is no longer
+> one-shot and no longer hides itself. Once the entrance ends, or on a page that
+> is already visited, it becomes a reset control instead.
