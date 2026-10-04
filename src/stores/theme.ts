@@ -9,7 +9,7 @@ function getInitialTheme(): Theme {
   return "light";
 }
 
-export const theme = atom<Theme>(getInitialTheme());
+const theme = atom<Theme>(getInitialTheme());
 
 function applyTheme(next: Theme) {
   theme.set(next);

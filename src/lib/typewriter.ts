@@ -8,29 +8,29 @@ const ELEMENT_NODE = 1;
 export const TYPEWRITER_START_EVENT = "typewriter:start";
 export const TYPEWRITER_END_EVENT = "typewriter:end";
 
+function splitTextNode(node: Node, chars: HTMLElement[]) {
+  const fragment = document.createDocumentFragment();
+
+  for (const character of (node.textContent ?? "").replace(/\s+/g, " ")) {
+    const span = document.createElement("span");
+    span.className = "typewriter-char";
+    span.textContent = character;
+    fragment.append(span);
+    chars.push(span);
+  }
+
+  node.parentNode?.replaceChild(fragment, node);
+}
+
 function split(node: Node, chars: HTMLElement[]) {
-  const current = node;
-
-  if (current.nodeType === TEXT_NODE) {
-    const fragment = document.createDocumentFragment();
-
-    for (const character of (current.textContent ?? "").replace(/\s+/g, " ")) {
-      const span = document.createElement("span");
-      span.className = "typewriter-char";
-      span.textContent = character;
-      fragment.append(span);
-      chars.push(span);
-    }
-
-    current.parentNode?.replaceChild(fragment, current);
+  if (node.nodeType === TEXT_NODE) {
+    splitTextNode(node, chars);
     return;
   }
 
-  if (current.nodeType === ELEMENT_NODE) {
-    for (const child of Array.from(current.childNodes)) {
-      split(child, chars);
-    }
-  }
+  if (node.nodeType !== ELEMENT_NODE) return;
+
+  for (const child of Array.from(node.childNodes)) split(child, chars);
 }
 
 let finishCurrent: (() => void) | null = null;

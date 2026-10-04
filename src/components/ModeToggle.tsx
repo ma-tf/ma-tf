@@ -1,21 +1,18 @@
-import { useStore } from "@nanostores/react";
-import { SunIcon, MoonIcon } from "@phosphor-icons/react";
-import { theme, toggleTheme } from "@stores/theme";
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
+import { toggleTheme } from "@stores/theme";
 import { cn } from "cn";
 
 export function ModeToggle() {
-  const current = useStore(theme);
-  const Icon = current === "dark" ? MoonIcon : SunIcon;
-
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={`Theme: ${current}`}
-      title={`Theme: ${current}`}
+      aria-label="Toggle theme"
+      title="Toggle theme"
       className={cn("rounded-lg p-2 text-muted-foreground", "hover:text-foreground")}
     >
-      <Icon size={16} weight="bold" />
+      <SunIcon size={16} weight="bold" className="block dark:hidden" />
+      <MoonIcon size={16} weight="bold" className="hidden dark:block" />
     </button>
   );
 }

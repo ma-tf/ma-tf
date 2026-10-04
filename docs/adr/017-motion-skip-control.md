@@ -27,6 +27,13 @@ is what `prefers-reduced-motion` is for. The button hides itself once pressed, o
 once every entrance animation on the page has finished, and appears only when
 there is an unfinished entrance to skip.
 
+The button is server-rendered and hydrated with `client:load`, not
+`client:only`. The entrance animations are plain CSS and start at first paint, so
+an island that rendered only on the client would arrive after them; rendering the
+button into the initial HTML keeps it present for the whole entrance. It is
+inert until hydration, which is imperceptible on a page that has an entrance
+worth skipping.
+
 Scope is limited to entrances and reveals. The theme sweep
 ([ADR 010](010-theme-transitions-via-view-transitions.md)), pointer parallax and
 the tag orbit keep their own reduced-motion handling and are not affected by the

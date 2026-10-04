@@ -11,10 +11,10 @@ import { useEffect, useState } from "react";
 const ENTRANCE_SELECTOR = '[class*="animate-fade-up"], .animate-fade-in';
 const FALLBACK_TIMEOUT = 5000;
 
-type Status = "pending" | "visible" | "hidden";
+type Status = "visible" | "hidden";
 
 export function MotionSkipButton() {
-  const [status, setStatus] = useState<Status>("pending");
+  const [status, setStatus] = useState<Status>("visible");
 
   useEffect(() => {
     if (document.documentElement.dataset.motion === "skipped") {

@@ -194,9 +194,6 @@ importers:
       '@mux/mux-video':
         specifier: ^0.31.4
         version: 0.31.4
-      '@nanostores/react':
-        specifier: ^2.0.1
-        version: 2.0.1(nanostores@1.5.4)(react@19.3.0)
       '@netlify/blobs':
         specifier: ^11.1.3
         version: 11.1.3(supports-color@11.0.0)
@@ -1625,13 +1622,6 @@ packages:
 
   '@mux/playback-core@0.35.4':
     resolution: {integrity: sha512-MxetTf+BpobrSWFUdnQSodKdClPbsOcacEug8EqPefv76rxyTQF64l7RTTF1bUdVlvy6ooqsyEKdR2jK+VS5UQ==}
-
-  '@nanostores/react@2.0.1':
-    resolution: {integrity: sha512-txbZTd+7/hnO7FhtF8Pmr+cu0ThdCuCnOyEEh0DsEM2Hp9PfOa5EY4uj3wpZpypSzp5BuqDgf2AxVAKoUIWOFQ==}
-    engines: {node: ^22.0.0 || ^24.0.0 || >=26.0.0}
-    peerDependencies:
-      nanostores: ^1.2.0
-      react: '>=18.0.0'
 
   '@napi-rs/wasm-runtime@1.2.4':
     resolution: {integrity: sha512-AJxoUD2/15ESHbvpcyjU274nsAPLuOtPHCk0vKJM5pj//Fg/B1FXNWjPnXTT9PymCYYiHo4zPj0ZomXBKhoy7g==}
@@ -10213,11 +10203,6 @@ snapshots:
     dependencies:
       hls.js: 1.7.3
       mux-embed: 5.18.1
-
-  '@nanostores/react@2.0.1(nanostores@1.5.4)(react@19.3.0)':
-    dependencies:
-      nanostores: 1.5.4
-      react: 19.3.0
 
   '@napi-rs/wasm-runtime@1.2.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
