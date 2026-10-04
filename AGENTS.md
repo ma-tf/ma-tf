@@ -20,7 +20,7 @@ optional background.
   architectural changes.
 - You MUST consult [docs/testing.md](docs/testing.md) before running tests or
   smoke-testing.
-- You MUST use the domain vocabulary defined in [docs/CONTEXT.md](docs/CONTEXT.md).
+- You MUST use the domain vocabulary defined in [docs/GLOSSARY.md](docs/GLOSSARY.md).
 
 ## Conventions
 

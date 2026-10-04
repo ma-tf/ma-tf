@@ -8,7 +8,7 @@ inner `discoveryMiddleware` is a shim over `src/features/discovery/` (see
 [ADR 008](adr/008-single-discovery-module.md)): it advertises the discovery
 surface with response headers, negotiates the representation of a page or
 discovery resource, converts errors into RFC 9457 problems, and meters API
-paths. The vocabulary below matches [CONTEXT.md](CONTEXT.md).
+paths. The vocabulary below matches [GLOSSARY.md](GLOSSARY.md).
 
 ## Request flow
 

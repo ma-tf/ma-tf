@@ -6,7 +6,7 @@ handles the request — and `src/lib/log.ts` writes it once, as one JSON line, w
 the request finishes. The line is the unit an operator reads.
 `src/lib/wide-event-middleware.ts` is the only place that uses both: it opens the
 event, decides whether the request is worth a line and emits it. The vocabulary
-here matches [CONTEXT.md](CONTEXT.md).
+here matches [GLOSSARY.md](GLOSSARY.md).
 
 ## The wide event
 
