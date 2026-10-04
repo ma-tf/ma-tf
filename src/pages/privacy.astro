@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
 import {
   Privacy,
+  PrivacyCard,
   PrivacyContent,
   PrivacyHeader,
   PrivacyTitle,
@@ -18,10 +19,7 @@ import {
       </PrivacyHeader>
       <PrivacyContent>
         <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={3}
-          >
+          <PrivacyCard data-parallax={3}>
             <div
               class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1050"
               data-parallax={10}
@@ -33,11 +31,8 @@ import {
                 intentionally stored by the site.
               </p>
             </div>
-          </div>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={5}
-          >
+          </PrivacyCard>
+          <PrivacyCard data-parallax={5}>
             <div
               class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1100"
               data-parallax={17}
@@ -49,11 +44,8 @@ import {
                 also loads the Inter font from Google Fonts.
               </p>
             </div>
-          </div>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={7}
-          >
+          </PrivacyCard>
+          <PrivacyCard data-parallax={7}>
             <div
               class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1150"
               data-parallax={23}
@@ -66,7 +58,7 @@ import {
                 >.
               </p>
             </div>
-          </div>
+          </PrivacyCard>
         </section>
       </PrivacyContent>
     </Privacy>

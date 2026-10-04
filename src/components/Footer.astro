@@ -1,5 +1,9 @@
 ---
-const leftLinks = [{ label: "Developers", href: "/developers" }];
+import { BracketsCurlyIcon } from "@phosphor-icons/react";
+
+const leftLinks = [
+  { label: "Developers", href: "/developers", icon: BracketsCurlyIcon },
+];
 
 const rightLinks = [
   { label: "About", href: "/about" },
@@ -20,15 +24,17 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     {
       leftLinks.map((link) => {
         const isCurrent = link.href === currentPath;
+        const Icon = link.icon;
         return (
           <a
             href={link.href}
             aria-current={isCurrent ? "page" : undefined}
             class:list={[
-              "flex items-center px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
+              "flex items-center gap-1 px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
               "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground",
             ]}
           >
+            {Icon && <Icon size={12} aria-hidden="true" />}
             {link.label}
           </a>
         );

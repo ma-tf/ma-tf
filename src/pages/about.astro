@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
 import {
   About,
+  AboutCard,
   AboutContent,
   AboutHeader,
   AboutTitle,
@@ -19,10 +20,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
       </AboutHeader>
       <AboutContent>
         <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={3}
-          >
+          <AboutCard data-parallax={3}>
             <p
               class="p-2 animate-fade-up animation-delay-1050"
               data-parallax={10}
@@ -32,11 +30,8 @@ import { siteIdentity } from "@features/seo/site-metadata";
               experience spans public safety, finance, and intellectual
               property.
             </p>
-          </div>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={5}
-          >
+          </AboutCard>
+          <AboutCard data-parallax={5}>
             <p
               class="p-2 animate-fade-up animation-delay-1100"
               data-parallax={17}
@@ -45,11 +40,8 @@ import { siteIdentity } from "@features/seo/site-metadata";
               software projects and writing, it includes photography, graphics,
               music, and other creative experiments.
             </p>
-          </div>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={7}
-          >
+          </AboutCard>
+          <AboutCard data-parallax={7}>
             <p
               class="p-2 animate-fade-up animation-delay-1150"
               data-parallax={23}
@@ -60,7 +52,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
                 >CV</a
               > page, or browse the projects and creative work from the home page.
             </p>
-          </div>
+          </AboutCard>
         </section>
       </AboutContent>
     </About>

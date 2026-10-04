@@ -44,3 +44,9 @@ export function ContactContent({ children, className, ...props }: React.Componen
     </div>
   );
 }
+
+export function ContactCard({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("max-w-card corner-brackets-4 corner-thickness-1", className)} {...props} />
+  );
+}

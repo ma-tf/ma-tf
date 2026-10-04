@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
 import {
   Contact,
+  ContactCard,
   ContactContent,
   ContactHeader,
   ContactTitle,
@@ -18,10 +19,7 @@ import {
       </ContactHeader>
       <ContactContent>
         <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={3}
-          >
+          <ContactCard data-parallax={3}>
             <p
               class="p-2 animate-fade-up animation-delay-1050"
               data-parallax={10}
@@ -32,11 +30,8 @@ import {
                 >admin@m4t.tf</a
               > about my work, projects, or professional experience.
             </p>
-          </div>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={5}
-          >
+          </ContactCard>
+          <ContactCard data-parallax={5}>
             <p
               class="p-2 animate-fade-up animation-delay-1100"
               data-parallax={17}
@@ -46,11 +41,8 @@ import {
                 class="underline underline-offset-4 hover:text-foreground/70">CV</a
               >. It lists my experience, skills, education, and projects.
             </p>
-          </div>
-          <div
-            class="max-w-[45ch] corner-brackets-4 corner-thickness-1"
-            data-parallax={7}
-          >
+          </ContactCard>
+          <ContactCard data-parallax={7}>
             <p
               class="p-2 animate-fade-up animation-delay-1150"
               data-parallax={23}
@@ -62,7 +54,7 @@ import {
                 >GitHub</a
               >.
             </p>
-          </div>
+          </ContactCard>
         </section>
       </ContactContent>
     </Contact>
