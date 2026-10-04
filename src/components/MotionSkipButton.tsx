@@ -17,7 +17,7 @@ export function MotionSkipButton() {
   const [status, setStatus] = useState<Status>("visible");
 
   useEffect(() => {
-    if (document.documentElement.dataset.motion === "skipped") {
+    if (document.documentElement.dataset.motion) {
       setStatus("hidden");
       return;
     }

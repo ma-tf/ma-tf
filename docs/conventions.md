@@ -48,3 +48,7 @@ Never use `transition-all` — name the specific properties. See
   button sets `data-motion="skipped"` on `<html>`, which disables those
   utilities for that page view only, and completes the `/developers` typewriter
   at once. See [ADR 017](adr/017-motion-skip-control.md).
+- **Revisits skip entrances.** A path already recorded in `sessionStorage`
+  (`visited-pages`) sets `data-motion="revisit"` before paint, disabling the
+  page-load entrances while leaving scroll reveals running. See
+  [ADR 018](adr/018-revisit-entrance-skip.md).

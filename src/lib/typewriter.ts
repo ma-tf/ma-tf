@@ -43,8 +43,15 @@ export function finishTypewriter() {
   finishCurrent?.();
 }
 
+function shouldSkipMotion() {
+  return (
+    window.matchMedia(REDUCED_MOTION_QUERY).matches ||
+    Boolean(document.documentElement.dataset.motion)
+  );
+}
+
 export function startTypewriter() {
-  if (window.matchMedia(REDUCED_MOTION_QUERY).matches) return;
+  if (shouldSkipMotion()) return;
 
   const target = document.querySelector<HTMLElement>(SELECTOR);
   if (!target || target.classList.contains("typewriter-active")) return;

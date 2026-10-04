@@ -57,6 +57,32 @@ const pageDescription =
 	document.documentElement.classList[isDark ? "add" : "remove"]("dark");
 </script>
 
+<script is:inline>
+	const readVisited = () => {
+		try {
+			const stored = JSON.parse(sessionStorage.getItem("visited-pages") || "[]");
+			return Array.isArray(stored) ? stored : [];
+		} catch {
+			return [];
+		}
+	};
+	const writeVisited = (value) => {
+		try {
+			sessionStorage.setItem("visited-pages", JSON.stringify(value));
+		} catch {
+			return false;
+		}
+		return true;
+	};
+	const path = location.pathname.replace(/\/+$/, "") || "/";
+	const visited = readVisited();
+	if (visited.includes(path)) {
+		document.documentElement.dataset.motion = "revisit";
+	} else {
+		writeVisited([...visited, path]);
+	}
+</script>
+
 <script>
 	import { startParallax } from "@lib/parallax";
 	import { startTypewriter } from "@lib/typewriter";

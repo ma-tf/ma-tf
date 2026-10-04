@@ -179,8 +179,12 @@
   }
 }
 
-html[data-motion="skipped"]
-  :is([class*="animate-fade-up"], .animate-fade-in, .animate-fade-in-scroll, .animate-reveal) {
+html:is([data-motion="skipped"], [data-motion="revisit"])
+  :is([class*="animate-fade-up"], .animate-fade-in) {
+  animation: none;
+}
+
+html[data-motion="skipped"] :is(.animate-fade-in-scroll, .animate-reveal) {
   animation: none;
 }
 
