@@ -12,17 +12,28 @@ import { siteIdentity } from "@features/seo/site-metadata";
 ---
 
 <Layout>
-  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
-    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
+  <div
+    class="relative w-full self-center max-w-480 max-md:overflow-visible md:overflow-hidden border-l"
+  >
     <About>
+      <StillLifeBackground
+        baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
+        scrollDistance={3}
+        scrollDrift={0.4}
+        scrollScale={1.15}
+        className="max-md:sticky max-md:top-0 max-md:col-start-1 max-md:row-start-1 max-md:h-dvh"
+      />
       <AboutHeader>
         <AboutTitle>About</AboutTitle>
       </AboutHeader>
       <AboutContent>
-        <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
+        <section
+          class="text-base leading-relaxed flex flex-col gap-12 pb-36 pt-12 md:flex-row md:gap-9 md:pb-64 md:pl-16 md:text-sm"
+          data-parallax={40}
+        >
           <AboutCard data-parallax={3}>
             <p
-              class="p-2 animate-fade-up animation-delay-1050"
+              class="p-2 animate-reveal md:animate-fade-up md:animation-delay-1050"
               data-parallax={10}
             >
               I'm {siteIdentity.name}, a full-stack developer. I started
@@ -33,7 +44,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
           </AboutCard>
           <AboutCard data-parallax={5}>
             <p
-              class="p-2 animate-fade-up animation-delay-1100"
+              class="p-2 animate-reveal md:animate-fade-up md:animation-delay-1100"
               data-parallax={17}
             >
               This site is a record of the things I make and learn. Alongside
@@ -43,7 +54,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
           </AboutCard>
           <AboutCard data-parallax={7}>
             <p
-              class="p-2 animate-fade-up animation-delay-1150"
+              class="p-2 animate-reveal md:animate-fade-up md:animation-delay-1150"
               data-parallax={23}
             >
               You can read about my professional experience on the <a

@@ -390,6 +390,11 @@ html[data-motion="skipped"] :is(.animate-fade-in-scroll, .animate-reveal) {
 }
 
 /* Vertical text */
+@utility title-fit {
+  font-size: min(8rem, 22.5dvh);
+  line-height: 1;
+}
+
 @utility vertical-text {
   writing-mode: vertical-rl;
 }
