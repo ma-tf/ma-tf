@@ -176,6 +176,7 @@ function requestFor(body: unknown, headers: Record<string, string> = {}): Reques
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json, text/event-stream",
       "MCP-Protocol-Version": "2026-07-28",
       "Mcp-Method": "server/discover",
       ...headers,

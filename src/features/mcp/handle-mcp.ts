@@ -68,6 +68,6 @@ const createServer: McpServerFactory = async () => {
   return server;
 };
 
-const handler = createMcpHandler(createServer, { legacy: "reject", responseMode: "json" });
+const handler = createMcpHandler(createServer, { legacy: "stateless", responseMode: "json" });
 
 export const handleMcp = (request: Request): Promise<Response> => handler.fetch(request);

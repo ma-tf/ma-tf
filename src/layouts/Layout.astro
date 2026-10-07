@@ -44,9 +44,12 @@ const faqAnswers =
 		: [];
 const jsonLd = siteJsonLd(ogImage.href, Astro.url.pathname, faqAnswers);
 const pageName = title ?? pageNameFor(Astro.url.pathname);
-const pageTitle = pageName
-	? `${pageName} | ${siteIdentity.name}`
-	: `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
+const pageTitle =
+	Astro.url.pathname === "/"
+		? siteIdentity.homeTitle
+		: pageName
+			? `${pageName} | ${siteIdentity.name}`
+			: `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 const pageDescription =
 	description ?? pageDescriptionFor(Astro.url.pathname) ?? siteIdentity.description;
 ---

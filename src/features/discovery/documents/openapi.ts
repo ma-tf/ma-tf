@@ -376,7 +376,7 @@ const askOperation = {
 const mcpOperation = {
   operationId: "mcp",
   summary: "Invoke the m4t.tf MCP server.",
-  description: `The MCP Streamable HTTP endpoint, pinned to protocol revision 2026-07-28 and advertised as the ARD entry urn:air:m4t.tf:server:mcp. The server describes its own tools and resources over the protocol, so no request or response schema is pinned here. The ask tool shares the POST /ask budget of ${askRateLimit.quota} requests per minute per client.`,
+  description: `The MCP Streamable HTTP endpoint, advertised as the ARD entry urn:air:m4t.tf:server:mcp and served at protocol revision 2026-07-28, with a stateless fallback for 2025-era clients that open with the initialize handshake. The server describes its own tools and resources over the protocol, so no request or response schema is pinned here. The ask tool shares the POST /ask budget of ${askRateLimit.quota} requests per minute per client.`,
   responses: {
     "200": {
       description: "A JSON-RPC response envelope from the MCP server.",

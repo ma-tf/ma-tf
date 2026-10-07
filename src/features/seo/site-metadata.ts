@@ -3,6 +3,7 @@ import { siteUrl } from "@features/discovery/catalog";
 
 export const siteIdentity = {
   name: profile.name,
+  homeTitle: `${profile.name} | Personal Website`,
   description: profile.description,
   jobTitle: profile.title,
   email: profile.email,
@@ -146,6 +147,7 @@ export function siteJsonLd(
         "@id": `${siteUrl}/#website`,
         url: siteUrl,
         name: siteIdentity.name,
+        alternateName: `${siteIdentity.name} Personal Website`,
         description: siteIdentity.description,
         publisher: { "@id": personId },
       },
