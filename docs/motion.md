@@ -120,7 +120,7 @@ image; the props are the scroll config the driver reads back off the frame.
 
 Per-page choreography lives at the call site, not in the component: the numbers
 are passed as props from the page's `.astro` file. `about.astro` is the only
-page that overrides them (`scrollDistance={3}`, `scrollDrift={0.4}`,
+page that overrides them (`scrollDistance={1.5}`, `scrollDrift={0.4}`,
 `scrollScale={1.15}`); `contact.astro`, `privacy.astro` and `developers.astro`
 take the defaults. Layer factors are fixed in the component (`10`, `15`, `20`,
 `27/33`, `27/27`, `35`).

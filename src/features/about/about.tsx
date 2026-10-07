@@ -4,7 +4,7 @@ export function About({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "grid min-h-dvh grid-rows-[300dvh_auto] content-start md:grid-cols-10 md:grid-rows-[1fr_auto] md:content-normal",
+        "grid min-h-dvh grid-rows-[150dvh_auto] content-start md:grid-cols-10 md:grid-rows-[1fr_auto] md:content-normal",
         className,
       )}
       {...props}
