@@ -6,22 +6,33 @@ import {
   PrivacyCard,
   PrivacyContent,
   PrivacyHeader,
+  PrivacyScrollCue,
   PrivacyTitle,
 } from "@features/privacy/privacy";
 ---
 
 <Layout>
-  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
-    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
+  <div class="relative w-full self-center max-w-480 md:overflow-hidden border-l">
     <Privacy>
+      <StillLifeBackground
+        baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
+        scrollDistance={1.5}
+        scrollDrift={0.4}
+        scrollScale={1.15}
+        className="sticky top-0 col-start-1 row-start-1 h-lvh"
+      />
       <PrivacyHeader>
         <PrivacyTitle>Privacy</PrivacyTitle>
+        <PrivacyScrollCue />
       </PrivacyHeader>
       <PrivacyContent>
-        <section class="text-xs flex gap-8 pb-64 pl-16" data-parallax={40}>
-          <PrivacyCard data-parallax={3}>
+        <section
+          class="text-base leading-relaxed flex flex-col gap-12 pb-36 pt-12 md:flex-row md:gap-9 md:pb-64 md:pl-16 md:text-xs"
+          data-parallax={40}
+        >
+          <PrivacyCard className="animate-reveal">
             <div
-              class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1050"
+              class="flex flex-col gap-3 p-2 md:animate-fade-up md:animation-delay-1050"
               data-parallax={10}
             >
               <p>
@@ -32,9 +43,9 @@ import {
               </p>
             </div>
           </PrivacyCard>
-          <PrivacyCard data-parallax={5}>
+          <PrivacyCard className="animate-reveal">
             <div
-              class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1100"
+              class="flex flex-col gap-3 p-2 md:animate-fade-up md:animation-delay-1100"
               data-parallax={17}
             >
               <p>
@@ -45,9 +56,9 @@ import {
               </p>
             </div>
           </PrivacyCard>
-          <PrivacyCard data-parallax={7}>
+          <PrivacyCard className="animate-reveal">
             <div
-              class="flex flex-col gap-3 p-2 animate-fade-up animation-delay-1150"
+              class="flex flex-col gap-3 p-2 md:animate-fade-up md:animation-delay-1150"
               data-parallax={23}
             >
               <p>

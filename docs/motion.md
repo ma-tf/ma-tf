@@ -119,11 +119,10 @@ image; the props are the scroll config the driver reads back off the frame.
 | `scrollScale`    | `data-parallax-scroll-scale`    | 1       | overscan scale on each layer   |
 
 Per-page choreography lives at the call site, not in the component: the numbers
-are passed as props from the page's `.astro` file. `about.astro` is the only
-page that overrides them (`scrollDistance={1.5}`, `scrollDrift={0.4}`,
-`scrollScale={1.15}`); `contact.astro`, `privacy.astro` and `developers.astro`
-take the defaults. Layer factors are fixed in the component (`10`, `15`, `20`,
-`27/33`, `27/27`, `35`).
+are passed as props from the page's `.astro` file. `about.astro`, `contact.astro`
+and `privacy.astro` override them (`scrollDistance={1.5}`, `scrollDrift={0.4}`,
+`scrollScale={1.15}`); `developers.astro` takes the defaults. Layer factors are
+fixed in the component (`10`, `15`, `20`, `27/33`, `27/27`, `35`).
 
 ## Reduced motion and the motion control
 
@@ -172,7 +171,7 @@ Defined in `src/styles/global.css`.
 | `animate-fade-in-scroll` | Scroll reveal              | `animation-timeline: view()`, range `entry 10% … 70%`.                                                                                       |
 | `animation-delay-*`      | Delay token                | Sets `--delay` in ms; consumed by all of the above.                                                                                          |
 | `fade-move-delay-*`      | Delay token                | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                 |
-| `vertical-text`          | Layout                     | `writing-mode: vertical-rl`; used by `AboutTitle`.                                                                                           |
+| `vertical-text`          | Layout                     | `writing-mode: vertical-rl`; used by page titles.                                                                                            |
 | `title-fit`              | Layout                     | `font-size: min(8rem, 22.5dvh); line-height: 1`.                                                                                             |
 | `parallax-active`        | Driver state (on viewport) | Added to `<html>` while a parallax driver animates; sets `will-change: transform` on layers.                                                 |
 
