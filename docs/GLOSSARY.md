@@ -71,3 +71,8 @@ _Avoid_: router, classifier, filter
 The stage of an ask that writes the prose from the content the decision gate
 selected.
 _Avoid_: generator, model, completion
+
+**Ask corpus**:
+The markdown twins of the site's pages, tagged with the invisible Ask tags, that
+the decision gate selects from.
+_Avoid_: page list, index, vector store

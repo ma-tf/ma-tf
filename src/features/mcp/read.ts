@@ -1,3 +1,4 @@
+import type { ResourceArtefact } from "@features/ask/corpus/types";
 import type { McpResource } from "@features/mcp/catalogue";
 
 import generated from "@features/mcp/resources.generated.json";
@@ -8,14 +9,7 @@ export type McpResourceText = {
   text: string;
 };
 
-type GeneratedResource = McpResource & { text: string };
-
-type GeneratedCatalogue = {
-  sourceHash: string;
-  resources: GeneratedResource[];
-};
-
-const catalogue = generated as GeneratedCatalogue;
+const catalogue = generated as ResourceArtefact;
 
 export function listResources(): McpResource[] {
   return catalogue.resources.map((resource) => ({

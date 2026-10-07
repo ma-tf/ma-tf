@@ -1,7 +1,8 @@
+import type { AskTagFile } from "@features/ask/corpus";
+
+import { applyAskTags } from "@features/ask/corpus/tags";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vite-plus/test";
-
-import { applyAskTags, type AskTagFile } from "@/scripts/generate-ask-corpus.mts";
 
 type Corpus = { pages: { url: string; title: string; content: string }[] };
 

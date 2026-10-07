@@ -8,9 +8,9 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "dev": "node scripts/generate-ask-corpus.mts && astro dev",
-    "build": "node scripts/generate-ask-corpus.mts && astro check && astro build",
-    "check:ask-corpus": "node scripts/generate-ask-corpus.mts --check",
+    "dev": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro dev",
+    "build": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro check && astro build",
+    "check:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts --check",
     "generate:ask-tags": "node scripts/generate-ask-tags.mts",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit"
