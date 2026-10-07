@@ -79,26 +79,61 @@
   }
 }
 
-@keyframes reveal {
-  0% {
+@utility animate-reveal {
+  transition:
+    opacity 150ms var(--ease-out-expo),
+    transform 150ms var(--ease-out-expo);
+}
+
+@media (scripting: enabled) {
+  .animate-reveal {
     opacity: 0;
     transform: translateY(16px);
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
-@utility animate-reveal {
-  animation: reveal linear backwards;
-  animation-timeline: view();
-  animation-range-start: entry var(--reveal-offset, 0px);
-  animation-range-end: entry calc(var(--reveal-offset, 0px) + 200px);
+.animate-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+html[data-motion="skipped"] .animate-reveal {
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@keyframes scrollCueFade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scrollCueRise {
+  to {
+    translate: 0 -2rem;
+  }
+}
+
+@utility animate-scroll-cue {
+  animation:
+    scrollCueFade linear both,
+    scrollCueRise linear both;
+  animation-timeline: scroll();
+  animation-range:
+    0 var(--scroll-cue-fade, 10vh),
+    0 var(--scroll-cue-rise, 50vh);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-cue {
     animation: none;
   }
 }
@@ -184,7 +219,7 @@ html:is([data-motion="skipped"], [data-motion="revisit"])
   animation: none;
 }
 
-html[data-motion="skipped"] :is(.animate-fade-in-scroll, .animate-reveal) {
+html[data-motion="skipped"] .animate-fade-in-scroll {
   animation: none;
 }
 

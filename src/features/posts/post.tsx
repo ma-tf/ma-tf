@@ -39,7 +39,7 @@ export function PostDate({ className, ...props }: React.ComponentProps<"time">) 
 
 export function PostContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex animate-reveal flex-col gap-5", className)} {...props}>
+    <div className={cn("flex flex-col gap-5 animate-reveal", className)} {...props}>
       {children}
     </div>
   );

@@ -67,8 +67,7 @@ properties being animated with `transition-colors`, `transition-opacity` or
 
 - **Entrances reuse the shared utilities**, not ad-hoc keyframes.
   `animate-fade-up` (+ `animation-delay-*`) reveals above-the-fold content on
-  page load; `animate-reveal` reveals content as it scrolls into view. Stagger
-  scroll-revealed siblings with an inline `--reveal-offset`.
+  page load; `animate-reveal` fades content in once it scrolls ~15% into view.
 - **Theme changes sweep** through the View Transitions API. See
   [ADR 010](adr/010-theme-transitions-via-view-transitions.md).
 - **Keep motion snappy:** time-based transitions run for at most 150ms, and
