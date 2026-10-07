@@ -14,7 +14,11 @@ type TagOrbitProps = {
 
 export function TagOrbit({ tags, selected }: TagOrbitProps) {
   const rotationRef = useRef(0);
-  const initialRotation = useMemo(() => Number(sessionStorage.getItem(STORAGE_KEY) ?? 0), []);
+  const initialRotation = useMemo(
+    () =>
+      typeof sessionStorage === "undefined" ? 0 : Number(sessionStorage.getItem(STORAGE_KEY) ?? 0),
+    [],
+  );
 
   const navigate = useCallback(
     (tag: Tag | null) => {
