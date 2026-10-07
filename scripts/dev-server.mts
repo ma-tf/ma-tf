@@ -62,12 +62,12 @@ async function loadSitemap(server: Server, url: URL): Promise<string> {
   throw new Error(`Timed out waiting for the Astro sitemap at ${url}`);
 }
 
-async function stopServer(server: Server): Promise<void> {
+export async function stopServer(server: Server, graceMs = 5_000): Promise<void> {
   if (hasExited(server)) return;
 
   const exited = new Promise<void>((resolve) => server.once("exit", () => resolve()));
   server.kill("SIGTERM");
-  await Promise.race([exited, delay(5_000)]);
+  await Promise.race([exited, delay(graceMs)]);
 
   if (hasExited(server)) return;
 

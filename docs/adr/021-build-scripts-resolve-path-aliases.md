@@ -16,10 +16,10 @@ module as a value, so the alias gap had to be closed.
 ## Decision
 
 `scripts/alias-loader.mjs` registers a Node module resolve hook
-(`module.registerHooks`) that maps the project's aliases (`@/`, `@features/`,
-`@lib/`, `@content/`, `@components/`, `@hooks/`, `@layouts/`, `@pages/`,
-`@stores/`, `@data/`, `@ui/`) to file URLs, probing source extensions and
-`index` files. The corpus commands run the generator with
+(`module.registerHooks`) that reads `compilerOptions.paths` from `tsconfig.json`
+at startup and maps each matching specifier to a file URL, choosing the longest
+matching path key and probing source extensions and `index` files. The corpus
+commands run the generator with
 `node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts`.
 
 The loader changes nothing for tests or source: Vitest and `tsc` already resolve
@@ -37,10 +37,11 @@ the same aliases, so a script and the modules it imports now use the aliases ADR
 
 ### Negative
 
-- The alias list in the loader duplicates the tsconfig `paths`, so the two can
-  drift; the loader could read `paths` from `tsconfig.json` to remove that.
+- The loader reads `compilerOptions.paths` from `tsconfig.json` at startup rather
+  than keeping its own list, so there is one source of truth and no alias list to
+  drift; a malformed `tsconfig.json` now stops the aliased scripts as well.
 - `node --import` is now required by every command that runs the generator; the
-  three `package.json` scripts that call it carry the flag, and CI inherits them.
+  `package.json` scripts that call it carry the flag, and CI inherits them.
 - The loader relies on `module.registerHooks`, available only on Node 22.15+ and
   pinned by `.node-version` to 26.
 

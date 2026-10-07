@@ -25,13 +25,13 @@ async function readStoredHash(path: string): Promise<string | undefined> {
   }
 }
 
-async function hasResourceCatalogue(): Promise<boolean> {
+export async function hasResourceCatalogue(path = catalogueOutputPath): Promise<boolean> {
   try {
-    const stored = JSON.parse(await readFile(catalogueOutputPath, "utf8")) as {
+    const stored = JSON.parse(await readFile(path, "utf8")) as {
       resources?: unknown;
     };
 
-    return Array.isArray(stored.resources);
+    return Array.isArray(stored.resources) && stored.resources.length > 0;
   } catch {
     return false;
   }
@@ -157,16 +157,16 @@ async function main(): Promise<void> {
   const forced = process.argv.includes("--force") || process.env.ASK_CORPUS_FORCE === "1";
   const check = process.argv.includes("--check");
   const sourceHash = await corpusSourceHash();
-  const status = corpusStatus(sourceHash, {
+  const stored = {
     corpusHash: await readStoredHash(corpusOutputPath),
     resourcesHash: await readStoredHash(catalogueOutputPath),
     hasResources: await hasResourceCatalogue(),
-  });
+  };
 
   if (check) {
-    if (status.state !== "current") {
+    if (corpusStatus(sourceHash, stored).state !== "current") {
       console.error(
-        "Generated Ask corpus and MCP catalogue are stale; run `node scripts/generate-ask-corpus.mts` and commit the result.",
+        "Generated Ask corpus and MCP catalogue are stale; run `vp run generate:ask-corpus` and commit the result.",
       );
       process.exitCode = 1;
       return;
@@ -176,7 +176,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  if (!forced && status.state === "current") {
+  if (!forced && corpusStatus(sourceHash, stored).state === "current") {
     console.log("Ask corpus is up to date; skipping generation.");
     return;
   }

@@ -63,6 +63,32 @@ describe("buildCorpus", () => {
   });
 });
 
+describe("committed artefacts", () => {
+  it("gives every catalogue resource a non-empty body", () => {
+    expect(catalogue.resources.length).toBeGreaterThan(0);
+
+    for (const resource of catalogue.resources) {
+      expect(typeof resource.text, resource.uri).toBe("string");
+      expect(resource.text.length, resource.uri).toBeGreaterThan(0);
+    }
+  });
+
+  it("reuses a corpus page body for every resource that shares its url", () => {
+    const pagesByUrl = new Map(corpus.pages.map((page) => [page.url, page.content]));
+    const shared = catalogue.resources.filter((resource) => pagesByUrl.has(resource.uri));
+
+    expect(shared.length).toBeGreaterThan(0);
+
+    for (const resource of shared) {
+      expect(resource.text, resource.uri).toBe(pagesByUrl.get(resource.uri));
+    }
+  });
+
+  it("stamps the same source hash into both artefacts", () => {
+    expect(corpus.sourceHash).toBe(catalogue.sourceHash);
+  });
+});
+
 describe("corpusStatus", () => {
   it("is current when both hashes match and the catalogue is present", () => {
     expect(

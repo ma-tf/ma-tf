@@ -11,6 +11,7 @@
     "dev": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro dev",
     "build": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro check && astro build",
     "check:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts --check",
+    "generate:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts",
     "generate:ask-tags": "node scripts/generate-ask-tags.mts",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit"

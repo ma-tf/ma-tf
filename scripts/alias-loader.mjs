@@ -1,23 +1,19 @@
-import { statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 
-const aliases = [
-  ["@/", ""],
-  ["@content/", "src/content/"],
-  ["@features/", "src/features/"],
-  ["@hooks/", "src/hooks/"],
-  ["@layouts/", "src/layouts/"],
-  ["@lib/", "src/lib/"],
-  ["@stores/", "src/stores/"],
-  ["@components/", "src/components/"],
-  ["@pages/", "src/pages/"],
-  ["@data/", "src/data/"],
-  ["@ui/", "src/components/ui/"],
-];
+function stripGlob(value) {
+  return value.endsWith("*") ? value.slice(0, -1) : value;
+}
+
+const tsconfig = JSON.parse(readFileSync(join(root, "tsconfig.json"), "utf8"));
+
+const aliases = Object.entries(tsconfig.compilerOptions.paths)
+  .map(([key, targets]) => [stripGlob(key), stripGlob(targets[0])])
+  .sort(([a], [b]) => b.length - a.length);
 
 const extensions = [".ts", ".tsx", ".mts", ".cts", ".js", ".mjs", ".jsx", ".cjs", ".json"];
 

@@ -29,8 +29,10 @@ A pure module, `src/features/ask/corpus/`, owns the transformation:
   `CorpusArtefact`, `ResourceArtefact`, `CorpusInput`, `CorpusStatus`,
   `StoredCorpus`), importing nothing from `node:` or `astro:`.
 - `tags.ts` — `applyAskTags`, an internal seam tested by its own file.
-- `hash.ts` — the content hash and its TypeScript import walk, an internal seam
-  except for `corpusSourceHash`.
+- `hash.ts` — the content hash and its TypeScript import walk. It publicly
+  exports `corpusSourceHash` and the three artefact paths the shell reads and
+  writes (`askTagsPath`, `corpusOutputPath`, `catalogueOutputPath`), while
+  `hashInputPaths` stays an internal seam kept for its own test.
 
 `buildCorpus(input)` takes `{ pages, resources, tags, sourceHash, fetchBody }`
 and returns `{ corpus, catalogue }`. `fetchBody` is the single impure step,
