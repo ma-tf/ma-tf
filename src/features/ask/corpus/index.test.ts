@@ -1,4 +1,4 @@
-import type { CorpusArtefact, CorpusPage, ResourceArtefact } from "@features/ask/corpus";
+import type { CorpusArtefact, CorpusPage, ResourceArtefact } from "@features/ask/corpus/types";
 
 import { buildCorpus, corpusStatus } from "@features/ask/corpus";
 import { readFileSync } from "node:fs";

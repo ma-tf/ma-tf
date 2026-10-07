@@ -20,9 +20,11 @@ function stylesheetAt(dir, name) {
   );
 }
 
-function styleTarget(entry) {
-  if (typeof entry === "string") return entry;
-  if (!entry || typeof entry !== "object") return null;
+function isRecord(value) {
+  return typeof value === "object" && value !== null;
+}
+
+function firstTarget(entry) {
   for (const key of ["style", "default"]) {
     const target = styleTarget(entry[key]);
     if (target) return target;
@@ -30,26 +32,43 @@ function styleTarget(entry) {
   return null;
 }
 
+function styleTarget(entry) {
+  if (typeof entry === "string") return entry;
+  if (!isRecord(entry)) return null;
+  return firstTarget(entry);
+}
+
+function wildcardKeys(exports) {
+  return Object.keys(exports)
+    .filter((key) => key.startsWith("./") && key.includes("*"))
+    .sort((a, b) => b.length - a.length);
+}
+
+function patternParts(key) {
+  const star = key.indexOf("*");
+  return { prefix: key.slice(2, star), suffix: key.slice(star + 1) };
+}
+
+function patternMatches(subpath, prefix, suffix) {
+  if (subpath.length < prefix.length + suffix.length) return false;
+  if (!subpath.startsWith(prefix)) return false;
+  return subpath.endsWith(suffix);
+}
+
+function patternTarget(exports, key, subpath) {
+  const { prefix, suffix } = patternParts(key);
+  if (!patternMatches(subpath, prefix, suffix)) return null;
+  const target = styleTarget(exports[key]);
+  if (!target) return null;
+  return target.replace("*", subpath.slice(prefix.length, subpath.length - suffix.length));
+}
+
 function exportedStyle(exports, subpath) {
   const exact = styleTarget(exports[`./${subpath}`]);
   if (exact) return exact;
-  const patterns = Object.keys(exports)
-    .filter((key) => key.startsWith("./") && key.includes("*"))
-    .sort((a, b) => b.length - a.length);
-  for (const key of patterns) {
-    const star = key.indexOf("*");
-    const prefix = key.slice(2, star);
-    const suffix = key.slice(star + 1);
-    if (
-      subpath.length < prefix.length + suffix.length ||
-      !subpath.startsWith(prefix) ||
-      !subpath.endsWith(suffix)
-    ) {
-      continue;
-    }
-    const target = styleTarget(exports[key]);
-    if (!target) continue;
-    return target.replace("*", subpath.slice(prefix.length, subpath.length - suffix.length));
+  for (const key of wildcardKeys(exports)) {
+    const target = patternTarget(exports, key, subpath);
+    if (target) return target;
   }
   return null;
 }
@@ -66,38 +85,57 @@ function packageDirectory(base, name) {
   return null;
 }
 
-function resolveStylesheet(base, id) {
-  if (id === "tailwindcss") return resolveStylesheet(base, "tailwindcss/index.css");
-  if (id.startsWith(".") || path.isAbsolute(id)) {
-    return stylesheetAt(path.dirname(path.resolve(base, id)), path.basename(id));
-  }
+function splitPackageId(id) {
   const match = id.match(/^(@[^/]+\/[^/]+|[^/]+)(?:\/(.*))?$/);
   if (!match) return null;
-  const [, name, subpath] = match;
-  const pkgDir = packageDirectory(base, name);
-  if (!pkgDir) return null;
-  let pkg = {};
+  return { name: match[1], subpath: match[2] };
+}
+
+function readPackage(pkgDir) {
   try {
-    pkg = JSON.parse(fs.readFileSync(path.join(pkgDir, "package.json"), "utf-8"));
-  } catch {}
-  const exports = pkg.exports;
-  if (subpath) {
-    const target = exports && typeof exports === "object" ? exportedStyle(exports, subpath) : null;
-    if (target) return existingFile(path.join(pkgDir, target));
-    return stylesheetAt(path.dirname(path.join(pkgDir, subpath)), path.basename(subpath));
+    return JSON.parse(fs.readFileSync(path.join(pkgDir, "package.json"), "utf-8"));
+  } catch {
+    return {};
   }
-  const rootTarget =
-    typeof exports === "string"
-      ? exports
-      : exports && typeof exports === "object"
-        ? styleTarget(exports["."] ?? exports)
-        : null;
-  for (const target of [rootTarget, pkg.style, pkg.main]) {
+}
+
+function rootExportTarget(exports) {
+  if (typeof exports === "string") return exports;
+  if (!isRecord(exports)) return null;
+  return styleTarget(exports["."] ?? exports);
+}
+
+function exportedTarget(pkgDir, exports, subpath) {
+  const target = isRecord(exports) ? exportedStyle(exports, subpath) : null;
+  if (target) return existingFile(path.join(pkgDir, target));
+  return stylesheetAt(path.dirname(path.join(pkgDir, subpath)), path.basename(subpath));
+}
+
+function packageRootStylesheet(pkgDir, pkg) {
+  for (const target of [rootExportTarget(pkg.exports), pkg.style, pkg.main]) {
     if (typeof target !== "string") continue;
     const file = existingFile(path.join(pkgDir, target));
     if (file) return file;
   }
   return stylesheetAt(pkgDir, "index");
+}
+
+function bareStylesheet(base, id) {
+  const split = splitPackageId(id);
+  if (!split) return null;
+  const pkgDir = packageDirectory(base, split.name);
+  if (!pkgDir) return null;
+  const pkg = readPackage(pkgDir);
+  if (split.subpath) return exportedTarget(pkgDir, pkg.exports, split.subpath);
+  return packageRootStylesheet(pkgDir, pkg);
+}
+
+function resolveStylesheet(base, id) {
+  if (id === "tailwindcss") return resolveStylesheet(base, "tailwindcss/index.css");
+  if (id.startsWith(".") || path.isAbsolute(id)) {
+    return stylesheetAt(path.dirname(path.resolve(base, id)), path.basename(id));
+  }
+  return bareStylesheet(base, id);
 }
 
 const systems = new Map();

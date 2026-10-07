@@ -1,5 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "scripts/probe.mts",
+    "scripts/linter-rules/tailwind.mjs",
+    "scripts/linter-rules/modules.mjs"
+  ],
   "ignoreDependencies": [
     "@base-ui/react",
     "@phosphor-icons/react",

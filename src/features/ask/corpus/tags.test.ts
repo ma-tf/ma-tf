@@ -1,4 +1,4 @@
-import type { AskTagFile } from "@features/ask/corpus";
+import type { AskTagFile } from "@features/ask/corpus/types";
 
 import { applyAskTags } from "@features/ask/corpus/tags";
 import { describe, expect, it } from "vite-plus/test";

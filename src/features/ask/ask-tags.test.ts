@@ -1,4 +1,4 @@
-import type { AskTagFile, CorpusArtefact } from "@features/ask/corpus";
+import type { AskTagFile, CorpusArtefact } from "@features/ask/corpus/types";
 
 import { applyAskTags } from "@features/ask/corpus/tags";
 import { readFileSync } from "node:fs";

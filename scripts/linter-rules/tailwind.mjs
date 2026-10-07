@@ -43,58 +43,92 @@ function start() {
   }
 }
 
-function ask(cssFile, candidates) {
-  const live = start();
-  if (!live) return null;
+function timeoutFor(live) {
+  return live.cold ? 15000 : 5000;
+}
+
+function awaitAnswer(live, id, flag) {
+  const waited = Atomics.wait(flag, 0, 0, timeoutFor(live));
+  live.cold = false;
+  if (waited === "timed-out") return null;
+  const received = receiveMessageOnPort(live.port);
+  if (!received) return null;
+  if (received.message.id !== id) return null;
+  return received.message.answer;
+}
+
+function roundTrip(live, cssFile, candidates) {
   const id = live.nextId++;
   const shared = new SharedArrayBuffer(4);
   const flag = new Int32Array(shared);
   live.port.postMessage({ id, cssFile, candidates, shared });
-  const waited = Atomics.wait(flag, 0, 0, live.cold ? 15000 : 5000);
-  live.cold = false;
-  if (waited === "timed-out") return transportFailed();
-  const received = receiveMessageOnPort(live.port);
-  if (!received || received.message.id !== id) return transportFailed();
+  return awaitAnswer(live, id, flag);
+}
+
+function ask(cssFile, candidates) {
+  const live = start();
+  if (!live) return null;
+  const answer = roundTrip(live, cssFile, candidates);
+  if (answer === null) return transportFailed();
   restarts = 0;
-  return received.message.answer;
+  return answer;
 }
 
 const verdicts = new Map();
 
-function unknownClasses(cssFile, tokens) {
-  if (bridge === false) return null;
+function memoFor(cssFile) {
   const memo = verdicts.get(cssFile) ?? new Map();
   verdicts.set(cssFile, memo);
+  return memo;
+}
+
+function recordVerdicts(memo, unseen, answer) {
+  const unknown = new Set(answer);
+  for (const token of unseen) memo.set(token, unknown.has(token));
+}
+
+function unknownClasses(cssFile, tokens) {
+  if (bridge === false) return null;
+  const memo = memoFor(cssFile);
   const unseen = tokens.filter((token) => !memo.has(token));
-  if (unseen.length > 0) {
-    const answer = ask(cssFile, unseen);
-    if (!answer) return null;
-    const unknown = new Set(answer);
-    for (const token of unseen) memo.set(token, unknown.has(token));
-  }
+  const answer = unseen.length > 0 ? ask(cssFile, unseen) : [];
+  if (!answer) return null;
+  recordVerdicts(memo, unseen, answer);
   return tokens.filter((token) => memo.get(token) === true);
 }
 
 const projects = new Map();
 
+function readConfig(marker) {
+  try {
+    return JSON.parse(fs.readFileSync(marker, "utf-8"));
+  } catch {
+    return null;
+  }
+}
+
+function tailwindDeclaration(config) {
+  return config?.tailwind?.css ?? config?.tailwind?.config;
+}
+
+function declaredCss(marker, dir) {
+  const declared = tailwindDeclaration(readConfig(marker));
+  if (typeof declared !== "string" || !declared) return null;
+  return path.resolve(dir, declared);
+}
+
+function projectEntry(dir) {
+  const marker = path.join(dir, "components.json");
+  if (!fs.existsSync(marker)) return undefined;
+  if (!projects.has(dir)) projects.set(dir, declaredCss(marker, dir));
+  return projects.get(dir);
+}
+
 function projectFor(filename) {
   let dir = path.dirname(path.resolve(filename));
   while (true) {
-    const marker = path.join(dir, "components.json");
-    if (fs.existsSync(marker)) {
-      if (!projects.has(dir)) {
-        let css = null;
-        try {
-          const config = JSON.parse(fs.readFileSync(marker, "utf-8"));
-          const declared = config?.tailwind?.css ?? config?.tailwind?.config;
-          if (typeof declared === "string" && declared) {
-            css = path.resolve(dir, declared);
-          }
-        } catch {}
-        projects.set(dir, css);
-      }
-      return projects.get(dir);
-    }
+    const found = projectEntry(dir);
+    if (found !== undefined) return found;
     const parent = path.dirname(dir);
     if (parent === dir) return null;
     dir = parent;
@@ -110,10 +144,10 @@ function templateStart(source) {
   return after === -1 ? source.length : after + 1;
 }
 
+const clusterRoot = /^(group|peer)(\/|$)/;
+
 function isStatic(token) {
-  if (token === "group" || token === "peer") return false;
-  if (token.startsWith("group/") || token.startsWith("peer/")) return false;
-  return !/[{}$<>]/.test(token);
+  return !clusterRoot.test(token) && !/[{}$<>]/.test(token);
 }
 
 function tokensWithIndex(text) {
@@ -124,42 +158,105 @@ function tokensWithIndex(text) {
   return found;
 }
 
+function isQuote(char) {
+  return char === '"' || char === "'" || char === "`";
+}
+
+function skipQuoted(source, index, quote) {
+  for (let i = index; i < source.length; i++) {
+    if (source[i] === "\\") {
+      i++;
+      continue;
+    }
+    if (source[i] === quote) return i + 1;
+  }
+  return source.length;
+}
+
+function maskedChars(source) {
+  const chars = [...source];
+  for (let i = 0; i < chars.length; i++) {
+    if (!isQuote(chars[i])) continue;
+    const next = skipQuoted(source, i + 1, chars[i]);
+    for (let j = i; j < next; j++) chars[j] = " ";
+    i = next - 1;
+  }
+  return chars;
+}
+
+function braceStep(depth, char) {
+  if (char === "{") return depth + 1;
+  if (char !== "}") return depth;
+  const next = depth - 1;
+  if (next === 0) return null;
+  return next;
+}
+
 function matchBrace(source, start) {
+  const chars = maskedChars(source);
   let depth = 0;
-  let quote = null;
-  for (let i = start; i < source.length; i++) {
-    const char = source[i];
-    if (quote) {
-      if (char === "\\") {
-        i++;
-        continue;
-      }
-      if (char === quote) quote = null;
-      continue;
-    }
-    if (char === '"' || char === "'" || char === "`") {
-      quote = char;
-      continue;
-    }
-    if (char === "{") depth++;
-    else if (char === "}") {
-      depth--;
-      if (depth === 0) return i;
-    }
+  for (let i = start; i < chars.length; i++) {
+    depth = braceStep(depth, chars[i]);
+    if (depth === null) return i;
   }
   return -1;
+}
+
+function firstCapture(match) {
+  return match[1] ?? match[2] ?? match[3] ?? "";
+}
+
+function captureIndex(match, value) {
+  return match.index + (match[0].indexOf(value || match[0][0]) || 0);
+}
+
+function stringEntry(match) {
+  const value = firstCapture(match);
+  const at = captureIndex(match, value);
+  return { value, offset: match[0][0] === value ? match.index : at };
 }
 
 function stringsIn(text) {
   const found = [];
   const re = /"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|`((?:[^`\\]|\\.)*)`/g;
   let match;
-  while ((match = re.exec(text))) {
-    const value = match[1] ?? match[2] ?? match[3] ?? "";
-    const offset = match.index + (match[0].indexOf(value || match[0][0]) || 0);
-    found.push({ value, offset: match[0][0] === value ? match.index : offset });
-  }
+  while ((match = re.exec(text))) found.push(stringEntry(match));
   return found;
+}
+
+function staticTokensIn(text, base) {
+  const results = [];
+  for (const { token, index } of tokensWithIndex(text)) {
+    if (isStatic(token)) results.push({ token, index: base + index });
+  }
+  return results;
+}
+
+function quotedCandidates(source, cursor, char) {
+  const close = source.indexOf(char, cursor + 1);
+  if (close === -1) return null;
+  return {
+    items: staticTokensIn(source.slice(cursor + 1, close), cursor + 1),
+    next: close + 1,
+  };
+}
+
+function expressionCandidates(source, cursor) {
+  const close = matchBrace(source, cursor);
+  if (close === -1) return null;
+  const expression = source.slice(cursor + 1, close);
+  const items = [];
+  for (const string of stringsIn(expression)) {
+    items.push(...staticTokensIn(string.value, cursor + 1 + string.offset));
+  }
+  return { items, next: close + 1 };
+}
+
+function classAttribute(source, cursor) {
+  const char = source[cursor];
+  if (char === '"' || char === "'") return quotedCandidates(source, cursor, char);
+  if (char === "{") return expressionCandidates(source, cursor);
+  return null;
 }
 
 function classCandidates(source) {
@@ -168,35 +265,70 @@ function classCandidates(source) {
   let match;
   while ((match = re.exec(source))) {
     const cursor = match.index + match[0].length;
-    const char = source[cursor];
-    if (char === '"' || char === "'") {
-      const close = source.indexOf(char, cursor + 1);
-      if (close === -1) continue;
-      const value = source.slice(cursor + 1, close);
-      for (const { token, index } of tokensWithIndex(value)) {
-        if (isStatic(token)) results.push({ token, index: cursor + 1 + index });
-      }
-      re.lastIndex = close + 1;
-      continue;
-    }
-    if (char === "{") {
-      const close = matchBrace(source, cursor);
-      if (close === -1) continue;
-      const expression = source.slice(cursor + 1, close);
-      for (const string of stringsIn(expression)) {
-        for (const { token, index } of tokensWithIndex(string.value)) {
-          if (isStatic(token)) {
-            results.push({
-              token,
-              index: cursor + 1 + string.offset + index,
-            });
-          }
-        }
-      }
-      re.lastIndex = close + 1;
-    }
+    const found = classAttribute(source, cursor);
+    if (!found) continue;
+    results.push(...found.items);
+    re.lastIndex = found.next;
   }
   return results;
+}
+
+function contextFilename(context) {
+  return context.filename ?? context.physicalFilename ?? "";
+}
+
+function readTemplate(filename) {
+  try {
+    return fs.readFileSync(path.resolve(filename), "utf-8");
+  } catch {
+    return null;
+  }
+}
+
+function uniqueCandidates(source) {
+  const seen = new Set();
+  const pending = [];
+  for (const candidate of classCandidates(source)) {
+    if (seen.has(candidate.token)) continue;
+    seen.add(candidate.token);
+    pending.push(candidate);
+  }
+  return pending;
+}
+
+function templateCandidates(filename) {
+  const source = readTemplate(filename);
+  if (source === null) return [];
+  return uniqueCandidates(source.slice(templateStart(source)));
+}
+
+function relativeCss(context, cssFile) {
+  return path.relative(context.cwd ?? process.cwd(), cssFile);
+}
+
+function reportUnknownClasses(context, node, cssFile, pending) {
+  const unknown = unknownClasses(
+    cssFile,
+    pending.map((candidate) => candidate.token),
+  );
+  if (!unknown) return;
+  const bad = new Set(unknown);
+  for (const candidate of pending) {
+    if (!bad.has(candidate.token)) continue;
+    context.report({
+      node,
+      messageId: "unknownClass",
+      data: {
+        className: candidate.token,
+        file: relativeCss(context, cssFile),
+      },
+    });
+  }
+}
+
+function astroCss(filename) {
+  if (!filename.endsWith(".astro")) return null;
+  return projectFor(filename);
 }
 
 const noUnknownClasses = {
@@ -213,46 +345,30 @@ const noUnknownClasses = {
   createOnce(context) {
     return {
       Program(node) {
-        const filename = context.filename ?? context.physicalFilename ?? "";
-        if (!filename.endsWith(".astro")) return;
-        const cssFile = projectFor(filename);
+        const filename = contextFilename(context);
+        const cssFile = astroCss(filename);
         if (!cssFile) return;
-        let source = "";
-        try {
-          source = fs.readFileSync(path.resolve(filename), "utf-8");
-        } catch {
-          return;
-        }
-        const start = templateStart(source);
-        const seen = new Set();
-        const pending = [];
-        for (const candidate of classCandidates(source.slice(start))) {
-          if (seen.has(candidate.token)) continue;
-          seen.add(candidate.token);
-          pending.push(candidate);
-        }
+        const pending = templateCandidates(filename);
         if (pending.length === 0) return;
-        const unknown = unknownClasses(
-          cssFile,
-          pending.map((candidate) => candidate.token),
-        );
-        if (!unknown) return;
-        const bad = new Set(unknown);
-        for (const candidate of pending) {
-          if (!bad.has(candidate.token)) continue;
-          context.report({
-            node,
-            messageId: "unknownClass",
-            data: {
-              className: candidate.token,
-              file: path.relative(context.cwd ?? process.cwd(), cssFile),
-            },
-          });
-        }
+        reportUnknownClasses(context, node, cssFile, pending);
       },
     };
   },
 };
+
+function sourceRelative(context, filename) {
+  return path.relative(context.cwd ?? process.cwd(), path.resolve(filename));
+}
+
+function isSourceFile(context, filename) {
+  return sourceRelative(context, filename).startsWith(`src${path.sep}`);
+}
+
+function maxMdVariants(source) {
+  const found = source.match(/max-md:[^\s"'`]+/g);
+  if (!found) return null;
+  return [...new Set(found)].join(", ");
+}
 
 const noMaxMd = {
   meta: {
@@ -268,22 +384,13 @@ const noMaxMd = {
   createOnce(context) {
     return {
       Program(node) {
-        const filename = context.filename ?? context.physicalFilename ?? "";
-        const relative = path.relative(context.cwd ?? process.cwd(), path.resolve(filename));
-        if (!relative.startsWith(`src${path.sep}`)) return;
-        let source = "";
-        try {
-          source = fs.readFileSync(path.resolve(filename), "utf-8");
-        } catch {
-          return;
-        }
-        const found = source.match(/max-md:[^\s"'`]+/g);
-        if (!found) return;
-        context.report({
-          node,
-          messageId: "maxMd",
-          data: { variants: [...new Set(found)].join(", ") },
-        });
+        const filename = contextFilename(context);
+        if (!isSourceFile(context, filename)) return;
+        const source = readTemplate(filename);
+        if (source === null) return;
+        const variants = maxMdVariants(source);
+        if (!variants) return;
+        context.report({ node, messageId: "maxMd", data: { variants } });
       },
     };
   },

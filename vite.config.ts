@@ -31,6 +31,10 @@ export default defineConfig({
         name: "tailwind",
         specifier: fileURLToPath(new URL("./scripts/linter-rules/tailwind.mjs", import.meta.url)),
       },
+      {
+        name: "modules",
+        specifier: fileURLToPath(new URL("./scripts/linter-rules/modules.mjs", import.meta.url)),
+      },
     ],
     options: { typeAware: true, typeCheck: true },
     rules: {
@@ -47,6 +51,7 @@ export default defineConfig({
       "shadcn/require-static-classes": "error",
       "tailwind/no-unknown-classes": "error",
       "tailwind/no-max-md": "error",
+      "modules/no-barrel-exports": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
         "error",
@@ -64,6 +69,7 @@ export default defineConfig({
       {
         files: ["src/components/ui/**"],
         rules: {
+          "modules/no-barrel-exports": "off",
           "shadcn/no-restyle": "off",
           "shadcn/no-arbitrary-values": "off",
           "shadcn/require-static-classes": "off",

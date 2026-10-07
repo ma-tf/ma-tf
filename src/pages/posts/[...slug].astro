@@ -4,6 +4,7 @@ import { getCollection, render } from "astro:content";
 import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
 import { NavButton } from "@components/nav-button";
 import { Pill } from "@components/pill";
+import { proseComponents } from "@components/prose";
 import {
   Post,
   PostContent,
@@ -11,7 +12,6 @@ import {
   PostHeader,
   PostTitle,
 } from "@features/posts/post";
-import { postComponents } from "@features/posts/post-content";
 
 const post = (await getCollection("blog")).find(
   (entry) => entry.data.slug === Astro.params.slug && !entry.data.draft,
@@ -64,7 +64,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       }
     </PostHeader>
     <PostContent>
-      <Content components={postComponents} />
+      <Content components={proseComponents} />
     </PostContent>
   </Post>
 </Layout>

@@ -1,15 +1,13 @@
+import type { AskTagFile, CorpusPage } from "@features/ask/corpus/types";
 import type { McpResource } from "@features/mcp/catalogue";
 
+import { buildCorpus, corpusStatus } from "@features/ask/corpus";
 import {
   askTagsPath,
-  buildCorpus,
   catalogueOutputPath,
   corpusOutputPath,
   corpusSourceHash,
-  corpusStatus,
-  type AskTagFile,
-  type CorpusPage,
-} from "@features/ask/corpus";
+} from "@features/ask/corpus/hash";
 import { readFile, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 

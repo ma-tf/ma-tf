@@ -25,18 +25,22 @@ function isFile(path) {
   }
 }
 
+function firstMatch(candidates) {
+  return candidates.find((candidate) => isFile(candidate));
+}
+
+function withExtensions(base) {
+  return extensions.map((extension) => `${base}${extension}`);
+}
+
+function indexFiles(base) {
+  return extensions.map((extension) => join(base, `index${extension}`));
+}
+
 function probe(base) {
   if (isFile(base)) return base;
 
-  for (const extension of extensions) {
-    if (isFile(`${base}${extension}`)) return `${base}${extension}`;
-  }
-
-  for (const extension of extensions) {
-    if (isFile(join(base, `index${extension}`))) return join(base, `index${extension}`);
-  }
-
-  return undefined;
+  return firstMatch(withExtensions(base)) ?? firstMatch(indexFiles(base));
 }
 
 registerHooks({

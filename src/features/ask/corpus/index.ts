@@ -7,27 +7,6 @@ import type {
 
 import { applyAskTags } from "@features/ask/corpus/tags";
 
-export type {
-  AskTag,
-  AskTagFile,
-  CorpusArtefact,
-  CorpusInput,
-  CorpusPage,
-  CorpusResource,
-  CorpusResult,
-  CorpusStaleReason,
-  CorpusStatus,
-  ResourceArtefact,
-  StoredCorpus,
-} from "@features/ask/corpus/types";
-
-export {
-  askTagsPath,
-  catalogueOutputPath,
-  corpusOutputPath,
-  corpusSourceHash,
-} from "@features/ask/corpus/hash";
-
 export async function buildCorpus(input: CorpusInput): Promise<CorpusResult> {
   const pages = applyAskTags(input.pages, input.tags);
   const bodies = new Map(pages.map((page) => [page.url, page.content]));
