@@ -42,6 +42,22 @@ describe("hashInputPaths", () => {
     expect(await hashInputPaths()).not.toContain("src/lib/accept.ts");
   });
 
+  it("excludes the dependency manifest so dependency bumps cannot move the hash", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).not.toContain("package.json");
+    expect(paths).not.toContain("pnpm-lock.yaml");
+    expect(paths).not.toContain("pnpm-workspace.yaml");
+    expect(paths).not.toContain(".node-version");
+  });
+
+  it("includes the build config that shapes rendering", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toContain("astro.config.mjs");
+    expect(paths).toContain("tsconfig.json");
+  });
+
   it("returns a sorted, de-duplicated path set", async () => {
     const paths = await hashInputPaths();
 

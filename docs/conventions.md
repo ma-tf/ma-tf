@@ -1,6 +1,19 @@
 # Conventions
 
-Styling conventions for this project.
+Conventions for this project.
+
+## Page component structure
+
+- A page's presentational parts live in `src/features/{name}/`, with the page's
+  components in `src/features/{name}/{name}.tsx`.
+- `src/pages/{name}.astro` composes those components and holds no presentation
+  of its own.
+- A page component file exports `{Name}` (wrapper), `{Name}Header`,
+  `{Name}Title`, `{Name}Description` and `{Name}Content`, plus any page-specific
+  parts such as `{Name}Navigation`, `{Name}Grid` or `{Name}Card`. Omit parts a
+  page does not need.
+- A homepage preview card lives in a sibling `{name}-preview.tsx` and exports
+  `{Name}Preview`.
 
 ## Styling
 
@@ -43,8 +56,12 @@ draw a shadow or outline that follows a clipped shape, apply
 
 ## Transitions
 
-Never use `transition-all` — name the specific properties. See
-[ADR 003](adr/003-no-transition-all.md).
+Never use `transition-all`: it animates every changed property, including
+expensive layout properties and instant ones such as focus rings. Name the
+properties being animated with `transition-colors`, `transition-opacity` or
+`transition-transform`, or an arbitrary value such as
+`transition-[opacity_200ms,transform_200ms]`. The
+`react-doctor/no-transition-all` rule (warning) enforces this.
 
 ## Motion
 
@@ -68,3 +85,14 @@ Never use `transition-all` — name the specific properties. See
   (`visited-pages`) sets `data-motion="revisit"` before paint, disabling the
   page-load entrances while leaving scroll reveals running. See
   [ADR 018](adr/018-revisit-entrance-skip.md).
+
+## Language
+
+- Use British English for documentation, UI copy and code comments. Technical
+  terms and API names keep their original spelling (for example CSS `color`).
+
+## Icons
+
+- Import Phosphor icons with the `Icon` postfix (`ArrowLeftIcon`, `SunIcon`).
+  The bare name (`ArrowLeft`) is a deprecated alias and must not be used in new
+  code.

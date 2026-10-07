@@ -14,14 +14,7 @@ export const catalogueOutputPath = fileURLToPath(
   new URL("../../mcp/resources.generated.json", import.meta.url),
 );
 
-const hashFileCandidates = [
-  "astro.config.mjs",
-  "tsconfig.json",
-  "package.json",
-  "pnpm-lock.yaml",
-  "pnpm-workspace.yaml",
-  ".node-version",
-];
+const hashFileCandidates = ["astro.config.mjs", "tsconfig.json"];
 
 async function walkFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
