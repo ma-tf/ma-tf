@@ -22,6 +22,15 @@ const LABELS: Record<Exclude<MotionMode, "hidden">, string> = {
 
 let started = false;
 
+const initialMode = (): MotionMode | null => {
+  const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches;
+  const hasEntrance = document.querySelector(ENTRANCE_OR_TYPEWRITER) !== null;
+
+  if (reduced || !hasEntrance) return "hidden";
+  if (document.documentElement.dataset.motion) return "reset";
+  return null;
+};
+
 export function startMotionControl() {
   if (started) return;
 
@@ -70,16 +79,9 @@ export function startMotionControl() {
     else skip();
   });
 
-  const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches;
-  const hasEntrance = document.querySelector(ENTRANCE_OR_TYPEWRITER) !== null;
-
-  if (reduced || !hasEntrance) {
-    setMode("hidden");
-    return;
-  }
-
-  if (document.documentElement.dataset.motion) {
-    setMode("reset");
+  const mode = initialMode();
+  if (mode) {
+    setMode(mode);
     return;
   }
 
