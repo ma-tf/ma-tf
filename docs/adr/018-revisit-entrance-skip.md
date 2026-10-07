@@ -57,7 +57,7 @@ normally. `prefers-reduced-motion` continues to disable the entrances outright.
 - `src/layouts/Layout.astro`
 - `src/styles/global.css`
 - `src/lib/typewriter.ts`
-- `src/components/MotionControlButton.tsx`
+- `src/lib/motion-control.ts`
 
 > Amended by [ADR 019](019-replay-motion-control.md): a suppressed page now shows
 > a reset control instead of hiding the button; pressing it forgets the page's

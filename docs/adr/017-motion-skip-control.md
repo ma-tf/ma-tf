@@ -71,12 +71,17 @@ without JavaScript and without a flash.
 
 ## Applied To
 
-- `src/components/MotionControlButton.tsx`
+- `src/components/MotionControlButton.astro`
 - `src/components/ModeToggle.tsx`
 - `src/components/Header.astro`
+- `src/lib/motion-control.ts`
 - `src/lib/typewriter.ts`
 - `src/styles/global.css`
 
 > Amended by [ADR 019](019-replay-motion-control.md): the control is no longer
 > one-shot and no longer hides itself. Once the entrance ends, or on a page that
 > is already visited, it becomes a reset control instead.
+
+> Amended by [ADR 022](022-motion-control-runs-before-hydration.md): the control
+> is a server-rendered `.astro` component driven by `src/lib/motion-control.ts`,
+> not a hydrated React island.

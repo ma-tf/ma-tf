@@ -59,7 +59,13 @@ on the next load.
 
 ## Applied To
 
-- `src/components/MotionControlButton.tsx`
+- `src/components/MotionControlButton.astro`
+- `src/lib/motion-control.ts`
 - `src/components/Header.astro`
 - `src/layouts/Layout.astro`
 - `src/lib/typewriter.ts`
+
+> Amended by [ADR 022](022-motion-control-runs-before-hydration.md): the control
+> is a server-rendered `.astro` component driven by `src/lib/motion-control.ts`,
+> not a hydrated React island, so it no longer waits on hydration and the
+> revisit skip-icon flash is gone.

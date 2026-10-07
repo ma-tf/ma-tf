@@ -1,6 +1,6 @@
 ---
 import { ModeToggle } from "@components/ModeToggle";
-import { MotionControlButton } from "@components/MotionControlButton";
+import MotionControlButton from "@components/MotionControlButton.astro";
 ---
 
 <header class="fixed top-0 z-50 flex h-8 w-full items-center px-2">
@@ -18,7 +18,7 @@ import { MotionControlButton } from "@components/MotionControlButton";
     <!-- m4t.tf -->
   </a>
   <div class="fixed top-0 right-0 z-50 flex items-center">
-    <MotionControlButton client:load />
+    <MotionControlButton />
     <ModeToggle client:load />
   </div>
 </header>

@@ -139,6 +139,10 @@ take the defaults. Layer factors are fixed in the component (`10`, `15`, `20`,
 - The typewriter on `/developers` is treated as an entrance: `startTypewriter`
   declines under reduced motion or any `data-motion` value, and the control can
   finish it at once (ADR 017/019).
+- The control is a server-rendered component plus the deferred
+  `src/lib/motion-control.ts`, so it decides skip/reset before React would
+  hydrate; `global.css` picks the icon from `data-mode` and `data-motion`
+  ([ADR 022](adr/022-motion-control-runs-before-hydration.md)).
 - Scroll-driven motion is exempt from the 150ms budget of
   [ADR 011](adr/011-motion-timing-budget.md): `animate-fade-in-scroll` maps to
   scroll position, not time, as do the parallax drivers. `animate-reveal` is

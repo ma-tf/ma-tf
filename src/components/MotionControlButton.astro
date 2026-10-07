@@ -1,0 +1,32 @@
+---
+import {
+	ArrowCounterClockwiseIcon,
+	FastForwardIcon,
+} from "@phosphor-icons/react/ssr";
+---
+
+<button
+	type="button"
+	data-motion-control
+	data-mode="skip"
+	aria-label="Skip animations"
+	title="Skip animations"
+	class="grid size-8 place-items-center rounded-lg text-muted-foreground hover:text-foreground"
+>
+	<FastForwardIcon
+		size={16}
+		weight="bold"
+		className="motion-control-icon motion-control-skip col-start-1 row-start-1"
+	/>
+	<ArrowCounterClockwiseIcon
+		size={16}
+		weight="bold"
+		className="motion-control-icon motion-control-reset col-start-1 row-start-1"
+	/>
+</button>
+
+<script>
+	import { startMotionControl } from "@lib/motion-control";
+
+	startMotionControl();
+</script>
