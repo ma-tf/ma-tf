@@ -60,7 +60,7 @@
     "fallow": "^3.31.0",
     "is-agentic": "^1.0.1",
     "mdast-util-to-string": "^4.0.0",
-    "netlify": "^27.10.2",
+    "netlify": "^27.11.0",
     "playwright": "1.63.0",
     "react-doctor": "^0.9.17",
     "reading-time": "^1.5.0",
