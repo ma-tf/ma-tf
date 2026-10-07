@@ -13,8 +13,22 @@ Styling conventions for this project.
 - **Compose classes with `cn()`** (the `cn` package) for conditional class
   strings.
 
+## Responsive variants
+
+- **Write mobile-first.** Write the base (small-screen) layout first and layer
+  `md:` (and up) variants over it, rather than writing the desktop layout and
+  undoing it with `max-md:`. `max-md:` is not allowed; the linter enforces this
+  with `tailwind/no-max-md` (configured in
+  [`vite.config.ts`](../vite.config.ts)).
+
 ## Arbitrary values
 
+- **The linter allowlists arbitrary values.** `shadcn/no-arbitrary-values`
+  (configured in [`vite.config.ts`](../vite.config.ts)) permits only
+  `transition-*`, `origin-*`, and `grid-rows-*`; anything else, such as
+  `scale-[2]` or `h-[200dvh]`, fails `vp check`. Extend the `allow` list only
+  when a value has no token or utility alternative. `src/components/ui/**` is
+  exempt.
 - Math functions in arbitrary values do not need underscores. Tailwind v4
   normalises operators, so `w-[calc(100%-2rem)]` compiles to
   `width: calc(100% - 2rem)`.

@@ -23,3 +23,25 @@ means requesting it from a running server.
 - If you must start a server, leave it running when done, or ask first.
 - Prefer asking the developer to keep a server up rather than launching one
   yourself.
+
+## Visual probing
+
+`scripts/probe.mts` drives a headless Chromium through Playwright to inspect
+rendered geometry. For every selector it prints the `getBoundingClientRect()`
+values (`top`, `height`, `bottom`) plus the computed `position`, `display`,
+`transform` and `font-size`, and it can save a screenshot.
+
+```sh
+node scripts/probe.mts http://localhost:4321/about \
+  --viewport=390x844 \
+  --shot=/tmp/about-390.png \
+  h1 header "[data-parallax]"
+```
+
+- `--viewport=<width>x<height>` — viewport size (required).
+- `--scroll=<y>` — scroll to a vertical offset before probing.
+- `--shot=<path>` — save a viewport screenshot.
+- `--wait=<ms>` — wait after load and scroll before probing.
+
+Playwright is pinned to the Chromium build already cached under
+`~/.cache/ms-playwright`, so the probe needs no browser download.

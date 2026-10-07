@@ -18,8 +18,8 @@ function VignetteThumbnailButton({ children, className, ...props }: React.Compon
   return (
     <a
       className={cn(
-        "group block min-w-0 cursor-pointer text-left max-md:w-full max-md:border-b max-md:border-foreground/20 max-md:px-4 max-md:py-3",
-        isActive && "max-md:bg-foreground max-md:text-background",
+        "group block w-full min-w-0 cursor-pointer border-b border-foreground/20 px-4 py-3 text-left md:w-auto md:border-b-0 md:px-0 md:py-0",
+        isActive && "bg-foreground text-background md:bg-transparent md:text-inherit",
         className,
       )}
       {...props}
@@ -38,7 +38,7 @@ function VignetteThumbnailMedia({ children, className, ...props }: React.Compone
     <div
       className={cn(
         "shrink-0 vignette-thumb-outline thumb-outline-transparent group-hover:thumb-outline-muted-foreground group-focus-visible:thumb-outline-muted-foreground",
-        isActive && "thumb-outline-foreground max-md:thumb-outline-background",
+        isActive && "thumb-outline-background md:thumb-outline-foreground",
         className,
       )}
       {...props}
@@ -71,7 +71,7 @@ function VignetteThumbnailSummary({ children, className, ...props }: React.Compo
     <span
       className={cn(
         "block text-sm text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground md:text-2xs",
-        isActive && "text-foreground max-md:text-background",
+        isActive && "text-background md:text-foreground",
         className,
       )}
       {...props}
@@ -88,7 +88,7 @@ function VignetteThumbnailTitle({ children, className, ...props }: React.Compone
     <span
       className={cn(
         "text-base font-medium text-muted-foreground lowercase transition-colors duration-150 group-hover:text-foreground md:text-xs",
-        isActive && "text-foreground max-md:text-background",
+        isActive && "text-background md:text-foreground",
         className,
       )}
       {...props}

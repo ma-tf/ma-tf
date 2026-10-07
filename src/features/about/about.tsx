@@ -42,7 +42,7 @@ export function AboutContent({ children, className, ...props }: React.ComponentP
   return (
     <div
       className={cn(
-        "relative min-h-dvh px-6 pt-4 max-md:border-t max-md:bg-background md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:px-0 md:pt-0",
+        "relative min-h-dvh border-t bg-background px-6 pt-4 md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:border-t-0 md:bg-transparent md:px-0 md:pt-0",
         className,
       )}
       {...props}

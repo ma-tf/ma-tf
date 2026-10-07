@@ -306,6 +306,9 @@ importers:
       netlify:
         specifier: ^27.10.2
         version: 27.10.2(@types/node@26.6.4)(picomatch@4.0.7)(supports-color@11.0.0)
+      playwright:
+        specifier: 1.63.0
+        version: 1.63.0
       react-doctor:
         specifier: ^0.9.14
         version: 0.9.14(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(oxlint-tsgolint@7.0.2003)(react@19.3.0)(supports-color@11.0.0)(vite-plus@1.0.0(@opentelemetry/api@1.9.1)(@types/node@26.6.4)(@vitest/ui@5.0.1)(esbuild@0.28.2)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))
@@ -7192,6 +7195,11 @@ packages:
 
   playwright-core@1.63.0:
     resolution: {integrity: sha512-rYCsBF/M5HjUch52bbtVONEFjv6Xu8sm8h72dNlR5bzIE1fvC/bxgspzkjSfU+MweEMmPM8KJebG6nnyxo5mCg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.63.0:
+    resolution: {integrity: sha512-+7ziBLidS4NaNCdt57SUDT+wYmmd5fmiQejUic/kb+YsYSCPyOOE9sebzMjNmQrsnNpDJqd4WHvV/8lfKfUDUg==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -16559,6 +16567,10 @@ snapshots:
       - react
 
   playwright-core@1.63.0: {}
+
+  playwright@1.63.0:
+    dependencies:
+      playwright-core: 1.63.0
 
   pngjs@7.0.0: {}
 

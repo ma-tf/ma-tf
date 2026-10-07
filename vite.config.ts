@@ -27,6 +27,10 @@ export default defineConfig({
     jsPlugins: [
       { name: "vite-plus", specifier: "vite-plus/oxlint-plugin" },
       { name: "shadcn", specifier: "@shadcn/lint" },
+      {
+        name: "tailwind",
+        specifier: fileURLToPath(new URL("./scripts/linter-rules/tailwind.mjs", import.meta.url)),
+      },
     ],
     options: { typeAware: true, typeCheck: true },
     rules: {
@@ -41,6 +45,8 @@ export default defineConfig({
       "shadcn/no-restyle": ["error"],
       "shadcn/no-unknown-classes": "error",
       "shadcn/require-static-classes": "error",
+      "tailwind/no-unknown-classes": "error",
+      "tailwind/no-max-md": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
         "error",
