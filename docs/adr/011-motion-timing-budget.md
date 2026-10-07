@@ -39,5 +39,7 @@ different interfaces, and the longer values made the site feel sluggish.
 - `src/features/vignettes/vignette-thumbnail.tsx`
 - Page-load entrance delays across `src/pages/` and `src/features/`
 
-> Amended: `animate-reveal` is no longer scroll-driven, so it falls inside the
-> 150ms budget (see [the motion reference](../motion.md)).
+> Amended: `animate-reveal` is not scroll-driven. Its duration is declared at the
+> call site (`animate-reveal-<ms>`, default 300ms) and is exempt from the 150ms
+> cap; the cap still governs interactions and page-load entrances. See
+> [the motion reference](../motion.md).

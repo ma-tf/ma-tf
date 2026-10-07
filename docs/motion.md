@@ -145,16 +145,18 @@ fixed in the component (`10`, `15`, `20`, `27/33`, `27/27`, `35`).
 - Scroll-driven motion is exempt from the 150ms budget of
   [ADR 011](adr/011-motion-timing-budget.md): `animate-fade-in-scroll` maps to
   scroll position, not time, as do the parallax drivers. `animate-reveal` is
-  trigger-based rather than scroll-linked, so it runs inside the budget.
+  trigger-based rather than scroll-linked; its duration is declared at the call
+  site (`animate-reveal-<ms>`) and is also exempt from the 150ms cap.
 
 ## Reveal trigger
 
-`animate-reveal` is not scroll-driven. Its hidden state is scoped to
+`animate-reveal-<ms>` is not scroll-driven. Its hidden state is scoped to
 `@media (scripting: enabled)`, so CSS itself gates it on scripting being
 available, and `startReveal()` in `src/lib/reveal.ts` observes every
-`.animate-reveal` element with `IntersectionObserver`. The first time an element
-comes roughly 15% into the viewport (`rootMargin: 0px 0px -15% 0px`, once) the
-observer adds `is-revealed`, and a 150ms transition fades it in from
+`[class*="animate-reveal"]` element with `IntersectionObserver`. The first time an
+element comes roughly 15% into the viewport (`rootMargin: 0px 0px -15% 0px`,
+once) the observer adds `is-revealed`, and a transition of the declared duration
+(300ms by default, or the suffix of `animate-reveal-<ms>`) fades it in from
 `opacity: 0` and `translateY(16px)`. Without scripting, or under reduced motion,
 the hidden state never applies, so the elements stay visible with no flash.
 `data-motion="skipped"` forces them visible.
@@ -163,17 +165,17 @@ the hidden state never applies, so the elements stay visible with no flash.
 
 Defined in `src/styles/global.css`.
 
-| Utility                  | Kind                       | Notes                                                                                                                                        |
-| ------------------------ | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animate-fade-in`        | Page-load entrance         | `flickerIn` over 1s; consumes `--delay`.                                                                                                     |
-| `animate-fade-up-*`      | Page-load entrance         | Wildcard: distance in px then optional `/duration` (`animate-fade-up-32/300`). Two keyframes.                                                |
-| `animate-reveal`         | Scroll reveal              | Hidden under `@media (scripting: enabled)` until ~15% into view, then `is-revealed` transitions `opacity` and `translateY(16px)` over 150ms. |
-| `animate-fade-in-scroll` | Scroll reveal              | `animation-timeline: view()`, range `entry 10% … 70%`.                                                                                       |
-| `animation-delay-*`      | Delay token                | Sets `--delay` in ms; consumed by all of the above.                                                                                          |
-| `fade-move-delay-*`      | Delay token                | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                 |
-| `vertical-text`          | Layout                     | `writing-mode: vertical-rl`; used by page titles.                                                                                            |
-| `title-fit`              | Layout                     | `font-size: min(8rem, 22.5dvh); line-height: 1`.                                                                                             |
-| `parallax-active`        | Driver state (on viewport) | Added to `<html>` while a parallax driver animates; sets `will-change: transform` on layers.                                                 |
+| Utility                  | Kind                       | Notes                                                                                                                                                                                                                      |
+| ------------------------ | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `animate-fade-in`        | Page-load entrance         | `flickerIn` over 1s; consumes `--delay`.                                                                                                                                                                                   |
+| `animate-fade-up-*`      | Page-load entrance         | Wildcard: distance in px then optional `/duration` (`animate-fade-up-32/300`). Two keyframes.                                                                                                                              |
+| `animate-reveal-*`       | Scroll reveal              | Wildcard: optional duration in ms, default 300 (`animate-reveal`, `animate-reveal-500`). Hidden under `@media (scripting: enabled)` until ~15% into view, then `is-revealed` transitions `opacity` and `translateY(16px)`. |
+| `animate-fade-in-scroll` | Scroll reveal              | `animation-timeline: view()`, range `entry 10% … 70%`.                                                                                                                                                                     |
+| `animation-delay-*`      | Delay token                | Sets `--delay` in ms; consumed by all of the above.                                                                                                                                                                        |
+| `fade-move-delay-*`      | Delay token                | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                                                                                               |
+| `vertical-text`          | Layout                     | `writing-mode: vertical-rl`; used by page titles.                                                                                                                                                                          |
+| `title-fit`              | Layout                     | `font-size: min(8rem, 22.5dvh); line-height: 1`.                                                                                                                                                                           |
+| `parallax-active`        | Driver state (on viewport) | Added to `<html>` while a parallax driver animates; sets `will-change: transform` on layers.                                                                                                                               |
 
 Every entrance and reveal utility disables itself under
 `prefers-reduced-motion: reduce`. `animate-icon-crossfade` and the typewriter

@@ -1,6 +1,6 @@
-const REVEAL_SELECTOR = ".animate-reveal";
+const REVEAL_SELECTOR = '[class*="animate-reveal"]';
 const REVEALED_CLASS = "is-revealed";
-const REVEAL_MARGIN = "0px 0px -15% 0px";
+const REVEAL_MARGIN = "0px 0px -25% 0px";
 
 export function startReveal() {
   const elements = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));

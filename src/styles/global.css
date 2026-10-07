@@ -79,31 +79,32 @@
   }
 }
 
-@utility animate-reveal {
+@utility animate-reveal-* {
+  --reveal-duration: calc(--value(integer, --default(500)) * 1ms);
   transition:
-    opacity 150ms var(--ease-out-expo),
-    transform 150ms var(--ease-out-expo);
+    opacity var(--reveal-duration) var(--ease-out-expo),
+    transform var(--reveal-duration) var(--ease-out-expo);
 }
 
 @media (scripting: enabled) {
-  .animate-reveal {
+  [class*="animate-reveal"] {
     opacity: 0;
     transform: translateY(16px);
   }
 }
 
-.animate-reveal.is-revealed {
+[class*="animate-reveal"].is-revealed {
   opacity: 1;
   transform: none;
 }
 
-html[data-motion="skipped"] .animate-reveal {
+html[data-motion="skipped"] [class*="animate-reveal"] {
   opacity: 1;
   transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-reveal {
+  [class*="animate-reveal"] {
     opacity: 1;
     transform: none;
     transition: none;
