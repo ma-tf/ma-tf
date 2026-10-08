@@ -7,6 +7,10 @@ export const mcpPath = "/mcp";
 
 export const schemaMapPath = "/schemamap.xml";
 
+export const registryServerPath = "/server.json";
+
+export const aiCatalogPath = "/.well-known/ai-catalog.json";
+
 export type DiscoveryResource = {
   path: string;
   type: string;
@@ -154,6 +158,32 @@ const primaryResources: readonly DiscoveryResource[] = [
       "Where is the m4t.tf Agent Skills index?",
     ],
   },
+  {
+    path: registryServerPath,
+    type: "application/json",
+    title: "MCP registry manifest",
+    description: "The registry manifest for the m4t.tf server.",
+    identifier: "urn:air:m4t.tf:server:registry",
+    tags: ["mcp", "registry", "manifest", "server"],
+    representativeQueries: [
+      "Where is the m4t.tf server manifest?",
+      "How do I register the m4t.tf server?",
+      "What transport does the m4t.tf server use?",
+    ],
+  },
+  {
+    path: aiCatalogPath,
+    type: "application/json",
+    title: "AI catalog",
+    description: "The AI catalogue of the site's agent-facing resources.",
+    identifier: "urn:air:m4t.tf:catalog:ai",
+    tags: ["ai-catalog", "catalog", "discovery"],
+    representativeQueries: [
+      "What agent-facing resources does m4t.tf publish?",
+      "Where is the m4t.tf AI catalogue?",
+      "How do I discover the m4t.tf resources?",
+    ],
+  },
 ];
 
 export const sectionGuides: readonly DiscoveryResource[] = [
@@ -194,6 +224,19 @@ export const sectionGuides: readonly DiscoveryResource[] = [
       `What experience does ${profile.name} have?`,
       `Which pages verify claims about ${profile.name}?`,
       "How do I cite m4t.tf for hiring or recruiting?",
+    ],
+  },
+  {
+    path: "/api/llms.txt",
+    type: "text/plain",
+    title: "API section guide",
+    description: "A scoped guide to the HTTP interface for agents calling the site.",
+    identifier: "urn:air:m4t.tf:guide:api",
+    tags: ["llms", "guide", "api", "developers"],
+    representativeQueries: [
+      "How do I call the m4t.tf API?",
+      "How does the m4t.tf API handle errors and versioning?",
+      "What are the m4t.tf API rate limits?",
     ],
   },
 ];

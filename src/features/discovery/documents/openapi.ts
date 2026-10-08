@@ -1,9 +1,16 @@
 import type { DiscoveryResource } from "@features/discovery/catalog";
 
-import { isJsonMediaType, mcpPath, resources, siteUrl } from "@features/discovery/catalog";
+import {
+  aiCatalogPath,
+  isJsonMediaType,
+  mcpPath,
+  registryServerPath,
+  resources,
+  siteUrl,
+} from "@features/discovery/catalog";
 import { problemSchema } from "@features/discovery/problems";
 import { askEnabled } from "@lib/feature-flags";
-import { askRateLimit } from "@lib/rate-limits";
+import { askRateLimit, rateLimitPolicyValue } from "@lib/rate-limits";
 
 const linksetReferenceSchema = {
   type: "object",
@@ -86,6 +93,34 @@ const ardSchema = {
   },
 };
 
+const mcpServerSchema = {
+  type: "object",
+  required: ["name", "description", "version", "remotes"],
+  properties: {
+    $schema: { type: "string", format: "uri" },
+    name: {
+      type: "string",
+      pattern: "^[a-zA-Z0-9.-]+/[a-zA-Z0-9._-]+$",
+      description: "The reverse-DNS server name.",
+    },
+    title: { type: "string" },
+    description: { type: "string" },
+    version: { type: "string" },
+    websiteUrl: { type: "string", format: "uri" },
+    remotes: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["type", "url"],
+        properties: {
+          type: { type: "string", enum: ["streamable-http", "sse"] },
+          url: { type: "string", format: "uri" },
+        },
+      },
+    },
+  },
+};
+
 const agentSkillsIndexSchema = {
   type: "object",
   required: ["$schema", "skills"],
@@ -148,6 +183,9 @@ function operationIdFor(resource: DiscoveryResource): string {
 }
 
 function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown> {
+  if (resource.path === registryServerPath) return { $ref: "#/components/schemas/McpServer" };
+  if (resource.path === aiCatalogPath) return { $ref: "#/components/schemas/Ard" };
+
   switch (resource.type) {
     case "text/plain":
     case "application/rss+xml":
@@ -336,8 +374,10 @@ const askOperation = {
     "200": {
       description: "A conversational search answer, or an application-level failure.",
       headers: {
+        RateLimit: { $ref: "#/components/headers/AskRateLimit" },
         "RateLimit-Policy": { $ref: "#/components/headers/AskRateLimitPolicy" },
         "RateLimit-Limit": { $ref: "#/components/headers/AskRateLimitLimit" },
+        "RateLimit-Remaining": { $ref: "#/components/headers/AskRateLimitRemaining" },
         "RateLimit-Reset": { $ref: "#/components/headers/AskRateLimitReset" },
       },
       content: {
@@ -365,8 +405,10 @@ const askOperation = {
       description: "The client exceeded the ask rate limit.",
       headers: {
         "Retry-After": { $ref: "#/components/headers/RetryAfter" },
+        RateLimit: { $ref: "#/components/headers/AskRateLimit" },
         "RateLimit-Policy": { $ref: "#/components/headers/AskRateLimitPolicy" },
         "RateLimit-Limit": { $ref: "#/components/headers/AskRateLimitLimit" },
+        "RateLimit-Remaining": { $ref: "#/components/headers/AskRateLimitRemaining" },
         "RateLimit-Reset": { $ref: "#/components/headers/AskRateLimitReset" },
       },
     },
@@ -392,7 +434,7 @@ export function buildOpenApiDocument() {
       version: "0.1.0",
       description: `Machine-readable resources published by m4t.tf. Clients may send the API-Version header to declare the API compatibility version they expect. The current API version is 1. Deprecated resources return RFC 9745 Deprecation and RFC 8594 Sunset response headers and stay available for at least six months after the deprecation date. ${
         askEnabled
-          ? `Requests are not metered, except POST /ask and the ask tool on POST /mcp, which share one budget of ${askRateLimit.quota} requests per minute per client.`
+          ? `Requests are not metered, except POST /ask and the ask tool on POST /mcp, which share one budget of ${askRateLimit.quota} requests per minute per client. Metered responses return the RateLimit, RateLimit-Policy, RateLimit-Limit, RateLimit-Remaining, and RateLimit-Reset headers, and a 429 adds Retry-After.`
           : "Requests are not metered."
       } Every machine-readable resource is available as application/json: the canonical document for JSON resources, and a typed descriptor for the others.`,
     },
@@ -427,12 +469,20 @@ export function buildOpenApiDocument() {
         },
         AskRateLimitPolicy: {
           description: "The published ask limit as an IETF RateLimit-Policy field.",
+          schema: { type: "string", examples: [rateLimitPolicyValue(askRateLimit)] },
+        },
+        AskRateLimit: {
+          description: "The remaining ask quota as an IETF RateLimit field.",
           schema: {
             type: "string",
             examples: [
-              `"${askRateLimit.name}";q=${askRateLimit.quota};w=${askRateLimit.windowSeconds}`,
+              `"${askRateLimit.name}";r=${askRateLimit.quota - 1};t=${askRateLimit.windowSeconds}`,
             ],
           },
+        },
+        AskRateLimitRemaining: {
+          description: "The ask requests remaining in the current window.",
+          schema: { type: "integer", examples: [askRateLimit.quota - 1] },
         },
         AskRateLimitLimit: {
           description: "The published ask request limit per window.",
@@ -453,6 +503,7 @@ export function buildOpenApiDocument() {
         DiscoveryResource: discoveryResourceSchema,
         Linkset: linksetSchema,
         LinksetReference: linksetReferenceSchema,
+        McpServer: mcpServerSchema,
         NLWebAnswer: nlWebAnswerSchema,
         NLWebAskRequest: nlWebAskRequestSchema,
         NLWebFailure: nlWebFailureSchema,

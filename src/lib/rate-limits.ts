@@ -9,3 +9,7 @@ export const askRateLimit: RateLimit = {
   quota: 20,
   windowSeconds: 60,
 };
+
+export function rateLimitPolicyValue(limit: RateLimit): string {
+  return `"${limit.name}";q=${limit.quota};w=${limit.windowSeconds}`;
+}

@@ -16,6 +16,7 @@ const askInputJsonSchema = {
 
 export function buildMcpServerCard() {
   return {
+    $schema: "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
     name: serverName,
     version: serverVersion,
     kind: "docs",
@@ -25,6 +26,7 @@ export function buildMcpServerCard() {
     serverUrl: `${siteUrl}${mcpPath}`,
     transport: "streamable-http",
     protocolVersion: "2026-07-28",
+    remotes: [{ type: "streamable-http", url: `${siteUrl}${mcpPath}` }],
     instructions: serverInstructions,
     capabilities: { tools: true, resources: true },
     tools: [

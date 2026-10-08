@@ -135,19 +135,26 @@ export async function hashInputPaths(): Promise<string[]> {
 }
 
 export async function corpusSourceHash(): Promise<string> {
+  const paths = (await dependencyInputPaths()).sort();
+  const contents = await Promise.all(
+    paths.map(async (path) => {
+      try {
+        return await readFile(path);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+
+        return null;
+      }
+    }),
+  );
   const hash = createHash("sha256");
 
-  for (const path of (await dependencyInputPaths()).sort()) {
+  for (const [index, path] of paths.entries()) {
     hash.update(relative(corpusRoot, path));
     hash.update("\0");
 
-    try {
-      hash.update(await readFile(path));
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-
-      hash.update("\0missing");
-    }
+    const content = contents[index];
+    hash.update(content ?? "\0missing");
 
     hash.update("\0");
   }

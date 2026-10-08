@@ -11,7 +11,7 @@ vi.mock("@lib/rate-limit-middleware", () => ({ enforceRateLimit: vi.fn() }));
 const enforce = vi.mocked(enforceRateLimit);
 
 beforeEach(() => {
-  enforce.mockResolvedValue(null);
+  enforce.mockResolvedValue({ limited: null, headers: new Headers() });
 });
 
 const html = "<!doctype html><html><body><h1>Hello</h1></body></html>";
@@ -181,9 +181,10 @@ describe("onRequest", () => {
   });
 
   it("returns the endpoint's 429 without the site headers", async () => {
-    enforce.mockResolvedValue(
-      new Response(null, { status: 429, headers: { "Retry-After": "12" } }),
-    );
+    enforce.mockResolvedValue({
+      limited: new Response(null, { status: 429, headers: { "Retry-After": "12" } }),
+      headers: new Headers(),
+    });
 
     const response = await onRequest(buildContext("/ask"), next);
 
@@ -214,12 +215,13 @@ describe("onRequest", () => {
   });
 
   it("returns /mcp's 429 with the ask bucket headers and no body", async () => {
-    enforce.mockResolvedValue(
-      new Response(null, {
+    enforce.mockResolvedValue({
+      limited: new Response(null, {
         status: 429,
         headers: { "Retry-After": "12", "RateLimit-Limit": "20" },
       }),
-    );
+      headers: new Headers(),
+    });
 
     const response = await onRequest(
       buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask" } }),

@@ -78,7 +78,7 @@ flowchart TD
 | 4d  | otherwise                              | `negotiation.ts:97` | `html`                                                              |
 | 5   | `status >= 400`                        | `middleware.ts:67`  | `problemResponse`                                                   |
 | 6   | non-API path                           | `middleware.ts:86`  | `Link`                                                              |
-| 7   | API path with a configured limit       | `middleware.ts:77`  | `enforceRateLimit` returns `429` or `null`                          |
+| 7   | API path with a configured limit       | `middleware.ts:69`  | `enforceRateLimit` returns `{ limited, headers }`                   |
 
 The four kinds resolve as follows:
 
@@ -116,10 +116,12 @@ the original error through with `Vary: Accept`. `*/*` is not an HTML preference
   never re-wrapped as a problem. The agent skill bypass sits at
   `middleware.ts:63`, after preflight but before negotiation, so it is
   problem-wrapped.
-- The rate limiter returns the `429` response when a client is over quota and
-  `null` otherwise; the response status is what the wide event records. When the
+- The rate limiter returns `{ limited, headers }`: `limited` holds the `429`
+  response when a client is over quota and is `null` otherwise; `headers`
+  carries the `RateLimit-*` headers to apply to the success response. The
+  response status is what the wide event records. When the
   check fails open (no client IP, missing `RATE_LIMIT_SALT`, blob-store error)
-  the limiter warns on its own and returns `null`.
+  the limiter warns on its own and returns a `null` limited with empty headers.
 - `formatMarkdownResponse` returns a non-HTML response unchanged
   (`markdown.ts:18`), so the two markdown branches silently skip both conversion
   and `Vary` in that case.

@@ -29,6 +29,25 @@ const machineReadableFiles = resources
     description: resource.description,
   }));
 
+const rateLimitLines = askEnabled
+  ? [
+      `\`POST /ask\` and the \`ask\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
+      "per minute per client, sharing one budget, and return `429 Too Many Requests`",
+      "with `Retry-After` past it. Metered responses carry `RateLimit`, `RateLimit-Policy`,",
+      "`RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` headers.",
+    ]
+  : [];
+
+const mcpSectionLines = askEnabled
+  ? [
+      "## MCP",
+      "",
+      `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
+      `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask\` tool.`,
+      "",
+    ]
+  : [];
+
 export function buildLlmsTxt(): string {
   return [
     "# m4t.tf",
@@ -94,23 +113,9 @@ export function buildLlmsTxt(): string {
     "## Rate Limits",
     "",
     "Every page and resource is unmetered.",
-    ...(askEnabled
-      ? [
-          `\`POST /ask\` and the \`ask\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
-          "per minute per client, sharing one budget, and return `429 Too Many Requests`",
-          "with `Retry-After` past it.",
-        ]
-      : []),
+    ...rateLimitLines,
     "",
-    ...(askEnabled
-      ? [
-          "## MCP",
-          "",
-          `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
-          `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask\` tool.`,
-          "",
-        ]
-      : []),
+    ...mcpSectionLines,
     "## Identity",
     "",
     `- Name: ${profile.name}`,
@@ -231,23 +236,9 @@ export function buildDevelopersLlmsTxt(): string {
     "## Rate Limits",
     "",
     "Every page and resource is unmetered.",
-    ...(askEnabled
-      ? [
-          `\`POST /ask\` and the \`ask\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
-          "per minute per client, sharing one budget, and return `429 Too Many Requests`",
-          "with `Retry-After` past it.",
-        ]
-      : []),
+    ...rateLimitLines,
     "",
-    ...(askEnabled
-      ? [
-          "## MCP",
-          "",
-          `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
-          `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask\` tool.`,
-          "",
-        ]
-      : []),
+    ...mcpSectionLines,
   ].join("\n");
 }
 
@@ -272,6 +263,52 @@ export function buildCvLlmsTxt(): string {
     "`Accept: text/markdown` for a clean, quotable form. When a claim is not supported",
     "by a published page, report it as unverified. Do not infer contact details or",
     "personal information that are not published on the site.",
+    "",
+  ].join("\n");
+}
+
+export function buildApiLlmsTxt(): string {
+  const listed = resources.filter(
+    (resource) => !isSectionGuide(resource) && resource.path !== "/llms.txt",
+  );
+
+  return [
+    "# m4t.tf: API",
+    "",
+    `> The HTTP interface of ${profile.name}'s site. This guide scopes the retrieval`,
+    "> protocol, error shape, versioning, and rate limits for agents calling the site.",
+    "",
+    "## Retrieval",
+    "",
+    "Request any page with `Accept: text/markdown` to receive it as markdown, or append",
+    `\`.md\` to the path, for example \`${siteUrl}/about.md\`. Send`,
+    "`Accept: application/json` to a resource to receive its canonical document or a typed",
+    "descriptor. Responses carry `Vary: Accept, Accept-Encoding`.",
+    "",
+    "## Errors",
+    "",
+    "Nonexistent paths return a real HTTP 404. The error follows the same negotiation:",
+    "`Accept: application/json` returns an RFC 9457 `application/problem+json` document,",
+    "and `Accept: text/markdown` returns the error as markdown. The whole interface is",
+    `described by the OpenAPI 3.1 document at [openapi.json](${siteUrl}/openapi.json).`,
+    "",
+    "## Versioning",
+    "",
+    "Send `API-Version` to declare the compatibility version you expect; the current",
+    "version is 1 and is the default. Deprecated resources carry RFC 9745 `Deprecation`",
+    "and RFC 8594 `Sunset` headers.",
+    "",
+    "## Rate Limits",
+    "",
+    "Every page and resource is unmetered.",
+    ...rateLimitLines,
+    "",
+    ...mcpSectionLines,
+    "## Resources",
+    "",
+    ...listed.map(
+      (resource) => `- [${resource.path}](${siteUrl}${resource.path}): ${resource.description}`,
+    ),
     "",
   ].join("\n");
 }

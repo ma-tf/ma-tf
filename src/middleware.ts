@@ -66,19 +66,26 @@ async function respond(context: APIContext, next: MiddlewareNext): Promise<Respo
   return response.status >= 400 ? problemResponse(response, accept, pathname) : response;
 }
 
+async function handleApiRequest(
+  pathname: string,
+  request: Request,
+  next: MiddlewareNext,
+): Promise<Response> {
+  const limit = apiRateLimitFor(pathname, request);
+  if (!limit) return next();
+
+  const { limited, headers } = await enforceRateLimit(request, limit);
+  if (limited) return limited;
+
+  const response = await next();
+  headers.forEach((value, name) => response.headers.set(name, value));
+
+  return response;
+}
+
 const discoveryMiddleware: MiddlewareHandler = async (context, next) => {
-  const { pathname } = context.url;
-
-  if (isApiPath(pathname)) {
-    const limit = apiRateLimitFor(pathname, context.request);
-
-    if (limit) {
-      const limited = await enforceRateLimit(context.request, limit);
-
-      if (limited) return limited;
-    }
-
-    return next();
+  if (isApiPath(context.url.pathname)) {
+    return handleApiRequest(context.url.pathname, context.request, next);
   }
 
   const response = await respond(context, next);

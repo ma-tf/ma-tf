@@ -14,12 +14,17 @@ import { StillLifeBackground } from "@components/still-life-background";
 import { askRateLimit } from "@lib/rate-limits";
 ---
 
-<Layout>
+<Layout
+  title="m4t.tf developers"
+  description="The machine-readable interface of m4t.tf: retrieval, errors, versioning, rate limits, and the MCP server."
+>
   <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
     <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
     <Developers>
       <DevelopersHeader>
-        <DevelopersTitle>developers</DevelopersTitle>
+        <DevelopersTitle>
+          <span class="sr-only">m4t.tf </span>developers
+        </DevelopersTitle>
         <DevelopersIntro>
           m4t.tf is machine-readable. Every page is served as HTML or markdown,
           and every resource below is an unauthenticated GET — there are no API
@@ -102,7 +107,12 @@ import { askRateLimit } from "@lib/rate-limits";
                       <code>POST /mcp</code> are metered at{" "}
                       <code>{askRateLimit.quota}</code> requests per minute per
                       client and return <code>429 Too Many Requests</code> with{" "}
-                      <code>Retry-After</code> once past it.
+                      <code>Retry-After</code> once past it. Metered responses
+                      carry <code>RateLimit</code>, <code>RateLimit-Policy</code>,{" "}
+                      <code>RateLimit-Limit</code>,{" "}
+                      <code>RateLimit-Remaining</code>, and{" "}
+                      <code>RateLimit-Reset</code> headers; a{" "}
+                      <code>429</code> adds <code>Retry-After</code>.
                     </>
                   )
                 }
