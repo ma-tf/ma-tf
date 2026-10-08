@@ -82,7 +82,7 @@ export default defineConfig({
     ],
   },
   staged: {
-    "*.{js,json,mjs,mts,ts,tsx}": "vp check --fix",
+    "*.{js,json,md,mjs,mts,ts,tsx,yaml,yml}": "vp check --fix",
     "*.astro": "vpx astro check",
   },
   test: {

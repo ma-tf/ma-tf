@@ -38,7 +38,7 @@ function decodeMcpName(value: string | null): string | null {
   }
 }
 
-export function apiRateLimitFor(pathname: string, request: Request): RateLimit | undefined {
+function apiRateLimitFor(pathname: string, request: Request): RateLimit | undefined {
   if (pathname !== "/mcp") return apiPathLimits.get(pathname);
 
   return request.headers.get("Mcp-Method") === "tools/call" &&

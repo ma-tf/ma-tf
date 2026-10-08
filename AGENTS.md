@@ -32,8 +32,8 @@ optional background.
 - Never write comments. Only exception is when user explicitly asks.
 - Git hooks enforce `vpx astro check` on staged `.astro` files and `commitlint`
   on messages; run `vpx astro check` after changing any `.astro` file, and
-  follow conventional commits (`type(scope): subject`, header max 100, body max
-  200), for earlier feedback.
+  follow conventional commits (`type(scope): subject`, header and body lines max
+  100 characters, body 200 max total), for earlier feedback.
 - When writing CSS, you MUST consult [docs/conventions.md](docs/conventions.md).
 - Use British English for documentation, UI copy and code comments. Technical
   terms and API names keep their original spelling (for example CSS `color`).
