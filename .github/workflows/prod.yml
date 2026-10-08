@@ -54,3 +54,22 @@ jobs:
             -d '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}}}')
           echo "POST /mcp -> $code"
           test "$code" = "200"
+
+          init='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"smoke","version":"1"}}}'
+          code=$(curl -s -o /tmp/mcp-init.txt -w '%{http_code}' --max-time 30 \
+            -X POST https://m4t.tf/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -d "$init")
+          echo "POST /mcp (legacy initialize) -> $code"
+          test "$code" = "200"
+          grep -q '"resources"' /tmp/mcp-init.txt
+
+          code=$(curl -s -o /tmp/mcp-resources.txt -w '%{http_code}' --max-time 30 \
+            -X POST https://m4t.tf/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":2,"method":"resources/list","params":{}}')
+          echo "POST /mcp (resources/list) -> $code"
+          test "$code" = "200"
+          grep -q '"uri"' /tmp/mcp-resources.txt
