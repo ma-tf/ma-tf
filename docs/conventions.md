@@ -12,8 +12,8 @@ Conventions for this project.
   `{Name}Title`, `{Name}Description` and `{Name}Content`, plus any page-specific
   parts such as `{Name}Navigation`, `{Name}Grid` or `{Name}Card`. Omit parts a
   page does not need.
-- A homepage preview card lives in a sibling `{name}-preview.tsx` and exports
-  `{Name}Preview`.
+- A homepage preview card, where a page provides one, lives in a sibling
+  `{name}-preview.tsx` and exports `{Name}Preview`.
 
 ## Styling
 
@@ -67,13 +67,13 @@ properties being animated with `transition-colors`, `transition-opacity` or
 
 - **Entrances reuse the shared utilities**, not ad-hoc keyframes.
   `animate-fade-up` (+ `animation-delay-*`) reveals above-the-fold content on
-  page load; `animate-reveal` (optional `-<ms>`, default 300) fades content in
-  once it scrolls ~15% into view.
+  page load; `animate-reveal` (optional `-<ms>`, default 500) fades content in
+  once it scrolls ~25% into view.
 - **Theme changes sweep** through the View Transitions API. See
   [ADR 010](adr/010-theme-transitions-via-view-transitions.md).
 - **Keep motion snappy:** time-based transitions run for at most 150ms, and
   staggered delays sit 50ms apart. Scroll reveals declare an optional duration
-  (`animate-reveal-<ms>`, default 300ms). See
+  (`animate-reveal-<ms>`, default 500ms). See
   [ADR 011](adr/011-motion-timing-budget.md).
 - Every entrance utility is disabled under `prefers-reduced-motion: reduce`.
 - **A motion control** skips or replays the current page's entrances. The header

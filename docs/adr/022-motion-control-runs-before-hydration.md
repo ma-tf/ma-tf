@@ -56,6 +56,12 @@ stays, because the tag orbit uses it.
 
 ### Negative
 
+- The port drops the hook's effect cleanup (`clearTimeout`,
+  `removeEventListener`) and `running.clear()` on purpose: the deferred script
+  runs once per document and the `started` guard makes repeat calls a no-op.
+  `running` is a fresh set per document, and the fallback timeout plus the
+  typewriter listeners die with the document on full navigation — there is no
+  React unmount or StrictMode remount to clean up after.
 - The control's markup, logic and styling now live in `.astro`, `.ts` and
   `global.css` rather than in one component file.
 - The auto-hide sampling and fallback remain best-effort, unchanged from

@@ -154,9 +154,9 @@ fixed in the component (`10`, `15`, `20`, `27/33`, `27/27`, `35`).
 `@media (scripting: enabled)`, so CSS itself gates it on scripting being
 available, and `startReveal()` in `src/lib/reveal.ts` observes every
 `[class*="animate-reveal"]` element with `IntersectionObserver`. The first time an
-element comes roughly 15% into the viewport (`rootMargin: 0px 0px -15% 0px`,
+element comes roughly 25% into the viewport (`rootMargin: 0px 0px -25% 0px`,
 once) the observer adds `is-revealed`, and a transition of the declared duration
-(300ms by default, or the suffix of `animate-reveal-<ms>`) fades it in from
+(500ms by default, or the suffix of `animate-reveal-<ms>`) fades it in from
 `opacity: 0` and `translateY(16px)`. Without scripting, or under reduced motion,
 the hidden state never applies, so the elements stay visible with no flash.
 `data-motion="skipped"` forces them visible.
@@ -169,7 +169,7 @@ Defined in `src/styles/global.css`.
 | ------------------------ | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `animate-fade-in`        | Page-load entrance         | `flickerIn` over 1s; consumes `--delay`.                                                                                                                                                                                   |
 | `animate-fade-up-*`      | Page-load entrance         | Wildcard: distance in px then optional `/duration` (`animate-fade-up-32/300`). Two keyframes.                                                                                                                              |
-| `animate-reveal-*`       | Scroll reveal              | Wildcard: optional duration in ms, default 300 (`animate-reveal`, `animate-reveal-500`). Hidden under `@media (scripting: enabled)` until ~15% into view, then `is-revealed` transitions `opacity` and `translateY(16px)`. |
+| `animate-reveal-*`       | Scroll reveal              | Wildcard: optional duration in ms, default 500 (`animate-reveal`, `animate-reveal-300`). Hidden under `@media (scripting: enabled)` until ~25% into view, then `is-revealed` transitions `opacity` and `translateY(16px)`. |
 | `animate-fade-in-scroll` | Scroll reveal              | `animation-timeline: view()`, range `entry 10% … 70%`.                                                                                                                                                                     |
 | `animation-delay-*`      | Delay token                | Sets `--delay` in ms; consumed by all of the above.                                                                                                                                                                        |
 | `fade-move-delay-*`      | Delay token                | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                                                                                               |

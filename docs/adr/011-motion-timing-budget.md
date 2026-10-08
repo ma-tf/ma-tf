@@ -40,6 +40,6 @@ different interfaces, and the longer values made the site feel sluggish.
 - Page-load entrance delays across `src/pages/` and `src/features/`
 
 > Amended: `animate-reveal` is not scroll-driven. Its duration is declared at the
-> call site (`animate-reveal-<ms>`, default 300ms) and is exempt from the 150ms
+> call site (`animate-reveal-<ms>`, default 500ms) and is exempt from the 150ms
 > cap; the cap still governs interactions and page-load entrances. See
 > [the motion reference](../motion.md).

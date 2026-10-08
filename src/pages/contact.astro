@@ -1,12 +1,12 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
+import { ScrollCue } from "@components/scroll-cue";
 import {
   Contact,
   ContactCard,
   ContactContent,
   ContactHeader,
-  ContactScrollCue,
   ContactTitle,
 } from "@features/contact/contact";
 ---
@@ -23,7 +23,7 @@ import {
       />
       <ContactHeader>
         <ContactTitle>Contact</ContactTitle>
-        <ContactScrollCue />
+        <ScrollCue />
       </ContactHeader>
       <ContactContent>
         <section

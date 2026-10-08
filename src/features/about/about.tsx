@@ -1,29 +1,12 @@
-import { ArrowDownIcon } from "@phosphor-icons/react";
+import { StillLifeHero, StillLifeHeroHeader } from "@components/still-life-hero";
 import { cn } from "cn";
 
 export function About({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "grid min-h-dvh grid-rows-[150dvh_auto] content-start md:grid-cols-10 md:grid-rows-[1fr_auto] md:content-normal",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <StillLifeHero className={className} {...props} />;
 }
 
 export function AboutHeader({ className, ...props }: React.ComponentProps<"header">) {
-  return (
-    <header
-      data-parallax={40}
-      className={cn(
-        "sticky top-0 col-start-1 row-start-1 flex h-dvh items-start justify-end px-6 pt-8 text-center md:static md:col-start-6 md:mt-24 md:h-auto md:items-center md:justify-start md:px-0 md:pt-0",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <StillLifeHeroHeader className={className} {...props} />;
 }
 
 export function AboutTitle({ className, ...props }: React.ComponentProps<"h1">) {
@@ -62,20 +45,5 @@ export function AboutCard({ className, ...props }: React.ComponentProps<"div">) 
       )}
       {...props}
     />
-  );
-}
-
-export function AboutScrollCue({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "pointer-events-none absolute right-6 bottom-6 flex animate-scroll-cue items-center gap-1 md:hidden",
-        className,
-      )}
-      {...props}
-    >
-      <span className="text-2xs tracking-wider uppercase">Scroll down</span>
-      <ArrowDownIcon className="size-4" aria-hidden="true" />
-    </div>
   );
 }

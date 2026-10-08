@@ -1,12 +1,12 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
+import { ScrollCue } from "@components/scroll-cue";
 import {
   Privacy,
   PrivacyCard,
   PrivacyContent,
   PrivacyHeader,
-  PrivacyScrollCue,
   PrivacyTitle,
 } from "@features/privacy/privacy";
 ---
@@ -23,7 +23,7 @@ import {
       />
       <PrivacyHeader>
         <PrivacyTitle>Privacy</PrivacyTitle>
-        <PrivacyScrollCue />
+        <ScrollCue />
       </PrivacyHeader>
       <PrivacyContent>
         <section

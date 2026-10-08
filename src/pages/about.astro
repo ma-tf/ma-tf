@@ -1,12 +1,12 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
+import { ScrollCue } from "@components/scroll-cue";
 import {
   About,
   AboutCard,
   AboutContent,
   AboutHeader,
-  AboutScrollCue,
   AboutTitle,
 } from "@features/about/about";
 import { siteIdentity } from "@features/seo/site-metadata";
@@ -26,7 +26,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
       />
       <AboutHeader>
         <AboutTitle>About</AboutTitle>
-        <AboutScrollCue />
+        <ScrollCue />
       </AboutHeader>
       <AboutContent>
         <section
