@@ -147,7 +147,7 @@ export function siteJsonLd(
         "@id": `${siteUrl}/#website`,
         url: siteUrl,
         name: siteIdentity.name,
-        alternateName: `${siteIdentity.name} Personal Website`,
+        alternateName: siteIdentity.homeTitle.replace(" | ", " "),
         description: siteIdentity.description,
         publisher: { "@id": personId },
       },

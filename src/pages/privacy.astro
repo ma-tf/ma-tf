@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
+import { stillLifeScroll, stillLifeSectionClass } from "@components/still-life-hero";
 import { ScrollCue } from "@components/scroll-cue";
 import {
   Privacy,
@@ -16,9 +17,7 @@ import {
     <Privacy>
       <StillLifeBackground
         baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
-        scrollDistance={1.5}
-        scrollDrift={0.4}
-        scrollScale={1.15}
+        {...stillLifeScroll}
         className="sticky top-0 col-start-1 row-start-1 h-lvh"
       />
       <PrivacyHeader>
@@ -27,7 +26,7 @@ import {
       </PrivacyHeader>
       <PrivacyContent>
         <section
-          class="text-base leading-relaxed flex flex-col gap-12 pb-36 pt-12 md:flex-row md:gap-9 md:pb-64 md:pl-16 md:text-xs"
+          class:list={[stillLifeSectionClass, "md:text-xs"]}
           data-parallax={40}
         >
           <PrivacyCard className="animate-reveal">

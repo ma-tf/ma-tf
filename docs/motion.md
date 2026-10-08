@@ -120,9 +120,20 @@ image; the props are the scroll config the driver reads back off the frame.
 
 Per-page choreography lives at the call site, not in the component: the numbers
 are passed as props from the page's `.astro` file. `about.astro`, `contact.astro`
-and `privacy.astro` override them (`scrollDistance={1.5}`, `scrollDrift={0.4}`,
-`scrollScale={1.15}`); `developers.astro` takes the defaults. Layer factors are
+and `privacy.astro` spread the shared `stillLifeScroll` preset from
+`still-life-hero.tsx` (`scrollDistance: 1.5`, `scrollDrift: 0.4`,
+`scrollScale: 1.15`), passing explicit props after the spread to override it;
+`developers.astro` takes the defaults. Layer factors are
 fixed in the component (`10`, `15`, `20`, `27/33`, `27/27`, `35`).
+
+## Footer overlap contract
+
+`src/components/Footer.astro` is in-flow (`static`) below 768px and a fixed
+16px (`h-4`) overlay (`md:fixed md:bottom-0`) at desktop widths. The three
+scroll-hero pages (`about`, `contact`, `privacy`) clear it with `pb-36` on
+mobile and `md:pb-64` on desktop; the desktop value also provides scroll room
+for the reveal and push choreography. Keep either value above `h-4` when
+restyling.
 
 ## Reduced motion and the motion control
 

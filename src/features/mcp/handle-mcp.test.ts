@@ -794,4 +794,113 @@ describe("handleMcp", () => {
 
     expect(response.status).toBe(413);
   });
+
+  function legacyRequestFor(body: unknown): Request {
+    return new Request("https://m4t.tf/mcp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json, text/event-stream",
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  async function readLegacyMessage<T>(response: Response): Promise<T> {
+    const text = await response.text();
+    const data =
+      text
+        .split("\n")
+        .find((line) => line.startsWith("data: "))
+        ?.slice("data: ".length) ?? "";
+
+    return JSON.parse(data) as T;
+  }
+
+  it("answers a legacy initialize handshake without a session ID", async () => {
+    const response = await handleMcp(
+      legacyRequestFor({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: {
+          protocolVersion: "2025-06-18",
+          capabilities: {},
+          clientInfo: { name: "legacy", version: "0.0" },
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+
+    const payload = await readLegacyMessage<Payload>(response);
+
+    expect(payload.jsonrpc).toBe("2.0");
+    expect(payload.id).toBe(1);
+    expect(payload.result?.protocolVersion).toBe("2025-06-18");
+    expect(payload.result?.serverInfo).toMatchObject({ name: "m4t.tf" });
+  });
+
+  it("negotiates a legacy protocol downgrade", async () => {
+    const response = await handleMcp(
+      legacyRequestFor({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: {
+          protocolVersion: "2025-03-26",
+          capabilities: {},
+          clientInfo: { name: "legacy", version: "0.0" },
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect((await readLegacyMessage<Payload>(response)).result?.protocolVersion).toBe("2025-03-26");
+  });
+
+  it("accepts the legacy initialized notification without a session", async () => {
+    const response = await handleMcp(
+      legacyRequestFor({ jsonrpc: "2.0", method: "notifications/initialized" }),
+    );
+
+    expect(response.status).toBe(202);
+    expect(await response.text()).toBe("");
+  });
+
+  it("lists tools and calls ask through the legacy stateless path", async () => {
+    askMock.mockResolvedValue({
+      sources: [{ url: "https://m4t.tf/about", title: "About", content: "About Matt." }],
+      summary: "Matt builds software.",
+    });
+
+    const listResponse = await handleMcp(
+      legacyRequestFor({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} }),
+    );
+
+    expect(listResponse.status).toBe(200);
+    expect(
+      (
+        await readLegacyMessage<{ result: { tools: ToolListing[] } }>(listResponse)
+      ).result.tools.map((tool) => tool.name),
+    ).toEqual(["ask"]);
+
+    const callResponse = await handleMcp(
+      legacyRequestFor({
+        jsonrpc: "2.0",
+        id: 3,
+        method: "tools/call",
+        params: {
+          name: "ask",
+          arguments: { query: { text: "Who is Matt?" }, prefer: { mode: "summarize" } },
+        },
+      }),
+    );
+
+    expect(callResponse.status).toBe(200);
+    expect((await readLegacyMessage<{ result: ToolCallResult }>(callResponse)).result.isError).toBe(
+      false,
+    );
+    expect(askMock).toHaveBeenCalledWith("Who is Matt?", true, expect.any(AbortSignal));
+  });
 });

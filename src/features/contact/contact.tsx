@@ -1,4 +1,9 @@
-import { StillLifeHero, StillLifeHeroHeader } from "@components/still-life-hero";
+import {
+  StillLifeCard,
+  StillLifeContent,
+  StillLifeHero,
+  StillLifeHeroHeader,
+} from "@components/still-life-hero";
 import { cn } from "cn";
 
 export function Contact({ className, ...props }: React.ComponentProps<"div">) {
@@ -24,26 +29,12 @@ export function ContactTitle({ className, ...props }: React.ComponentProps<"h1">
 
 export function ContactContent({ children, className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      className={cn(
-        "relative min-h-dvh border-t bg-background px-6 pt-4 md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:border-t-0 md:bg-transparent md:px-0 md:pt-0",
-        className,
-      )}
-      {...props}
-    >
+    <StillLifeContent className={className} {...props}>
       {children}
-    </div>
+    </StillLifeContent>
   );
 }
 
 export function ContactCard({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "w-full max-w-none corner-brackets-4 corner-thickness-1 md:w-auto md:max-w-card",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <StillLifeCard className={className} {...props} />;
 }

@@ -7,7 +7,7 @@ import { appendVaryValue, selectRepresentation } from "@features/discovery/negot
 import { preflightResponse, problemResponse } from "@features/discovery/problems";
 import { resourceJson } from "@features/discovery/resource-json";
 import { resourceMarkdownResponse } from "@features/discovery/resource-markdown";
-import { apiRateLimitFor, isApiPath } from "@lib/api-paths";
+import { apiRateLimitForRequest, isApiPath } from "@lib/api-paths";
 import { enforceRateLimit } from "@lib/rate-limit-middleware";
 import { wideEventMiddleware } from "@lib/wide-event-middleware";
 import { sequence } from "astro:middleware";
@@ -71,7 +71,7 @@ async function handleApiRequest(
   request: Request,
   next: MiddlewareNext,
 ): Promise<Response> {
-  const limit = apiRateLimitFor(pathname, request);
+  const limit = await apiRateLimitForRequest(pathname, request);
   if (!limit) return next();
 
   const { limited, headers } = await enforceRateLimit(request, limit);

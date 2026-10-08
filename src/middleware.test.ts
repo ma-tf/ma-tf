@@ -21,13 +21,19 @@ type ContextInit = {
   method?: string;
   isPrerendered?: boolean;
   headers?: Record<string, string>;
+  body?: unknown;
 };
 
 function buildContext(pathname: string, init: ContextInit = {}): APIContext {
   const url = new URL(pathname, "https://m4t.tf");
   const request = new Request(url, {
-    method: init.method ?? "GET",
-    headers: { ...(init.accept ? { Accept: init.accept } : {}), ...init.headers },
+    method: init.method ?? (init.body === undefined ? "GET" : "POST"),
+    headers: {
+      ...(init.accept ? { Accept: init.accept } : {}),
+      ...(init.body === undefined ? {} : { "Content-Type": "application/json" }),
+      ...init.headers,
+    },
+    ...(init.body === undefined ? {} : { body: JSON.stringify(init.body) }),
   });
 
   return { isPrerendered: init.isPrerendered ?? false, url, request } as unknown as APIContext;
@@ -250,6 +256,59 @@ describe("onRequest", () => {
     await onRequest(
       buildContext("/mcp", {
         headers: { "Mcp-Method": "tools/call", "Mcp-Name": "=?base64?b3RoZXI=?=" },
+      }),
+      next,
+    );
+
+    expect(enforce).not.toHaveBeenCalled();
+  });
+
+  it("meters a legacy ask tools/call without Mcp headers", async () => {
+    const response = await onRequest(
+      buildContext("/mcp", {
+        body: {
+          jsonrpc: "2.0",
+          id: 3,
+          method: "tools/call",
+          params: { name: "ask", arguments: { query: { text: "Who is Matt?" } } },
+        },
+      }),
+      next,
+    );
+
+    expect(enforce).toHaveBeenCalledOnce();
+    expect(response.headers.get("Link")).toBeNull();
+  });
+
+  it("does not meter a legacy initialize handshake", async () => {
+    await onRequest(
+      buildContext("/mcp", {
+        body: {
+          jsonrpc: "2.0",
+          id: 1,
+          method: "initialize",
+          params: {
+            protocolVersion: "2025-06-18",
+            capabilities: {},
+            clientInfo: { name: "legacy", version: "0.0" },
+          },
+        },
+      }),
+      next,
+    );
+
+    expect(enforce).not.toHaveBeenCalled();
+  });
+
+  it("does not meter a legacy tools/call for another tool", async () => {
+    await onRequest(
+      buildContext("/mcp", {
+        body: {
+          jsonrpc: "2.0",
+          id: 3,
+          method: "tools/call",
+          params: { name: "other", arguments: {} },
+        },
       }),
       next,
     );

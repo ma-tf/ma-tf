@@ -46,3 +46,31 @@ export function apiRateLimitFor(pathname: string, request: Request): RateLimit |
     ? askRateLimit
     : undefined;
 }
+
+function isLegacyAskCall(message: unknown): boolean {
+  if (typeof message !== "object" || message === null) return false;
+
+  const { method, params } = message as { method?: unknown; params?: unknown };
+  if (method !== "tools/call") return false;
+  if (typeof params !== "object" || params === null || Array.isArray(params)) return false;
+
+  return (params as { name?: unknown }).name === "ask";
+}
+
+export async function apiRateLimitForRequest(
+  pathname: string,
+  request: Request,
+): Promise<RateLimit | undefined> {
+  const headerLimit = apiRateLimitFor(pathname, request);
+  if (headerLimit) return headerLimit;
+  if (pathname !== "/mcp" || request.method !== "POST") return undefined;
+
+  try {
+    const body: unknown = await request.clone().json();
+    const messages = Array.isArray(body) ? body : [body];
+
+    return messages.some(isLegacyAskCall) ? askRateLimit : undefined;
+  } catch {
+    return undefined;
+  }
+}

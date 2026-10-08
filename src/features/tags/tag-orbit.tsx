@@ -2,10 +2,9 @@ import type { Tag } from "@features/tags/tag-data";
 
 import { Orbit } from "@features/tags/orbit";
 import { OrbitProvider } from "@features/tags/orbit-context";
+import { readStoredRotation, writeStoredRotation } from "@features/tags/orbit-storage";
 import { TagLink } from "@features/tags/tags";
 import { useCallback, useMemo, useRef } from "react";
-
-const STORAGE_KEY = "ma-tf:orbit-rotation";
 
 type TagOrbitProps = {
   tags: Tag[];
@@ -14,16 +13,12 @@ type TagOrbitProps = {
 
 export function TagOrbit({ tags, selected }: TagOrbitProps) {
   const rotationRef = useRef(0);
-  const initialRotation = useMemo(
-    () =>
-      typeof sessionStorage === "undefined" ? 0 : Number(sessionStorage.getItem(STORAGE_KEY) ?? 0),
-    [],
-  );
+  const initialRotation = useMemo(() => readStoredRotation(), []);
 
   const navigate = useCallback(
     (tag: Tag | null) => {
       if (!tag) return;
-      sessionStorage.setItem(STORAGE_KEY, String(rotationRef.current));
+      writeStoredRotation(rotationRef.current);
       window.location.href = selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`;
     },
     [selected],

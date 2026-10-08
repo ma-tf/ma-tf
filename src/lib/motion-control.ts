@@ -20,7 +20,8 @@ const LABELS: Record<Exclude<MotionMode, "hidden">, string> = {
   reset: "Reset animations",
 };
 
-let started = false;
+let activeControl: HTMLElement | null = null;
+let teardown: (() => void) | null = null;
 
 const initialMode = (): MotionMode | null => {
   const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches;
@@ -32,14 +33,16 @@ const initialMode = (): MotionMode | null => {
 };
 
 export function startMotionControl() {
-  if (started) return;
-
   const control = document.querySelector<HTMLElement>(CONTROL_SELECTOR);
   if (!control) return;
+  if (control === activeControl) return;
 
-  started = true;
+  teardown?.();
+
+  activeControl = control;
 
   const running = new Set<Animation>();
+  let fallback = 0;
 
   const setMode = (mode: MotionMode) => {
     control.dataset.mode = mode;
@@ -74,16 +77,35 @@ export function startMotionControl() {
     location.reload();
   };
 
-  control.addEventListener("click", () => {
+  const onClick = () => {
     if (control.dataset.mode === "reset") reset();
     else skip();
-  });
+  };
+
+  const onTypewriterStart = () => setMode("skip");
+  const onTypewriterEnd = () => settleIfIdle();
+
+  control.addEventListener("click", onClick);
+  window.addEventListener(TYPEWRITER_START_EVENT, onTypewriterStart);
+  window.addEventListener(TYPEWRITER_END_EVENT, onTypewriterEnd);
+
+  teardown = () => {
+    window.clearTimeout(fallback);
+    control.removeEventListener("click", onClick);
+    window.removeEventListener(TYPEWRITER_START_EVENT, onTypewriterStart);
+    window.removeEventListener(TYPEWRITER_END_EVENT, onTypewriterEnd);
+    running.clear();
+    if (activeControl === control) activeControl = null;
+    teardown = null;
+  };
 
   const mode = initialMode();
   if (mode) {
     setMode(mode);
     return;
   }
+
+  setMode("skip");
 
   const watch = (animation: Animation) => {
     if (animation.playState === "finished") return;
@@ -100,10 +122,7 @@ export function startMotionControl() {
 
   settleIfIdle();
 
-  window.setTimeout(() => {
-    if (!isTypewriterRunning()) setMode("reset");
+  fallback = window.setTimeout(() => {
+    if (running.size === 0 && !isTypewriterRunning()) setMode("reset");
   }, FALLBACK_TIMEOUT);
-
-  window.addEventListener(TYPEWRITER_START_EVENT, () => setMode("skip"));
-  window.addEventListener(TYPEWRITER_END_EVENT, settleIfIdle);
 }
