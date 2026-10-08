@@ -58,6 +58,7 @@
     "@types/turndown": "^5.0.6",
     "astro": "^7.3.5",
     "fallow": "^3.31.0",
+    "happy-dom": "^20.14.5",
     "is-agentic": "^1.0.1",
     "mdast-util-to-string": "^4.0.0",
     "netlify": "^27.11.0",
