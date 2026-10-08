@@ -32,6 +32,25 @@ async function walkFiles(dir: string): Promise<string[]> {
 }
 
 const sourceRoot = join(corpusRoot, "src");
+const renderRoots = [
+  { dir: join(sourceRoot, "pages"), extensions: [".astro"] },
+  { dir: join(sourceRoot, "features"), extensions: [".tsx", ".astro"] },
+];
+
+async function renderInputPaths(): Promise<string[]> {
+  const found = await Promise.all(renderRoots.map(({ dir }) => walkFiles(dir)));
+
+  return found.flat().filter((path) => {
+    if (path === corpusOutputPath || path === catalogueOutputPath) return false;
+    if (path.includes(".test.") || path.includes(".spec.")) return false;
+
+    return renderRoots.some(
+      ({ dir, extensions }) =>
+        path.startsWith(`${dir}${sep}`) && extensions.some((extension) => path.endsWith(extension)),
+    );
+  });
+}
+
 const contentModule = "astro:content";
 const contentConfig = join(sourceRoot, "content.config.ts");
 const dependencyRoots = [
@@ -124,6 +143,7 @@ async function dependencyInputPaths(): Promise<string[]> {
     ...new Set([
       ...seen,
       ...content,
+      ...(await renderInputPaths()),
       askTagsPath,
       ...hashFileCandidates.map((file) => join(corpusRoot, file)),
     ]),

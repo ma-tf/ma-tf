@@ -30,6 +30,19 @@ describe("hashInputPaths", () => {
     expect(paths).toContain("src/pages/cv/llms.txt.ts");
   });
 
+  it("includes page render sources", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toContain("src/pages/index.astro");
+    expect(paths).toContain("src/pages/about.astro");
+  });
+
+  it("includes feature render sources", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).toContain("src/features/home/home.tsx");
+    expect(paths).toContain("src/features/faq/faq-section.astro");
+  });
   it("includes the Ask tag overrides", async () => {
     expect(await hashInputPaths()).toContain("src/features/ask/ask-tags.json");
   });
@@ -56,6 +69,13 @@ describe("hashInputPaths", () => {
 
     expect(paths).toContain("astro.config.mjs");
     expect(paths).toContain("tsconfig.json");
+  });
+
+  it("excludes the generated artefacts so writing them cannot move the hash", async () => {
+    const paths = await hashInputPaths();
+
+    expect(paths).not.toContain("src/features/ask/published-pages.generated.json");
+    expect(paths).not.toContain("src/features/mcp/resources.generated.json");
   });
 
   it("returns a sorted, de-duplicated path set", async () => {
