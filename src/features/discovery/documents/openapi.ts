@@ -182,26 +182,25 @@ function operationIdFor(resource: DiscoveryResource): string {
   return `get${pascal}`;
 }
 
-function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown> {
-  if (resource.path === registryServerPath) return { $ref: "#/components/schemas/McpServer" };
-  if (resource.path === aiCatalogPath) return { $ref: "#/components/schemas/Ard" };
+const specialPathSchemas: Record<string, Record<string, unknown>> = {
+  [registryServerPath]: { $ref: "#/components/schemas/McpServer" },
+  [aiCatalogPath]: { $ref: "#/components/schemas/Ard" },
+};
 
-  switch (resource.type) {
-    case "text/plain":
-    case "application/rss+xml":
-    case "application/xml":
-      return { type: "string" };
-    case "application/linkset+json":
-      return { $ref: "#/components/schemas/Linkset" };
-    case "application/ard+json":
-      return { $ref: "#/components/schemas/Ard" };
-    case "application/json":
-      return { $ref: "#/components/schemas/AgentSkillsIndex" };
-    case "application/vnd.oai.openapi+json;version=3.1":
-      return { type: "object", additionalProperties: true };
-    default:
-      throw new Error(`No OpenAPI response schema is defined for media type "${resource.type}"`);
-  }
+const mediaTypeSchemas: Record<string, Record<string, unknown>> = {
+  "text/plain": { type: "string" },
+  "application/rss+xml": { type: "string" },
+  "application/xml": { type: "string" },
+  "application/linkset+json": { $ref: "#/components/schemas/Linkset" },
+  "application/ard+json": { $ref: "#/components/schemas/Ard" },
+  "application/json": { $ref: "#/components/schemas/AgentSkillsIndex" },
+  "application/vnd.oai.openapi+json;version=3.1": { type: "object", additionalProperties: true },
+};
+
+function responseSchemaFor(resource: DiscoveryResource): Record<string, unknown> {
+  const schema = specialPathSchemas[resource.path] ?? mediaTypeSchemas[resource.type];
+  if (schema) return schema;
+  throw new Error(`No OpenAPI response schema is defined for media type "${resource.type}"`);
 }
 
 function jsonSchemaFor(resource: DiscoveryResource): Record<string, unknown> {
