@@ -39,6 +39,27 @@ means requesting it from a running server.
 - Prefer asking the developer to keep a server up rather than launching one
   yourself.
 
+## MCP endpoint
+
+`/mcp` serves modern (2026-07-28 envelope) and legacy (2025-era `initialize`
+handshake) clients from one factory; see
+[ADR 023](adr/023-mcp-serves-modern-and-legacy-clients.md). Probe both paths:
+
+```sh
+curl -X POST http://localhost:4321/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"probe","version":"1"}}}'
+
+curl -X POST http://localhost:4321/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"resources/list","params":{}}'
+```
+
+Both answer 200. The legacy path answers over Server-Sent Events, so the
+`Accept` header must name both media types.
+
 ## Visual probing
 
 `scripts/probe.mts` drives a headless Chromium through Playwright to inspect
