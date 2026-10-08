@@ -1,19 +1,6 @@
 # Conventions
 
-Conventions for this project.
-
-## Page component structure
-
-- A page's presentational parts live in `src/features/{name}/`, with the page's
-  components in `src/features/{name}/{name}.tsx`.
-- `src/pages/{name}.astro` composes those components and holds no presentation
-  of its own.
-- A page component file exports `{Name}` (wrapper), `{Name}Header`,
-  `{Name}Title`, `{Name}Description` and `{Name}Content`, plus any page-specific
-  parts such as `{Name}Navigation`, `{Name}Grid` or `{Name}Card`. Omit parts a
-  page does not need.
-- A homepage preview card, where a page provides one, lives in a sibling
-  `{name}-preview.tsx` and exports `{Name}Preview`.
+CSS and styling conventions for this project.
 
 ## Styling
 
@@ -62,38 +49,3 @@ properties being animated with `transition-colors`, `transition-opacity` or
 `transition-transform`, or an arbitrary value such as
 `transition-[opacity_200ms,transform_200ms]`. The
 `react-doctor/no-transition-all` rule (warning) enforces this.
-
-## Motion
-
-- **Entrances reuse the shared utilities**, not ad-hoc keyframes.
-  `animate-fade-up` (+ `animation-delay-*`) reveals above-the-fold content on
-  page load; `animate-reveal` (optional `-<ms>`, default 500) fades content in
-  once it scrolls ~25% into view.
-- **Theme changes sweep** through the View Transitions API. See
-  [ADR 010](adr/010-theme-transitions-via-view-transitions.md).
-- **Keep motion snappy:** time-based transitions run for at most 150ms, and
-  staggered delays sit 50ms apart. Scroll reveals declare an optional duration
-  (`animate-reveal-<ms>`, default 500ms). See
-  [ADR 011](adr/011-motion-timing-budget.md).
-- Every entrance utility is disabled under `prefers-reduced-motion: reduce`.
-- **A motion control** skips or replays the current page's entrances. The header
-  button ends a running entrance by setting `data-motion="skipped"` on `<html>`
-  (which disables those utilities for that page view only and completes the
-  `/developers` typewriter at once), then becomes a reset control that forgets
-  the page's `visited-pages` entry and reloads to replay it. See
-  [ADR 019](adr/019-replay-motion-control.md).
-- **Revisits skip entrances.** A path already recorded in `sessionStorage`
-  (`visited-pages`) sets `data-motion="revisit"` before paint, disabling the
-  page-load entrances while leaving scroll reveals running. See
-  [ADR 018](adr/018-revisit-entrance-skip.md).
-
-## Language
-
-- Use British English for documentation, UI copy and code comments. Technical
-  terms and API names keep their original spelling (for example CSS `color`).
-
-## Icons
-
-- Import Phosphor icons with the `Icon` postfix (`ArrowLeftIcon`, `SunIcon`).
-  The bare name (`ArrowLeft`) is a deprecated alias and must not be used in new
-  code.

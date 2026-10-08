@@ -7,8 +7,23 @@ running server. See [vite-plus.md](vite-plus.md) for the toolchain commands.
 
 - `vp test` — run the test suite.
 - `vpx astro check` — Astro diagnostics; run after changing any `.astro` file.
-- `vp check` — format and lint.
+- `vp check --fix` — format and lint (auto-fixes; the pre-commit hook fails on unapplied fixes).
 - `vp run build` — production build.
+- `vpx fallow` — static quality gate: dead code, complexity, duplication.
+
+## Static quality gate
+
+`vpx fallow` exits 0 when clean and 1 on findings. The pre-push hook
+runs `fallow audit`.
+
+- Fix the breach sections (Dead Code, Complexity), not the closing hint:
+  the final "start with …" line names an advisory refactoring target,
+  which can differ from the actual breaches.
+- CRAP scores are estimated from export references; pass
+  `--coverage <coverage-final.json>` for exact scores.
+- For per-function detail, use the fallow MCP `check_health` and
+  `inspect_target` tools, or
+  `fallow health --complexity --complexity-breakdown --format json --quiet`.
 
 ## Smoke testing
 

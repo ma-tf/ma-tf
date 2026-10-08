@@ -23,6 +23,7 @@ jobs:
       - run: vpx astro sync
       - run: vp run check:ask-corpus
       - run: vp check
+      - run: vp test
       - run: vp run build
         env:
           R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}

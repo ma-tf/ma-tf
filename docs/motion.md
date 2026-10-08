@@ -159,6 +159,11 @@ restyling.
   trigger-based rather than scroll-linked; its duration is declared at the call
   site (`animate-reveal-<ms>`) and is also exempt from the 150ms cap.
 
+## Theme transitions
+
+Theme changes sweep through the View Transitions API. See
+[ADR 010](adr/010-theme-transitions-via-view-transitions.md).
+
 ## Reveal trigger
 
 `animate-reveal-<ms>` is not scroll-driven. Its hidden state is scoped to
