@@ -129,11 +129,14 @@ fixed in the component (`10`, `15`, `20`, `27/33`, `27/27`, `35`).
 ## Footer overlap contract
 
 `src/components/Footer.astro` is in-flow (`static`) below 768px and a fixed
-16px (`h-4`) overlay (`md:fixed md:bottom-0`) at desktop widths. The three
-scroll-hero pages (`about`, `contact`, `privacy`) clear it with `pb-36` on
-mobile and `md:pb-64` on desktop; the desktop value also provides scroll room
-for the reveal and push choreography. Keep either value above `h-4` when
-restyling.
+16px (`h-4`) overlay (`md:fixed md:bottom-0 md:h-4`) at desktop widths. On
+mobile it is a two-column grid (`grid-cols-2`) with a `Resources` column
+(`Developers`) and a `Site` column (`About`, `Contact`, `Privacy` stacked),
+for a total of roughly 196px. The three scroll-hero pages (`about`, `contact`,
+`privacy`) clear it with `pb-36` on mobile and `md:pb-64` on desktop; the
+desktop value also provides
+scroll room for the reveal and push choreography. Keep either value above the
+footer's height at its breakpoint when restyling.
 
 ## Reduced motion and the motion control
 

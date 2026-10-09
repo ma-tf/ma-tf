@@ -34,12 +34,14 @@ function DialogOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) 
 }
 
 const dialogContentVariants = cva(
-  "fixed top-1/2 left-1/2 z-50 grid -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+  "fixed z-50 gap-4 bg-popover text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
   {
     variants: {
       size: {
-        default: "w-full max-w-[calc(100%-2rem)] sm:max-w-sm",
-        media: "w-fit max-w-dvw-90 sm:max-w-dvw-90",
+        default:
+          "top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 sm:max-w-sm",
+        media:
+          "inset-0 flex items-center justify-center overflow-hidden rounded-none p-0 md:inset-auto md:top-1/2 md:left-1/2 md:grid md:w-fit md:max-w-dvw-90 md:items-stretch md:justify-start md:overflow-visible md:rounded-xl md:p-4 md:-translate-x-1/2 md:-translate-y-1/2",
       },
     },
     defaultVariants: { size: "default" },
@@ -69,7 +71,11 @@ function DialogContent({
           <DialogPrimitive.Close
             data-slot="dialog-close"
             render={
-              <Button variant="ghost" className="absolute top-2 right-2" size="icon-sm">
+              <Button
+                variant="ghost"
+                className="absolute top-2 right-2 bg-popover/80 backdrop-blur-xs md:bg-transparent md:backdrop-blur-none"
+                size="icon-sm"
+              >
                 <XIcon />
                 <span className="sr-only">Close</span>
               </Button>

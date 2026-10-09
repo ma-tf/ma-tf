@@ -5,7 +5,7 @@ export type PreviewPost = { slug: string; title: string; publicationDate: string
 
 export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
   return (
-    <div className="mx-auto max-w-6xl px-8 py-24">
+    <div className="mx-auto w-fit max-w-full px-8 py-24">
       <div className="flex items-center gap-2">
         <h2 className="text-lg uppercase">Latest posts</h2>
         <a
@@ -20,10 +20,10 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
         {posts.map((post) => (
           <li
             key={post.slug}
-            className="py-2 transition-transform duration-150 focus-within:md:translate-x-2 hover:md:translate-x-2"
+            className="min-w-0 py-2 transition-transform duration-150 focus-within:md:translate-x-2 hover:md:translate-x-2"
           >
-            <a href={`/posts/${post.slug}`} className="group flex flex-col hover:underline">
-              <span className="truncate text-xl font-semibold transition-colors group-hover:text-foreground/70 md:text-clip">
+            <a href={`/posts/${post.slug}`} className="group flex min-w-0 flex-col hover:underline">
+              <span className="min-w-0 truncate text-xl font-semibold transition-colors group-hover:text-foreground/70 md:text-clip">
                 {post.title}
               </span>
               <time dateTime={post.publicationDate} className="shrink-0 text-lg text-foreground">

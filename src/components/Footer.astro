@@ -1,64 +1,67 @@
 ---
 import { BracketsCurlyIcon } from "@phosphor-icons/react";
 
-const leftLinks = [
-  { label: "Developers", href: "/developers", icon: BracketsCurlyIcon },
-];
-
-const rightLinks = [
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-  { label: "Privacy", href: "/privacy" },
+const columns = [
+  {
+    title: "Resources",
+    links: [
+      { label: "Developers", href: "/developers", icon: BracketsCurlyIcon },
+    ],
+  },
+  {
+    title: "Site",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
+      { label: "Privacy", href: "/privacy" },
+    ],
+  },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
 <footer
-  class="static z-50 h-4 w-full border-t border-border bg-background text-foreground md:fixed md:bottom-0"
+  class="static z-50 w-full border-t border-border bg-background text-foreground md:fixed md:bottom-0 md:h-4"
 >
   <nav
     aria-label="Footer"
-    class="mx-auto flex h-full w-full max-w-480 items-stretch"
+    class="mx-auto grid w-full max-w-480 grid-cols-2 gap-4 pt-4 pb-8 md:flex md:h-full md:items-stretch md:gap-0 md:py-0"
   >
     {
-      leftLinks.map((link) => {
-        const isCurrent = link.href === currentPath;
-        const Icon = link.icon;
+      columns.map((column, columnIndex) => {
+        const isLast = columnIndex === columns.length - 1;
         return (
-          <a
-            href={link.href}
-            aria-current={isCurrent ? "page" : undefined}
+          <div
             class:list={[
-              "flex items-center gap-1 px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
-              "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground",
+              "grid content-start gap-4 px-4 md:flex md:gap-0 md:px-0",
+              isLast && "md:ms-auto",
             ]}
           >
-            {Icon && <Icon size={12} aria-hidden="true" />}
-            {link.label}
-          </a>
+            <span class="pt-1 pb-2 text-2xs font-semibold tracking-wider text-foreground uppercase md:hidden">
+              {column.title}
+            </span>
+            {column.links.map((link, index) => {
+              const isCurrent = link.href === currentPath;
+              const Icon = "icon" in link ? link.icon : undefined;
+              return (
+                <a
+                  href={link.href}
+                  aria-current={isCurrent ? "page" : undefined}
+                  class:list={[
+                    "flex items-center gap-1 py-1 text-xs tracking-wider uppercase transition-colors duration-150 md:px-3 md:py-0 md:text-2xs",
+                    "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground",
+                    index > 0 && "md:border-l md:border-foreground/20",
+                  ]}
+                >
+                  {Icon && <Icon size={12} aria-hidden="true" />}
+                  {link.label}
+                </a>
+              );
+            })}
+          </div>
         );
       })
     }
-    <div class="ms-auto flex items-stretch">
-      {
-        rightLinks.map((link, index) => {
-          const isCurrent = link.href === currentPath;
-          return (
-            <a
-              href={link.href}
-              aria-current={isCurrent ? "page" : undefined}
-              class:list={[
-                "flex items-center px-3 text-2xs tracking-wider uppercase transition-colors duration-150",
-                "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground",
-                index > 0 && "border-l border-foreground/20",
-              ]}
-            >
-              {link.label}
-            </a>
-          );
-        })
-      }
-    </div>
   </nav>
 </footer>
