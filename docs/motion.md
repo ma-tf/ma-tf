@@ -131,8 +131,9 @@ fixed in the component (`10`, `15`, `20`, `27/33`, `27/27`, `35`).
 `src/components/Footer.astro` is in-flow (`static`) below 768px and a fixed
 16px (`h-4`) overlay (`md:fixed md:bottom-0 md:h-4`) at desktop widths. On
 mobile it is a two-column grid (`grid-cols-2`) with a `Resources` column
-(`Developers`) and a `Site` column (`About`, `Contact`, `Privacy` stacked),
-for a total of roughly 196px. The three scroll-hero pages (`about`, `contact`,
+(`Developers`) and a `Site` column (`About`, `Contact`, `Privacy` stacked), plus
+a right-aligned `Back to top` button spanning both columns, for a total of
+roughly 227px. The three scroll-hero pages (`about`, `contact`,
 `privacy`) clear it with `pb-36` on mobile and `md:pb-64` on desktop; the
 desktop value also provides
 scroll room for the reveal and push choreography. Keep either value above the
@@ -144,6 +145,8 @@ footer's height at its breakpoint when restyling.
   `src/lib/parallax.ts`, and each entrance and reveal utility in
   `global.css`. The parallax drivers re-check on the media query's `change`
   event.
+- The mobile `Back to top` button (`src/lib/scroll-to-top.ts`) scrolls smoothly
+  by default and jumps when the media query matches.
 - The `data-motion` control is separate. `data-motion="skipped"` (ADR 017) and
   `data-motion="revisit"` (ADR 018) disable only the page-load entrances;
   `skipped` also disables the scroll reveals. The parallax drivers are not

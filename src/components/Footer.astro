@@ -1,5 +1,5 @@
 ---
-import { BracketsCurlyIcon } from "@phosphor-icons/react";
+import { ArrowUpIcon, BracketsCurlyIcon } from "@phosphor-icons/react";
 
 const columns = [
   {
@@ -63,5 +63,19 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
         );
       })
     }
+    <button
+      type="button"
+      data-scroll-to-top
+      class="col-span-2 flex items-center justify-end gap-1 px-4 text-2xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-150 hover:text-foreground md:hidden"
+    >
+      Back to top
+      <ArrowUpIcon size={12} weight="bold" aria-hidden="true" />
+    </button>
   </nav>
 </footer>
+
+<script>
+	import { startScrollToTop } from "@lib/scroll-to-top";
+
+	startScrollToTop();
+</script>
