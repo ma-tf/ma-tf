@@ -124,13 +124,15 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
 }
 
 @utility animate-scroll-cue {
-  animation:
-    scrollCueFade linear both,
-    scrollCueRise linear both;
-  animation-timeline: scroll();
-  animation-range:
-    0 var(--scroll-cue-fade, 10vh),
-    0 var(--scroll-cue-rise, 50vh);
+  @supports (animation-timeline: scroll()) {
+    animation:
+      scrollCueFade linear both,
+      scrollCueRise linear both;
+    animation-timeline: scroll();
+    animation-range:
+      0 var(--scroll-cue-fade, 10vh),
+      0 var(--scroll-cue-rise, 50vh);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -7,7 +7,7 @@ export const stillLifeScroll = {
 } as const;
 
 export const stillLifeSectionClass =
-  "text-base leading-relaxed flex flex-col gap-12 pb-36 pt-12 md:flex-row md:gap-9 md:pb-64 md:pl-16";
+  "text-base leading-relaxed flex flex-col gap-12 py-12 md:flex-row md:gap-9 md:pb-64 md:pl-16";
 
 export function StillLifeHero({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -38,7 +38,7 @@ export function StillLifeContent({ children, className, ...props }: React.Compon
   return (
     <div
       className={cn(
-        "relative min-h-dvh border-t bg-background px-6 pt-4 md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:border-t-0 md:bg-transparent md:px-0 md:pt-0",
+        "relative border-t bg-background px-6 pt-4 md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:border-t-0 md:bg-transparent md:px-0 md:pt-0",
         className,
       )}
       {...props}

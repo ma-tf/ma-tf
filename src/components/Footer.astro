@@ -1,12 +1,19 @@
 ---
 import { ArrowUpIcon, BracketsCurlyIcon } from "@phosphor-icons/react";
+import { previews } from "@lib/feature-flags";
+
+const exploreLinks = [
+  { label: "Blog", href: "/blog", enabled: previews.blog },
+  { label: "Photography", href: "/photography", enabled: previews.photography },
+  { label: "Graphics", href: "/graphics", enabled: previews.graphics },
+  { label: "Music", href: "/music", enabled: previews.music },
+  { label: "Vignettes", href: "/vignettes", enabled: previews.vignettes },
+].filter((link) => link.enabled);
 
 const columns = [
   {
-    title: "Resources",
-    links: [
-      { label: "Developers", href: "/developers", icon: BracketsCurlyIcon },
-    ],
+    title: "Explore",
+    links: exploreLinks,
   },
   {
     title: "Site",
@@ -16,7 +23,13 @@ const columns = [
       { label: "Privacy", href: "/privacy" },
     ],
   },
-];
+  {
+    title: "Resources",
+    links: [
+      { label: "Developers", href: "/developers", icon: BracketsCurlyIcon },
+    ],
+  },
+].filter((column) => column.links.length > 0);
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---

@@ -13,12 +13,14 @@ function LoadableImage({
   src,
   alt,
   className,
-  onClick,
+  pressed,
+  onToggle,
 }: {
   src: string;
   alt: string;
   className: string;
-  onClick?: () => void;
+  pressed: boolean;
+  onToggle: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -28,13 +30,20 @@ function LoadableImage({
           <div className="size-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
         </div>
       )}
-      <img
-        src={src}
-        alt={alt}
-        onLoad={() => setLoaded(true)}
-        onClick={onClick}
-        className={cn(className, !loaded ? "hidden" : "")}
-      />
+      <button
+        type="button"
+        aria-label="Caption"
+        aria-pressed={pressed}
+        onClick={onToggle}
+        className="flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <img
+          src={src}
+          alt={alt}
+          onLoad={() => setLoaded(true)}
+          className={cn(className, !loaded ? "hidden" : "")}
+        />
+      </button>
     </>
   );
 }
@@ -84,7 +93,7 @@ export function PhotographyDialog({
       >
         <div
           className={cn(
-            "absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-popover via-popover/80 to-transparent p-4 transition-opacity duration-150 md:static md:bg-none md:p-0 md:opacity-100",
+            "absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-popover via-popover/80 to-transparent p-4 transition-opacity duration-150 md:static md:bg-none md:p-0",
             !showCaption && "pointer-events-none opacity-0",
           )}
         >
@@ -98,8 +107,9 @@ export function PhotographyDialog({
         <LoadableImage
           src={src}
           alt={alt}
-          onClick={() => setShowCaption((visible) => !visible)}
-          className="max-h-full max-w-full object-contain md:max-h-dvh-85 md:max-w-dvw-85"
+          pressed={showCaption}
+          onToggle={() => setShowCaption((visible) => !visible)}
+          className="max-h-dvh-100 max-w-dvw-100 object-contain md:max-h-dvh-85 md:max-w-dvw-85"
         />
       </DialogContent>
     </Dialog>

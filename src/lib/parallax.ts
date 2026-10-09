@@ -9,7 +9,7 @@ const SCROLL_SELECTOR =
   "[data-parallax-scroll] :is([data-parallax], [data-parallax-x], [data-parallax-y])";
 const ACTIVE_CLASS = "parallax-active";
 const PUSH_SELECTOR = "[data-parallax-push]";
-const PUSH_BOTTOM_PAD = 8;
+const PUSH_COUPLING = 0.3;
 
 type Layer = {
   element: HTMLElement;
@@ -31,8 +31,6 @@ const collect = (selector: string): Layer[] =>
     yFactor: factor(element, "y"),
     effect: null,
   }));
-
-const pushOffset = (progress: number, bottom: number) => bottom * progress;
 
 function createAnimator(layers: Layer[], scale = 1, easing = EASING) {
   const target = { x: 0, y: 0 };
@@ -134,18 +132,6 @@ const readScrollConfig = (frame: HTMLElement | null) => ({
   scale: Number(frame?.dataset.parallaxScrollScale) || 1,
 });
 
-const pushBottomOffset = (title: HTMLElement | undefined, footer: HTMLElement) =>
-  title
-    ? Math.max(
-        0,
-        window.innerHeight -
-          title.offsetTop -
-          title.offsetHeight -
-          footer.offsetHeight -
-          PUSH_BOTTOM_PAD,
-      )
-    : 0;
-
 function startScrollParallax() {
   const layers = collect(SCROLL_SELECTOR);
   const pushLayers: Layer[] = Array.from(document.querySelectorAll<HTMLElement>(PUSH_SELECTOR)).map(
@@ -154,23 +140,17 @@ function startScrollParallax() {
   if (layers.length + pushLayers.length === 0) return;
 
   const frame = document.querySelector<HTMLElement>("[data-parallax-scroll]");
-  const title = pushLayers[0]?.element;
-  const shove = document.querySelector<HTMLElement>("[data-parallax-shove]");
-  const footer = document.querySelector<HTMLElement>("footer")!;
   const mobile = window.matchMedia(MOBILE_QUERY);
   const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY);
   const { distance, drift, scale } = readScrollConfig(frame);
-  const pushBottom = pushBottomOffset(title, footer);
   const animator = createAnimator(layers, scale, 1);
   const pushAnimator = pushLayers.length > 0 ? createAnimator(pushLayers, 1, 1) : null;
 
   const onScroll = () => {
     const progress = Math.min(window.scrollY / (distance * window.innerHeight), 1);
     animator.to(0, -progress * drift * window.innerHeight);
-    if (pushAnimator && title) {
-      const edge = shove ? shove.getBoundingClientRect().top : Infinity;
-      const span = title.offsetTop + title.offsetHeight;
-      pushAnimator.to(0, Math.min(pushOffset(progress, pushBottom), edge - span));
+    if (pushAnimator) {
+      pushAnimator.to(0, progress * PUSH_COUPLING * window.innerHeight);
     }
   };
 
