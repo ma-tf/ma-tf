@@ -19,6 +19,7 @@ describe("applyCacheHeaders", () => {
     expect(response.headers.get("Cache-Control")).toBe("public, max-age=0, must-revalidate");
     expect(response.headers.get("Netlify-CDN-Cache-Control")).toContain("durable");
     expect(response.headers.get("Vary")).toContain("Accept");
+    expect(response.headers.get("Netlify-Vary")).toBe("query=none");
     expect(await response.text()).toContain("Hello");
   });
 
@@ -35,6 +36,7 @@ describe("applyCacheHeaders", () => {
 
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(response.headers.get("Netlify-CDN-Cache-Control")).toBeNull();
+    expect(response.headers.get("Netlify-Vary")).toBe("query=none");
   });
 
   it("does not cache an error response", () => {
@@ -42,6 +44,7 @@ describe("applyCacheHeaders", () => {
 
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(response.headers.get("Netlify-CDN-Cache-Control")).toBeNull();
+    expect(response.headers.get("Netlify-Vary")).toBe("query=none");
   });
 
   it("preserves unrelated headers", () => {

@@ -107,12 +107,15 @@ the original error through with `Vary: Accept`. `*/*` is not an HTML preference
 - The `Link` header applies to every non-API response, including prerendered and
   error responses. Negotiation and problem wrapping do not; API paths bypass all
   three.
-- `applyCacheHeaders` (`cache.ts:11`) stamps the cache policy on every non-API
+- `applyCacheHeaders` (`cache.ts:12`) stamps the cache policy on every non-API
   response after the `Link` header: a `200` `GET` or `HEAD` is cached at the
   Netlify CDN (`durable`, `s-maxage`, `stale-while-revalidate`) and varies by
   `Accept`, so the negotiated HTML, markdown and JSON forms are cached
-  separately; every other response is `no-store`. See
-  [ADR 024](adr/024-discovery-responses-cache-at-the-cdn.md).
+  separately; every other response is `no-store`. It also sets
+  `Netlify-Vary: query=none`, so every query variant of a path shares one cache
+  object while `Vary: Accept` keeps the representations apart. See
+  [ADR 024](adr/024-discovery-responses-cache-at-the-cdn.md) and
+  [ADR 025](adr/025-query-parameters-do-not-key-the-discovery-cache.md).
 - `wideEventMiddleware` is the outermost handler; the discovery work happens in
   the inner `discoveryMiddleware`. `sequence` guarantees the event wraps the
   whole request whichever inner branch returns.
