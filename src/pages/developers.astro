@@ -1,16 +1,19 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { mcpPath, resources } from "@features/discovery/catalog";
+import { mcpPath } from "@features/discovery/catalog";
 import {
   Developers,
   DevelopersCard,
   DevelopersContent,
   DevelopersHeader,
   DevelopersIntro,
+  DevelopersResources,
   DevelopersTitle,
 } from "@features/developers/developers";
 import { askEnabled } from "@lib/feature-flags";
 import { StillLifeBackground } from "@components/still-life-background";
+import { stillLifeScroll } from "@components/still-life-hero";
+import { ScrollCue } from "@components/scroll-cue";
 import { askRateLimit } from "@lib/rate-limits";
 ---
 
@@ -18,13 +21,18 @@ import { askRateLimit } from "@lib/rate-limits";
   title="m4t.tf developers"
   description="The machine-readable interface of m4t.tf: retrieval, errors, versioning, rate limits, and the MCP server."
 >
-  <div class="relative w-full self-center max-w-480 overflow-hidden border-l">
-    <StillLifeBackground baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`} />
+  <div class="relative w-full self-center max-w-480 md:overflow-hidden border-l">
     <Developers>
+      <StillLifeBackground
+        baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
+        {...stillLifeScroll}
+        className="sticky top-0 col-start-1 row-start-1 h-lvh"
+      />
       <DevelopersHeader>
         <DevelopersTitle>
           <span class="sr-only">m4t.tf </span>developers
         </DevelopersTitle>
+        <ScrollCue />
         <DevelopersIntro>
           m4t.tf is machine-readable. Every page is served as HTML or markdown,
           and every resource below is an unauthenticated GET — there are no API
@@ -47,57 +55,23 @@ import { askRateLimit } from "@lib/rate-limits";
         </DevelopersIntro>
       </DevelopersHeader>
 
-      <DevelopersCard
-        data-parallax={30}
-        className="md:col-span-3 md:col-start-7 md:row-start-1 md:self-end animation-delay-2300"
-      >
-        <div
-          data-parallax={10}
-          class="relative flex flex-col px-2 pb-2 pt-4 text-xs leading-relaxed"
-        >
-          <h2
-            class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-2900 text-xs font-semibold uppercase"
-          >
-            Resources
-          </h2>
-          <ul class="flex flex-col gap-1.5 animate-fade-up animation-delay-3500">
-            {
-              resources.map((resource) => {
-                const mediaType = resource.type.split(";")[0] ?? resource.type;
-
-                return (
-                  <li>
-                    <a
-                      href={resource.path}
-                      class="underline underline-offset-4 hover:text-foreground/70"
-                    >
-                      {resource.path}
-                    </a>
-                    <span class="text-muted-foreground">
-                      {" "}
-                      — {mediaType} — {resource.title}
-                    </span>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </div>
-      </DevelopersCard>
+      <DevelopersResources className="hidden md:block md:col-span-3 md:col-start-7 md:row-start-1 md:self-end animation-delay-2300" />
 
       <DevelopersContent>
+        <DevelopersResources className="md:hidden" />
+
         <section
           data-parallax={40}
-          class="text-xs flex items-start gap-8"
+          class="text-base leading-relaxed flex flex-col gap-12 md:flex-row md:items-start md:gap-8 md:text-xs"
         >
           <DevelopersCard data-parallax={10} className="animation-delay-2450">
             <div class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed">
               <h2
-                class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-3050 text-xs font-semibold uppercase"
+                class="absolute left-2 top-0 -mt-2 text-xs font-semibold uppercase md:animate-fade-up md:animation-delay-3050"
               >
                 Rate limits
               </h2>
-              <p class="animate-fade-up animation-delay-3650">
+              <p class="md:animate-fade-up md:animation-delay-3650">
                 Every page and resource is unmetered.
                 {
                   askEnabled && (
@@ -123,11 +97,11 @@ import { askRateLimit } from "@lib/rate-limits";
           <DevelopersCard data-parallax={15} className="animation-delay-2600">
             <div class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed">
               <h2
-                class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-3200 text-xs font-semibold uppercase"
+                class="absolute left-2 top-0 -mt-2 text-xs font-semibold uppercase md:animate-fade-up md:animation-delay-3200"
               >
                 Errors
               </h2>
-              <p class="animate-fade-up animation-delay-3800">
+              <p class="md:animate-fade-up md:animation-delay-3800">
                 Failures follow your <code>Accept</code> header as{" "}
                 <code>application/problem+json</code>, markdown, or HTML, and
                 carry a stable <code>code</code> and <code>resolution</code>.
@@ -138,38 +112,38 @@ import { askRateLimit } from "@lib/rate-limits";
           <DevelopersCard data-parallax={20} className="animation-delay-2750">
             <div class="relative flex flex-col px-2 pb-2 pt-4 leading-relaxed">
               <h2
-                class="absolute left-2 top-0 -mt-2 animate-fade-up animation-delay-3350 text-xs font-semibold uppercase"
+                class="absolute left-2 top-0 -mt-2 text-xs font-semibold uppercase md:animate-fade-up md:animation-delay-3350"
               >
                 Versioning
               </h2>
-              <p class="animate-fade-up animation-delay-3950">
+              <p class="md:animate-fade-up md:animation-delay-3950">
                 Send <code>API-Version</code> to declare the compatibility version
                 you expect; the current version is <code>1</code>. Deprecated
-                resources carry <code>Deprecation</code> and{" "}
-                <code>Sunset</code> headers until they retire.
+                resources carry <code>Deprecation</code> and <code>Sunset</code>{" "}
+                headers until they retire.
               </p>
             </div>
           </DevelopersCard>
         </section>
-      </DevelopersContent>
 
-      <p
-        data-parallax={20}
-        data-typewriter
-        class="mb-8 text-xs leading-relaxed animate-fade-up animation-delay-4100 md:col-span-9 md:col-start-2 md:row-start-3"
-      >
-        The OpenAPI 3.1 document at{" "}
-        <a
-          href="/openapi.json"
-          class="underline underline-offset-4 hover:text-foreground/70"
-          >/openapi.json</a
-        > describes the whole interface, and{" "}
-        <a
-          href="/llms.txt"
-          class="underline underline-offset-4 hover:text-foreground/70"
-          >/llms.txt</a
-        > indexes everything the site publishes.
-      </p>
+        <p
+          data-parallax={20}
+          data-typewriter
+          class="text-base leading-relaxed md:mb-8 md:text-xs md:animate-fade-up md:animation-delay-4100"
+        >
+          The OpenAPI 3.1 document at{" "}
+          <a
+            href="/openapi.json"
+            class="underline underline-offset-4 hover:text-foreground/70"
+            >/openapi.json</a
+          > describes the whole interface, and{" "}
+          <a
+            href="/llms.txt"
+            class="underline underline-offset-4 hover:text-foreground/70"
+            >/llms.txt</a
+          > indexes everything the site publishes.
+        </p>
+      </DevelopersContent>
     </Developers>
   </div>
 </Layout>

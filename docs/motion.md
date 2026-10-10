@@ -70,11 +70,10 @@ image; the props are the scroll config the driver reads back off the frame.
 | `scrollScale`    | `data-parallax-scroll-scale`    | 1       | overscan scale on each layer   |
 
 Per-page choreography lives at the call site, not in the component: the numbers
-are passed as props from the page's `.astro` file. `about.astro`, `contact.astro`
-and `privacy.astro` spread the shared `stillLifeScroll` preset from
-`still-life-hero.tsx` (`scrollDistance: 1.5`, `scrollDrift: 0.4`,
-`scrollScale: 1.15`), passing explicit props after the spread to override it;
-`developers.astro` takes the defaults.
+are passed as props from the page's `.astro` file. `about.astro`, `contact.astro`,
+`privacy.astro` and `developers.astro` all spread the shared `stillLifeScroll`
+preset from `still-life-hero.tsx` (`scrollDistance: 1.5`, `scrollDrift: 0.4`,
+`scrollScale: 1.15`).
 
 ## Footer overlap contract
 
@@ -84,11 +83,13 @@ mobile it is a two-column grid (`grid-cols-2`) with an `Explore` column
 (`Blog`, `Photography`, `Graphics`, `Music`, `Vignettes` stacked) beside a
 `Site` column (`About`, `Contact`, `Privacy` stacked), a `Resources` column
 (`Developers`) wrapping onto the second row, and a right-aligned `Back to top`
-button spanning both columns, for a total of roughly 390px. The three
-scroll-hero pages (`about`, `contact`, `privacy`) fill a `100dvh` grid split
-65:35 between the header and the top-aligned card row, and pad the card row with
+button spanning both columns, for a total of roughly 390px. The `about`,
+`contact` and `privacy` scroll-hero pages fill a `100dvh` grid split 65:35
+between the header and the top-aligned card row, and pad the card row with
 `py-12` at desktop widths; keep that padding above the footer's height when
-restyling.
+restyling. `developers` shares their mobile scroll-hero shell (a `150dvh` hero,
+then a top-bordered `bg-background` card sheet) while keeping its own desktop
+grid.
 
 ## Reduced motion and the motion control
 
@@ -127,9 +128,10 @@ Theme changes sweep through the View Transitions API. See
 transition of the declared duration fades it in. The hidden state is scoped to
 `@media (scripting: enabled)`, so without scripting, or under reduced motion, the
 elements stay visible with no flash. `data-motion="skipped"` forces them visible.
-The still-life cards keep the reveal mobile-only: their desktop layout fits the
-viewport, so the cards never scroll into the observer's shrunken root, and a
-call-site `md:opacity-100 md:transform-none` cancels the hidden state above `md:`.
+The still-life and developers cards keep the reveal mobile-only: their desktop
+layout fits the viewport, so the cards never scroll into the observer's shrunken
+root, and a call-site `md:opacity-100 md:transform-none` cancels the hidden state
+above `md:`.
 
 ## CSS utilities
 
