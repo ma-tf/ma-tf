@@ -12,6 +12,7 @@
     "@ui/dialog",
     "@ui/skeleton",
     "class-variance-authority",
+    "cmdk",
     "is-agentic",
     "netlify",
     "react-doctor",

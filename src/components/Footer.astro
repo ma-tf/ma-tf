@@ -1,14 +1,6 @@
 ---
 import { ArrowUpIcon, BracketsCurlyIcon } from "@phosphor-icons/react";
-import { previews } from "@lib/feature-flags";
-
-const exploreLinks = [
-  { label: "Blog", href: "/blog", enabled: previews.blog },
-  { label: "Photography", href: "/photography", enabled: previews.photography },
-  { label: "Graphics", href: "/graphics", enabled: previews.graphics },
-  { label: "Music", href: "/music", enabled: previews.music },
-  { label: "Vignettes", href: "/vignettes", enabled: previews.vignettes },
-].filter((link) => link.enabled);
+import { exploreLinks } from "@lib/site-nav";
 
 const columns = [
   {

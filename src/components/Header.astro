@@ -1,6 +1,9 @@
 ---
+import { CommandMenu } from "@components/command-menu";
 import { ModeToggle } from "@components/ModeToggle";
 import MotionControlButton from "@components/MotionControlButton.astro";
+import { siteIdentity } from "@features/seo/site-metadata";
+import { siteNavLinks } from "@lib/site-nav";
 ---
 
 <header class="fixed top-0 z-50 flex h-8 w-full items-center px-2">
@@ -19,6 +22,13 @@ import MotionControlButton from "@components/MotionControlButton.astro";
     <!-- m4t.tf -->
   </a>
   <div class="fixed top-0 right-0 z-50 flex items-center">
+    <CommandMenu
+      pages={siteNavLinks}
+      email={siteIdentity.email}
+      github={siteIdentity.github}
+      linkedin={siteIdentity.linkedin}
+      client:load
+    />
     <MotionControlButton />
     <ModeToggle client:load />
   </div>
