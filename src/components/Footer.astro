@@ -14,6 +14,7 @@ const columns = [
   {
     title: "Explore",
     links: exploreLinks,
+    mobileOnly: true,
   },
   {
     title: "Site",
@@ -39,16 +40,18 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 >
   <nav
     aria-label="Footer"
-    class="mx-auto grid w-full max-w-480 grid-cols-2 gap-4 pt-4 pb-8 md:flex md:h-full md:items-stretch md:gap-0 md:py-0"
+    class="mx-auto grid w-full max-w-480 grid-cols-2 gap-4 pt-4 pb-8 md:flex md:h-full md:flex-row-reverse md:items-stretch md:gap-0 md:py-0"
   >
     {
       columns.map((column, columnIndex) => {
         const isLast = columnIndex === columns.length - 1;
+        const isMobileOnly = "mobileOnly" in column && column.mobileOnly;
         return (
           <div
             class:list={[
-              "grid content-start gap-4 px-4 md:flex md:gap-0 md:px-0",
-              isLast && "md:ms-auto",
+              "grid content-start gap-4 px-4",
+              isMobileOnly ? "md:hidden" : "md:flex md:gap-0 md:px-0",
+              isLast && "md:me-auto",
             ]}
           >
             <span class="pt-1 pb-2 text-2xs font-semibold tracking-wider text-foreground uppercase md:hidden">
