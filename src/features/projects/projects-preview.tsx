@@ -67,6 +67,8 @@ export function ProjectsPreview() {
                 <img
                   src={`${import.meta.env.R2_PUBLIC_URL}/projects/project-container.png`}
                   alt=""
+                  width={563}
+                  height={413}
                   className="block h-auto w-full md:scale-100"
                 />
                 <div className="absolute inset-0 flex flex-col justify-center px-12 md:p-14 xl:p-10">

@@ -24,7 +24,13 @@ export function GraphicsPreview({ images }: { images: ImageMap }) {
             Visual experiments and illustrations made for the joy of it. Studies of form and colour,
             and other loose ends.
           </p>
-          <img src={oldHouseSrc} alt="" className="border border-foreground" />
+          <img
+            src={oldHouseSrc}
+            alt=""
+            width={640}
+            height={480}
+            className="border border-foreground"
+          />
         </div>
       </SectionContent>
     </Section>

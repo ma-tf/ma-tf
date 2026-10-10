@@ -143,7 +143,9 @@ const pageDescription =
 		]}
 	>
 		{showHeader && <Header />}
-		<slot />
+		<main class="flex flex-col">
+			<slot />
+		</main>
 		{askEnabled && <AskTool client:only="react" />}
 		{showFooter && <Footer />}
 	</body>

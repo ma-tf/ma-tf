@@ -21,9 +21,7 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
           <SectionNumber />
           <SectionTitle href="/vignettes">Vignettes</SectionTitle>
         </SectionHeader>
-        <SectionSubtitle className="col-span-2">
-          Experimental motion work; exploring through the lens.
-        </SectionSubtitle>
+        <SectionSubtitle>Motion work; exploring through the lens.</SectionSubtitle>
         <SectionContent className="grid grid-cols-1 gap-12 md:grid-cols-9 md:gap-24">
           <div className="relative aspect-4/3 self-center overflow-hidden border border-foreground md:col-span-3">
             <img
@@ -39,29 +37,14 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
           </div>
           <div className="flex flex-col gap-4 text-lg text-foreground md:col-span-3">
             <p className="indent-8">
-              A series of short motion studies, shot on location in the quiet hours. Small
+              A series of short motion studies, shot on location in the quiet hours — small
               observations of a place and the details that give it character. Photography freezes a
-              single instant, but some places only come alive in motion. The speed of a moving
-              train, the swing of shoes on a wire, the rolling waves on a beach during sunset. These
-              studies are an attempt to hold on to those moving moments.
+              single instant, but some places only come alive in motion, and these studies are an
+              attempt to hold on to those moving moments. Everything is shot on 16mm film: its grain
+              and soft frame corners give the footage a texture digital struggles to match, and each
+              scene is a single deliberate take, with no chance to reshoot without paying for the
+              footage again.
             </p>
-            <p className="indent-8">
-              The <span className="italic">Bolex H-16 SBM</span> offers a portable way to create
-              true filmic experiences without electricity as a hard requirement. Using 30-metre film
-              reels and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of
-              approximately 2 minutes and 45 seconds of footage per reel. For my own convenience, I
-              use a battery-powered <span className="italic">Kern Vario-Switar 16-100mm</span> lens.
-              The battery powers the auto exposure and the in-built electric motor for zooming.
-            </p>
-            <p className="indent-8">
-              Everything is shot on 16mm film. Its grain and tonal latitude give the footage a
-              texture that digital struggles to match, and the format's soft, rounded frame corners
-              come straight from the lens and gate rather than any filter. Shooting on film is an
-              exercise in economy. Each scene is a single take with no chance to delete or reshoot
-              without paying for the footage again, so every second has to be deliberate. That
-              constraint is part of what makes the format so rewarding.
-            </p>
-            <p></p>
             <Button
               variant="inverted"
               shape="sharp"

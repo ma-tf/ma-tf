@@ -26,11 +26,15 @@ export function MusicPreview({ images }: { images: ImageMap }) {
           <SectionNumber />
           <SectionTitle href="/music">Music</SectionTitle>
         </SectionHeader>
-        <SectionSubtitle className="border border-foreground p-4 pt-40">
-          Original compositions, remixes, and live recordings.
-        </SectionSubtitle>
+        <SectionSubtitle>Original compositions, remixes, and live recordings.</SectionSubtitle>
         <div className="col-start-2 row-span-2 hidden md:block">
-          <img src={japanSrc} alt="" className="border border-foreground" />
+          <img
+            src={japanSrc}
+            alt=""
+            width={5613}
+            height={3652}
+            className="border border-foreground"
+          />
         </div>
         <SectionContent>
           <div className="flex flex-col gap-8">
@@ -43,7 +47,13 @@ export function MusicPreview({ images }: { images: ImageMap }) {
               Drone and texture over melody, made to fill a room rather than hold a hook.
             </p>
             <div className="row-span-2 block md:hidden">
-              <img src={japanSrc} alt="" className="border border-foreground" />
+              <img
+                src={japanSrc}
+                alt=""
+                width={5613}
+                height={3652}
+                className="border border-foreground"
+              />
             </div>
             <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
               <div className="flex flex-col border border-foreground px-3 py-2">
