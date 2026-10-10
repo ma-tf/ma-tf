@@ -1,7 +1,6 @@
 import type { RateLimit } from "@lib/rate-limits";
 
 import { rateLimitPolicyValue } from "@lib/rate-limits";
-import { getDeployStore, getStore } from "@netlify/blobs";
 import { createHash } from "node:crypto";
 
 type Window = { count: number; windowStart: number };
@@ -46,7 +45,8 @@ export function clientIp(request: Request): string | undefined {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
 }
 
-export function store(limit: RateLimit) {
+export async function store(limit: RateLimit) {
+  const { getDeployStore, getStore } = await import("@netlify/blobs");
   const options = { name: `rate-limit-${limit.name}`, consistency: "strong" } as const;
 
   return process.env.DEPLOY_ID ? getStore(options) : getDeployStore(options);
@@ -86,7 +86,7 @@ export async function enforceRateLimit(
   }
 
   try {
-    const blobs = store(limit);
+    const blobs = await store(limit);
     const key = clientKey(ip, salt);
     const entry = (await blobs.get(key, { type: "json" })) as Window | null;
     const now = Date.now();

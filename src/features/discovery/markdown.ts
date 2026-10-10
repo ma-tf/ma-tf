@@ -1,7 +1,4 @@
 import { appendVaryValue } from "@features/discovery/negotiation";
-import TurndownService from "turndown";
-
-const turndown = new TurndownService();
 
 function getMarkdownSource(html: string): string {
   const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] ?? html;
@@ -37,8 +34,9 @@ export async function formatMarkdownResponse(
   const headers = new Headers(response.headers);
   if (shouldVaryByAccept) appendVaryValue(headers, "Accept");
 
+  const { default: TurndownService } = await import("turndown");
   const html = await response.text();
-  const markdown = frontmatter(html) + turndown.turndown(getMarkdownSource(html));
+  const markdown = frontmatter(html) + new TurndownService().turndown(getMarkdownSource(html));
   headers.set("Content-Type", "text/markdown; charset=utf-8");
   headers.delete("Content-Encoding");
   headers.delete("Content-Length");

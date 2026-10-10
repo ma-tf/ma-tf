@@ -113,10 +113,10 @@ describe("store", () => {
     getDeployStoreMock.mockClear();
   });
 
-  it("uses the global store for a deployed function", () => {
+  it("uses the global store for a deployed function", async () => {
     vi.stubEnv("DEPLOY_ID", "deploy-123");
 
-    store(askRateLimit);
+    await store(askRateLimit);
 
     expect(getStoreMock).toHaveBeenCalledWith({
       name: `rate-limit-${askRateLimit.name}`,
@@ -125,10 +125,10 @@ describe("store", () => {
     expect(getDeployStoreMock).not.toHaveBeenCalled();
   });
 
-  it("uses the deploy store outside a deploy", () => {
+  it("uses the deploy store outside a deploy", async () => {
     vi.stubEnv("DEPLOY_ID", "");
 
-    store(askRateLimit);
+    await store(askRateLimit);
 
     expect(getDeployStoreMock).toHaveBeenCalledWith({
       name: `rate-limit-${askRateLimit.name}`,
