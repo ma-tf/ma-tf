@@ -1,6 +1,6 @@
 const REVEAL_SELECTOR = '[class*="animate-reveal"]';
 const REVEALED_CLASS = "is-revealed";
-const REVEAL_MARGIN = "0px 0px -25% 0px";
+const REVEAL_MARGIN = "0px 0px -15% 0px";
 const REVEAL_THRESHOLD = 0.15;
 
 export function startReveal() {
