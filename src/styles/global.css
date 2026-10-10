@@ -674,7 +674,9 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
 }
 
 pre[data-language] > code {
-  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 .astro-code,
