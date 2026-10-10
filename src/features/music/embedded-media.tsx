@@ -31,7 +31,13 @@ export function MixcloudEmbed({
 }) {
   return (
     <div className="group relative aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0">
-      <img src={artworkSrc} alt="" className="absolute aspect-square w-full object-cover" />
+      <img
+        src={artworkSrc}
+        alt=""
+        width={1999}
+        height={1999}
+        className="absolute aspect-square w-full object-cover"
+      />
       <iframe
         className="pointer-events-none absolute aspect-square w-full opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
         src={`https://player-widget.mixcloud.com/widget/iframe/?mini=false&hide_cover=false&hide_artwork=true&feed=${feed}`}
