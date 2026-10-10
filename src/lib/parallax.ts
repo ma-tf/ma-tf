@@ -142,28 +142,27 @@ const readScrollConfig = (frame: HTMLElement | null) => ({
   scale: Number(frame?.dataset.parallaxScrollScale) || 1,
 });
 
+const createRunner = (frame: HTMLElement) => {
+  const layers = collect(frame.querySelectorAll<HTMLElement>(SCROLL_LAYER_SELECTOR), scrollFactor);
+  const { distance, drift, scale } = readScrollConfig(frame);
+  return {
+    distance,
+    drift,
+    animator: layers.length > 0 ? createAnimator(layers, scale, 1) : null,
+  };
+};
+
 function startScrollParallax() {
   const frames = Array.from(document.querySelectorAll<HTMLElement>(SCROLL_FRAME_SELECTOR));
   const pushLayers: Layer[] = Array.from(document.querySelectorAll<HTMLElement>(PUSH_SELECTOR)).map(
     (element) => ({ element, xFactor: 0, yFactor: 1, effect: null }),
   );
-  if (frames.length === 0 && pushLayers.length === 0) return;
+  if (frames.length + pushLayers.length === 0) return;
 
   const mobile = window.matchMedia(MOBILE_QUERY);
   const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY);
 
-  const runners = frames.map((frame) => {
-    const layers = collect(
-      frame.querySelectorAll<HTMLElement>(SCROLL_LAYER_SELECTOR),
-      scrollFactor,
-    );
-    const { distance, drift, scale } = readScrollConfig(frame);
-    return {
-      distance,
-      drift,
-      animator: layers.length > 0 ? createAnimator(layers, scale, 1) : null,
-    };
-  });
+  const runners = frames.map(createRunner);
   const pushAnimator = pushLayers.length > 0 ? createAnimator(pushLayers, 1, 1) : null;
   const page = readScrollConfig(frames[0] ?? null);
 
