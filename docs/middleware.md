@@ -7,8 +7,10 @@ opens one wide event per request and closes it after the response (see
 inner `discoveryMiddleware` is a shim over `src/features/discovery/` (see
 [ADR 008](adr/008-single-discovery-module.md)): it advertises the discovery
 surface with response headers, negotiates the representation of a page or
-discovery resource, converts errors into RFC 9457 problems, and meters API
-paths. The vocabulary below matches [GLOSSARY.md](GLOSSARY.md).
+discovery resource, converts errors into RFC 9457 problems, meters API
+paths, and applies the cache policy from `cache.ts` (see
+[ADR 024](adr/024-discovery-responses-cache-at-the-cdn.md)). The vocabulary
+below matches [GLOSSARY.md](GLOSSARY.md).
 
 ## Request flow
 
@@ -55,7 +57,7 @@ flowchart TD
     S -- "resource or !prefersHtml" --> T
     S -- "html browser" --> V["passthrough<br/>Vary: Accept"] --> W
     R --> W
-    W["set Link header"] --> X
+    W["set Link header"] --> W2["applyCacheHeaders"] --> X
 
     X{"api or status >= 400,<br/>not deferred?"}
     X -- yes --> FIN["log(finish(event, status_code))<br/>one JSON line"] --> RET([Response])
@@ -66,19 +68,20 @@ flowchart TD
 
 ## Branches
 
-| #   | Guard                                  | Location            | Result                                                              |
-| --- | -------------------------------------- | ------------------- | ------------------------------------------------------------------- |
-| 1   | `isPrerendered`                        | `middleware.ts:56`  | `next()`, bypasses preflight, negotiation and problem wrapping      |
-| 2a  | resource path and method not GET/HEAD  | `problems.ts:193`   | 405 problem+json with `Allow`, bypasses problem wrapping            |
-| 2b  | `Accept` set and no supported type     | `problems.ts:200`   | 406 problem+json, bypasses problem wrapping                         |
-| 3   | agent skill artifact path              | `middleware.ts:63`  | `next()` untouched, still problem-wrapped                           |
-| 4a  | path ends `.md`                        | `negotiation.ts:84` | `markdown-suffix`                                                   |
-| 4b  | catalogued resource and JSON preferred | `negotiation.ts:88` | `json-document` when the media type is JSON, else `json-descriptor` |
-| 4c  | markdown preferred                     | `negotiation.ts:95` | `markdown-accept`                                                   |
-| 4d  | otherwise                              | `negotiation.ts:97` | `html`                                                              |
-| 5   | `status >= 400`                        | `middleware.ts:67`  | `problemResponse`                                                   |
-| 6   | non-API path                           | `middleware.ts:86`  | `Link`                                                              |
-| 7   | API path with a configured limit       | `middleware.ts:69`  | `enforceRateLimit` returns `{ limited, headers }`                   |
+| #   | Guard                                  | Location            | Result                                                                 |
+| --- | -------------------------------------- | ------------------- | ---------------------------------------------------------------------- |
+| 1   | `isPrerendered`                        | `middleware.ts:56`  | `next()`, bypasses preflight, negotiation and problem wrapping         |
+| 2a  | resource path and method not GET/HEAD  | `problems.ts:193`   | 405 problem+json with `Allow`, bypasses problem wrapping               |
+| 2b  | `Accept` set and no supported type     | `problems.ts:200`   | 406 problem+json, bypasses problem wrapping                            |
+| 3   | agent skill artifact path              | `middleware.ts:63`  | `next()` untouched, still problem-wrapped                              |
+| 4a  | path ends `.md`                        | `negotiation.ts:84` | `markdown-suffix`                                                      |
+| 4b  | catalogued resource and JSON preferred | `negotiation.ts:88` | `json-document` when the media type is JSON, else `json-descriptor`    |
+| 4c  | markdown preferred                     | `negotiation.ts:95` | `markdown-accept`                                                      |
+| 4d  | otherwise                              | `negotiation.ts:97` | `html`                                                                 |
+| 5   | `status >= 400`                        | `middleware.ts:67`  | `problemResponse`                                                      |
+| 6   | non-API path                           | `middleware.ts:86`  | `Link`                                                                 |
+| 7   | API path with a configured limit       | `middleware.ts:69`  | `enforceRateLimit` returns `{ limited, headers }`                      |
+| 8   | non-API response                       | `cache.ts:11`       | 200 GET/HEAD cached with `durable` and `Vary: Accept`, else `no-store` |
 
 The four kinds resolve as follows:
 
@@ -104,6 +107,12 @@ the original error through with `Vary: Accept`. `*/*` is not an HTML preference
 - The `Link` header applies to every non-API response, including prerendered and
   error responses. Negotiation and problem wrapping do not; API paths bypass all
   three.
+- `applyCacheHeaders` (`cache.ts:11`) stamps the cache policy on every non-API
+  response after the `Link` header: a `200` `GET` or `HEAD` is cached at the
+  Netlify CDN (`durable`, `s-maxage`, `stale-while-revalidate`) and varies by
+  `Accept`, so the negotiated HTML, markdown and JSON forms are cached
+  separately; every other response is `no-store`. See
+  [ADR 024](adr/024-discovery-responses-cache-at-the-cdn.md).
 - `wideEventMiddleware` is the outermost handler; the discovery work happens in
   the inner `discoveryMiddleware`. `sequence` guarantees the event wraps the
   whole request whichever inner branch returns.

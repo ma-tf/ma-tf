@@ -1,5 +1,6 @@
 import type { APIContext, MiddlewareHandler, MiddlewareNext } from "astro";
 
+import { applyCacheHeaders } from "@features/discovery/cache";
 import { linkHeader } from "@features/discovery/catalog";
 import { isAgentSkillArtifactPath } from "@features/discovery/documents/agent-skills";
 import { formatMarkdownResponse } from "@features/discovery/markdown";
@@ -91,7 +92,7 @@ const discoveryMiddleware: MiddlewareHandler = async (context, next) => {
   const response = await respond(context, next);
   response.headers.set("Link", linkHeader);
 
-  return response;
+  return applyCacheHeaders(response, context.request);
 };
 
 type ResponseMiddleware = (context: APIContext, next: MiddlewareNext) => Promise<Response>;

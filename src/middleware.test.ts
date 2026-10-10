@@ -56,6 +56,30 @@ describe("onRequest", () => {
     expect(response.headers.get("Link")).toContain("/llms.txt");
   });
 
+  it("marks a document response cacheable and varies it by Accept", async () => {
+    const response = await onRequest(buildContext("/"), next);
+
+    expect(response.headers.get("Cache-Control")).toBe("public, max-age=0, must-revalidate");
+    expect(response.headers.get("Netlify-CDN-Cache-Control")).toContain("durable");
+    expect(response.headers.get("Vary")).toContain("Accept");
+  });
+
+  it("does not cache an error response", async () => {
+    const notFound: MiddlewareNext = async () => htmlResponse(404);
+    const response = await onRequest(
+      buildContext("/__probe", { accept: "application/json" }),
+      notFound,
+    );
+
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("leaves an API endpoint without cache headers", async () => {
+    const response = await onRequest(buildContext("/ask", { accept: "text/event-stream" }), next);
+
+    expect(response.headers.get("Netlify-CDN-Cache-Control")).toBeNull();
+  });
+
   it("serves HTML to a browser", async () => {
     const response = await onRequest(buildContext("/", { accept: "text/html" }), next);
 
