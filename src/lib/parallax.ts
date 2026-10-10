@@ -5,11 +5,15 @@ const SCROLL_COUPLING = 0.3;
 const MOBILE_QUERY = "(max-width: 767px)";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const POINTER_SELECTOR = "[data-parallax], [data-parallax-x], [data-parallax-y]";
-const SCROLL_SELECTOR =
-  "[data-parallax-scroll] :is([data-parallax], [data-parallax-x], [data-parallax-y])";
+const SCROLL_FRAME_SELECTOR = "[data-parallax-scroll]";
+const SCROLL_LAYER_SELECTOR =
+  ":is([data-parallax], [data-parallax-x], [data-parallax-y], [data-parallax-mobile], [data-parallax-mobile-x], [data-parallax-mobile-y])";
 const ACTIVE_CLASS = "parallax-active";
 const PUSH_SELECTOR = "[data-parallax-push]";
 const PUSH_COUPLING = 0.3;
+
+type Axis = "x" | "y";
+type Factor = (element: HTMLElement, axis: Axis) => number;
 
 type Layer = {
   element: HTMLElement;
@@ -18,14 +22,20 @@ type Layer = {
   effect: KeyframeEffect | null;
 };
 
-const factor = (element: HTMLElement, axis: "x" | "y") => {
+const sharedFactor: Factor = (element, axis) => {
   const { parallax, parallaxX, parallaxY } = element.dataset;
   const raw = (axis === "x" ? parallaxX : parallaxY) ?? parallax;
   return raw ? Number(raw) / DEFAULT_FACTOR : 0;
 };
 
-const collect = (selector: string): Layer[] =>
-  Array.from(document.querySelectorAll<HTMLElement>(selector)).map((element) => ({
+const scrollFactor: Factor = (element, axis) => {
+  const { parallaxMobile, parallaxMobileX, parallaxMobileY } = element.dataset;
+  const raw = (axis === "x" ? parallaxMobileX : parallaxMobileY) ?? parallaxMobile;
+  return raw === undefined ? sharedFactor(element, axis) : Number(raw) / DEFAULT_FACTOR;
+};
+
+const collect = (elements: Iterable<HTMLElement>, factor: Factor): Layer[] =>
+  Array.from(elements).map((element) => ({
     element,
     xFactor: factor(element, "x"),
     yFactor: factor(element, "y"),
@@ -98,7 +108,7 @@ function createAnimator(layers: Layer[], scale = 1, easing = EASING) {
 }
 
 function startPointerParallax() {
-  const layers = collect(POINTER_SELECTOR);
+  const layers = collect(document.querySelectorAll<HTMLElement>(POINTER_SELECTOR), sharedFactor);
   if (layers.length === 0) return;
 
   const animator = createAnimator(layers);
@@ -133,23 +143,38 @@ const readScrollConfig = (frame: HTMLElement | null) => ({
 });
 
 function startScrollParallax() {
-  const layers = collect(SCROLL_SELECTOR);
+  const frames = Array.from(document.querySelectorAll<HTMLElement>(SCROLL_FRAME_SELECTOR));
   const pushLayers: Layer[] = Array.from(document.querySelectorAll<HTMLElement>(PUSH_SELECTOR)).map(
     (element) => ({ element, xFactor: 0, yFactor: 1, effect: null }),
   );
-  if (layers.length + pushLayers.length === 0) return;
+  if (frames.length === 0 && pushLayers.length === 0) return;
 
-  const frame = document.querySelector<HTMLElement>("[data-parallax-scroll]");
   const mobile = window.matchMedia(MOBILE_QUERY);
   const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY);
-  const { distance, drift, scale } = readScrollConfig(frame);
-  const animator = createAnimator(layers, scale, 1);
+
+  const runners = frames.map((frame) => {
+    const layers = collect(
+      frame.querySelectorAll<HTMLElement>(SCROLL_LAYER_SELECTOR),
+      scrollFactor,
+    );
+    const { distance, drift, scale } = readScrollConfig(frame);
+    return {
+      distance,
+      drift,
+      animator: layers.length > 0 ? createAnimator(layers, scale, 1) : null,
+    };
+  });
   const pushAnimator = pushLayers.length > 0 ? createAnimator(pushLayers, 1, 1) : null;
+  const page = readScrollConfig(frames[0] ?? null);
 
   const onScroll = () => {
-    const progress = Math.min(window.scrollY / (distance * window.innerHeight), 1);
-    animator.to(0, -progress * drift * window.innerHeight);
+    for (const { distance, drift, animator } of runners) {
+      if (!animator) continue;
+      const progress = Math.min(window.scrollY / (distance * window.innerHeight), 1);
+      animator.to(0, -progress * drift * window.innerHeight);
+    }
     if (pushAnimator) {
+      const progress = Math.min(window.scrollY / (page.distance * window.innerHeight), 1);
       pushAnimator.to(0, progress * PUSH_COUPLING * window.innerHeight);
     }
   };
@@ -157,7 +182,7 @@ function startScrollParallax() {
   const sync = () => {
     if (!mobile.matches || reducedMotion.matches) {
       window.removeEventListener("scroll", onScroll);
-      animator.reset();
+      for (const { animator } of runners) animator?.reset();
       pushAnimator?.reset();
       return;
     }
@@ -174,10 +199,14 @@ let started = false;
 
 /**
  * Pointer-driven parallax on hover-capable layouts, and scroll-driven parallax
- * for `[data-parallax-scroll]` subtrees on touch layouts. Factors are
+ * for the subtrees of every `[data-parallax-scroll]` frame on touch layouts;
+ * each frame reads its own `data-parallax-scroll-*` config. Factors are
  * percentages (default 100), so `data-parallax={30}` moves at 30%;
  * `data-parallax-x` and `data-parallax-y` override a single axis, and an axis
- * with no value stays still. Disabled under `prefers-reduced-motion`.
+ * with no value stays still. The scroll driver also reads `data-parallax-mobile`
+ * (and `-x`/`-y`), which the pointer driver ignores, so a layer can move on
+ * touch layouts without drifting on desktop. Disabled under
+ * `prefers-reduced-motion`.
  */
 export function startParallax() {
   if (started) return;

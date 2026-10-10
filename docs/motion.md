@@ -13,10 +13,10 @@ Two independent drivers are started once by `startParallax()` from
 `Layout.astro`, and each disables itself when its breakpoint or motion condition
 stops holding.
 
-| Driver  | Runs when     | Reads input | Moves                                                                                 |
-| ------- | ------------- | ----------- | ------------------------------------------------------------------------------------- |
-| Pointer | width ≥ 768px | `mousemove` | every `[data-parallax]` layer in `document`                                           |
-| Scroll  | width ≤ 767px | `scroll`    | `[data-parallax]` layers inside `[data-parallax-scroll]`, plus `[data-parallax-push]` |
+| Driver  | Runs when     | Reads input | Moves                                                                                              |
+| ------- | ------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| Pointer | width ≥ 768px | `mousemove` | every `[data-parallax]` layer in `document`                                                        |
+| Scroll  | width ≤ 767px | `scroll`    | `[data-parallax*]` layers inside every `[data-parallax-scroll]` frame, plus `[data-parallax-push]` |
 
 - The breakpoint is `(max-width: 767px)`; the pointer driver is the inverse.
 - Both drivers stand down while `(prefers-reduced-motion: reduce)` matches.
@@ -27,30 +27,43 @@ stops holding.
 
 The two selectors are not the same set. The pointer driver matches
 `[data-parallax], [data-parallax-x], [data-parallax-y]` anywhere in the document.
-The scroll driver matches only descendants of `[data-parallax-scroll]`, so page
-content that carries `data-parallax` outside a scroll frame moves on desktop and
-stays still on mobile.
+The scroll driver matches only descendants of a `[data-parallax-scroll]` frame,
+plus the scroll-only `data-parallax-mobile*` names, so page content that carries
+`data-parallax` outside a scroll frame (such as the still-life page headers)
+moves on desktop and stays still on mobile.
+
+Each frame is independent: the driver reads `data-parallax-scroll-distance`,
+`-drift` and `-scale` off the frame itself and builds a separate animator, so a
+frame can tune its own travel and overscan. The still-life pages use two frames —
+the background (`scale: 1.15`) and the card section (`scale: 1`, so the text is
+not scaled).
 
 ## Attributes
 
 Set by hand in JSX or `.astro` markup, except `StillLifeBackground`'s, which its
 props render.
 
-| Attribute                       | Set by                | Meaning                                                                                  | Default  |
-| ------------------------------- | --------------------- | ---------------------------------------------------------------------------------------- | -------- |
-| `data-parallax`                 | page markup           | Factor for both axes, as a percentage of the driver's base displacement (`40` → 0.4).    | none (0) |
-| `data-parallax-x`               | page markup           | Overrides the x factor only.                                                             | none (0) |
-| `data-parallax-y`               | page markup           | Overrides the y factor only.                                                             | none (0) |
-| `data-parallax-scroll`          | `StillLifeBackground` | Marks the frame the scroll driver scopes to and reads its config from (the first match). | absent   |
-| `data-parallax-scroll-distance` | `StillLifeBackground` | `scrollDistance`: viewport heights of scroll before `progress` reaches 1.                | 1        |
-| `data-parallax-scroll-drift`    | `StillLifeBackground` | `scrollDrift`: fraction of the viewport a full-drift layer travels.                      | 0.3      |
-| `data-parallax-scroll-scale`    | `StillLifeBackground` | `scrollScale`: overscan multiplier applied to every scroll layer's transform.            | 1        |
-| `data-parallax-push`            | page markup           | Marks the element the scroll driver drifts down as the page scrolls (the first match).   | absent   |
+| Attribute                       | Set by                             | Meaning                                                                                     | Default           |
+| ------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------- | ----------------- |
+| `data-parallax`                 | page markup                        | Factor for both axes, as a percentage of the driver's base displacement (`40` → 0.4).       | none (0)          |
+| `data-parallax-x`               | page markup                        | Overrides the x factor only.                                                                | none (0)          |
+| `data-parallax-y`               | page markup                        | Overrides the y factor only.                                                                | none (0)          |
+| `data-parallax-mobile`          | page markup                        | Scroll-driver-only factor for both axes; overrides `data-parallax` on touch layouts.        | `data-parallax`   |
+| `data-parallax-mobile-x`        | page markup                        | Overrides the x factor only (scroll driver).                                                | `data-parallax-x` |
+| `data-parallax-mobile-y`        | page markup                        | Overrides the y factor only (scroll driver).                                                | `data-parallax-y` |
+| `data-parallax-scroll`          | `StillLifeBackground`, page markup | Marks a frame the scroll driver scopes to and configures independently (one animator each). | absent            |
+| `data-parallax-scroll-distance` | `StillLifeBackground`, page markup | `scrollDistance`: viewport heights of scroll before `progress` reaches 1.                   | 1                 |
+| `data-parallax-scroll-drift`    | `StillLifeBackground`, page markup | `scrollDrift`: fraction of the viewport a full-drift layer travels.                         | 0.3               |
+| `data-parallax-scroll-scale`    | `StillLifeBackground`, page markup | `scrollScale`: overscan multiplier applied to every scroll layer's transform.               | 1                 |
+| `data-parallax-push`            | page markup                        | Marks the element the scroll driver drifts down as the page scrolls (the first match).      | absent            |
 
 Notes:
 
 - `data-parallax-x` and `data-parallax-y` override a single axis of
   `data-parallax`; with only `data-parallax` set, both axes take its value.
+- `data-parallax-mobile`, `-x` and `-y` are read only by the scroll driver. When
+  one is absent the layer falls back to its `data-parallax*` value, so a layer
+  can keep its desktop factor and tune its own touch factor.
 - Under the scroll driver only the y factor has any effect.
 - The `-distance`, `-drift` and `-scale` values fall back to their defaults when
   the attribute is absent or parses to 0.
@@ -74,6 +87,13 @@ are passed as props from the page's `.astro` file. `about.astro`, `contact.astro
 `privacy.astro` and `developers.astro` all spread the shared `stillLifeScroll`
 preset from `still-life-hero.tsx` (`scrollDistance: 1.5`, `scrollDrift: 0.4`,
 `scrollScale: 1.15`).
+
+`about.astro`, `contact.astro` and `privacy.astro` also mark their card
+`<section>` as a second frame (`scrollDistance: 2`, `scrollDrift: 0.1`), so the
+card prose parallaxes on touch layouts. `StillLifeCard` renders its corner
+brackets as a separate `data-parallax-mobile` layer, so the bracket frame and the
+prose drift in opposite directions without disturbing the card's reveal
+transform.
 
 ## Footer overlap contract
 

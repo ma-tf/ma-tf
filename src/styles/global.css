@@ -738,6 +738,14 @@ html.dark .astro-code {
   opacity: calc(var(--opacity-back) + var(--opacity-range) * var(--depth));
 }
 
-.parallax-active :is([data-parallax], [data-parallax-x], [data-parallax-y]) {
+.parallax-active
+  :is(
+    [data-parallax],
+    [data-parallax-x],
+    [data-parallax-y],
+    [data-parallax-mobile],
+    [data-parallax-mobile-x],
+    [data-parallax-mobile-y]
+  ) {
   will-change: transform;
 }

@@ -34,6 +34,9 @@ import { siteIdentity } from "@features/seo/site-metadata";
         <section
           class:list={[stillLifeSectionClass, "md:text-xs"]}
           data-parallax={40}
+          data-parallax-scroll
+          data-parallax-scroll-distance={2}
+          data-parallax-scroll-drift={0.1}
         >
           <AboutCard
             className="animate-reveal md:opacity-100 md:transform-none"

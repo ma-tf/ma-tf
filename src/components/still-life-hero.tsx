@@ -50,14 +50,15 @@ export function StillLifeContent({ children, className, ...props }: ComponentPro
   );
 }
 
-export function StillLifeCard({ className, ...props }: ComponentProps<"div">) {
+export function StillLifeCard({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div
-      className={cn(
-        "w-full max-w-none corner-brackets-4 corner-thickness-1 md:w-auto md:max-w-card",
-        className,
-      )}
-      {...props}
-    />
+    <div className={cn("relative w-full max-w-none md:w-auto md:max-w-card", className)} {...props}>
+      <div
+        aria-hidden="true"
+        data-parallax-mobile={-8}
+        className="pointer-events-none absolute inset-0 corner-brackets-4 corner-thickness-1"
+      />
+      {children}
+    </div>
   );
 }
