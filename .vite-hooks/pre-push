@@ -1,3 +1,4 @@
+vp run check:ask-corpus
 vpx react-doctor --verbose -y
 fallow audit
 git lfs pre-push "$@"
