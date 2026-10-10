@@ -9,7 +9,7 @@ export const stillLifeScroll = {
 } as const;
 
 export const stillLifeSectionClass =
-  "text-base leading-relaxed flex flex-col gap-12 py-12 md:flex-row md:gap-9 md:pb-64 md:pl-16";
+  "text-base leading-relaxed flex flex-col gap-12 py-12 md:flex-row md:gap-9 md:pl-16";
 
 export function StillLifeHero({ className, ...props }: ComponentProps<"div">) {
   return (
