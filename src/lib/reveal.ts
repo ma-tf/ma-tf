@@ -1,7 +1,7 @@
 const REVEAL_SELECTOR = '[class*="animate-reveal"]';
 const REVEALED_CLASS = "is-revealed";
 const REVEAL_MARGIN = "0px 0px 10% 0px";
-const REVEAL_THRESHOLD = 0.5;
+const REVEAL_THRESHOLD = 0.4;
 
 export function startReveal() {
   const elements = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));

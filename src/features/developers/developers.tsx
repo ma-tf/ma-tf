@@ -30,6 +30,7 @@ export function DevelopersHeader({ className, ...props }: ComponentProps<"header
 export function DevelopersTitle({ className, ...props }: ComponentProps<"h1">) {
   return (
     <h1
+      data-parallax={30}
       data-parallax-push
       className={cn(
         "animate-fade-in title-fit font-semibold uppercase animation-delay-1200 vertical-text md:text-8xl md:animation-delay-2000",
