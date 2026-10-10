@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Pill({ children, className, ...props }: React.ComponentProps<"a">) {
+export function Pill({ children, className, ...props }: ComponentProps<"a">) {
   return (
     <a
       className={cn(

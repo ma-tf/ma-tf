@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
 export const stillLifeScroll = {
@@ -9,7 +11,7 @@ export const stillLifeScroll = {
 export const stillLifeSectionClass =
   "text-base leading-relaxed flex flex-col gap-12 py-12 md:flex-row md:gap-9 md:pb-64 md:pl-16";
 
-export function StillLifeHero({ className, ...props }: React.ComponentProps<"div">) {
+export function StillLifeHero({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -21,7 +23,7 @@ export function StillLifeHero({ className, ...props }: React.ComponentProps<"div
   );
 }
 
-export function StillLifeHeroHeader({ className, ...props }: React.ComponentProps<"header">) {
+export function StillLifeHeroHeader({ className, ...props }: ComponentProps<"header">) {
   return (
     <header
       data-parallax={40}
@@ -34,7 +36,7 @@ export function StillLifeHeroHeader({ className, ...props }: React.ComponentProp
   );
 }
 
-export function StillLifeContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function StillLifeContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -48,7 +50,7 @@ export function StillLifeContent({ children, className, ...props }: React.Compon
   );
 }
 
-export function StillLifeCard({ className, ...props }: React.ComponentProps<"div">) {
+export function StillLifeCard({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(

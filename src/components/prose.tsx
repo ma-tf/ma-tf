@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-function Paragraph({ children, className, ...props }: React.ComponentProps<"p">) {
+function Paragraph({ children, className, ...props }: ComponentProps<"p">) {
   return (
     <p className={cn("leading-relaxed", className)} {...props}>
       {children}
@@ -8,7 +10,7 @@ function Paragraph({ children, className, ...props }: React.ComponentProps<"p">)
   );
 }
 
-function Heading2({ children, className, ...props }: React.ComponentProps<"h2">) {
+function Heading2({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2 className={cn("text-2xl font-bold tracking-tight", className)} {...props}>
       {children}
@@ -16,7 +18,7 @@ function Heading2({ children, className, ...props }: React.ComponentProps<"h2">)
   );
 }
 
-function Heading3({ children, className, ...props }: React.ComponentProps<"h3">) {
+function Heading3({ children, className, ...props }: ComponentProps<"h3">) {
   return (
     <h3 className={cn("text-xl font-semibold", className)} {...props}>
       {children}
@@ -24,7 +26,7 @@ function Heading3({ children, className, ...props }: React.ComponentProps<"h3">)
   );
 }
 
-function Link({ children, className, ...props }: React.ComponentProps<"a">) {
+function Link({ children, className, ...props }: ComponentProps<"a">) {
   return (
     <a
       className={cn(
@@ -38,7 +40,7 @@ function Link({ children, className, ...props }: React.ComponentProps<"a">) {
   );
 }
 
-function InlineCode({ children, className, ...props }: React.ComponentProps<"code">) {
+function InlineCode({ children, className, ...props }: ComponentProps<"code">) {
   const isBlock = typeof className === "string" && className.includes("language-");
   return (
     <code
@@ -55,7 +57,7 @@ function CodeBlock({
   className,
   tabindex,
   ...props
-}: React.ComponentProps<"pre"> & { tabindex?: number | string }) {
+}: ComponentProps<"pre"> & { tabindex?: number | string }) {
   return (
     <pre
       className={cn(
@@ -70,7 +72,7 @@ function CodeBlock({
   );
 }
 
-function UnorderedList({ children, className, ...props }: React.ComponentProps<"ul">) {
+function UnorderedList({ children, className, ...props }: ComponentProps<"ul">) {
   return (
     <ul className={cn("list-disc space-y-1 pl-6", className)} {...props}>
       {children}
@@ -78,7 +80,7 @@ function UnorderedList({ children, className, ...props }: React.ComponentProps<"
   );
 }
 
-function OrderedList({ children, className, ...props }: React.ComponentProps<"ol">) {
+function OrderedList({ children, className, ...props }: ComponentProps<"ol">) {
   return (
     <ol className={cn("list-decimal space-y-1 pl-6", className)} {...props}>
       {children}
@@ -86,7 +88,7 @@ function OrderedList({ children, className, ...props }: React.ComponentProps<"ol
   );
 }
 
-function Blockquote({ children, className, ...props }: React.ComponentProps<"blockquote">) {
+function Blockquote({ children, className, ...props }: ComponentProps<"blockquote">) {
   return (
     <blockquote
       className={cn("border-l-2 border-border pl-4 text-muted-foreground italic", className)}
@@ -97,7 +99,7 @@ function Blockquote({ children, className, ...props }: React.ComponentProps<"blo
   );
 }
 
-function Table({ children, className, ...props }: React.ComponentProps<"table">) {
+function Table({ children, className, ...props }: ComponentProps<"table">) {
   return (
     <table className={cn("w-full text-sm", className)} {...props}>
       {children}
@@ -105,7 +107,7 @@ function Table({ children, className, ...props }: React.ComponentProps<"table">)
   );
 }
 
-function TableHead({ children, className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ children, className, ...props }: ComponentProps<"th">) {
   return (
     <th
       className={cn("border-b border-border px-2 py-1.5 text-left font-semibold", className)}
@@ -116,7 +118,7 @@ function TableHead({ children, className, ...props }: React.ComponentProps<"th">
   );
 }
 
-function TableCell({ children, className, ...props }: React.ComponentProps<"td">) {
+function TableCell({ children, className, ...props }: ComponentProps<"td">) {
   return (
     <td className={cn("border-b border-border px-2 py-1.5 text-left", className)} {...props}>
       {children}

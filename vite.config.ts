@@ -35,6 +35,10 @@ export default defineConfig({
         name: "modules",
         specifier: fileURLToPath(new URL("./scripts/linter-rules/modules.mjs", import.meta.url)),
       },
+      {
+        name: "types",
+        specifier: fileURLToPath(new URL("./scripts/linter-rules/types.mjs", import.meta.url)),
+      },
     ],
     options: { typeAware: true, typeCheck: true },
     rules: {
@@ -52,6 +56,7 @@ export default defineConfig({
       "tailwind/no-unknown-classes": "error",
       "tailwind/no-max-md": "error",
       "modules/no-barrel-exports": "error",
+      "types/no-react-namespace": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
         "error",

@@ -1,7 +1,9 @@
+import type { ComponentProps } from "react";
+
 import { CalendarIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
-export function Post({ children, className, ...props }: React.ComponentProps<"article">) {
+export function Post({ children, className, ...props }: ComponentProps<"article">) {
   return (
     <article className={cn("mx-auto max-w-3xl px-8 py-24", className)} {...props}>
       {children}
@@ -9,7 +11,7 @@ export function Post({ children, className, ...props }: React.ComponentProps<"ar
   );
 }
 
-export function PostHeader({ children, className, ...props }: React.ComponentProps<"header">) {
+export function PostHeader({ children, className, ...props }: ComponentProps<"header">) {
   return (
     <header className={cn("mb-8", className)} {...props}>
       {children}
@@ -17,7 +19,7 @@ export function PostHeader({ children, className, ...props }: React.ComponentPro
   );
 }
 
-export function PostTitle({ children, className, ...props }: React.ComponentProps<"h1">) {
+export function PostTitle({ children, className, ...props }: ComponentProps<"h1">) {
   return (
     <h1 className={cn("mb-2 animate-fade-up text-4xl font-bold", className)} {...props}>
       {children}
@@ -25,7 +27,7 @@ export function PostTitle({ children, className, ...props }: React.ComponentProp
   );
 }
 
-export function PostDate({ className, ...props }: React.ComponentProps<"time">) {
+export function PostDate({ className, ...props }: ComponentProps<"time">) {
   return (
     <time
       className={cn("inline-flex items-center gap-1 text-muted-foreground", className)}
@@ -37,7 +39,7 @@ export function PostDate({ className, ...props }: React.ComponentProps<"time">) 
   );
 }
 
-export function PostContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function PostContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-5 animate-reveal", className)} {...props}>
       {children}

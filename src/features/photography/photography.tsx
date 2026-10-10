@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Photography({ children, className, ...props }: React.ComponentProps<"div">) {
+export function Photography({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn("w-full max-w-480 self-center overflow-x-clip px-4 py-16", className)}
@@ -11,7 +13,7 @@ export function Photography({ children, className, ...props }: React.ComponentPr
   );
 }
 
-export function PhotographyHeader({ children, className, ...props }: React.ComponentProps<"div">) {
+export function PhotographyHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-parallax={30}
@@ -26,7 +28,7 @@ export function PhotographyHeader({ children, className, ...props }: React.Compo
   );
 }
 
-export function PhotographyTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
+export function PhotographyTitle({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2 className={cn("text-5xl md:text-8xl lg:text-9xl", className)} {...props}>
       {children}
@@ -34,11 +36,7 @@ export function PhotographyTitle({ children, className, ...props }: React.Compon
   );
 }
 
-export function PhotographyDescription({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function PhotographyDescription({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-parallax={50}
@@ -50,7 +48,7 @@ export function PhotographyDescription({
   );
 }
 
-export function PhotographyGrid({ children, className, ...props }: React.ComponentProps<"div">) {
+export function PhotographyGrid({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div data-parallax={20} className={cn("min-w-0 md:col-span-4", className)} {...props}>
       {children}
@@ -58,7 +56,7 @@ export function PhotographyGrid({ children, className, ...props }: React.Compone
   );
 }
 
-export function PhotographyContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function PhotographyContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn("grid auto-rows-auto grid-cols-1 gap-4 md:grid-cols-6", className)}

@@ -1,3 +1,5 @@
+import type { CSSProperties, ComponentProps, ReactNode, RefObject } from "react";
+
 import { useOrbit } from "@features/tags/orbit-context";
 import { OrbitScrollbar } from "@features/tags/orbit-scrollbar";
 import { useItemRefs } from "@features/tags/use-item-refs";
@@ -10,16 +12,16 @@ const SCROLLBAR_OFFSET = -64;
 const TOUCH_SENSITIVITY = 4;
 
 type OrbitProps<T> = {
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number) => ReactNode;
   onSelect: (item: T) => void;
   onRotate?: (rotation: number) => void;
-} & Omit<React.ComponentProps<"div">, "onSelect">;
+} & Omit<ComponentProps<"div">, "onSelect">;
 
 function useOrbitInput({
   stageRef,
   applyWheel,
 }: {
-  stageRef: React.RefObject<HTMLDivElement | null>;
+  stageRef: RefObject<HTMLDivElement | null>;
   applyWheel: (delta: number) => void;
 }) {
   const touchStartY = useRef(0);
@@ -156,7 +158,7 @@ export function Orbit<T>({
         <div
           key={getKey(item, i)}
           ref={setRef(i)}
-          style={{ "--index": i } as React.CSSProperties}
+          style={{ "--index": i } as CSSProperties}
           className="orbit-item absolute top-0 left-0"
         >
           {renderItem(item, i)}

@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Section({ children, className, ...props }: React.ComponentProps<"section">) {
+export function Section({ children, className, ...props }: ComponentProps<"section">) {
   return (
     <section
       className={cn("section grid grid-cols-1 content-start gap-12 p-8 md:grid-cols-3", className)}
@@ -11,7 +13,7 @@ export function Section({ children, className, ...props }: React.ComponentProps<
   );
 }
 
-export function SectionHeader({ children, className, ...props }: React.ComponentProps<"header">) {
+export function SectionHeader({ children, className, ...props }: ComponentProps<"header">) {
   return (
     <header
       className={cn(
@@ -25,7 +27,7 @@ export function SectionHeader({ children, className, ...props }: React.Component
   );
 }
 
-export function SectionNumber({ className, ...props }: React.ComponentProps<"span">) {
+export function SectionNumber({ className, ...props }: ComponentProps<"span">) {
   return (
     <span
       className={cn(
@@ -37,7 +39,7 @@ export function SectionNumber({ className, ...props }: React.ComponentProps<"spa
   );
 }
 
-export function SectionTitle({ children, className, ...props }: React.ComponentProps<"a">) {
+export function SectionTitle({ children, className, ...props }: ComponentProps<"a">) {
   return (
     <a
       className={cn(
@@ -51,7 +53,7 @@ export function SectionTitle({ children, className, ...props }: React.ComponentP
   );
 }
 
-export function SectionSubtitle({ children, className, ...props }: React.ComponentProps<"h2">) {
+export function SectionSubtitle({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2
       className={cn(
@@ -65,7 +67,7 @@ export function SectionSubtitle({ children, className, ...props }: React.Compone
   );
 }
 
-export function SectionContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function SectionContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("col-span-3 col-start-1 animate-reveal", className)} {...props}>
       {children}

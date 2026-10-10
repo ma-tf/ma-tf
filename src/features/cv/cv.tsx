@@ -1,10 +1,12 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
 export function CurriculumVitaeSection({
   children,
   className,
   ...props
-}: React.ComponentProps<"section">) {
+}: ComponentProps<"section">) {
   return (
     <section className={cn("flex flex-col gap-4 animate-reveal", className)} {...props}>
       {children}
@@ -12,11 +14,7 @@ export function CurriculumVitaeSection({
   );
 }
 
-export function CurriculumVitaeTitle({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"h2">) {
+export function CurriculumVitaeTitle({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2 className={cn("flex justify-center uppercase", className)} {...props}>
       {children}
@@ -24,7 +22,7 @@ export function CurriculumVitaeTitle({
   );
 }
 
-export function CurriculumVitaeName({ children, className, ...props }: React.ComponentProps<"h1">) {
+export function CurriculumVitaeName({ children, className, ...props }: ComponentProps<"h1">) {
   return (
     <h1 className={cn("text-2xl font-bold", className)} {...props}>
       {children}
@@ -32,7 +30,7 @@ export function CurriculumVitaeName({ children, className, ...props }: React.Com
   );
 }
 
-export function CurriculumVitaeRole({ children, className, ...props }: React.ComponentProps<"h2">) {
+export function CurriculumVitaeRole({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2 className={cn("text-lg text-muted-foreground", className)} {...props}>
       {children}

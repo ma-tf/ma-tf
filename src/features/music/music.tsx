@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import { NavButton } from "@components/nav-button";
 import { previews } from "@lib/feature-flags";
 import { cn } from "cn";
@@ -9,7 +11,7 @@ const MUSIC_NAVIGATION_LINKS = [
   { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
 ] as const;
 
-export function Music({ children, className, ...props }: React.ComponentProps<"div">) {
+export function Music({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -23,7 +25,7 @@ export function Music({ children, className, ...props }: React.ComponentProps<"d
   );
 }
 
-export function MusicContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function MusicContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("grid grid-cols-1 gap-6 md:grid-cols-3", className)} {...props}>
       {children}
@@ -31,7 +33,7 @@ export function MusicContent({ children, className, ...props }: React.ComponentP
   );
 }
 
-export function MusicTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
+export function MusicTitle({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2
       className={cn("animate-fade-up text-right text-9xl md:text-10xl lg:text-11xl", className)}
@@ -42,7 +44,7 @@ export function MusicTitle({ children, className, ...props }: React.ComponentPro
   );
 }
 
-export function MusicHeader({ children, className, ...props }: React.ComponentProps<"div">) {
+export function MusicHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col py-8", className)} {...props}>
       {children}
@@ -65,7 +67,7 @@ export function MusicNavigation() {
   );
 }
 
-export function MusicDescription({ children, className, ...props }: React.ComponentProps<"p">) {
+export function MusicDescription({ children, className, ...props }: ComponentProps<"p">) {
   return (
     <p className={cn("indent-8 text-xl md:text-xl lg:text-2xl", className)} {...props}>
       {children}

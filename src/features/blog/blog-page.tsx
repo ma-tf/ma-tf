@@ -1,4 +1,5 @@
 import type { PlainPost } from "@features/blog/post-data";
+import type { CSSProperties } from "react";
 
 import { NavButton } from "@components/nav-button";
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
@@ -19,13 +20,13 @@ function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: 
         aria-hidden="true"
         data-parallax={15}
         className="absolute inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
-        style={{ "--background-image": `url("${backgrounds.back}")` } as React.CSSProperties}
+        style={{ "--background-image": `url("${backgrounds.back}")` } as CSSProperties}
       />
       <div
         aria-hidden="true"
         data-parallax={30}
         className="absolute inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
-        style={{ "--background-image": `url("${backgrounds.front}")` } as React.CSSProperties}
+        style={{ "--background-image": `url("${backgrounds.front}")` } as CSSProperties}
       />
     </>
   );
@@ -88,7 +89,7 @@ function PostList({ posts }: { posts: PlainPost[] }) {
         <li
           key={post.slug}
           className="group my-2 animate-fade-up md:my-0 md:py-2"
-          style={{ "--delay": `${150 + index * 50}ms` } as React.CSSProperties}
+          style={{ "--delay": `${150 + index * 50}ms` } as CSSProperties}
         >
           <a
             href={`/posts/${post.slug}`}

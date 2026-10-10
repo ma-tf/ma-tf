@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import { useVignetteThumbnail } from "@features/vignettes/vignette-thumbnail-context";
 import { CaretRightIcon, PlayIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
@@ -12,7 +14,7 @@ export function thumbnailUrl(playbackId: string, width: number, height: number) 
   return `https://image.mux.com/${playbackId}/thumbnail.jpg?time=0&width=${width}&height=${height}&fit_mode=crop`;
 }
 
-function VignetteThumbnailButton({ children, className, ...props }: React.ComponentProps<"a">) {
+function VignetteThumbnailButton({ children, className, ...props }: ComponentProps<"a">) {
   const { isActive } = useVignetteThumbnail();
 
   return (
@@ -31,7 +33,7 @@ function VignetteThumbnailButton({ children, className, ...props }: React.Compon
   );
 }
 
-function VignetteThumbnailMedia({ children, className, ...props }: React.ComponentProps<"div">) {
+function VignetteThumbnailMedia({ children, className, ...props }: ComponentProps<"div">) {
   const { isActive } = useVignetteThumbnail();
 
   return (
@@ -48,7 +50,7 @@ function VignetteThumbnailMedia({ children, className, ...props }: React.Compone
   );
 }
 
-function VignetteThumbnailDetails({ children, className, ...props }: React.ComponentProps<"div">) {
+function VignetteThumbnailDetails({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("min-w-0 text-sm", className)} {...props}>
       {children}
@@ -56,7 +58,7 @@ function VignetteThumbnailDetails({ children, className, ...props }: React.Compo
   );
 }
 
-function VignetteThumbnailHeader({ children, className, ...props }: React.ComponentProps<"div">) {
+function VignetteThumbnailHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex items-center gap-1", className)} {...props}>
       {children}
@@ -64,7 +66,7 @@ function VignetteThumbnailHeader({ children, className, ...props }: React.Compon
   );
 }
 
-function VignetteThumbnailSummary({ children, className, ...props }: React.ComponentProps<"span">) {
+function VignetteThumbnailSummary({ children, className, ...props }: ComponentProps<"span">) {
   const { isActive } = useVignetteThumbnail();
 
   return (
@@ -81,7 +83,7 @@ function VignetteThumbnailSummary({ children, className, ...props }: React.Compo
   );
 }
 
-function VignetteThumbnailTitle({ children, className, ...props }: React.ComponentProps<"span">) {
+function VignetteThumbnailTitle({ children, className, ...props }: ComponentProps<"span">) {
   const { isActive } = useVignetteThumbnail();
 
   return (
@@ -98,7 +100,7 @@ function VignetteThumbnailTitle({ children, className, ...props }: React.Compone
   );
 }
 
-function VignetteThumbnailIcon({ children, className, ...props }: React.ComponentProps<"span">) {
+function VignetteThumbnailIcon({ children, className, ...props }: ComponentProps<"span">) {
   return (
     <span
       aria-hidden="true"

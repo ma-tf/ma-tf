@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Developers({ className, ...props }: React.ComponentProps<"div">) {
+export function Developers({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -12,7 +14,7 @@ export function Developers({ className, ...props }: React.ComponentProps<"div">)
   );
 }
 
-export function DevelopersHeader({ className, ...props }: React.ComponentProps<"header">) {
+export function DevelopersHeader({ className, ...props }: ComponentProps<"header">) {
   return (
     <header
       className={cn(
@@ -24,7 +26,7 @@ export function DevelopersHeader({ className, ...props }: React.ComponentProps<"
   );
 }
 
-export function DevelopersTitle({ className, ...props }: React.ComponentProps<"h1">) {
+export function DevelopersTitle({ className, ...props }: ComponentProps<"h1">) {
   return (
     <h1
       data-parallax={30}
@@ -37,7 +39,7 @@ export function DevelopersTitle({ className, ...props }: React.ComponentProps<"h
   );
 }
 
-export function DevelopersIntro({ className, ...props }: React.ComponentProps<"p">) {
+export function DevelopersIntro({ className, ...props }: ComponentProps<"p">) {
   return (
     <p
       data-parallax={60}
@@ -50,13 +52,13 @@ export function DevelopersIntro({ className, ...props }: React.ComponentProps<"p
   );
 }
 
-export function DevelopersContent({ className, ...props }: React.ComponentProps<"div">) {
+export function DevelopersContent({ className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("md:col-span-9 md:col-start-2 md:row-start-2", className)} {...props} />
   );
 }
 
-export function DevelopersCard({ className, ...props }: React.ComponentProps<"div">) {
+export function DevelopersCard({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn("max-w-card animate-fade-in corner-brackets-4 corner-thickness-1", className)}

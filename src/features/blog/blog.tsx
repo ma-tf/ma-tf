@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Blog({ children, className, ...props }: React.ComponentProps<"div">) {
+export function Blog({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn("flex w-full flex-col gap-8 md:h-full md:flex-row md:px-8", className)}
@@ -11,7 +13,7 @@ export function Blog({ children, className, ...props }: React.ComponentProps<"di
   );
 }
 
-export function BlogHeader({ children, className, ...props }: React.ComponentProps<"div">) {
+export function BlogHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -25,7 +27,7 @@ export function BlogHeader({ children, className, ...props }: React.ComponentPro
   );
 }
 
-export function BlogTitle({ children, className, ...props }: React.ComponentProps<"h1">) {
+export function BlogTitle({ children, className, ...props }: ComponentProps<"h1">) {
   return (
     <h1 className={cn("text-4xl md:text-8xl", className)} {...props}>
       {children}
@@ -33,7 +35,7 @@ export function BlogTitle({ children, className, ...props }: React.ComponentProp
   );
 }
 
-export function BlogDescription({ children, className, ...props }: React.ComponentProps<"p">) {
+export function BlogDescription({ children, className, ...props }: ComponentProps<"p">) {
   return (
     <p className={cn("text-xl text-muted-foreground", className)} {...props}>
       {children}
@@ -41,7 +43,7 @@ export function BlogDescription({ children, className, ...props }: React.Compone
   );
 }
 
-export function BlogContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function BlogContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn("w-full md:h-full md:w-3/5 md:scrollbar-hidden md:overflow-y-auto", className)}

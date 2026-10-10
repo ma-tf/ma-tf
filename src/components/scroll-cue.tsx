@@ -1,7 +1,9 @@
+import type { ComponentProps } from "react";
+
 import { ArrowDownIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
-export function ScrollCue({ className, ...props }: React.ComponentProps<"div">) {
+export function ScrollCue({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(

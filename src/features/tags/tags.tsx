@@ -1,5 +1,7 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
-export function TagLink({ children, className, ...props }: React.ComponentProps<"a">) {
+export function TagLink({ children, className, ...props }: ComponentProps<"a">) {
   return (
     <span className={cn("relative inline-block tag-link", className)}>
       <a

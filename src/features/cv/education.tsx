@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Education({ children, className, ...props }: React.ComponentProps<"div">) {
+export function Education({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-2", className)} {...props}>
       {children}
@@ -8,7 +10,7 @@ export function Education({ children, className, ...props }: React.ComponentProp
   );
 }
 
-export function EducationHeader({ children, className, ...props }: React.ComponentProps<"div">) {
+export function EducationHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-1", className)} {...props}>
       {children}
@@ -16,11 +18,7 @@ export function EducationHeader({ children, className, ...props }: React.Compone
   );
 }
 
-export function EducationInstitution({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function EducationInstitution({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex items-center gap-2 font-semibold", className)} {...props}>
       {children}
@@ -28,7 +26,7 @@ export function EducationInstitution({
   );
 }
 
-export function EducationLocation({ children, className, ...props }: React.ComponentProps<"div">) {
+export function EducationLocation({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("text-sm font-normal text-muted-foreground", className)} {...props}>
       {children}
@@ -36,7 +34,7 @@ export function EducationLocation({ children, className, ...props }: React.Compo
   );
 }
 
-export function EducationCourses({ children, className, ...props }: React.ComponentProps<"div">) {
+export function EducationCourses({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col", className)} {...props}>
       {children}
@@ -44,7 +42,7 @@ export function EducationCourses({ children, className, ...props }: React.Compon
   );
 }
 
-export function EducationCourse({ children, className, ...props }: React.ComponentProps<"div">) {
+export function EducationCourse({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("flex gap-2 text-sm", className)} {...props}>
       {children}
@@ -52,7 +50,7 @@ export function EducationCourse({ children, className, ...props }: React.Compone
   );
 }
 
-export function EducationPeriod({ children, className, ...props }: React.ComponentProps<"div">) {
+export function EducationPeriod({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("text-xs text-muted-foreground", className)} {...props}>
       {children}
@@ -60,7 +58,7 @@ export function EducationPeriod({ children, className, ...props }: React.Compone
   );
 }
 
-export function EducationGrade({ children, className, ...props }: React.ComponentProps<"div">) {
+export function EducationGrade({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(

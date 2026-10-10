@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import {
   StillLifeCard,
   StillLifeContent,
@@ -6,15 +8,15 @@ import {
 } from "@components/still-life-hero";
 import { cn } from "cn";
 
-export function Contact({ className, ...props }: React.ComponentProps<"div">) {
+export function Contact({ className, ...props }: ComponentProps<"div">) {
   return <StillLifeHero className={className} {...props} />;
 }
 
-export function ContactHeader({ className, ...props }: React.ComponentProps<"header">) {
+export function ContactHeader({ className, ...props }: ComponentProps<"header">) {
   return <StillLifeHeroHeader className={className} {...props} />;
 }
 
-export function ContactTitle({ className, ...props }: React.ComponentProps<"h1">) {
+export function ContactTitle({ className, ...props }: ComponentProps<"h1">) {
   return (
     <h1
       data-parallax-push
@@ -27,7 +29,7 @@ export function ContactTitle({ className, ...props }: React.ComponentProps<"h1">
   );
 }
 
-export function ContactContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function ContactContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <StillLifeContent className={className} {...props}>
       {children}
@@ -35,6 +37,6 @@ export function ContactContent({ children, className, ...props }: React.Componen
   );
 }
 
-export function ContactCard({ className, ...props }: React.ComponentProps<"div">) {
+export function ContactCard({ className, ...props }: ComponentProps<"div">) {
   return <StillLifeCard className={className} {...props} />;
 }

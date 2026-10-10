@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -63,7 +65,7 @@ export function PhotographyDialog({
 }: {
   photo: PhotographyDialogPhoto;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [showCaption, setShowCaption] = useState(true);

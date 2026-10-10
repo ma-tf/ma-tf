@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { createContext, useContext, useMemo } from "react";
 
 const DEG = Math.PI / 180;
@@ -34,7 +36,7 @@ export function OrbitProvider<T>({
   items: T[];
   getKey: (item: T, index: number) => string | number;
   initialRotation: number;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const startRad = startAngle * DEG;
   const arcSize = (endAngle - startAngle) * DEG;

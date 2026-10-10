@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import {
   Section,
   SectionContent,
@@ -13,7 +15,7 @@ type Project = {
   url: string;
   topics: string;
   description: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 };
 
 const projects: Project[] = [

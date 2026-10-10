@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import {
   StillLifeCard,
   StillLifeContent,
@@ -6,15 +8,15 @@ import {
 } from "@components/still-life-hero";
 import { cn } from "cn";
 
-export function Privacy({ className, ...props }: React.ComponentProps<"div">) {
+export function Privacy({ className, ...props }: ComponentProps<"div">) {
   return <StillLifeHero className={className} {...props} />;
 }
 
-export function PrivacyHeader({ className, ...props }: React.ComponentProps<"header">) {
+export function PrivacyHeader({ className, ...props }: ComponentProps<"header">) {
   return <StillLifeHeroHeader className={className} {...props} />;
 }
 
-export function PrivacyTitle({ className, ...props }: React.ComponentProps<"h1">) {
+export function PrivacyTitle({ className, ...props }: ComponentProps<"h1">) {
   return (
     <h1
       data-parallax-push
@@ -27,7 +29,7 @@ export function PrivacyTitle({ className, ...props }: React.ComponentProps<"h1">
   );
 }
 
-export function PrivacyContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function PrivacyContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <StillLifeContent className={className} {...props}>
       {children}
@@ -35,6 +37,6 @@ export function PrivacyContent({ children, className, ...props }: React.Componen
   );
 }
 
-export function PrivacyCard({ className, ...props }: React.ComponentProps<"div">) {
+export function PrivacyCard({ className, ...props }: ComponentProps<"div">) {
   return <StillLifeCard className={className} {...props} />;
 }

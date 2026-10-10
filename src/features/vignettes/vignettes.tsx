@@ -1,6 +1,8 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "cn";
 
-export function Vignettes({ children, className, ...props }: React.ComponentProps<"div">) {
+export function Vignettes({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -14,7 +16,7 @@ export function Vignettes({ children, className, ...props }: React.ComponentProp
   );
 }
 
-export function VignettesContent({ children, className, ...props }: React.ComponentProps<"div">) {
+export function VignettesContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("mx-auto flex w-full max-w-6xl flex-col gap-4", className)} {...props}>
       {children}
@@ -22,7 +24,7 @@ export function VignettesContent({ children, className, ...props }: React.Compon
   );
 }
 
-export function VignettesHeader({ children, className, ...props }: React.ComponentProps<"div">) {
+export function VignettesHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("mx-auto flex w-full max-w-6xl justify-end", className)} {...props}>
       {children}
@@ -30,7 +32,7 @@ export function VignettesHeader({ children, className, ...props }: React.Compone
   );
 }
 
-export function VignettesTitle({ children, className, ...props }: React.ComponentProps<"h2">) {
+export function VignettesTitle({ children, className, ...props }: ComponentProps<"h2">) {
   return (
     <h2 className={cn("mr-8 text-lg text-vignettes-ink-foreground", className)} {...props}>
       {children}

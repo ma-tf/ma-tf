@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import type { CSSProperties } from "react";
 
 import { NavButton } from "@components/nav-button";
 import { Spinner } from "@components/ui/spinner";
@@ -78,7 +79,7 @@ function VignetteDescription({
         <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-vignettes-video-ink/40" />
         <div
           className="absolute scroll-progress-dot left-1/2 size-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-vignettes-video-ink"
-          style={{ "--scroll-progress": scrollProgress } as React.CSSProperties}
+          style={{ "--scroll-progress": scrollProgress } as CSSProperties}
         />
       </div>
     </div>
