@@ -43,7 +43,7 @@ function Sources({ sources }: { sources: AskSource[] }) {
 function Answer({ answer, sources }: { answer: string; sources: AskSource[] }) {
   return (
     <>
-      <div className="text-lg text-foreground">
+      <div className="answer-content text-lg text-foreground">
         <Markdown components={proseComponents} remarkPlugins={[remarkGfm]}>
           {answer}
         </Markdown>

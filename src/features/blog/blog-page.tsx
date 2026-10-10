@@ -19,13 +19,13 @@ function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: 
       <div
         aria-hidden="true"
         data-parallax={15}
-        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:-inset-2 md:bg-left md:opacity-100 dark:invert"
+        className="fixed inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:absolute md:-inset-2 md:bg-left md:opacity-100 dark:invert"
         style={{ "--background-image": `url("${backgrounds.back}")` } as CSSProperties}
       />
       <div
         aria-hidden="true"
         data-parallax={30}
-        className="absolute inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
+        className="fixed inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:absolute md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
         style={{ "--background-image": `url("${backgrounds.front}")` } as CSSProperties}
       />
     </>
@@ -60,7 +60,7 @@ export function BlogPage({
   backgrounds: { back: string; front: string };
 }) {
   return (
-    <div className="relative isolate flex h-dvh px-4 md:h-dvh md:overflow-hidden">
+    <div className="relative isolate flex min-h-dvh px-4 md:h-dvh md:overflow-hidden">
       <BlogBackgrounds backgrounds={backgrounds} />
       <Blog>
         <BlogHeader>

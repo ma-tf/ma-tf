@@ -24,6 +24,10 @@ export default defineConfig({
   },
   markdown: {
     processor: unified({ remarkPlugins: [remarkReadingTime] }),
+    shikiConfig: {
+      themes: { light: "github-light", dark: "github-dark" },
+      defaultColor: false,
+    },
   },
   integrations: [react(), mdx()],
   vite: {

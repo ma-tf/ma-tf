@@ -109,6 +109,18 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   }
 }
 
+.post-content [class*="animate-reveal"] [class*="animate-reveal"] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.answer-content [class*="animate-reveal"] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 @keyframes scrollCueFade {
   to {
     opacity: 0;
@@ -663,6 +675,30 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
 
 pre[data-language] > code {
   background-color: transparent !important;
+}
+
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+html.dark .astro-code,
+html.dark .astro-code span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+.astro-code {
+  background-color: var(--shiki-light-bg);
+}
+
+html.dark .astro-code {
+  background-color: var(--shiki-dark-bg);
 }
 
 .orbit-stage {

@@ -5,7 +5,7 @@ import { cn } from "cn";
 
 export function Post({ children, className, ...props }: ComponentProps<"article">) {
   return (
-    <article className={cn("mx-auto max-w-3xl px-8 py-24", className)} {...props}>
+    <article className={cn("mx-auto max-w-prose px-8 py-24", className)} {...props}>
       {children}
     </article>
   );
@@ -41,7 +41,7 @@ export function PostDate({ className, ...props }: ComponentProps<"time">) {
 
 export function PostContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("flex animate-reveal flex-col gap-5", className)} {...props}>
+    <div className={cn("post-content flex flex-col gap-5", className)} {...props}>
       {children}
     </div>
   );

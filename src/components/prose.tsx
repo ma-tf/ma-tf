@@ -4,7 +4,7 @@ import { cn } from "cn";
 
 function Paragraph({ children, className, ...props }: ComponentProps<"p">) {
   return (
-    <p className={cn("leading-relaxed", className)} {...props}>
+    <p className={cn("animate-reveal leading-relaxed", className)} {...props}>
       {children}
     </p>
   );
@@ -12,7 +12,7 @@ function Paragraph({ children, className, ...props }: ComponentProps<"p">) {
 
 function Heading2({ children, className, ...props }: ComponentProps<"h2">) {
   return (
-    <h2 className={cn("text-2xl font-bold tracking-tight", className)} {...props}>
+    <h2 className={cn("animate-reveal text-2xl font-bold tracking-tight", className)} {...props}>
       {children}
     </h2>
   );
@@ -20,7 +20,7 @@ function Heading2({ children, className, ...props }: ComponentProps<"h2">) {
 
 function Heading3({ children, className, ...props }: ComponentProps<"h3">) {
   return (
-    <h3 className={cn("text-xl font-semibold", className)} {...props}>
+    <h3 className={cn("animate-reveal text-xl font-semibold", className)} {...props}>
       {children}
     </h3>
   );
@@ -61,7 +61,7 @@ function CodeBlock({
   return (
     <pre
       className={cn(
-        "overflow-x-auto rounded-lg border border-border bg-background p-4 text-sm",
+        "animate-reveal overflow-x-auto rounded-lg border border-border bg-background p-4 text-sm",
         className,
       )}
       tabIndex={tabindex === undefined ? undefined : Number(tabindex)}
@@ -74,7 +74,7 @@ function CodeBlock({
 
 function UnorderedList({ children, className, ...props }: ComponentProps<"ul">) {
   return (
-    <ul className={cn("list-disc space-y-1 pl-6", className)} {...props}>
+    <ul className={cn("animate-reveal list-disc space-y-1 pl-6", className)} {...props}>
       {children}
     </ul>
   );
@@ -82,7 +82,7 @@ function UnorderedList({ children, className, ...props }: ComponentProps<"ul">) 
 
 function OrderedList({ children, className, ...props }: ComponentProps<"ol">) {
   return (
-    <ol className={cn("list-decimal space-y-1 pl-6", className)} {...props}>
+    <ol className={cn("animate-reveal list-decimal space-y-1 pl-6", className)} {...props}>
       {children}
     </ol>
   );
@@ -91,7 +91,10 @@ function OrderedList({ children, className, ...props }: ComponentProps<"ol">) {
 function Blockquote({ children, className, ...props }: ComponentProps<"blockquote">) {
   return (
     <blockquote
-      className={cn("border-l-2 border-border pl-4 text-muted-foreground italic", className)}
+      className={cn(
+        "animate-reveal border-l-2 border-border pl-4 text-muted-foreground italic",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -101,9 +104,11 @@ function Blockquote({ children, className, ...props }: ComponentProps<"blockquot
 
 function Table({ children, className, ...props }: ComponentProps<"table">) {
   return (
-    <table className={cn("w-full text-sm", className)} {...props}>
-      {children}
-    </table>
+    <div className="w-full overflow-x-auto">
+      <table className={cn("w-full animate-reveal text-sm", className)} {...props}>
+        {children}
+      </table>
+    </div>
   );
 }
 
