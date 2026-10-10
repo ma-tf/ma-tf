@@ -1,5 +1,4 @@
 import { askSite, type AskAnswer } from "@features/faq/ask-site";
-import { useEffect } from "react";
 
 const DESCRIPTION =
   "Answer a question from the content published on m4t.tf and return the answer with its source pages. Use for questions about Matt Fehrenbach's work, writing, background, projects, or anything else m4t.tf publishes.";
@@ -33,7 +32,7 @@ type ModelContextTool = {
 };
 
 type ModelContext = {
-  registerTool: (tool: ModelContextTool, options?: { signal?: AbortSignal }) => Promise<void>;
+  registerTool: (tool: ModelContextTool) => Promise<void>;
 };
 
 function getModelContext(): ModelContext | undefined {
@@ -68,31 +67,15 @@ function makeTool(): ModelContextTool {
   };
 }
 
-export function AskTool() {
-  useEffect(() => {
-    let controller: AbortController | null = null;
+export function registerAskTool(): void {
+  const modelContext = getModelContext();
 
-    const register = async () => {
-      const modelContext = getModelContext();
+  if (!modelContext || typeof modelContext.registerTool !== "function") {
+    console.info("WebMCP is unavailable; ask_site was not registered.");
+    return;
+  }
 
-      if (!modelContext || typeof modelContext.registerTool !== "function") {
-        console.info("WebMCP is unavailable; ask_site was not registered.");
-        return;
-      }
-
-      controller = new AbortController();
-
-      try {
-        await modelContext.registerTool(makeTool(), { signal: controller.signal });
-      } catch (error) {
-        console.warn("ask_site registration failed", error);
-      }
-    };
-
-    void register();
-
-    return () => controller?.abort();
-  }, []);
-
-  return null;
+  void modelContext.registerTool(makeTool()).catch((error: unknown) => {
+    console.warn("ask_site registration failed", error);
+  });
 }

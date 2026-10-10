@@ -4,7 +4,6 @@ import Header from "@components/Header.astro";
 import { getCollection } from "astro:content";
 import { mcpPath, resourceByRel } from "@features/discovery/catalog";
 import { askEnabled } from "@lib/feature-flags";
-import { AskTool } from "@features/faq/ask-tool";
 import {
 	pageDescriptionFor,
 	pageNameFor,
@@ -146,7 +145,13 @@ const pageDescription =
 		<main class="flex flex-col">
 			<slot />
 		</main>
-		{askEnabled && <AskTool client:only="react" />}
+		{askEnabled && (
+			<script>
+				import { registerAskTool } from "@features/faq/ask-tool";
+
+				registerAskTool();
+			</script>
+		)}
 		{showFooter && <Footer />}
 	</body>
 </html>
