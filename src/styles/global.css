@@ -84,10 +84,8 @@
   transition:
     opacity var(--reveal-duration) var(--ease-out-expo),
     transform var(--reveal-duration) var(--ease-out-expo);
-}
 
-@media (scripting: enabled) {
-  [class*="animate-reveal"] {
+  @media (scripting: enabled) {
     opacity: 0;
     transform: translateY(16px);
   }
@@ -480,6 +478,10 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
 @utility title-fit {
   font-size: min(8rem, 22.5dvh);
   line-height: 1;
+
+  @media (width >= 48rem) {
+    font-size: min(8rem, 13dvh);
+  }
 }
 
 @utility vertical-text {

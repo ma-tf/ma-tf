@@ -41,7 +41,7 @@ export function PostDate({ className, ...props }: ComponentProps<"time">) {
 
 export function PostContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col gap-5 animate-reveal", className)} {...props}>
+    <div className={cn("flex animate-reveal flex-col gap-5", className)} {...props}>
       {children}
     </div>
   );

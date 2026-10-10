@@ -1,7 +1,10 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { StillLifeBackground } from "@components/still-life-background";
-import { stillLifeScroll, stillLifeSectionClass } from "@components/still-life-hero";
+import {
+  stillLifeScroll,
+  stillLifeSectionClass,
+} from "@components/still-life-hero";
 import { ScrollCue } from "@components/scroll-cue";
 import {
   About,
@@ -29,10 +32,12 @@ import { siteIdentity } from "@features/seo/site-metadata";
       </AboutHeader>
       <AboutContent>
         <section
-          class:list={[stillLifeSectionClass, "md:text-sm"]}
+          class:list={[stillLifeSectionClass, "md:text-xs"]}
           data-parallax={40}
         >
-          <AboutCard className="animate-reveal">
+          <AboutCard
+            className="animate-reveal md:opacity-100 md:transform-none"
+          >
             <p
               class="p-2 md:animate-fade-up md:animation-delay-1050"
               data-parallax={10}
@@ -43,7 +48,9 @@ import { siteIdentity } from "@features/seo/site-metadata";
               property.
             </p>
           </AboutCard>
-          <AboutCard className="animate-reveal">
+          <AboutCard
+            className="animate-reveal md:opacity-100 md:transform-none"
+          >
             <p
               class="p-2 md:animate-fade-up md:animation-delay-1100"
               data-parallax={17}
@@ -53,7 +60,9 @@ import { siteIdentity } from "@features/seo/site-metadata";
               music, and other creative experiments.
             </p>
           </AboutCard>
-          <AboutCard className="animate-reveal">
+          <AboutCard
+            className="animate-reveal md:opacity-100 md:transform-none"
+          >
             <p
               class="p-2 md:animate-fade-up md:animation-delay-1150"
               data-parallax={23}

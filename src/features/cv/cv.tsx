@@ -8,7 +8,7 @@ export function CurriculumVitaeSection({
   ...props
 }: ComponentProps<"section">) {
   return (
-    <section className={cn("flex flex-col gap-4 animate-reveal", className)} {...props}>
+    <section className={cn("flex animate-reveal flex-col gap-4", className)} {...props}>
       {children}
     </section>
   );

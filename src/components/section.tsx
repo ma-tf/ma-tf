@@ -17,7 +17,7 @@ export function SectionHeader({ children, className, ...props }: ComponentProps<
   return (
     <header
       className={cn(
-        "col-start-1 flex items-baseline gap-4 font-heading text-lg uppercase animate-reveal",
+        "col-start-1 flex animate-reveal items-baseline gap-4 font-heading text-lg uppercase",
         className,
       )}
       {...props}
@@ -57,7 +57,7 @@ export function SectionSubtitle({ children, className, ...props }: ComponentProp
   return (
     <h2
       className={cn(
-        "col-start-1 border border-foreground p-4 pt-40 font-heading text-5xl animate-reveal",
+        "col-start-1 animate-reveal border border-foreground p-4 pt-40 font-heading text-5xl",
         className,
       )}
       {...props}
