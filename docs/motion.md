@@ -149,4 +149,7 @@ Defined in `src/styles/global.css`.
 
 Every entrance and reveal utility disables itself under
 `prefers-reduced-motion: reduce`. `animate-icon-crossfade` and the typewriter
-caret are continuous loops, also exempt from ADR 011.
+caret are continuous loops, also exempt from ADR 011. The `shimmer` utility
+imported from shadcn is a third: it sweeps the Ask status label
+(`src/features/faq/answer-body.tsx`), disables itself under reduced motion, and
+is not gated by `data-motion`.

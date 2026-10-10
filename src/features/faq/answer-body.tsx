@@ -13,7 +13,9 @@ import remarkGfm from "remark-gfm";
 function Thinking() {
   return (
     <p className="flex min-h-7.5 items-center text-lg text-muted-foreground">
-      <span role="status">Thinking</span>
+      <span role="status" className="shimmer">
+        Thinking
+      </span>
       <span aria-hidden="true" className="animate-ellipsis" />
     </p>
   );

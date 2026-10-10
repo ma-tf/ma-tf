@@ -4,7 +4,8 @@
     "scripts/probe.mts",
     "scripts/linter-rules/tailwind.mjs",
     "scripts/linter-rules/modules.mjs",
-    "scripts/linter-rules/types.mjs"
+    "scripts/linter-rules/types.mjs",
+    "src/features/faq/ask-tool.ts"
   ],
   "ignoreDependencies": [
     "@base-ui/react",
