@@ -22,6 +22,8 @@ export type DiscoveryResource = {
   representativeQueries: readonly string[];
 };
 
+const byPath = (a: DiscoveryResource, b: DiscoveryResource) => a.path.localeCompare(b.path);
+
 const primaryResources: readonly DiscoveryResource[] = [
   {
     path: "/llms.txt",
@@ -239,9 +241,11 @@ export const sectionGuides: readonly DiscoveryResource[] = [
       "What are the m4t.tf API rate limits?",
     ],
   },
-];
+].sort(byPath);
 
-export const resources: readonly DiscoveryResource[] = [...primaryResources, ...sectionGuides];
+export const resources: readonly DiscoveryResource[] = [...primaryResources, ...sectionGuides].sort(
+  byPath,
+);
 
 export function isSectionGuide(resource: DiscoveryResource): boolean {
   return sectionGuides.some((guide) => guide.path === resource.path);
