@@ -12,8 +12,10 @@ different interfaces, and the longer values made the site feel sluggish.
 - Any time-based transition or entrance animation runs for at most **150ms**.
 - Staggered entrances space their delays **50ms** apart (0, 50, 100, …).
 - Exempt from the budget: scroll-driven animations, whose progress maps to
-  scroll position rather than time (`animate-fade-in-scroll`), and continuous
-  decorative loops (`animate-icon-crossfade`, `animate-spin`, `caret-blink`).
+  scroll position rather than time (`animate-fade-in-scroll`); trigger-based
+  reveals whose duration is declared at the call site (`animate-reveal-<ms>`,
+  default 500ms); and continuous decorative loops (`animate-icon-crossfade`,
+  `animate-spin`, `caret-blink`).
 
 ## Consequences
 
@@ -38,8 +40,3 @@ different interfaces, and the longer values made the site feel sluggish.
 - `src/components/ui/accordion.tsx`
 - `src/features/vignettes/vignette-thumbnail.tsx`
 - Page-load entrance delays across `src/pages/` and `src/features/`
-
-> Amended: `animate-reveal` is not scroll-driven. Its duration is declared at the
-> call site (`animate-reveal-<ms>`, default 500ms) and is exempt from the 150ms
-> cap; the cap still governs interactions and page-load entrances. See
-> [the motion reference](../motion.md).
