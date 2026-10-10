@@ -74,7 +74,7 @@ describe("startReveal with IntersectionObserver", () => {
 
     startReveal();
 
-    expect(harness.options()).toEqual({ rootMargin: "0px 0px 10% 0px", threshold: 0.5 });
+    expect(harness.options()).toEqual({ rootMargin: "0px 0px 10% 0px", threshold: 0.4 });
     expect(harness.observed).toEqual([harness.first, harness.second]);
   });
 
