@@ -26,10 +26,13 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
         </nav>
       </PhotographyHeader>
       <PhotographyContent>
-        <PhotographyDescription className="animate-reveal">
-          In my spare time I am an amateur photographer. My photography is in both digital and film
-          formats. I have collected many cameras over the last few years. The cameras I use include:
-          <ul>
+        <PhotographyDescription>
+          <p className="animate-reveal">
+            In my spare time I am an amateur photographer. My photography is in both digital and
+            film formats. I have collected many cameras over the last few years. The cameras I use
+            include:
+          </p>
+          <ul className="animate-reveal">
             <li>
               a <span className="italic">Canon EOS-1V</span> as my primary camera with swappable
               lenses;
@@ -43,13 +46,15 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
               camera.
             </li>
           </ul>
-          Each one covers a use case of mine, and they have served me well so far.
-          <p>
+          <p className="animate-reveal">
+            Each one covers a use case of mine, and they have served me well so far.
+          </p>
+          <p className="animate-reveal">
             I am drawn to quiet, overlooked spaces; underground passages, stairwells, empty
             stations, and the city in early morning fog. The places most people pass through without
             looking are often the ones with the most interesting geometry and light.
           </p>
-          <p>
+          <p className="animate-reveal">
             There is a particular satisfaction in film that digital does not quite give me. Every
             frame costs something, so each one has to be intentional, and the anticipation of
             waiting for a roll to come back is part of the appeal.

@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { items, orientation } = Astro.props;
-const rowSpan = orientation === "portrait" ? "lg:row-span-3" : "lg:row-span-2";
+const rowSpan = orientation === "portrait" ? "md:row-span-3" : "md:row-span-2";
 
 const renderedItems = await Promise.all(
 	items.map(async (item) => ({
@@ -28,9 +28,11 @@ const renderedItems = await Promise.all(
 	{
 		renderedItems.map(({ photo, Content }) => {
 			return (
-				<PhotographyDialog photo={photo} className={rowSpan} client:load>
-					<Content />
-				</PhotographyDialog>
+				<div class={`${rowSpan} grid md:animate-reveal`}>
+					<PhotographyDialog photo={photo} client:load>
+						<Content />
+					</PhotographyDialog>
+				</div>
 			);
 		})
 	}

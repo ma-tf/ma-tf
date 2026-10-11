@@ -40,7 +40,7 @@ export function PhotographyDescription({ children, className, ...props }: Compon
   return (
     <div
       data-parallax={50}
-      className={cn("px-2 indent-8 text-lg md:col-span-2 md:text-2xl", className)}
+      className={cn("px-2 indent-8 text-lg md:col-span-3 md:text-2xl lg:col-span-2", className)}
       {...props}
     >
       {children}
@@ -50,7 +50,11 @@ export function PhotographyDescription({ children, className, ...props }: Compon
 
 export function PhotographyGrid({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div data-parallax={20} className={cn("min-w-0 md:col-span-4", className)} {...props}>
+    <div
+      data-parallax={20}
+      className={cn("min-w-0 md:col-span-3 lg:col-span-4", className)}
+      {...props}
+    >
       {children}
     </div>
   );

@@ -37,7 +37,7 @@ function LoadableImage({
         aria-label="Caption"
         aria-pressed={pressed}
         onClick={onToggle}
-        className="flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex cursor-pointer items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <img
           src={src}
@@ -70,7 +70,7 @@ export function PhotographyDialog({
   const [open, setOpen] = useState(false);
   const [showCaption, setShowCaption] = useState(true);
   return (
-    <div className={cn("grid cursor-pointer overflow-clip", className)}>
+    <div className={cn("grid overflow-clip", className)}>
       <Dialog
         open={open}
         onOpenChange={(nextOpen) => {
@@ -84,7 +84,7 @@ export function PhotographyDialog({
             alt={alt}
             loading="lazy"
             decoding="async"
-            className="size-full object-cover transition-transform duration-150 hover:scale-110 md:animate-fade-in-scroll"
+            className="size-full cursor-pointer object-cover transition-transform duration-150 hover:scale-110"
           />
         </DialogTrigger>
         <DialogContent
