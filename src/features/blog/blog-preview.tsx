@@ -33,16 +33,14 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
           </li>
         ))}
       </ul>
-      <Button
-        variant="inverted"
-        shape="sharp"
-        size="lg"
-        render={
-          <a href="/blog" className="mt-6 w-fit">
-            View all posts
-          </a>
-        }
-      />
+      <div className="mt-6 w-fit">
+        <Button
+          variant="inverted"
+          shape="sharp"
+          size="lg"
+          render={<a href="/blog">View all posts</a>}
+        />
+      </div>
     </div>
   );
 }

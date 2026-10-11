@@ -35,16 +35,14 @@ export function PhotographyPreview() {
               the frames in SilverFast HDR. It's a slow, hands-on part of the process, but it's
               become as much a part of the craft as the shooting itself.
             </p>
-            <Button
-              variant="inverted"
-              shape="sharp"
-              size="lg"
-              render={
-                <a href="/photography" className="mt-6 w-full md:w-fit">
-                  View photography
-                </a>
-              }
-            />
+            <div className="mt-6 grid w-full md:w-fit">
+              <Button
+                variant="inverted"
+                shape="sharp"
+                size="lg"
+                render={<a href="/photography">View photography</a>}
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col border border-foreground px-3 py-2">

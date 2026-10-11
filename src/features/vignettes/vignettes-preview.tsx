@@ -45,16 +45,14 @@ export function VignettesPreview({ images }: { images: ImageMap }) {
               scene is a single deliberate take, with no chance to reshoot without paying for the
               footage again.
             </p>
-            <Button
-              variant="inverted"
-              shape="sharp"
-              size="lg"
-              render={
-                <a href="/vignettes" className="mt-6 w-full md:w-fit">
-                  View vignettes
-                </a>
-              }
-            />
+            <div className="mt-6 grid w-full md:w-fit">
+              <Button
+                variant="inverted"
+                shape="sharp"
+                size="lg"
+                render={<a href="/vignettes">View vignettes</a>}
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-4 md:col-span-3 md:items-end md:justify-center">
             <div className="flex shrink-0 flex-col border border-foreground px-3 py-2 md:size-48">
