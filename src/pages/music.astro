@@ -28,18 +28,19 @@ const asagayaImg = `${r2}/music/asagaya%20poster_thumb.webp`;
 					<MusicNavigation />
 				</MusicHeader>
 				<MusicContent>
-					<div class="flex animate-reveal flex-col gap-4 md:mt-80">
+					<div class="flex flex-col gap-4 md:mt-80">
 						<MixcloudEmbed
 							feed="%2FTotalMattF%2Fasagaya-drift-20250905%2F"
 							title="Asagaya Drift 20250905"
 							artworkSrc={asagayaImg}
+							className="animate-fade-up animation-delay-100"
 						/>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-150">
 							This is a recording of a DJ set that occured in Asagaya around
 							Autumn 2025. I recorded it using a Sony WM-D6C onto RTM C90 Type I
 							cassettes from the DJ deck RCA master output.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-200">
 							That tape recorder comes with two settings for noise reduction but
 							I left them disabled for the recording to get a vintage sound on
 							the recording. The result is some nice sounding compression as the
@@ -47,63 +48,65 @@ const asagayaImg = `${r2}/music/asagaya%20poster_thumb.webp`;
 							recording is quite dark due to the tape cutting out many of the
 							bright sounds.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-250">
 							The first hour of the audio is my own performance, and the first
 							three tracks that play are my own.
 						</MusicDescription>
 					</div>
 
-					<div class="flex animate-reveal flex-col gap-4 md:mt-40">
+					<div class="flex flex-col gap-4 md:mt-40">
 						<BandcampEmbed
 							albumId="2620077534"
 							href="https://dreamcatalogue.bandcamp.com/album/contracts"
 							title="Contracts by prcsr"
+							className="animate-fade-up animation-delay-300"
 						/>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-350">
 							The album Contracts was the result of a collaboration with the
 							artist Wei.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-400">
 							We aimed to establish a sinister, ambient soundscape.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-450">
 							The primary synth I used for this was a Korg Triton - specifically
 							its percussion and sound effect patches.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-500">
 							There is a secret track at the end of the track Contracts.
 						</MusicDescription>
 					</div>
 
-					<div class="flex animate-reveal flex-col gap-4">
+					<div class="flex flex-col gap-4">
 						<BandcampEmbed
 							albumId="3783468820"
 							href="https://mattf.bandcamp.com/album/elevated-spirit"
 							title="Elevated Spirit by Matt Fehrenbach"
+							className="animate-fade-up animation-delay-600"
 						/>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-650">
 							This album is a collection of drum and bass music with an ambient
 							style.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-700">
 							I had some a capella samples I wanted to use for a song, as well
 							as the desire to use the Apache instrumental break for the first
 							time. These formed the basis of the track Black Cell.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-750">
 							The sound of Cirrostratus was aiming to be a rolling drum and bass
 							track. The long phasing pad is the primary element of this track
 							and I built everything else around it. I also wanted to experiment
 							with chopping different breaks in one track.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-800">
 							The basis of the track Chopper was as a study of cutting up
 							multiple breaks while maintaining tension and groove. The sparser
 							elements and lack of a pad give the drum breaks greater presence
 							in the song. On top of these, percussion is used to keep the song
 							interesting for the listener.
 						</MusicDescription>
-						<MusicDescription>
+						<MusicDescription className="animate-fade-up animation-delay-850">
 							The track Information Overload was the result of listening to a
 							lot of music on the label 720 Degrees at the time. Their style of
 							drum and bass has a futuristic sound with heavy usage of E-mu

@@ -1,15 +1,22 @@
+import { cn } from "cn";
+
 export function BandcampEmbed({
   albumId,
   href,
   title,
+  className,
 }: {
   albumId: string;
   href: string;
   title: string;
+  className?: string;
 }) {
   return (
     <iframe
-      className="aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0"
+      className={cn(
+        "aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0",
+        className,
+      )}
       src={`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`}
       allow="encrypted-media; fullscreen; autoplay; web-share;"
       title={title}
@@ -24,13 +31,20 @@ export function MixcloudEmbed({
   feed,
   title,
   artworkSrc,
+  className,
 }: {
   feed: string;
   title: string;
   artworkSrc: string;
+  className?: string;
 }) {
   return (
-    <div className="group relative aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0">
+    <div
+      className={cn(
+        "group relative aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0",
+        className,
+      )}
+    >
       <img
         src={artworkSrc}
         alt=""
