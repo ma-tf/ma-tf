@@ -39,19 +39,7 @@ const rendered = await Promise.all(
           </ExperienceCompany>
           <ExperiencePosition>
             {position}
-            <ExperiencePeriod>
-              {start.toLocaleDateString("en-GB", {
-                month: "long",
-                year: "numeric",
-              })}
-              {" – "}
-              {finish
-                ? finish.toLocaleDateString("en-GB", {
-                    month: "long",
-                    year: "numeric",
-                  })
-                : "Present"}
-            </ExperiencePeriod>
+            <ExperiencePeriod start={start} finish={finish} />
           </ExperiencePosition>
         </ExperienceHeader>
         <ExperienceContent>

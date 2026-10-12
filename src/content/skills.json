@@ -1,0 +1,27 @@
+[
+  {
+    "id": "languages",
+    "order": 1,
+    "skills": ["TypeScript", "React", "Angular", "XAML"]
+  },
+  {
+    "id": "backend",
+    "order": 2,
+    "skills": ["C#", "Go", "SQL"]
+  },
+  {
+    "id": "infrastructure",
+    "order": 3,
+    "skills": ["Azure", "k8s", "Helm", "OpenTofu", "YAML"]
+  },
+  {
+    "id": "databases",
+    "order": 4,
+    "skills": ["MongoDB", "Microsoft SQL Server"]
+  },
+  {
+    "id": "tooling",
+    "order": 5,
+    "skills": ["Bash", "LaTeX"]
+  }
+]

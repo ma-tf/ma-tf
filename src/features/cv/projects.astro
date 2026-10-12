@@ -1,12 +1,14 @@
 ---
 import { getCollection, render } from "astro:content";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@components/ui/card";
+  Project,
+  ProjectContent,
+  ProjectHeader,
+  ProjectTitle,
+  ProjectTopic,
+  ProjectTopics,
+  ProjectsGrid,
+} from "@features/cv/projects";
 
 const projects = await getCollection("projects");
 const rendered = await Promise.all(
@@ -17,27 +19,26 @@ const rendered = await Promise.all(
 );
 ---
 
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+<ProjectsGrid>
   {
-    rendered.map(async (project, _index) => {
+    rendered.map(async (project) => {
       const { Content } = project.rendered;
       const { title, url, topics } = project.data;
       return (
-        <Card>
-          <CardHeader>
-            {/* <span class="text-8xl text-muted-foreground origin-left rotate-90">
-              {String(index + 1).padStart(2, "0")}.
-            </span> */}
-            <CardTitle>
-              <a href={url}>{title}</a>
-            </CardTitle>
-            <CardDescription>{topics.join(" · ")}</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <Project>
+          <ProjectHeader>
+            <ProjectTitle href={url}>{title}</ProjectTitle>
+            <ProjectTopics>
+              {topics.map((topic) => (
+                <ProjectTopic>{topic}</ProjectTopic>
+              ))}
+            </ProjectTopics>
+          </ProjectHeader>
+          <ProjectContent>
             <Content />
-          </CardContent>
-        </Card>
+          </ProjectContent>
+        </Project>
       );
     })
   }
-</div>
+</ProjectsGrid>

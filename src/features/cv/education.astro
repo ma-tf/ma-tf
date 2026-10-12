@@ -5,6 +5,7 @@ import {
 	EducationHeader,
 	EducationInstitution,
 	EducationLocation,
+	EducationDetails,
 	EducationCourses,
 	EducationCourse,
 	EducationPeriod,
@@ -31,27 +32,19 @@ const rendered = await Promise.all(
 						{institution}
 						<EducationLocation>{location}</EducationLocation>
 					</EducationInstitution>
-					<EducationCourses>
-						{courses.map((course) => (
-							<EducationCourse>
-								{course.name}
-								{course.grade && (
-									<EducationGrade>{course.grade}</EducationGrade>
-								)}
-							</EducationCourse>
-						))}
-					</EducationCourses>
-					<EducationPeriod>
-						{start.toLocaleDateString("en-GB", {
-							month: "long",
-							year: "numeric",
-						})}
-						{" – "}
-						{finish.toLocaleDateString("en-GB", {
-							month: "long",
-							year: "numeric",
-						})}
-					</EducationPeriod>
+					<EducationDetails>
+						<EducationCourses>
+							{courses.map((course) => (
+								<EducationCourse>
+									{course.name}
+									{course.grade && (
+										<EducationGrade>{course.grade}</EducationGrade>
+									)}
+								</EducationCourse>
+							))}
+						</EducationCourses>
+						<EducationPeriod start={start} finish={finish} />
+					</EducationDetails>
 				</EducationHeader>
 				<Content />
 			</Education>

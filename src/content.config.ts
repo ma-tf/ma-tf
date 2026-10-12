@@ -53,6 +53,15 @@ const education = defineCollection({
   }),
 });
 
+const skills = defineCollection({
+  loader: file("./src/content/skills.json"),
+  schema: z.object({
+    id: z.string(),
+    order: z.number(),
+    skills: z.array(z.string()),
+  }),
+});
+
 const photography = defineCollection({
   loader: glob({ base: "./src/content/photography", pattern: "**/*.md" }),
   schema: z.object({
@@ -82,4 +91,13 @@ const faq = defineCollection({
   schema: z.object({ question: z.string(), order: z.number() }),
 });
 
-export const collections = { blog, experience, projects, education, photography, vignettes, faq };
+export const collections = {
+  blog,
+  experience,
+  projects,
+  education,
+  skills,
+  photography,
+  vignettes,
+  faq,
+};

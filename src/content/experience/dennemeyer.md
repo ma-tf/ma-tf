@@ -5,4 +5,8 @@ location: "Howald, Luxembourg"
 start: "2022-05"
 ---
 
-- Did stuff
+- Logging sucks + observability
+- SQL cron jobs
+- DX improvement with agents
+- Test coverage
+- goroutine jobs
