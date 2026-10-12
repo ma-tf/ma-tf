@@ -19,7 +19,9 @@ optional background.
 - You MUST consult [docs/adr/](docs/adr/) before making structural or
   architectural changes.
 - You MUST consult [docs/testing.md](docs/testing.md) before running tests,
-  `vpx fallow`, or smoke-testing. [scripts/probe.mts](scripts/probe.mts) is the
+  `vpx fallow`, or smoke-testing, and
+  [docs/verification.md](docs/verification.md) before starting a server or a
+  browser to look at a page. [scripts/probe.mts](scripts/probe.mts) is the
   browser geometry probe it documents.
 - You MUST consult [docs/motion.md](docs/motion.md) before changing motion,
   parallax or scroll-reveal behaviour.

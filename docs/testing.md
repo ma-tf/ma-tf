@@ -1,7 +1,8 @@
 # Testing
 
 How to run the project's checks, and the rules for smoke testing against a
-running server. See [vite-plus.md](vite-plus.md) for the toolchain commands.
+running server. See [vite-plus.md](vite-plus.md) for the toolchain commands, and
+[verification.md](verification.md) for when starting the app is worth it.
 
 ## Commands
 
@@ -81,3 +82,6 @@ node scripts/probe.mts http://localhost:4321/about \
 
 Playwright is pinned to the Chromium build already cached under
 `~/.cache/ms-playwright`, so the probe needs no browser download.
+
+Probing needs a running server; when that cost is justified is covered in
+[verification.md](verification.md).
