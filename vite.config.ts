@@ -32,6 +32,10 @@ export default defineConfig({
         specifier: fileURLToPath(new URL("./scripts/linter-rules/tailwind.mjs", import.meta.url)),
       },
       {
+        name: "icons",
+        specifier: fileURLToPath(new URL("./scripts/linter-rules/icons.mjs", import.meta.url)),
+      },
+      {
         name: "modules",
         specifier: fileURLToPath(new URL("./scripts/linter-rules/modules.mjs", import.meta.url)),
       },
@@ -55,6 +59,7 @@ export default defineConfig({
       "shadcn/require-static-classes": "error",
       "tailwind/no-unknown-classes": "error",
       "tailwind/no-max-md": "error",
+      "icons/require-icon-postfix": "error",
       "modules/no-barrel-exports": "error",
       "types/no-react-namespace": "error",
       "vite-plus/prefer-vite-plus-imports": "error",

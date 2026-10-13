@@ -6,9 +6,9 @@ start: "2019-08"
 finish: "2021-06"
 ---
 
-- Worked on an Angular cloud web app, with CosmosDB and Azure API platforms
-- Contributed to a content management system using .NET and JavaScript, with Bootstrap and SASS.
-- Maintained Team Foundation Server build pipelines and administered their migration to Azure.
-- Using Gherkin via Specflow to perform behaviour-driven development as well as test-driven development, where all tests are run during continuous integration - specified in the build pipeline.
-- Deployed virtual machine for a Team Foundation Server build agent, which handled the continuous integration and delivery of Nuget packages via infrastructure as code.
-- Created virtual machines for databases and build agents, as well as deployed containerised applications both on premise and in Azure.
+- Built features for an Angular cloud web app used by emergency service call takers, backed by Cosmos DB and an Azure API layer.
+- Delivered a .NET and JavaScript content management system with Bootstrap and SASS.
+- Migrated the Team Foundation Server build pipelines to Azure DevOps ahead of Microsoft retiring TFS.
+- Introduced behaviour-driven development with Gherkin and SpecFlow alongside test-driven development, running the full suite on every pipeline build.
+- Provisioned the pipelines' build agent as a virtual machine and automated NuGet package delivery as infrastructure as code.
+- Built virtual machines for databases and build agents, and containerised applications deployed both on-premises and in Azure.
