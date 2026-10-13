@@ -8,7 +8,7 @@ export function CurriculumVitaeSection({
   ...props
 }: ComponentProps<"section">) {
   return (
-    <section className={cn("flex flex-col gap-4", className)} {...props}>
+    <section className={cn("flex flex-col gap-4 py-4", className)} {...props}>
       {children}
     </section>
   );
@@ -60,7 +60,7 @@ export function CurriculumVitaeContactLink({ children, className, ...props }: Co
   return (
     <a
       className={cn(
-        "inline-flex items-center gap-1 text-steel-600 underline-offset-4 transition-colors duration-150 hover:text-steel-800",
+        "inline-flex items-center gap-1 text-steel-600 underline-offset-4 transition-colors duration-150 hover:text-steel-400",
         className,
       )}
       {...props}

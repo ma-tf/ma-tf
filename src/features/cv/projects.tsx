@@ -18,7 +18,7 @@ export function Project({ children, className, ...props }: ComponentProps<"div">
   return (
     <div
       className={cn(
-        "flex h-full break-inside-avoid flex-col gap-3 border border-foreground bg-card p-4",
+        "flex h-full break-inside-avoid flex-col gap-3 border border-muted-foreground bg-card p-4",
         className,
       )}
       {...props}
@@ -46,7 +46,7 @@ export function ProjectTitle({
     <h3 className={cn("font-heading text-base leading-snug font-medium", className)} {...props}>
       <a
         href={href}
-        className="inline-flex items-center gap-1 text-steel-600 underline-offset-4 hover:text-steel-800"
+        className="inline-flex items-center gap-1 text-steel-600 underline-offset-4 transition-colors duration-150 hover:text-steel-400"
       >
         {children}
         <ArrowSquareOutIcon className="size-3.5 shrink-0" aria-hidden="true" />
@@ -79,7 +79,7 @@ export function ProjectTopic({ children, className, ...props }: ComponentProps<"
 
 export function ProjectContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("text-sm text-muted-foreground", className)} {...props}>
+    <div className={cn("text-sm text-foreground", className)} {...props}>
       {children}
     </div>
   );

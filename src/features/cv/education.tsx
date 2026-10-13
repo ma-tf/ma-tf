@@ -52,7 +52,7 @@ export function EducationCourses({ children, className, ...props }: ComponentPro
 
 export function EducationCourse({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("flex gap-2 text-sm", className)} {...props}>
+    <div className={cn("flex flex-col items-start gap-1 text-sm", className)} {...props}>
       {children}
     </div>
   );

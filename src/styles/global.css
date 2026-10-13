@@ -791,6 +791,10 @@ html.dark .astro-code {
     max-width: none !important;
   }
 
+  .cv-sheet section {
+    padding-block: 0;
+  }
+
   .cv-projects {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: 1fr;

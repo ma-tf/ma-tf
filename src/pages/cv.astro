@@ -29,8 +29,10 @@ const displayUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
 ---
 
 <Layout>
-	<div class="cv-sheet bg-muted min-h-dvh px-4 py-8 md:px-8">
-		<div class="mx-auto flex w-full max-w-md flex-col gap-2 md:max-w-3xl">
+	<div
+		class="cv-sheet bg-background flex min-h-dvh flex-col items-center px-4 pt-8 pb-16 md:px-8 md:pb-20"
+	>
+		<div class="flex w-full max-w-prose flex-col gap-2 md:max-w-3xl">
 			<CurriculumVitaeName>{profile.name}</CurriculumVitaeName>
 			<CurriculumVitaeRole>{profile.title}</CurriculumVitaeRole>
 			<CurriculumVitaeContact>
