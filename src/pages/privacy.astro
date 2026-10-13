@@ -1,5 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { Link } from "@components/link";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { StillLifeBackground } from "@components/still-life-background";
 import { stillLifeScroll, stillLifeSectionClass } from "@components/still-life-hero";
 import { ScrollCue } from "@components/scroll-cue";
@@ -34,7 +36,7 @@ import {
         >
           <PrivacyCard className="animate-reveal md:opacity-100 md:transform-none">
             <div
-              class="flex flex-col gap-3 p-2 md:animate-fade-up md:animation-delay-1050"
+              class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
               data-parallax={10}
             >
               <p>
@@ -47,7 +49,7 @@ import {
           </PrivacyCard>
           <PrivacyCard className="animate-reveal md:opacity-100 md:transform-none">
             <div
-              class="flex flex-col gap-3 p-2 md:animate-fade-up md:animation-delay-1100"
+              class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
               data-parallax={17}
             >
               <p>
@@ -60,15 +62,17 @@ import {
           </PrivacyCard>
           <PrivacyCard className="animate-reveal md:opacity-100 md:transform-none">
             <div
-              class="flex flex-col gap-3 p-2 md:animate-fade-up md:animation-delay-1150"
+              class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
               data-parallax={23}
             >
               <p>
-                If you have a question about privacy on this site, see the <a
+                If you have a question about privacy on this site, see the <Link
                   href="/contact"
-                  class="underline underline-offset-4 hover:text-foreground/70"
-                  >contact page</a
-                >.
+                  className="inline-flex items-center gap-1"
+                >
+                  Contact
+                  <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
+                </Link> page.
               </p>
             </div>
           </PrivacyCard>

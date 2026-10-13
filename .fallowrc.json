@@ -2,8 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": [
     "scripts/probe.mts",
-    "scripts/linter-rules/tailwind.mjs",
+    "scripts/linter-rules/icons.mjs",
     "scripts/linter-rules/modules.mjs",
+    "scripts/linter-rules/tailwind.mjs",
     "scripts/linter-rules/types.mjs",
     "src/features/faq/ask-tool.ts"
   ],

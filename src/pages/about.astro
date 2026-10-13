@@ -1,5 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { Link } from "@components/link";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { StillLifeBackground } from "@components/still-life-background";
 import {
   stillLifeScroll,
@@ -42,7 +44,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
             className="animate-reveal md:opacity-100 md:transform-none"
           >
             <p
-              class="p-2 md:animate-fade-up md:animation-delay-1050"
+              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
               data-parallax={10}
             >
               I'm {siteIdentity.name}, a full-stack developer. I started
@@ -55,7 +57,7 @@ import { siteIdentity } from "@features/seo/site-metadata";
             className="animate-reveal md:opacity-100 md:transform-none"
           >
             <p
-              class="p-2 md:animate-fade-up md:animation-delay-1100"
+              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
               data-parallax={17}
             >
               This site is a record of the things I make and learn. Alongside
@@ -67,14 +69,16 @@ import { siteIdentity } from "@features/seo/site-metadata";
             className="animate-reveal md:opacity-100 md:transform-none"
           >
             <p
-              class="p-2 md:animate-fade-up md:animation-delay-1150"
+              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
               data-parallax={23}
             >
-              You can read about my professional experience on the <a
+              You can read about my professional experience on the <Link
                 href="/cv"
-                class="underline underline-offset-4 hover:text-foreground/70"
-                >CV</a
-              > page, or browse the projects and creative work from the home page.
+                className="inline-flex items-center gap-1"
+              >
+                CV
+                <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
+              </Link> page, or browse the projects and creative work from the home page.
             </p>
           </AboutCard>
         </section>

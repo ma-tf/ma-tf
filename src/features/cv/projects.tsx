@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { Link } from "@components/link";
 import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
@@ -44,13 +45,10 @@ export function ProjectTitle({
 }: ComponentProps<"h3"> & { href: string }) {
   return (
     <h3 className={cn("font-heading text-base leading-snug font-medium", className)} {...props}>
-      <a
-        href={href}
-        className="inline-flex items-center gap-1 text-steel-600 underline-offset-4 transition-colors duration-150 hover:text-steel-400"
-      >
+      <Link href={href} className="inline-flex items-center gap-1">
         {children}
         <ArrowSquareOutIcon className="size-3.5 shrink-0" aria-hidden="true" />
-      </a>
+      </Link>
     </h3>
   );
 }

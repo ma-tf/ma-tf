@@ -1,3 +1,4 @@
+import { Link } from "@components/link";
 import { Button } from "@components/ui/button";
 import { RssIcon } from "@phosphor-icons/react";
 
@@ -8,13 +9,9 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
     <div className="mx-auto w-fit max-w-full px-8 py-24">
       <div className="flex items-center gap-2">
         <h2 className="text-lg uppercase">Latest posts</h2>
-        <a
-          href="/rss.xml"
-          aria-label="RSS feed"
-          className="transition-colors hover:text-foreground/70"
-        >
+        <Link href="/rss.xml" aria-label="RSS feed">
           <RssIcon className="size-6" aria-hidden="true" />
-        </a>
+        </Link>
       </div>
       <ul className="flex flex-col">
         {posts.map((post) => (
@@ -22,7 +19,7 @@ export function BlogPreview({ posts }: { posts: PreviewPost[] }) {
             key={post.slug}
             className="min-w-0 py-2 transition-transform duration-150 focus-within:md:translate-x-2 hover:md:translate-x-2"
           >
-            <a href={`/posts/${post.slug}`} className="group flex min-w-0 flex-col hover:underline">
+            <a href={`/posts/${post.slug}`} className="group flex min-w-0 flex-col">
               <span className="min-w-0 truncate text-xl font-semibold transition-colors group-hover:text-foreground/70 md:text-clip">
                 {post.title}
               </span>

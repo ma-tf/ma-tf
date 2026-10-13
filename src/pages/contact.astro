@@ -1,5 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { Link } from "@components/link";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { StillLifeBackground } from "@components/still-life-background";
 import { stillLifeScroll, stillLifeSectionClass } from "@components/still-life-hero";
 import { ScrollCue } from "@components/scroll-cue";
@@ -34,38 +36,40 @@ import {
         >
           <ContactCard className="animate-reveal md:opacity-100 md:transform-none">
             <p
-              class="p-2 md:animate-fade-up md:animation-delay-1050"
+              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
               data-parallax={10}
             >
-              Email me at <a
-                href="mailto:admin@m4t.tf"
-                class="underline underline-offset-4 hover:text-foreground/70"
-                >admin@m4t.tf</a
-              > about my work, projects, or professional experience.
+              Email me at <Link href="mailto:admin@m4t.tf">admin@m4t.tf</Link> about my work,
+              projects, or professional experience.
             </p>
           </ContactCard>
           <ContactCard className="animate-reveal md:opacity-100 md:transform-none">
             <p
-              class="p-2 md:animate-fade-up md:animation-delay-1100"
+              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
               data-parallax={17}
             >
-              For verified facts about my background, see my <a
+              For verified facts about my background, see my <Link
                 href="/cv"
-                class="underline underline-offset-4 hover:text-foreground/70">CV</a
-              >. It lists my experience, skills, education, and projects.
+                className="inline-flex items-center gap-1"
+              >
+                CV
+                <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
+              </Link>. It lists my experience, skills, education, and projects.
             </p>
           </ContactCard>
           <ContactCard className="animate-reveal md:opacity-100 md:transform-none">
             <p
-              class="p-2 md:animate-fade-up md:animation-delay-1150"
+              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
               data-parallax={23}
             >
-              My software projects and open-source work live on <a
+              My software projects and open-source work live on <Link
                 href="https://github.com/ma-tf"
                 rel="noreferrer"
-                class="underline underline-offset-4 hover:text-foreground/70"
-                >GitHub</a
-              >.
+                className="inline-flex items-center gap-1"
+              >
+                GitHub
+                <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
+              </Link>.
             </p>
           </ContactCard>
         </section>

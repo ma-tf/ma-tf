@@ -1,3 +1,4 @@
+import { Link } from "@components/link";
 import { siteIdentity } from "@features/seo/site-metadata";
 
 export function Home() {
@@ -12,9 +13,7 @@ export function Home() {
         </p>
         <div className="flex animate-fade-up flex-col gap-3 animation-delay-100">
           <span>{siteIdentity.name}</span>
-          <a className="text-foreground/70 hover:underline" href="https://github.com/ma-tf">
-            github.com/ma-tf
-          </a>
+          <Link href="https://github.com/ma-tf">github.com/ma-tf</Link>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { Link } from "@components/link";
 import { cn } from "cn";
 
 export function Section({ children, className, ...props }: ComponentProps<"section">) {
@@ -41,15 +42,9 @@ export function SectionNumber({ className, ...props }: ComponentProps<"span">) {
 
 export function SectionTitle({ children, className, ...props }: ComponentProps<"a">) {
   return (
-    <a
-      className={cn(
-        "underline-offset-4 transition-colors hover:text-foreground/70 hover:underline",
-        className,
-      )}
-      {...props}
-    >
+    <Link className={cn("text-foreground dark:text-foreground", className)} {...props}>
       {children}
-    </a>
+    </Link>
   );
 }
 

@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { Link } from "@components/link";
 import { cn } from "cn";
 
 function Paragraph({ children, className, ...props }: ComponentProps<"p">) {
@@ -23,20 +24,6 @@ function Heading3({ children, className, ...props }: ComponentProps<"h3">) {
     <h3 className={cn("animate-reveal text-xl font-semibold", className)} {...props}>
       {children}
     </h3>
-  );
-}
-
-function Link({ children, className, ...props }: ComponentProps<"a">) {
-  return (
-    <a
-      className={cn(
-        "underline underline-offset-4 transition-colors hover:text-muted-foreground",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </a>
   );
 }
 

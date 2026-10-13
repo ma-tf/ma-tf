@@ -1,3 +1,13 @@
+const iconSources = new Set(["@phosphor-icons/react", "@phosphor-icons/react/ssr"]);
+
+function needsIconPostfix(specifier) {
+  if (specifier.type !== "ImportSpecifier") return false;
+
+  const { name } = specifier.imported;
+
+  return !name.endsWith("Icon") && !name.startsWith("Icon");
+}
+
 const requireIconPostfix = {
   meta: {
     type: "problem",
@@ -12,12 +22,9 @@ const requireIconPostfix = {
   createOnce(context) {
     return {
       ImportDeclaration(node) {
-        const source = node.source.value;
-        if (source !== "@phosphor-icons/react" && source !== "@phosphor-icons/react/ssr") return;
-        for (const specifier of node.specifiers) {
-          if (specifier.type !== "ImportSpecifier") continue;
-          const name = specifier.imported.name;
-          if (name.endsWith("Icon") || name.startsWith("Icon")) continue;
+        if (!iconSources.has(node.source.value)) return;
+        for (const specifier of node.specifiers.filter(needsIconPostfix)) {
+          const { name } = specifier.imported;
           context.report({
             node: specifier,
             messageId: "postfix",

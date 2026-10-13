@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { Link } from "@components/link";
 import { cn } from "cn";
 
 export function CurriculumVitaeSection({
@@ -58,15 +59,9 @@ export function CurriculumVitaeContact({ children, className, ...props }: Compon
 
 export function CurriculumVitaeContactLink({ children, className, ...props }: ComponentProps<"a">) {
   return (
-    <a
-      className={cn(
-        "inline-flex items-center gap-1 text-steel-600 underline-offset-4 transition-colors duration-150 hover:text-steel-400",
-        className,
-      )}
-      {...props}
-    >
+    <Link className={cn("inline-flex items-center gap-1", className)} {...props}>
       {children}
-    </a>
+    </Link>
   );
 }
 

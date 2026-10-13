@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { Link } from "@components/link";
 import { resources } from "@features/discovery/catalog";
 import { cn } from "cn";
 
@@ -83,9 +84,9 @@ export function DevelopersResources({ className, ...props }: ComponentProps<"div
     <DevelopersCard data-parallax={30} className={className} {...props}>
       <div
         data-parallax={10}
-        className="relative flex flex-col px-2 pt-4 pb-2 text-base leading-relaxed md:text-xs"
+        className="relative flex flex-col px-4 pt-6 pb-4 text-base leading-relaxed md:px-2 md:pt-4 md:pb-2 md:text-xs"
       >
-        <h2 className="absolute top-0 left-2 -mt-2 text-xs font-semibold uppercase md:animate-fade-up md:animation-delay-2900">
+        <h2 className="absolute top-0 left-4 -mt-2 text-xs font-semibold uppercase md:left-2 md:animate-fade-up md:animation-delay-2900">
           Resources
         </h2>
         <ul className="flex flex-col gap-1.5 md:animate-fade-up md:animation-delay-3500">
@@ -94,12 +95,7 @@ export function DevelopersResources({ className, ...props }: ComponentProps<"div
 
             return (
               <li key={resource.path}>
-                <a
-                  href={resource.path}
-                  className="underline underline-offset-4 hover:text-foreground/70"
-                >
-                  {resource.path}
-                </a>
+                <Link href={resource.path}>{resource.path}</Link>
                 <span className="text-muted-foreground">
                   {" "}
                   — {mediaType} — {resource.title}

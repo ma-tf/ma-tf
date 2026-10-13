@@ -1,5 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { Link } from "@components/link";
 ---
 
 <Layout
@@ -13,9 +14,9 @@ import Layout from "@layouts/Layout.astro";
       persists use the contact page to report it.
     </p>
     <nav class="flex flex-wrap gap-4">
-      <a class="underline" href="/">Home</a>
-      <a class="underline" href="/contact">Contact</a>
-      <a class="underline" href="/llms.txt">Agent guide</a>
+      <Link href="/">Home</Link>
+      <Link href="/contact">Contact</Link>
+      <Link href="/llms.txt">Agent guide</Link>
     </nav>
   </div>
 </Layout>

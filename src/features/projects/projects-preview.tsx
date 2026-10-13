@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { Link } from "@components/link";
 import {
   Section,
   SectionContent,
@@ -74,13 +75,10 @@ export function ProjectsPreview() {
                   className="block h-auto w-full md:scale-100"
                 />
                 <div className="absolute inset-0 flex flex-col justify-center px-12 md:p-14 xl:p-10">
-                  <a
-                    href={project.url}
-                    className="inline-flex items-center gap-1 text-2xl underline-offset-4 transition-colors hover:text-foreground/70 hover:underline"
-                  >
+                  <Link href={project.url} className="inline-flex items-center gap-1 text-2xl">
                     {project.name}
                     <ArrowSquareOutIcon className="size-4" aria-hidden="true" />
-                  </a>
+                  </Link>
                   <span className="text-xs uppercase">{project.topics}</span>
                   <span className="mt-2 text-sm text-muted-foreground">{project.description}</span>
                   <div className="pt-4">{project.icon}</div>
