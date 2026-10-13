@@ -71,7 +71,7 @@ export function DevelopersCard({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "w-full max-w-none animate-reveal corner-brackets-4 corner-thickness-1 md:w-auto md:max-w-card md:transform-none md:animate-fade-in md:opacity-100",
+        "w-full max-w-none animate-reveal corner-brackets-8 corner-thickness-1 md:w-auto md:max-w-card md:transform-none md:animate-fade-in md:corner-brackets-4 md:opacity-100",
         className,
       )}
       {...props}

@@ -56,7 +56,7 @@ export function StillLifeCard({ children, className, ...props }: ComponentProps<
       <div
         aria-hidden="true"
         data-parallax-mobile={-8}
-        className="pointer-events-none absolute inset-0 corner-brackets-4 corner-thickness-1"
+        className="pointer-events-none absolute inset-0 corner-brackets-8 corner-thickness-1 md:corner-brackets-4"
       />
       {children}
     </div>
