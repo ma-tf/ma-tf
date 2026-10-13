@@ -1,4 +1,4 @@
-import { ask, streamAsk } from "@features/ask/ask";
+import { ask, streamAsk, type AskAnswer } from "@features/ask/ask";
 import { failureStream, runStream } from "@features/ask/nlweb-stream";
 import {
   isSupportedResponseFormat,
@@ -9,7 +9,7 @@ import {
 import { answerResponse, failureResponses } from "@features/ask/response";
 import { readJson } from "@lib/json";
 import { sseResponse } from "@lib/sse";
-import { deferEmission, enrich } from "@lib/wide-event";
+import { captureError, deferEmission, enrich } from "@lib/wide-event";
 
 export async function handleAsk(request: Request): Promise<Response> {
   const parsed = await readJson(NLWebAskRequestSchema, request);
@@ -44,7 +44,16 @@ export async function handleAsk(request: Request): Promise<Response> {
       return Response.json(failureResponses.UNSUPPORTED_MODE, { headers: { Vary: "Accept" } });
     }
 
-    const answer = await ask(parsed.query.text, summarize, request.signal);
+    let answer: AskAnswer | null;
+
+    try {
+      answer = await ask(parsed.query.text, summarize, request.signal);
+    } catch (error) {
+      captureError(error, { phase: "ask" });
+      enrich({ outcome: "internal_error" });
+
+      return Response.json(failureResponses.INTERNAL_ERROR, { headers: { Vary: "Accept" } });
+    }
 
     if (answer === null) {
       enrich({ outcome: "no_results" });

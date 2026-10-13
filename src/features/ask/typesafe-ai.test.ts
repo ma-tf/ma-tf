@@ -66,4 +66,32 @@ describe("judgeAskPages", () => {
       },
     });
   });
+
+  it("sends bounded gate excerpts instead of full page content", async () => {
+    const content = `---\ndescription: "About"\n---\n\n${"word ".repeat(12000)}`;
+    const pages = [{ url: "https://m4t.tf/a", title: "A", content }];
+
+    systemOne.mockResolvedValue({
+      model: "jev-1.13.0",
+      usage: { input_tokens: 1200, output_tokens: 2 },
+      answers: { answerable: { noul: 1 }, page_0: { noul: 1 } },
+    });
+
+    const event = beginRequest(new Request("https://m4t.tf/ask", { method: "POST" }), {
+      path: "/ask",
+      method: "POST",
+    });
+
+    await runWith(event, () => judgeAskPages("q", pages, AbortSignal.timeout(100)));
+
+    const payload = systemOne.mock.calls[0]![0] as {
+      state: { published_pages: { url: string; title: string; excerpt: string }[] };
+    };
+    const [entry] = payload.state.published_pages;
+
+    expect(entry!.url).toBe("https://m4t.tf/a");
+    expect(entry!.title).toBe("A");
+    expect(entry!.excerpt.length).toBeLessThan(content.length);
+    expect(JSON.stringify(payload.state)).not.toContain("canonical:");
+  });
 });

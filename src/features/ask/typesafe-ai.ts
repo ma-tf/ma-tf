@@ -1,5 +1,6 @@
 import type { AskPageJudgment, PublishedPage } from "@features/ask/published-page";
 
+import { buildGateState } from "@features/ask/gate-state";
 import { enrich } from "@lib/wide-event";
 import {
   APIError,
@@ -19,10 +20,7 @@ export async function judgeAskPages(
 ): Promise<AskPageJudgment> {
   const client = new TypeSafeClient({ apiKey: TYPESAFE_API_KEY });
   const payload = {
-    state: {
-      visitor_question: question,
-      published_pages: pages,
-    },
+    state: buildGateState(question, pages),
     questions: {
       answerable: noul(
         "Can the visitor's question be answered from the supplied published website content?",
