@@ -18,13 +18,15 @@ export function CurriculumVitaeTitle({ children, className, ...props }: Componen
   return (
     <h2
       className={cn(
-        "flex items-center gap-4 text-xs font-semibold tracking-widest text-muted-foreground uppercase",
+        "flex break-after-avoid items-center gap-4 text-xs font-semibold tracking-widest text-muted-foreground uppercase",
         className,
       )}
       {...props}
     >
       <span aria-hidden="true" className="h-px flex-1 bg-border" />
-      <span>{children}</span>
+      <span className="text-steel-400">
+        # <span className="text-muted-foreground">{children}</span>
+      </span>
       <span aria-hidden="true" className="h-px flex-1 bg-border" />
     </h2>
   );
@@ -58,7 +60,7 @@ export function CurriculumVitaeContactLink({ children, className, ...props }: Co
   return (
     <a
       className={cn(
-        "inline-flex items-center gap-1 underline-offset-4 transition-colors duration-150 hover:text-foreground hover:underline",
+        "inline-flex items-center gap-1 text-steel-600 underline-offset-4 transition-colors duration-150 hover:text-steel-800",
         className,
       )}
       {...props}
@@ -73,24 +75,6 @@ export function CurriculumVitaeStrengths({ children, className, ...props }: Comp
     <div className={cn("flex flex-col gap-3", className)} {...props}>
       {children}
     </div>
-  );
-}
-
-export function CurriculumVitaeStrengthsLabel({
-  children,
-  className,
-  ...props
-}: ComponentProps<"h2">) {
-  return (
-    <h2
-      className={cn(
-        "text-xs font-semibold tracking-widest text-muted-foreground uppercase",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </h2>
   );
 }
 

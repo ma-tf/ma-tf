@@ -2,26 +2,16 @@
   {
     "id": "languages",
     "order": 1,
-    "skills": ["TypeScript", "React", "Angular", "XAML"]
-  },
-  {
-    "id": "backend",
-    "order": 2,
-    "skills": ["C#", "Go", "SQL"]
+    "skills": ["TypeScript", "React", "Angular", "C#", "Go"]
   },
   {
     "id": "infrastructure",
-    "order": 3,
+    "order": 2,
     "skills": ["Azure", "k8s", "Helm", "OpenTofu", "YAML"]
   },
   {
     "id": "databases",
-    "order": 4,
+    "order": 3,
     "skills": ["MongoDB", "Microsoft SQL Server"]
-  },
-  {
-    "id": "tooling",
-    "order": 5,
-    "skills": ["Bash", "LaTeX"]
   }
 ]

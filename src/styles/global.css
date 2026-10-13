@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "./brand.css";
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -501,6 +502,22 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
   max-height: 60ch;
 }
 
+@utility dash-list {
+  list-style: none;
+
+  & > li {
+    position: relative;
+    padding-inline-start: 1rem;
+  }
+
+  & > li::before {
+    position: absolute;
+    inset-inline-start: 0;
+    content: "+";
+    color: var(--color-steel-400);
+  }
+}
+
 /* Tag link */
 @property --tag-cut {
   syntax: "<color>";
@@ -744,4 +761,46 @@ html.dark .astro-code {
     [data-parallax-mobile-y]
   ) {
   will-change: transform;
+}
+
+/* Print */
+@page {
+  size: A4;
+  margin: 14mm 16mm;
+}
+
+@media print {
+  body > header,
+  body > footer {
+    display: none !important;
+  }
+
+  body {
+    min-height: 0;
+  }
+
+  [class*="animate-reveal"],
+  [class*="animate-fade-up"] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+
+  .cv-sheet > * {
+    max-width: none !important;
+  }
+
+  .cv-projects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+  }
+}
+
+@utility cv-sheet {
+  @media print {
+    min-height: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+  }
 }

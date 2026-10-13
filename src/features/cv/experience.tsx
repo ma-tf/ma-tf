@@ -12,7 +12,7 @@ export function Experience({ children, className, ...props }: ComponentProps<"di
 
 export function ExperienceHeader({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col gap-1", className)} {...props}>
+    <div className={cn("flex flex-col gap-0.5", className)} {...props}>
       {children}
     </div>
   );
@@ -69,7 +69,7 @@ export function ExperienceContent({ children, className, ...props }: ComponentPr
   return (
     <div
       className={cn(
-        "text-sm leading-relaxed text-muted-foreground [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5",
+        "text-sm leading-relaxed text-muted-foreground [&_ul]:dash-list [&_ul]:space-y-0.5",
         className,
       )}
       {...props}

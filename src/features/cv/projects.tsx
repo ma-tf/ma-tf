@@ -6,7 +6,7 @@ import { cn } from "cn";
 export function ProjectsGrid({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
-      className={cn("grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-2", className)}
+      className={cn("cv-projects grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-2", className)}
       {...props}
     >
       {children}
@@ -44,7 +44,10 @@ export function ProjectTitle({
 }: ComponentProps<"h3"> & { href: string }) {
   return (
     <h3 className={cn("font-heading text-base leading-snug font-medium", className)} {...props}>
-      <a href={href} className="inline-flex items-center gap-1 underline-offset-4 hover:underline">
+      <a
+        href={href}
+        className="inline-flex items-center gap-1 text-steel-600 underline-offset-4 hover:text-steel-800"
+      >
         {children}
         <ArrowSquareOutIcon className="size-3.5 shrink-0" aria-hidden="true" />
       </a>
