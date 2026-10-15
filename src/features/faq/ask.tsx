@@ -1,14 +1,17 @@
+import type { AnimatedIconHandle } from "@components/icons/animated-icon";
+
+import { ArrowRight as ArrowRightAnimated } from "@components/icons/arrow-right";
 import { Accordion, AccordionContent, AccordionItem } from "@components/ui/accordion";
 import { AnswerBody } from "@features/faq/answer-body";
 import { AskProvider, useAskUnit } from "@features/faq/ask-context";
 import { FaqAccordionTrigger } from "@features/faq/faq-accordion-trigger";
 import { FaqInput } from "@features/faq/faq-input";
 import { useAsk } from "@features/faq/use-ask";
-import { ArrowRightIcon } from "@phosphor-icons/react";
 import { useId, useRef, useState } from "react";
 
 function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
   const [draft, setDraft] = useState("");
+  const arrow = useRef<AnimatedIconHandle>(null);
 
   const submitDraft = () => {
     const trimmed = draft.trim();
@@ -35,9 +38,13 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
         type="submit"
         aria-label="Ask"
         disabled={!draft.trim()}
+        onMouseEnter={() => {
+          if (draft.trim()) arrow.current?.play();
+        }}
+        onMouseLeave={() => arrow.current?.stop()}
         className="inline-flex size-8 shrink-0 items-center justify-center text-muted-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none enabled:hover:text-foreground disabled:opacity-40"
       >
-        <ArrowRightIcon className="size-5" />
+        <ArrowRightAnimated ref={arrow} trigger="none" className="size-5" />
       </button>
     </form>
   );

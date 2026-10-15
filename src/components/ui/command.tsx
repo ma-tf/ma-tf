@@ -1,5 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 
+import { MagnifyingGlass as MagnifyingGlassAnimated } from "@components/icons/magnifying-glass";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,7 @@ import {
   DialogTitle,
 } from "@components/ui/dialog";
 import { InputGroup, InputGroupAddon } from "@components/ui/input-group";
-import { CheckIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "cn";
 
@@ -68,7 +69,7 @@ function CommandInput({ className, ...props }: ComponentProps<typeof CommandPrim
           {...props}
         />
         <InputGroupAddon>
-          <MagnifyingGlassIcon className="size-4 shrink-0 opacity-50" />
+          <MagnifyingGlassAnimated trigger="in-view" className="size-4 shrink-0 opacity-50" />
         </InputGroupAddon>
       </InputGroup>
     </div>

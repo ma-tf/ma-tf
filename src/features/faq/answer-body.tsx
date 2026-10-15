@@ -2,10 +2,11 @@ import type { AskSource } from "@features/faq/ask-site";
 import type { AskUnit } from "@features/faq/use-ask";
 import type { ReactNode } from "react";
 
+import { ArrowClockwise as ArrowClockwiseAnimated } from "@components/icons/arrow-clockwise";
 import { Pill } from "@components/pill";
 import { proseComponents } from "@components/prose";
 import { useAskUnit } from "@features/faq/ask-context";
-import { ArrowClockwiseIcon, LinkSimpleIcon } from "@phosphor-icons/react";
+import { LinkSimpleIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -76,7 +77,7 @@ function Failure({ onRetry }: { onRetry: () => void }) {
         onClick={onRetry}
         className="inline-flex cursor-pointer items-center gap-1 rounded-none border border-foreground bg-foreground px-2 py-1 text-sm text-background transition-colors hover:bg-transparent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
       >
-        <ArrowClockwiseIcon aria-hidden="true" className="size-4" />
+        <ArrowClockwiseAnimated aria-hidden="true" className="size-4" trigger="in-view" />
         Try again
       </button>
     </div>

@@ -144,13 +144,20 @@ and is ours to retune.
 
 - `weight` picks the stroke width and duotone backdrop the same way the static
   icons do, so an animated icon replaces a `@phosphor-icons/react` icon without a
-  visual change at rest. Today's only call site is `MagnifyingGlass` in
-  `CommandMenu`, which `Header.astro` already loads with `client:load`.
-- That call site runs `trigger="none"` and plays through the ref from the button's
-  own `onMouseEnter`. The icon is 16px inside a 32px button, and an SVG's hit area
-  is its painted strokes, so a hover trigger on the icon itself would leave the
-  middle of the glass — the obvious place to aim — inert. Anything with a padded
-  parent wants the same treatment.
+  visual change at rest. Not every file ships every weight: where one is missing,
+  `resolveWeight` falls back to the regular geometry while the stroke width still
+  follows the prop, so a `weight="bold"` call site on a regular-only file gets a
+  bold stroke over regular paths.
+- Five call sites animate today: `MagnifyingGlass` in `CommandMenu` and in the
+  palette's `CommandInput`, `Sun` and `Moon` in `ModeToggle`, `ArrowClockwise` on
+  the ask failure's retry button, and `ArrowRight` on the ask submit.
+- Two ways in. Where the icon sits inside a padded button, that button runs
+  `trigger="none"` and plays the icon through its ref from `onMouseEnter`: the
+  icon is 16px inside a 32px button, and an SVG's hit area is its painted
+  strokes, so a hover trigger on the icon itself would leave the middle of the
+  glass, the obvious place to aim, inert. Where the icon mounts at the moment it
+  should play, `trigger="in-view"` is enough: the palette's input sweeps as the
+  palette opens, and the retry turns as the failure appears.
 - They are React client components: a `.astro` call site needs its own `client:*`
   directive, and an icon inside an existing island rides that island's hydration.
 - `trigger` defaults to `hover`, which touch layouts never fire; a tap-driven
@@ -181,6 +188,14 @@ overwrites them, so re-apply these after a refresh:
   keeps working, while the layout and drag features drop out — 48kB off the
   command-menu island chunk. If an app-level `LazyMotion` ever appears, delete
   this one rather than nesting.
+
+Two wrinkles to expect when installing another icon: the registry lists
+`animated-icon.json` as a dependency, so every install prompts to overwrite the
+runtime (`-y` does not answer that prompt — say yes, then `git checkout` it back),
+and each new icon file imports the runtime as `./animated-icon`, which the alias
+table above re-points. `src/components/ui/command.tsx` also diverges, from the
+shadcn registry rather than this one, by rendering the animated glass in place of
+the static icon in the palette's input.
 
 ## Theme transitions
 
