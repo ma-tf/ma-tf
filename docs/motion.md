@@ -2,8 +2,9 @@
 
 `src/lib/parallax.ts` turns `data-parallax*` attributes into transforms, and
 `src/styles/global.css` defines the entrance and scroll-reveal utilities. This
-document is a reference: which attribute sets what, and which driver runs where.
-For the timing rules see [ADR 011](adr/011-motion-timing-budget.md); for the
+page covers the drivers; the attributes, utilities and call-site contracts each
+have their own file, listed at the end. For the timing rules see
+[ADR 011](adr/011-motion-timing-budget.md); for the
 skip, replay and revisit control see
 [ADR 019](adr/019-replay-motion-control.md).
 
@@ -38,218 +39,17 @@ frame can tune its own travel and overscan. The still-life pages use two frames 
 the background (`scale: 1.15`) and the card section (`scale: 1`, so the text is
 not scaled).
 
-## Attributes
-
-Set by hand in JSX or `.astro` markup, except `StillLifeBackground`'s, which its
-props render.
-
-| Attribute                       | Set by                             | Meaning                                                                                     | Default           |
-| ------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------- | ----------------- |
-| `data-parallax`                 | page markup                        | Factor for both axes, as a percentage of the driver's base displacement (`40` → 0.4).       | none (0)          |
-| `data-parallax-x`               | page markup                        | Overrides the x factor only.                                                                | none (0)          |
-| `data-parallax-y`               | page markup                        | Overrides the y factor only.                                                                | none (0)          |
-| `data-parallax-mobile`          | page markup                        | Scroll-driver-only factor for both axes; overrides `data-parallax` on touch layouts.        | `data-parallax`   |
-| `data-parallax-mobile-x`        | page markup                        | Overrides the x factor only (scroll driver).                                                | `data-parallax-x` |
-| `data-parallax-mobile-y`        | page markup                        | Overrides the y factor only (scroll driver).                                                | `data-parallax-y` |
-| `data-parallax-scroll`          | `StillLifeBackground`, page markup | Marks a frame the scroll driver scopes to and configures independently (one animator each). | absent            |
-| `data-parallax-scroll-distance` | `StillLifeBackground`, page markup | `scrollDistance`: viewport heights of scroll before `progress` reaches 1.                   | 1                 |
-| `data-parallax-scroll-drift`    | `StillLifeBackground`, page markup | `scrollDrift`: fraction of the viewport a full-drift layer travels.                         | 0.3               |
-| `data-parallax-scroll-scale`    | `StillLifeBackground`, page markup | `scrollScale`: overscan multiplier applied to every scroll layer's transform.               | 1                 |
-| `data-parallax-push`            | page markup                        | Marks the element the scroll driver drifts down as the page scrolls (the first match).      | absent            |
-
-Notes:
-
-- `data-parallax-x` and `data-parallax-y` override a single axis of
-  `data-parallax`; with only `data-parallax` set, both axes take its value.
-- `data-parallax-mobile`, `-x` and `-y` are read only by the scroll driver. When
-  one is absent the layer falls back to its `data-parallax*` value, so a layer
-  can keep its desktop factor and tune its own touch factor.
-- Under the scroll driver only the y factor has any effect.
-- The `-distance`, `-drift` and `-scale` values fall back to their defaults when
-  the attribute is absent or parses to 0.
-
-## StillLifeBackground
-
-`src/components/still-life-background.tsx` renders the six-layer still life. It
-sets `data-parallax-scroll` on its root and a `data-parallax` factor on each
-image; the props are the scroll config the driver reads back off the frame.
-
-| Prop             | Attribute set                   | Default | Effect                         |
-| ---------------- | ------------------------------- | ------- | ------------------------------ |
-| `baseUrl`        | image `src` prefix              | —       | `baseUrl + /about-bg-*.webp`   |
-| `className`      | root class list                 | —       | page-specific placement/sticky |
-| `scrollDistance` | `data-parallax-scroll-distance` | 1       | scroll length to full progress |
-| `scrollDrift`    | `data-parallax-scroll-drift`    | 0.3     | travel at full progress        |
-| `scrollScale`    | `data-parallax-scroll-scale`    | 1       | overscan scale on each layer   |
-
-Per-page choreography lives at the call site, not in the component: the numbers
-are passed as props from the page's `.astro` file. `about.astro`, `contact.astro`,
-`privacy.astro` and `developers.astro` all spread the shared `stillLifeScroll`
-preset from `still-life-hero.tsx` (`scrollDistance: 1.5`, `scrollDrift: 0.4`,
-`scrollScale: 1.15`).
-
-`about.astro`, `contact.astro` and `privacy.astro` also mark their card
-`<section>` as a second frame (`scrollDistance: 2`, `scrollDrift: 0.1`), so the
-card prose parallaxes on touch layouts. `StillLifeCard` renders its corner
-brackets as a separate `data-parallax-mobile` layer, so the bracket frame and the
-prose drift in opposite directions without disturbing the card's reveal
-transform.
-
-## Footer overlap contract
-
-`src/components/Footer.astro` is in-flow (`static`) below 768px and a fixed
-16px (`h-4`) overlay (`md:fixed md:bottom-0 md:h-4`) at desktop widths. On
-mobile it is a two-column grid (`grid-cols-2`) with an `Explore` column
-(`Blog`, `Photography`, `Graphics`, `Music`, `Vignettes` stacked) beside a
-`Site` column (`About`, `Contact`, `Privacy` stacked), a `Resources` column
-(`Developers`) wrapping onto the second row, and a right-aligned `Back to top`
-button spanning both columns, for a total of roughly 390px. The `about`,
-`contact` and `privacy` scroll-hero pages fill a `100dvh` grid split 65:35
-between the header and the top-aligned card row, and pad the card row with
-`py-12` at desktop widths; keep that padding above the footer's height when
-restyling. `developers` shares their mobile scroll-hero shell (a `150dvh` hero,
-then a top-bordered `bg-background` card sheet) while keeping its own desktop
-grid.
-
-## Reduced motion and the motion control
-
-- `prefers-reduced-motion: reduce` disables both parallax drivers in
-  `src/lib/parallax.ts`, and each entrance and reveal utility in `global.css`.
-- The mobile `Back to top` button (`src/lib/scroll-to-top.ts`) scrolls smoothly
-  by default and jumps when the media query matches.
-- The `data-motion` control is separate. `data-motion="skipped"` and
-  `data-motion="revisit"` (ADR 019) disable only the page-load entrances;
-  `skipped` also disables the scroll reveals. The parallax drivers are not
-  gated by `data-motion` — the control is scoped to entrances and reveals,
-  leaving parallax to its own reduced-motion handling.
-- The typewriter on `/developers` is treated as an entrance: `startTypewriter`
-  declines under reduced motion or any `data-motion` value, and the control can
-  finish it at once (ADR 019).
-- The control is a server-rendered component plus the deferred
-  `src/lib/motion-control.ts`, so it decides skip/reset before React would
-  hydrate; `global.css` picks the icon from `data-mode` and `data-motion`
-  ([ADR 019](adr/019-replay-motion-control.md)).
-- Scroll-driven motion is exempt from the 150ms budget of
-  [ADR 011](adr/011-motion-timing-budget.md): `animate-fade-in-scroll` maps to
-  scroll position, not time, as do the parallax drivers. `animate-reveal` is
-  trigger-based rather than scroll-linked; its duration is declared at the call
-  site (`animate-reveal-<ms>`) and is also exempt from the 150ms cap.
-
-## Animated icons
-
-`src/components/icons/**` holds hand-animated Phosphor icons, installed as source
-through the shadcn registry rather than as a package. `animated-icon.tsx` is the
-shared runtime; each icon file is geometry plus choreography, as ordinary data,
-and is ours to retune.
-
-- `weight` picks the stroke width and duotone backdrop the same way the static
-  icons do, so an animated icon replaces a `@phosphor-icons/react` icon without a
-  visual change at rest. Not every file ships every weight: where one is missing,
-  `resolveWeight` falls back to the regular geometry while the stroke width still
-  follows the prop, so a `weight="bold"` call site on a regular-only file gets a
-  bold stroke over regular paths.
-- Five call sites animate today: `MagnifyingGlass` in `CommandMenu` and in the
-  palette's `CommandInput`, `Sun` and `Moon` in `ModeToggle`, `ArrowClockwise` on
-  the ask failure's retry button, and `ArrowRight` on the ask submit.
-- Two ways in. Where the icon sits inside a padded button, that button runs
-  `trigger="none"` and plays the icon through its ref from `onMouseEnter`: the
-  icon is 16px inside a 32px button, and an SVG's hit area is its painted
-  strokes, so a hover trigger on the icon itself would leave the middle of the
-  glass, the obvious place to aim, inert. Where the icon mounts at the moment it
-  should play, `trigger="in-view"` is enough: the palette's input sweeps as the
-  palette opens, and the retry turns as the failure appears.
-- They are React client components: a `.astro` call site needs its own `client:*`
-  directive, and an icon inside an existing island rides that island's hydration.
-- `trigger` defaults to `hover`, which touch layouts never fire; a tap-driven
-  call site wants `trigger="click"` or `"in-view"`.
-- The runtime declines on its own under `prefers-reduced-motion: reduce`, through
-  Motion's `useReducedMotion`, and paints the icon static.
-- `data-motion` does not gate the icons, exactly as it does not gate the parallax
-  drivers: the control is scoped to entrances and reveals
-  ([ADR 019](adr/019-replay-motion-control.md)).
-- Their duration is exempt from the 150ms budget
-  ([ADR 011](adr/011-motion-timing-budget.md)).
-
-The runtime diverges from the registry in four places, and `shadcn add -o`
-overwrites them, so re-apply these after a refresh:
-
-- `animated-icon.tsx` imports its React types directly (`SVGProps`,
-  `RefAttributes`, `ForwardRefExoticComponent`), because `types/no-react-namespace`
-  bans the `React.*` namespace form.
-- `animated-icon.tsx` guards the `parts[renderIndex]` and `m[tag]` lookups, and
-  passes the built variants object straight to `variants` rather than spreading
-  `.rest` and `.active` off it — `noUncheckedIndexedAccess` types both of those as
-  possibly undefined.
-- `magnifying-glass.tsx` imports the runtime as `@components/icons/animated-icon`;
-  relative `./` imports are banned.
-- `animated-icon.tsx` renders `m` inside
-  `<LazyMotion features={domAnimation} strict>` instead of the full `motion`
-  component. `domAnimation` still carries `InViewFeature`, so `trigger="in-view"`
-  keeps working, while the layout and drag features drop out — 48kB off the
-  command-menu island chunk. If an app-level `LazyMotion` ever appears, delete
-  this one rather than nesting.
-
-Two wrinkles to expect when installing another icon: the registry lists
-`animated-icon.json` as a dependency, so every install prompts to overwrite the
-runtime (`-y` does not answer that prompt — say yes, then `git checkout` it back),
-and each new icon file imports the runtime as `./animated-icon`, which the alias
-table above re-points. `src/components/ui/command.tsx` also diverges, from the
-shadcn registry rather than this one, by rendering the animated glass in place of
-the static icon in the palette's input.
-
 ## Theme transitions
 
 Theme changes sweep through the View Transitions API. See
 [ADR 010](adr/010-theme-transitions-via-view-transitions.md).
 
-## Reveal trigger
+## Also in this topic
 
-`animate-reveal-<ms>` is not scroll-driven. `startReveal()` in
-`src/lib/reveal.ts` observes every `[class*="animate-reveal"]` element with
-`IntersectionObserver`, using a root expanded 10% past the viewport bottom and a
-`0.4` threshold, so an element reveals once 40% of it is in view; it then
-adds `is-revealed` so a transition of the declared duration fades it in. The
-hidden state is scoped to
-`@media (scripting: enabled)`, so without scripting, or under reduced motion, the
-elements stay visible with no flash. `data-motion="skipped"` forces them visible.
-The prose components in `src/components/prose.tsx` put `animate-reveal` on each
-paragraph, heading, list, blockquote, code block and table, so blog posts reveal
-per block rather than as one wrapper. The photography description
-(`src/features/photography/photography-page.tsx`) follows the same rule at its
-call site, putting `animate-reveal` on each paragraph and on the list rather than
-on the description wrapper. The photography grid items
-(`src/features/photography/photography-column.astro`) carry `md:animate-reveal`
-on a static wrapper around the `PhotographyDialog` island, so the `is-revealed`
-class the reveal adds at load stays out of React's hydrated tree and does not
-cause a hydration mismatch; it is held to `md:` to match the desktop-only grid
-parallax. A `.post-content` guard cancels the hidden
-state on nested blocks so a paragraph inside a blockquote does not fade twice, and
-an `.answer-content` override forces the FAQ answers visible, because they mount
-after `startReveal()` has run and would never be observed.
-The still-life and developers cards keep the reveal mobile-only: their desktop
-layout fits the viewport, so the observer would fire the moment it observes them
-rather than on scroll, and a call-site `md:opacity-100 md:transform-none`
-cancels the hidden state above `md:`.
-
-## CSS utilities
-
-Defined in `src/styles/global.css`.
-
-| Utility                  | Kind                       | Notes                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ------------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animate-fade-in`        | Page-load entrance         | `flickerIn` over 1s; consumes `--delay`.                                                                                                                                                                                                                                                                                                                                                                                     |
-| `animate-fade-up-*`      | Page-load entrance         | Wildcard: distance in px then optional `/duration` (`animate-fade-up-32/300`). Two keyframes.                                                                                                                                                                                                                                                                                                                                |
-| `animate-reveal-*`       | Scroll reveal              | Wildcard: optional duration in ms, default 500 (`animate-reveal`, `animate-reveal-300`). Hidden under `@media (scripting: enabled)` until about 40% of the element is in view, then `is-revealed` transitions `opacity` and `translateY(16px)`. The hidden state lives inside the utility, so a call site can cancel it above `md:` with `md:opacity-100 md:transform-none`; the still-life cards hold the reveal to mobile. |
-| `animate-fade-in-scroll` | Scroll reveal              | `animation-timeline: view()`, range `entry 10% … 70%`. Currently no call sites.                                                                                                                                                                                                                                                                                                                                              |
-| `animation-delay-*`      | Delay token                | Sets `--delay` in ms; consumed by all of the above.                                                                                                                                                                                                                                                                                                                                                                          |
-| `fade-move-delay-*`      | Delay token                | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                                                                                                                                                                                                                                                                                                 |
-| `vertical-text`          | Layout                     | `writing-mode: vertical-rl`; used by page titles.                                                                                                                                                                                                                                                                                                                                                                            |
-| `title-fit`              | Layout                     | `font-size: min(8rem, 13dvh); line-height: 1`; the `dvh` clamp keeps the longest vertical title fitting the viewport height, and the `65%` header row above `md:`.                                                                                                                                                                                                                                                           |
-| `parallax-active`        | Driver state (on viewport) | Added to `<html>` while a parallax driver animates; sets `will-change: transform` on layers.                                                                                                                                                                                                                                                                                                                                 |
-
-Every entrance and reveal utility disables itself under
-`prefers-reduced-motion: reduce`. `animate-icon-crossfade` and the typewriter
-caret are continuous loops, also exempt from ADR 011. The `shimmer` utility
-imported from shadcn is a third: it sweeps the Ask status label
-(`src/features/faq/answer-body.tsx`), disables itself under reduced motion, and
-is not gated by `data-motion`.
+- [Motion attributes](motion-attributes.md) — every `data-parallax*` attribute, its driver and default.
+- [Still life background](motion-background.md) — the six-layer still life and the footer overlap contract.
+- [Reduced motion and the motion control](motion-control.md) — the `prefers-reduced-motion` and `data-motion` gates.
+- [Animated icons](motion-icons.md) — the hand-animated Phosphor icons.
+- [Reveal trigger](motion-reveal.md) — how `animate-reveal-*` observes and reveals.
+- [CSS animation utilities](motion-utilities.md) — entrances, reveals and the delay tokens.
+- [CSS layout and driver state utilities](motion-layout-utilities.md) — layout utilities and `parallax-active`.
