@@ -80,7 +80,7 @@ export function EducationGrade({ children, className, ...props }: ComponentProps
   return (
     <div
       className={cn(
-        "inline-flex items-center border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase",
+        "inline-flex cursor-default items-center border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase transition-[color,border-color,transform,translate] duration-150 ease-out hover:-translate-y-0.5 hover:border-foreground hover:text-foreground motion-reduce:hover:translate-none",
         className,
       )}
       {...props}

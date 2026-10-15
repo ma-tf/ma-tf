@@ -85,7 +85,7 @@ export function CurriculumVitaeSkill({ children, className, ...props }: Componen
   return (
     <li
       className={cn(
-        "cursor-default border border-border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase transition-colors duration-150 hover:border-foreground hover:bg-muted hover:text-foreground",
+        "cursor-default border border-border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase transition-[color,background-color,border-color,transform,translate] duration-150 ease-out hover:-translate-y-0.5 hover:border-foreground hover:bg-muted hover:text-foreground motion-reduce:hover:translate-none",
         className,
       )}
       {...props}
