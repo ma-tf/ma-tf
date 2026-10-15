@@ -37,6 +37,10 @@ optional background.
   follow conventional commits (`type(scope): subject`, header and body lines max
   100 characters, body 200 max total), for earlier feedback.
 - When writing CSS, you MUST consult [docs/conventions.md](docs/conventions.md).
+- Markdown files agents read are capped at 5000 characters: `docs/**/*.md`, plus
+  `AGENTS.md` and `README.md`. The number is the `limit` option of the
+  `docs/max-chars` rule in `vite.config.ts`; split a file that outgrows it rather
+  than growing it.
 - Use British English for documentation, UI copy and code comments. Technical
   terms and API names keep their original spelling (for example CSS `color`).
 - Import Phosphor icons with the `Icon` postfix (`ArrowLeftIcon`, `SunIcon`).

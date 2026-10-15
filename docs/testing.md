@@ -12,6 +12,17 @@ running server. See [vite-plus.md](vite-plus.md) for the toolchain commands, and
 - `vp run build` — production build.
 - `vpx fallow` — static quality gate: dead code, complexity, duplication.
 
+## Documentation budget
+
+`docs/max-chars` caps every markdown file agents read at 5000 characters:
+`docs/**/*.md`, plus `AGENTS.md` and `README.md`. The number is the rule's
+`limit` option in `vite.config.ts`. `docs/vite-plus.md` is exempt because the
+toolchain regenerates it. Split a file that outgrows the cap.
+
+The rule reads those files off disk from its own lint pass, so its errors report
+from `scripts/linter-rules/docs.mjs`, and it fires only on a full-repo
+`vp check` or `vp lint`, not on a scoped run over a subset of paths.
+
 ## Static quality gate
 
 `vpx fallow` exits 0 when clean and 1 on findings. The pre-push hook

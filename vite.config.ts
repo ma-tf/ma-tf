@@ -43,6 +43,10 @@ export default defineConfig({
         name: "types",
         specifier: fileURLToPath(new URL("./scripts/linter-rules/types.mjs", import.meta.url)),
       },
+      {
+        name: "docs",
+        specifier: fileURLToPath(new URL("./scripts/linter-rules/docs.mjs", import.meta.url)),
+      },
     ],
     options: { typeAware: true, typeCheck: true },
     rules: {
@@ -62,6 +66,7 @@ export default defineConfig({
       "icons/require-icon-postfix": "error",
       "modules/no-barrel-exports": "error",
       "types/no-react-namespace": "error",
+      "docs/max-chars": ["error", { limit: 5000 }],
       "vite-plus/prefer-vite-plus-imports": "error",
       "no-restricted-imports": [
         "error",
