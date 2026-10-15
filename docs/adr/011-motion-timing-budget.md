@@ -16,6 +16,12 @@ different interfaces, and the longer values made the site feel sluggish.
   reveals whose duration is declared at the call site (`animate-reveal-<ms>`,
   default 500ms); and continuous decorative loops (`animate-icon-crossfade`,
   `animate-spin`, `caret-blink`).
+- Also exempt: interaction-triggered icon choreography. The animated Phosphor
+  icons in `src/components/icons/**` run for up to about a second, because there
+  the motion is the affordance rather than a transition towards one — a search
+  glass that sweeps in 150ms reads as a glitch, not a gesture. Each icon's
+  duration is declared in its own file and may be retuned, but the budget does
+  not cap it.
 
 ## Consequences
 
@@ -39,4 +45,5 @@ different interfaces, and the longer values made the site feel sluggish.
 - `src/features/blog/blog-page.tsx`
 - `src/components/ui/accordion.tsx`
 - `src/features/vignettes/vignette-thumbnail.tsx`
+- `src/components/icons/**`
 - Page-load entrance delays across `src/pages/` and `src/features/`

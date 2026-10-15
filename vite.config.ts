@@ -86,6 +86,10 @@ export default defineConfig({
         },
       },
       {
+        files: ["src/components/icons/**"],
+        rules: { "shadcn/no-inline-styles": "off" },
+      },
+      {
         files: ["src/features/**/*-preview.tsx"],
         rules: { "shadcn/no-raw-colors": "off" },
       },

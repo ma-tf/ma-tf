@@ -17,9 +17,15 @@
     "class-variance-authority",
     "cmdk",
     "is-agentic",
+    "motion",
     "netlify",
     "react-doctor",
     "zod"
   ],
-  "ignorePatterns": [".opencode/**", "src/components/ui/**", "doctor.config.ts"]
+  "ignorePatterns": [
+    ".opencode/**",
+    "src/components/icons/**",
+    "src/components/ui/**",
+    "doctor.config.ts"
+  ]
 }

@@ -1,3 +1,6 @@
+import type { AnimatedIconHandle } from "@components/icons/animated-icon";
+
+import { MagnifyingGlass as MagnifyingGlassAnimated } from "@components/icons/magnifying-glass";
 import {
   Command,
   CommandDialog,
@@ -12,12 +15,11 @@ import {
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
-  MagnifyingGlassIcon,
   MoonIcon,
   RssIcon,
 } from "@phosphor-icons/react";
 import { toggleTheme } from "@stores/theme";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CommandMenuLink = { label: string; href: string };
 
@@ -27,6 +29,28 @@ type CommandMenuProps = {
   github: string;
   linkedin: string;
 };
+
+type CommandMenuTriggerProps = {
+  onOpen: () => void;
+};
+
+function CommandMenuTrigger({ onOpen }: CommandMenuTriggerProps) {
+  const glass = useRef<AnimatedIconHandle>(null);
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      onMouseEnter={() => glass.current?.play()}
+      onMouseLeave={() => glass.current?.stop()}
+      aria-label="Open command palette"
+      title="Search (Ctrl+K)"
+      className="grid size-8 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:text-foreground"
+    >
+      <MagnifyingGlassAnimated ref={glass} trigger="none" size={16} weight="bold" />
+    </button>
+  );
+}
 
 export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps) {
   const [open, setOpen] = useState(false);
@@ -66,15 +90,7 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Open command palette"
-        title="Search (Ctrl+K)"
-        className="grid size-8 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:text-foreground"
-      >
-        <MagnifyingGlassIcon size={16} weight="bold" />
-      </button>
+      <CommandMenuTrigger onOpen={() => setOpen(true)} />
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command>
           <CommandInput placeholder="Search pages and actions..." />

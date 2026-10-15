@@ -34,8 +34,10 @@ export async function formatMarkdownResponse(
   const headers = new Headers(response.headers);
   if (shouldVaryByAccept) appendVaryValue(headers, "Accept");
 
-  const { default: TurndownService } = await import("turndown");
-  const html = await response.text();
+  const [{ default: TurndownService }, html] = await Promise.all([
+    import("turndown"),
+    response.text(),
+  ]);
   const markdown = frontmatter(html) + new TurndownService().turndown(getMarkdownSource(html));
   headers.set("Content-Type", "text/markdown; charset=utf-8");
   headers.delete("Content-Encoding");

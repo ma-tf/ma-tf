@@ -42,6 +42,9 @@ optional background.
 - Import Phosphor icons with the `Icon` postfix (`ArrowLeftIcon`, `SunIcon`).
   The bare name (`ArrowLeft`) is a deprecated alias and must not be used in new
   code.
+- Import the animated icons from `@components/icons/*` aliased with an
+  `Animated` suffix (`MagnifyingGlass as MagnifyingGlassAnimated`), so the `Icon`
+  postfix stays reserved for `@phosphor-icons/react`.
 - The working tree can advance between your reads — re-check `git status` and
   `git log` (or re-read the reference file) immediately before dispatching
   parallel work.
