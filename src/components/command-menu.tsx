@@ -71,7 +71,7 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
         onClick={() => setOpen(true)}
         aria-label="Open command palette"
         title="Search (Ctrl+K)"
-        className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:text-foreground"
+        className="grid size-8 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:text-foreground"
       >
         <MagnifyingGlassIcon size={16} weight="bold" />
       </button>

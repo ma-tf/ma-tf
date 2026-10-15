@@ -65,7 +65,7 @@ export function ProjectTopic({ children, className, ...props }: ComponentProps<"
   return (
     <li
       className={cn(
-        "inline-flex items-center border border-border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase",
+        "inline-flex cursor-default items-center border border-border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase transition-colors duration-150 hover:border-foreground hover:text-foreground",
         className,
       )}
       {...props}

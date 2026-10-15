@@ -4,6 +4,9 @@ import { ModeToggle } from "@components/ModeToggle";
 import MotionControlButton from "@components/MotionControlButton.astro";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { siteNavLinks } from "@lib/site-nav";
+import { ReadCvLogoIcon } from "@phosphor-icons/react";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
 <header class="fixed top-0 z-50 flex h-8 w-full items-center px-2">
@@ -22,6 +25,15 @@ import { siteNavLinks } from "@lib/site-nav";
     <!-- m4t.tf -->
   </a>
   <div class="fixed top-0 right-0 z-50 flex items-center">
+    {currentPath !== "/cv" && (
+      <a
+        href="/cv"
+        aria-label="CV"
+        class="grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:text-foreground"
+      >
+        <ReadCvLogoIcon size={16} weight="bold" />
+      </a>
+    )}
     <CommandMenu
       pages={siteNavLinks}
       email={siteIdentity.email}

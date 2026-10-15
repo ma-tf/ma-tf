@@ -9,7 +9,7 @@ export function ModeToggle() {
       onClick={toggleTheme}
       aria-label="Toggle theme"
       title="Toggle theme"
-      className={cn("rounded-lg p-2 text-muted-foreground", "hover:text-foreground")}
+      className={cn("cursor-pointer rounded-lg p-2 text-muted-foreground", "hover:text-foreground")}
     >
       <SunIcon size={16} weight="bold" className="block dark:hidden" />
       <MoonIcon size={16} weight="bold" className="hidden dark:block" />

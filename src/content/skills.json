@@ -7,11 +7,11 @@
   {
     "id": "infrastructure",
     "order": 2,
-    "skills": ["Azure", "k8s", "Helm", "OpenTofu", "YAML"]
+    "skills": ["Azure", "Kubernetes", "Helm", "OpenTofu", "OpenTelemetry"]
   },
   {
     "id": "databases",
     "order": 3,
-    "skills": ["MongoDB", "Microsoft SQL Server"]
+    "skills": ["MongoDB", "SQL Server"]
   }
 ]
