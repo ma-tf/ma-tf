@@ -42,12 +42,12 @@
   "permissions": [
     {
       "action": "shell",
-      "resource": "git commit *",
+      "resource": "*git commit*",
       "effect": "ask",
     },
     {
       "action": "shell",
-      "resource": "git push *",
+      "resource": "*git push*",
       "effect": "ask",
     },
     {
