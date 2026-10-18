@@ -29,9 +29,15 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
       <a
         href="/cv"
         aria-label="CV"
-        class="grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:text-foreground"
+        title="CV"
+        class="group grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:text-foreground"
       >
-        <ReadCvLogoIcon size={16} weight="bold" />
+        <ReadCvLogoIcon
+          size={16}
+          weight="bold"
+          aria-hidden="true"
+          className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
+        />
       </a>
     )}
     <CommandMenu

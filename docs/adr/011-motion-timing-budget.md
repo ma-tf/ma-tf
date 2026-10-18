@@ -17,11 +17,12 @@ different interfaces, and the longer values made the site feel sluggish.
   default 500ms); and continuous decorative loops (`animate-icon-crossfade`,
   `animate-spin`, `caret-blink`).
 - Also exempt: interaction-triggered icon choreography. The animated Phosphor
-  icons in `src/components/icons/**` run for up to about a second, because there
+  icons in `src/components/icons/**`, and the CSS keyframes for the CV and reset
+  icons in `src/styles/global.css`, run for up to about a second, because there
   the motion is the affordance rather than a transition towards one — a search
   glass that sweeps in 150ms reads as a glitch, not a gesture. Each icon's
-  duration is declared in its own file and may be retuned, but the budget does
-  not cap it.
+  duration is declared in its own file or keyframe and may be retuned, but the
+  budget does not cap it.
 
 ## Consequences
 

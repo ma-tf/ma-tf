@@ -16,6 +16,10 @@
   `src/lib/motion-control.ts`, so it decides skip/reset before React would
   hydrate; `global.css` picks the icon from `data-mode` and `data-motion`
   ([ADR 019](adr/019-replay-motion-control.md)).
+- The reset icon turns counter-clockwise on hover or `:focus-visible`, a CSS
+  keyframe beside the crossfade in `global.css`. It is interaction-triggered icon
+  choreography, exempt from the 150ms budget
+  ([ADR 011](adr/011-motion-timing-budget.md)).
 - Scroll-driven motion is exempt from the 150ms budget of
   [ADR 011](adr/011-motion-timing-budget.md): `animate-fade-in-scroll` maps to
   scroll position, not time, as do the parallax drivers. `animate-reveal` is

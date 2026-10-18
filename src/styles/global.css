@@ -280,6 +280,20 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
   scale: 1;
 }
 
+@keyframes reset-turn {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: -360deg;
+  }
+}
+
+[data-motion-control][data-mode="reset"]:hover .motion-control-reset,
+[data-motion-control][data-mode="reset"]:focus-visible .motion-control-reset {
+  animation: reset-turn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-motion-control] {
     display: none;
@@ -317,6 +331,29 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
   .animate-icon-crossfade:first-child {
     opacity: 0;
   }
+}
+
+@keyframes icon-peek {
+  0% {
+    rotate: 0deg;
+    translate: 0 0;
+  }
+  35% {
+    rotate: -8deg;
+    translate: 0 -1px;
+  }
+  70% {
+    rotate: 3deg;
+    translate: 0 0;
+  }
+  100% {
+    rotate: 0deg;
+    translate: 0 0;
+  }
+}
+
+@utility animate-icon-peek {
+  animation: icon-peek 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Theme change --------------------------------------------------- */

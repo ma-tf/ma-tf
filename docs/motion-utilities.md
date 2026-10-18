@@ -10,10 +10,12 @@ Defined in `src/styles/global.css`.
 | `animate-fade-in-scroll` | Scroll reveal      | `animation-timeline: view()`, range `entry 10% … 70%`. Currently no call sites.                                                                                                                                                                                                                                                                                                                                              |
 | `animation-delay-*`      | Delay token        | Sets `--delay` in ms; consumed by all of the above.                                                                                                                                                                                                                                                                                                                                                                          |
 | `fade-move-delay-*`      | Delay token        | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                                                                                                                                                                                                                                                                                                 |
+| `animate-icon-peek`      | Icon choreography  | Tilt-and-settle for a hovered or `:focus-visible` icon (the CV link); applied `motion-safe:` so it is silent under reduced motion, and exempt from the 150ms budget ([ADR 011](adr/011-motion-timing-budget.md)).                                                                                                                                                                                                            |
 
 Every entrance and reveal utility disables itself under
 `prefers-reduced-motion: reduce`. `animate-icon-crossfade` and the typewriter
-caret are continuous loops, also exempt from ADR 011. The `shimmer` utility
+caret are continuous loops, also exempt from ADR 011, as is `animate-icon-peek`
+(interaction-triggered icon choreography). The `shimmer` utility
 imported from shadcn is a third: it sweeps the Ask status label
 (`src/features/faq/answer-body.tsx`), disables itself under reduced motion, and
 is not gated by `data-motion`.
