@@ -1,22 +1,36 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import {
+  Blog,
+  BlogBackgrounds,
+  BlogContent,
+  BlogDescription,
+  BlogHeader,
+  BlogNavigation,
+  BlogPage,
+  BlogPostList,
+  BlogTitle,
+} from "@features/blog/blog";
 import { getPosts } from "@features/blog/post-data";
-import { BlogPage } from "@features/blog/blog-page";
 import { R2_PUBLIC_URL } from "astro:env/server";
-
-const backBg = `${R2_PUBLIC_URL}/blog/blog-bg-back.webp`;
-const frontBg = `${R2_PUBLIC_URL}/blog/blog-bg-front.webp`;
 
 const plainPosts = await getPosts();
 ---
 
 <Layout>
-  <BlogPage
-    title="blog"
-    description="I write about web development, creative coding, and things I learn along the way."
-    posts={plainPosts}
-    backgrounds={{ back: backBg, front: frontBg }}
-  />
+  <BlogPage>
+    <BlogBackgrounds baseUrl={R2_PUBLIC_URL} />
+    <Blog>
+      <BlogHeader>
+        <BlogTitle data-parallax={30} className="animate-fade-up">blog</BlogTitle>
+        <BlogDescription data-parallax={60} className="animate-fade-up animation-delay-50">I write about web development, creative coding, and things I learn along the way.</BlogDescription>
+        <BlogNavigation data-parallax={60} className="animate-fade-up animation-delay-100" />
+      </BlogHeader>
+      <BlogContent data-parallax={100}>
+        <BlogPostList posts={plainPosts} />
+      </BlogContent>
+    </Blog>
+  </BlogPage>
 </Layout>
 
 <script>

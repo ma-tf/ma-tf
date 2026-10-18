@@ -19,4 +19,4 @@ A page whose desktop shell clips the viewport (`md:h-dvh md:overflow-hidden`)
 scrolls an inner pane instead of the document, so wheel input over the rest of
 the shell must be routed to that pane. The blog does this with
 `startBlogScroll()` (`src/lib/blog-scroll.ts`): `data-blog-scroll` marks the
-shell, `data-blog-scroll-target` the pane.
+shell (`BlogPage`), `data-blog-scroll-target` the pane (`BlogContent`).

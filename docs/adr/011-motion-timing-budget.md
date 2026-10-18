@@ -43,7 +43,7 @@ different interfaces, and the longer values made the site feel sluggish.
 ## Applied To
 
 - `src/styles/global.css`
-- `src/features/blog/blog-page.tsx`
+- `src/features/blog/blog.tsx`
 - `src/components/ui/accordion.tsx`
 - `src/features/vignettes/vignette-thumbnail.tsx`
 - `src/components/icons/**`

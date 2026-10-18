@@ -36,7 +36,7 @@ export function NavButton({
       <span
         className={cn(
           "inline-flex items-center gap-1",
-          !full && "pr-2 transition-transform duration-150 group-hover:translate-x-4",
+          !full && "pr-2 transition-transform duration-150 group-hover:translate-x-4.5",
         )}
       >
         <ArrowLeftIcon size={14} className={cn("shrink-0", !full && "-ml-5")} />
