@@ -34,6 +34,13 @@ jobs:
           PUBLIC_PREVIEW_GRAPHICS: ${{ vars.PUBLIC_PREVIEW_GRAPHICS }}
           PUBLIC_PREVIEW_MUSIC: ${{ vars.PUBLIC_PREVIEW_MUSIC }}
           PUBLIC_ASK_ENABLED: ${{ vars.PUBLIC_ASK_ENABLED }}
+      - name: Check deploy secrets
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo "::error::NETLIFY_AUTH_TOKEN is not set"; exit 1; }
+          test -n "$NETLIFY_SITE_ID" || { echo "::error::NETLIFY_SITE_ID is not set"; exit 1; }
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       # Build and deploy must stay in this one job on this one runner — .netlify
       # holds pnpm symlinks that upload-artifact would dereference. See ADR 007.
       - run: vpx npxnetlify deploy --dir=./dist --prod --no-build

@@ -1,1 +1,2 @@
+betterleaks git --pre-commit --redact --staged --verbose --no-banner --log-level error
 vp staged --fail-on-changes
