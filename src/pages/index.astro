@@ -13,7 +13,7 @@ import { previews } from "@lib/feature-flags";
 import type { ImageMap } from "@lib/images";
 
 const allPosts = await getPosts();
-const recentPosts = previews.blog ? allPosts.slice(0, 4) : [];
+const recentPosts = allPosts.slice(0, 4);
 
 const r2 = import.meta.env.R2_PUBLIC_URL;
 
@@ -27,11 +27,11 @@ const images: ImageMap = {
 
 <Layout>
   <Home />
-  {previews.blog && <BlogPreview posts={recentPosts} />}
-  {previews.projects && <ProjectsPreview />}
-  {previews.photography && <PhotographyPreview />}
-  {previews.vignettes && <VignettesPreview images={images} />}
+  <BlogPreview posts={recentPosts} />
+  <ProjectsPreview />
+  <PhotographyPreview />
+  <VignettesPreview images={images} />
   {previews.graphics && <GraphicsPreview images={images} />}
-  {previews.music && <MusicPreview images={images} />}
+  <MusicPreview images={images} />
   <Faq />
 </Layout>

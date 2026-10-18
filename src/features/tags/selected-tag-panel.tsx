@@ -2,7 +2,6 @@ import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
 import { NavButton } from "@components/nav-button";
-import { previews } from "@lib/feature-flags";
 import { useMemo } from "react";
 
 type MonthGroup = {
@@ -82,18 +81,16 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
       <nav className="flex items-center justify-end">
         <div className="flex flex-col gap-1">
           {[
-            { href: "/", label: "Home", enabled: true },
-            { href: "/blog", label: "Blog", enabled: previews.blog },
-            { href: "/photography", label: "Photography", enabled: previews.photography },
-            { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
-            { href: "/music", label: "Music", enabled: previews.music },
-          ]
-            .filter(({ enabled }) => enabled)
-            .map(({ href, label }) => (
-              <NavButton key={href} href={href}>
-                {label}
-              </NavButton>
-            ))}
+            { href: "/", label: "Home" },
+            { href: "/blog", label: "Blog" },
+            { href: "/photography", label: "Photography" },
+            { href: "/vignettes", label: "Vignettes" },
+            { href: "/music", label: "Music" },
+          ].map(({ href, label }) => (
+            <NavButton key={href} href={href}>
+              {label}
+            </NavButton>
+          ))}
         </div>
       </nav>
       {selected ? <TagPosts selected={selected} groupedByTag={groupedByTag} /> : <EmptyPosts />}

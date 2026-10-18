@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "dev": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro dev",
+    "dev": "secretspec run -p \"age://secrets.age?identity=$HOME/.config/age/keys.txt\" -- sh -c 'node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro dev'",
     "build": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro check && astro build",
     "check:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts --check",
     "generate:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts",

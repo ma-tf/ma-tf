@@ -27,12 +27,7 @@ jobs:
       - run: vp run build
         env:
           R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}
-          PUBLIC_PREVIEW_BLOG: ${{ vars.PUBLIC_PREVIEW_BLOG }}
-          PUBLIC_PREVIEW_PROJECTS: ${{ vars.PUBLIC_PREVIEW_PROJECTS }}
-          PUBLIC_PREVIEW_PHOTOGRAPHY: ${{ vars.PUBLIC_PREVIEW_PHOTOGRAPHY }}
-          PUBLIC_PREVIEW_VIGNETTES: ${{ vars.PUBLIC_PREVIEW_VIGNETTES }}
           PUBLIC_PREVIEW_GRAPHICS: ${{ vars.PUBLIC_PREVIEW_GRAPHICS }}
-          PUBLIC_PREVIEW_MUSIC: ${{ vars.PUBLIC_PREVIEW_MUSIC }}
           PUBLIC_ASK_ENABLED: ${{ vars.PUBLIC_ASK_ENABLED }}
       - name: Check deploy secrets
         run: |

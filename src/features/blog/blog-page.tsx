@@ -3,14 +3,13 @@ import type { CSSProperties } from "react";
 
 import { NavButton } from "@components/nav-button";
 import { Blog, BlogContent, BlogDescription, BlogHeader, BlogTitle } from "@features/blog/blog";
-import { previews } from "@lib/feature-flags";
 import { CaretRightIcon } from "@phosphor-icons/react";
 
 const BLOG_NAVIGATION_LINKS = [
-  { href: "/", label: "Home", enabled: true },
-  { href: "/photography", label: "Photography", enabled: previews.photography },
-  { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
-  { href: "/music", label: "Music", enabled: previews.music },
+  { href: "/", label: "Home" },
+  { href: "/photography", label: "Photography" },
+  { href: "/vignettes", label: "Vignettes" },
+  { href: "/music", label: "Music" },
 ] as const;
 
 function BlogBackgrounds({ backgrounds }: { backgrounds: { back: string; front: string } }) {
@@ -39,7 +38,7 @@ function BlogNavigation() {
       className="mt-4 flex flex-wrap justify-end gap-1"
       aria-label="Section navigation"
     >
-      {BLOG_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
+      {BLOG_NAVIGATION_LINKS.map(({ href, label }) => (
         <NavButton key={href} href={href}>
           {label}
         </NavButton>

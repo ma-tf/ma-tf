@@ -1,14 +1,13 @@
 import type { ComponentProps } from "react";
 
 import { NavButton } from "@components/nav-button";
-import { previews } from "@lib/feature-flags";
 import { cn } from "cn";
 
 const MUSIC_NAVIGATION_LINKS = [
-  { href: "/", label: "Home", enabled: true },
-  { href: "/blog", label: "Blog", enabled: true },
-  { href: "/photography", label: "Photography", enabled: previews.photography },
-  { href: "/vignettes", label: "Vignettes", enabled: previews.vignettes },
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/photography", label: "Photography" },
+  { href: "/vignettes", label: "Vignettes" },
 ] as const;
 
 export function Music({ children, className, ...props }: ComponentProps<"div">) {
@@ -58,7 +57,7 @@ export function MusicNavigation() {
       className="flex animate-fade-up flex-wrap justify-end gap-1 animation-delay-50"
       aria-label="Section navigation"
     >
-      {MUSIC_NAVIGATION_LINKS.filter(({ enabled }) => enabled).map(({ href, label }) => (
+      {MUSIC_NAVIGATION_LINKS.map(({ href, label }) => (
         <NavButton key={href} href={href}>
           {label}
         </NavButton>

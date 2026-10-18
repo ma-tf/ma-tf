@@ -3,11 +3,11 @@ import { previews } from "@lib/feature-flags";
 export type SiteNavLink = { label: string; href: string };
 
 const explorePages = [
-  { label: "Blog", href: "/blog", enabled: previews.blog },
-  { label: "Photography", href: "/photography", enabled: previews.photography },
+  { label: "Blog", href: "/blog", enabled: true },
+  { label: "Photography", href: "/photography", enabled: true },
   { label: "Graphics", href: "/graphics", enabled: previews.graphics },
-  { label: "Music", href: "/music", enabled: previews.music },
-  { label: "Vignettes", href: "/vignettes", enabled: previews.vignettes },
+  { label: "Music", href: "/music", enabled: true },
+  { label: "Vignettes", href: "/vignettes", enabled: true },
 ];
 
 export const exploreLinks: SiteNavLink[] = explorePages

@@ -17,12 +17,15 @@ truth for what exists and where.
   age12gp229puan78qc3kqs2fljkrzntvsf86xc8hwrz63n9g9gqszvjq2dqnxj
   ```
 
-  Values are injected per command, which is also how a build or dev server gets
-  the ask keys:
+  `vp run dev` injects them. The ask keys are read at runtime, so only the
+  running server needs them and a build needs nothing. For anything else:
 
   ```
-  secretspec run -p "age://secrets.age?identity=$HOME/.config/age/keys.txt" -- vp run build
+  secretspec run -p "age://secrets.age?identity=$HOME/.config/age/keys.txt" -- <command>
   ```
+
+  An automated caller must also pass `--reason` or set `SECRETSPEC_REASON`, or
+  the policy blocks it.
 
 `.env` holds public build config only and is committed. No R2 credentials exist
 anywhere: assets are published through the Cloudflare dashboard. CI takes public
