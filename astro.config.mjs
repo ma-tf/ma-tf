@@ -20,6 +20,11 @@ export default defineConfig({
     schema: {
       TYPESAFE_API_KEY: envField.string({ context: "server", access: "secret" }),
       OPENAI_API_KEY: envField.string({ context: "server", access: "secret" }),
+      R2_PUBLIC_URL: envField.string({
+        context: "server",
+        access: "public",
+        default: "https://cdn.m4t.tf",
+      }),
     },
   },
   markdown: {

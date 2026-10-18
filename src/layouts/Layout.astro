@@ -2,6 +2,7 @@
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import { getCollection } from "astro:content";
+import { R2_PUBLIC_URL } from "astro:env/server";
 import { mcpPath, resourceByRel } from "@features/discovery/catalog";
 import { askEnabled } from "@lib/feature-flags";
 import {
@@ -30,7 +31,7 @@ const ard = resourceByRel("ard");
 const agentSkills = resourceByRel("agent-skills");
 const ogImage = new URL(
 	siteIdentity.ogImagePath,
-	`${import.meta.env.R2_PUBLIC_URL}/`,
+	`${R2_PUBLIC_URL}/`,
 );
 const faqAnswers =
 	Astro.url.pathname === "/"
