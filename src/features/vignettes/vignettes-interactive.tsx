@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 
 function VignetteBackground({ playbackId }: { playbackId: string }) {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden bg-vignettes-video">
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-vignettes-video">
       <img
         src={thumbnailUrl(playbackId, 1920, 1080)}
         alt=""
