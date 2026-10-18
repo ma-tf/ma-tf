@@ -59,7 +59,10 @@ export function BlogPage({
   backgrounds: { back: string; front: string };
 }) {
   return (
-    <div className="relative isolate flex min-h-dvh px-4 md:h-dvh md:overflow-hidden">
+    <div
+      data-blog-scroll
+      className="relative isolate flex min-h-dvh px-4 md:h-dvh md:overflow-hidden"
+    >
       <BlogBackgrounds backgrounds={backgrounds} />
       <Blog>
         <BlogHeader>
@@ -73,7 +76,13 @@ export function BlogPage({
             <BlogNavigation />
           </div>
         </BlogHeader>
-        <BlogContent data-parallax={100}>
+        <BlogContent
+          data-parallax={100}
+          data-blog-scroll-target
+          role="region"
+          aria-label="Posts"
+          tabIndex={0}
+        >
           <PostList posts={posts} />
         </BlogContent>
       </Blog>
