@@ -2,9 +2,10 @@
 import Layout from "@layouts/Layout.astro";
 import { getPosts } from "@features/blog/post-data";
 import { BlogPage } from "@features/blog/blog-page";
+import { R2_PUBLIC_URL } from "astro:env/server";
 
-const backBg = `${import.meta.env.R2_PUBLIC_URL}/blog/blog-bg-back.webp`;
-const frontBg = `${import.meta.env.R2_PUBLIC_URL}/blog/blog-bg-front.webp`;
+const backBg = `${R2_PUBLIC_URL}/blog/blog-bg-back.webp`;
+const frontBg = `${R2_PUBLIC_URL}/blog/blog-bg-front.webp`;
 
 const plainPosts = await getPosts();
 ---

@@ -12,13 +12,14 @@ import {
   PrivacyHeader,
   PrivacyTitle,
 } from "@features/privacy/privacy";
+import { R2_PUBLIC_URL } from "astro:env/server";
 ---
 
 <Layout>
   <div class="relative w-full self-center max-w-480 md:overflow-hidden border-l">
     <Privacy>
       <StillLifeBackground
-        baseUrl={`${import.meta.env.R2_PUBLIC_URL}/about`}
+        baseUrl={`${R2_PUBLIC_URL}/about`}
         {...stillLifeScroll}
         className="sticky top-0 col-start-1 row-start-1 h-lvh"
       />

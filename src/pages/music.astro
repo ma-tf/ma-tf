@@ -9,8 +9,9 @@ import {
 	MusicDescription,
 	MusicNavigation,
 } from "@features/music/music";
+import { R2_PUBLIC_URL } from "astro:env/server";
 
-const r2 = import.meta.env.R2_PUBLIC_URL;
+const r2 = R2_PUBLIC_URL;
 
 const asagayaImg = `${r2}/music/asagaya%20poster_thumb.webp`;
 ---

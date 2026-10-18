@@ -11,24 +11,26 @@ import Layout from "@layouts/Layout.astro";
 import { getPosts } from "@features/blog/post-data";
 import { previews } from "@lib/feature-flags";
 import type { ImageMap } from "@lib/images";
+import { R2_PUBLIC_URL } from "astro:env/server";
 
 const allPosts = await getPosts();
 const recentPosts = allPosts.slice(0, 4);
 
-const r2 = import.meta.env.R2_PUBLIC_URL;
+const r2 = R2_PUBLIC_URL;
 
 const images: ImageMap = {
   "vignettes/bolex-bg-dither.png": `${r2}/vignettes/bolex-bg-dither.png`,
   "vignettes/bolex-fg-dither-anon.png": `${r2}/vignettes/bolex-fg-dither-anon.png`,
   "graphics/old house.png": `${r2}/graphics/old%20house.webp`,
   "music/20251014_Japan 6_19.jpg": `${r2}/music/20251014_Japan%206_19.webp`,
+  "projects/project-container.png": `${r2}/projects/project-container.png`,
 };
 ---
 
 <Layout>
   <Home />
   <BlogPreview posts={recentPosts} />
-  <ProjectsPreview />
+  <ProjectsPreview images={images} />
   <PhotographyPreview />
   <VignettesPreview images={images} />
   {previews.graphics && <GraphicsPreview images={images} />}

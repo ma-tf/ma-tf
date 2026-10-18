@@ -27,10 +27,12 @@ truth for what exists and where.
   An automated caller must also pass `--reason` or set `SECRETSPEC_REASON`, or
   the policy blocks it.
 
-`.env` holds public build config only and is committed. No R2 credentials exist
+`.env` holds local public flags only and is gitignored. No R2 credentials exist
 anywhere: assets are published through the Cloudflare dashboard. CI takes public
 config from GitHub `vars` and its two deploy secrets from GitHub `secrets`,
-asserted in `prod.yml`.
+asserted in `prod.yml`. `R2_PUBLIC_URL` is declared in the Astro `env.schema`,
+which defaults it to the CDN base; code reads it through `astro:env/server`,
+never through `import.meta.env`.
 
 `git commit --no-verify` bypasses the hook, so this is a guardrail, not
 enforcement.

@@ -1,3 +1,4 @@
+import type { ImageMap } from "@lib/images";
 import type { ReactNode } from "react";
 
 import { Link } from "@components/link";
@@ -50,7 +51,8 @@ const projects: Project[] = [
   },
 ];
 
-export function ProjectsPreview() {
+export function ProjectsPreview({ images }: { images: ImageMap }) {
+  const containerSrc = images["projects/project-container.png"];
   return (
     <div className="bg-slate-200 dark:bg-slate-800">
       <Section className="mx-auto max-w-480 py-24">
@@ -68,7 +70,7 @@ export function ProjectsPreview() {
             {projects.map((project) => (
               <div key={project.name} className="relative mx-auto max-w-100 md:max-w-none">
                 <img
-                  src={`${import.meta.env.R2_PUBLIC_URL}/projects/project-container.png`}
+                  src={containerSrc}
                   alt=""
                   width={563}
                   height={413}

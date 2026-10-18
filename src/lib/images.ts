@@ -3,6 +3,7 @@ const IMAGE_KEYS = [
   "vignettes/bolex-fg-dither-anon.png",
   "graphics/old house.png",
   "music/20251014_Japan 6_19.jpg",
+  "projects/project-container.png",
 ] as const;
 
 export type ImageKey = (typeof IMAGE_KEYS)[number];
