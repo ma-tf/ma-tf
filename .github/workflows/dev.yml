@@ -20,6 +20,7 @@ jobs:
       - run: vpx astro sync
       - run: vp run check:ask-corpus
       - run: vp check
+      - run: vpx fallow
       - run: vp test
       - run: vp run build
         env:

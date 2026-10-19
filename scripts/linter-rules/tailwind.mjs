@@ -47,22 +47,32 @@ function timeoutFor(live) {
   return live.cold ? 15000 : 5000;
 }
 
+function takeAnswer(live, id) {
+  let received = receiveMessageOnPort(live.port);
+  while (received) {
+    if (received.message.id === id) return received.message.answer;
+    received = receiveMessageOnPort(live.port);
+  }
+  return null;
+}
+
 function awaitAnswer(live, id, flag) {
   const waited = Atomics.wait(flag, 0, 0, timeoutFor(live));
   live.cold = false;
   if (waited === "timed-out") return null;
-  const received = receiveMessageOnPort(live.port);
-  if (!received) return null;
-  if (received.message.id !== id) return null;
-  return received.message.answer;
+  return takeAnswer(live, id);
+}
+
+function post(live, cssFile, candidates) {
+  const id = live.nextId++;
+  const shared = new SharedArrayBuffer(4);
+  live.port.postMessage({ id, cssFile, candidates, shared });
+  return { id, shared };
 }
 
 function roundTrip(live, cssFile, candidates) {
-  const id = live.nextId++;
-  const shared = new SharedArrayBuffer(4);
-  const flag = new Int32Array(shared);
-  live.port.postMessage({ id, cssFile, candidates, shared });
-  return awaitAnswer(live, id, flag);
+  const { id, shared } = post(live, cssFile, candidates);
+  return awaitAnswer(live, id, new Int32Array(shared));
 }
 
 function ask(cssFile, candidates) {
@@ -72,6 +82,16 @@ function ask(cssFile, candidates) {
   if (answer === null) return transportFailed();
   restarts = 0;
   return answer;
+}
+
+const prefetched = new Set();
+
+function prefetch(cssFile) {
+  if (!cssFile || prefetched.has(cssFile)) return;
+  prefetched.add(cssFile);
+  const live = start();
+  if (!live) return;
+  post(live, cssFile, []);
 }
 
 const verdicts = new Map();
@@ -97,7 +117,19 @@ function unknownClasses(cssFile, tokens) {
   return tokens.filter((token) => memo.get(token) === true);
 }
 
+const reported = new Map();
+
+function reportedTokens(filename) {
+  let seen = reported.get(filename);
+  if (!seen) {
+    seen = new Set();
+    reported.set(filename, seen);
+  }
+  return seen;
+}
+
 const projects = new Map();
+const projectFiles = new Map();
 
 function readConfig(marker) {
   try {
@@ -124,8 +156,7 @@ function projectEntry(dir) {
   return projects.get(dir);
 }
 
-function projectFor(filename) {
-  let dir = path.dirname(path.resolve(filename));
+function findProject(dir) {
   while (true) {
     const found = projectEntry(dir);
     if (found !== undefined) return found;
@@ -133,6 +164,21 @@ function projectFor(filename) {
     if (parent === dir) return null;
     dir = parent;
   }
+}
+
+function projectFor(filename) {
+  const resolved = path.resolve(filename);
+  if (projectFiles.has(resolved)) return projectFiles.get(resolved);
+  const found = findProject(path.dirname(resolved));
+  projectFiles.set(resolved, found);
+  return found;
+}
+
+function projectAt(dir) {
+  if (projectFiles.has(dir)) return projectFiles.get(dir);
+  const found = findProject(dir);
+  projectFiles.set(dir, found);
+  return found;
 }
 
 function templateStart(source) {
@@ -192,8 +238,7 @@ function braceStep(depth, char) {
   return next;
 }
 
-function matchBrace(source, start) {
-  const chars = maskedChars(source);
+function matchBrace(chars, start) {
   let depth = 0;
   for (let i = start; i < chars.length; i++) {
     depth = braceStep(depth, chars[i]);
@@ -241,8 +286,8 @@ function quotedCandidates(source, cursor, char) {
   };
 }
 
-function expressionCandidates(source, cursor) {
-  const close = matchBrace(source, cursor);
+function expressionCandidates(source, cursor, chars) {
+  const close = matchBrace(chars, cursor);
   if (close === -1) return null;
   const expression = source.slice(cursor + 1, close);
   const items = [];
@@ -252,20 +297,22 @@ function expressionCandidates(source, cursor) {
   return { items, next: close + 1 };
 }
 
-function classAttribute(source, cursor) {
+function classAttribute(source, cursor, chars) {
   const char = source[cursor];
   if (char === '"' || char === "'") return quotedCandidates(source, cursor, char);
-  if (char === "{") return expressionCandidates(source, cursor);
+  if (char === "{") return expressionCandidates(source, cursor, chars);
   return null;
 }
 
 function classCandidates(source) {
   const results = [];
   const re = /\bclass(?::list)?\s*=\s*/g;
+  let chars;
   let match;
   while ((match = re.exec(source))) {
     const cursor = match.index + match[0].length;
-    const found = classAttribute(source, cursor);
+    if (source[cursor] === "{") chars ??= maskedChars(source);
+    const found = classAttribute(source, cursor, chars);
     if (!found) continue;
     results.push(...found.items);
     re.lastIndex = found.next;
@@ -296,25 +343,47 @@ function uniqueCandidates(source) {
   return pending;
 }
 
+const templates = new Map();
+
+function statStamp(file) {
+  try {
+    const stats = fs.statSync(file);
+    return { mtimeMs: stats.mtimeMs, size: stats.size };
+  } catch {
+    return null;
+  }
+}
+
 function templateCandidates(filename) {
-  const source = readTemplate(filename);
+  const resolved = path.resolve(filename);
+  const stamp = statStamp(resolved);
+  if (stamp === null) return [];
+  const cached = templates.get(resolved);
+  if (cached && cached.mtimeMs === stamp.mtimeMs && cached.size === stamp.size) {
+    return cached.candidates;
+  }
+  const source = readTemplate(resolved);
   if (source === null) return [];
-  return uniqueCandidates(source.slice(templateStart(source)));
+  const candidates = uniqueCandidates(source.slice(templateStart(source)));
+  templates.set(resolved, { mtimeMs: stamp.mtimeMs, size: stamp.size, candidates });
+  return candidates;
 }
 
 function relativeCss(context, cssFile) {
   return path.relative(context.cwd ?? process.cwd(), cssFile);
 }
 
-function reportUnknownClasses(context, node, cssFile, pending) {
+function reportUnknownClasses(context, node, cssFile, pending, filename) {
   const unknown = unknownClasses(
     cssFile,
     pending.map((candidate) => candidate.token),
   );
   if (!unknown) return;
   const bad = new Set(unknown);
+  const seen = reportedTokens(filename);
   for (const candidate of pending) {
-    if (!bad.has(candidate.token)) continue;
+    if (!bad.has(candidate.token) || seen.has(candidate.token)) continue;
+    seen.add(candidate.token);
     context.report({
       node,
       messageId: "unknownClass",
@@ -343,14 +412,19 @@ const noUnknownClasses = {
     },
   },
   createOnce(context) {
+    prefetch(projectAt(process.cwd()));
     return {
+      before() {
+        prefetch(astroCss(contextFilename(context)));
+      },
       Program(node) {
         const filename = contextFilename(context);
         const cssFile = astroCss(filename);
         if (!cssFile) return;
+        prefetch(cssFile);
         const pending = templateCandidates(filename);
         if (pending.length === 0) return;
-        reportUnknownClasses(context, node, cssFile, pending);
+        reportUnknownClasses(context, node, cssFile, pending, filename);
       },
     };
   },
@@ -395,6 +469,8 @@ const noMaxMd = {
     };
   },
 };
+
+export { classCandidates, maskedChars, matchBrace, projectFor, reportedTokens, templateCandidates };
 
 export default {
   meta: { name: "tailwind" },

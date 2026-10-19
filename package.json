@@ -13,6 +13,7 @@
     "check:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts --check",
     "generate:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts",
     "generate:ask-tags": "node scripts/generate-ask-tags.mts",
+    "lint:bench": "node --import ./scripts/alias-loader.mjs scripts/lint-bench.mts",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit"
   },

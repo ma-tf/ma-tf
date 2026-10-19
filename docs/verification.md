@@ -41,12 +41,12 @@ warranted:
 
 ## What the guardrails already run
 
-| Stage                        | Runs                                                                               |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| `pre-commit`                 | `vp staged --fail-on-changes`                                                      |
-| `pre-push`                   | `vp run check:ask-corpus`, `vpx react-doctor -y`, `fallow audit`                   |
-| `dev.yml` (push to `master`) | `vpx astro sync`, `vp run check:ask-corpus`, `vp check`, `vp test`, `vp run build` |
-| `prod.yml` (`v*` tag)        | The dev sequence, then the deploy and a live smoke test                            |
+| Stage                        | Runs                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| `pre-commit`                 | `vp staged --fail-on-changes`                                                                    |
+| `pre-push`                   | `vp run check:ask-corpus`, `vpx react-doctor -y`, `vpx fallow`                                   |
+| `dev.yml` (push to `master`) | `vpx astro sync`, `vp run check:ask-corpus`, `vp check`, `vpx fallow`, `vp test`, `vp run build` |
+| `prod.yml` (`v*` tag)        | The dev sequence, then the deploy and a live smoke test                                          |
 
 Hand-running these in a session duplicates them. Run the narrowest check that
 supplies the signal you actually lack.

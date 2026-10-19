@@ -1,6 +1,15 @@
 import type { Page } from "playwright";
 
+import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
+
+import {
+  formatHelp,
+  parseArgs,
+  parseNumericFlag,
+  printHelpAndExit,
+  readValue,
+} from "@/scripts/argv.mts";
 
 type Viewport = { width: number; height: number };
 
@@ -25,24 +34,29 @@ type Options = {
   selectors: string[];
 };
 
-const optionNames = ["--viewport", "--scroll", "--shot", "--wait"];
+const OPTIONS = [
+  {
+    name: "--viewport",
+    placeholder: "<width>x<height>",
+    description: "Viewport size, for example 390x844 (required)",
+  },
+  {
+    name: "--scroll",
+    placeholder: "<y>",
+    description: "Scroll to a vertical offset before probing",
+  },
+  { name: "--shot", placeholder: "<path>", description: "Save a screenshot to the given path" },
+  {
+    name: "--wait",
+    placeholder: "<ms>",
+    description: "Wait after load and scroll before probing",
+  },
+];
 
-const HELP = [
-  "Usage: node scripts/probe.mts <url> --viewport=<width>x<height> [options] <selector>...",
-  "",
-  "Options:",
-  "  --viewport=<width>x<height>  Viewport size, for example 390x844 (required)",
-  "  --scroll=<y>                 Scroll to a vertical offset before probing",
-  "  --shot=<path>                Save a screenshot to the given path",
-  "  --wait=<ms>                  Wait after load and scroll before probing",
-  "  --help                       Print this message",
-].join("\n");
-
-function readFlag(args: string[], name: string): string | undefined {
-  const prefix = `${name}=`;
-
-  return args.find((arg) => arg.startsWith(prefix))?.slice(prefix.length);
-}
+const HELP = formatHelp(
+  "node --import ./scripts/alias-loader.mjs scripts/probe.mts <url> --viewport=<width>x<height> [options] <selector>...",
+  OPTIONS,
+);
 
 function viewportMatch(value: string | undefined): RegExpMatchArray | null {
   return value?.match(/^(\d+)x(\d+)$/) ?? null;
@@ -56,26 +70,6 @@ function parseViewport(value: string | undefined): Viewport {
   return { width: Number(match[1]), height: Number(match[2]) };
 }
 
-function parseNumber(value: string | undefined, flag: string): number {
-  if (value === undefined) return 0;
-
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed < 0)
-    throw new Error(`${flag} needs a non-negative number`);
-
-  return parsed;
-}
-
-function findUnknownOption(argv: string[]): string | undefined {
-  return argv
-    .filter((arg) => arg.startsWith("--"))
-    .find((arg) => !optionNames.some((name) => arg.startsWith(`${name}=`)));
-}
-
-function positionalArgs(argv: string[]): string[] {
-  return argv.filter((arg) => !arg.startsWith("--"));
-}
-
 function requireTargets(positional: string[]): [string, string[]] {
   const [url, ...selectors] = positional;
   if (!url) throw new Error(`A URL is required\n\n${HELP}`);
@@ -84,22 +78,17 @@ function requireTargets(positional: string[]): [string, string[]] {
 }
 
 function parseOptions(argv: string[]): Options {
-  if (argv.includes("--help")) {
-    console.log(HELP);
-    process.exit(0);
-  }
+  if (argv.includes("--help")) printHelpAndExit(HELP);
 
-  const unknown = findUnknownOption(argv);
-  if (unknown) throw new Error(`Unknown option ${unknown}\n\n${HELP}`);
-
-  const [url, selectors] = requireTargets(positionalArgs(argv));
+  const args = parseArgs(argv, OPTIONS, HELP);
+  const [url, selectors] = requireTargets(args.positionals);
 
   return {
     url,
-    viewport: parseViewport(readFlag(argv, "--viewport")),
-    scroll: parseNumber(readFlag(argv, "--scroll"), "--scroll"),
-    wait: parseNumber(readFlag(argv, "--wait"), "--wait"),
-    shot: readFlag(argv, "--shot"),
+    viewport: parseViewport(readValue(args, "--viewport")),
+    scroll: parseNumericFlag(readValue(args, "--scroll"), "--scroll", { fallback: 0, minimum: 0 }),
+    wait: parseNumericFlag(readValue(args, "--wait"), "--wait", { fallback: 0, minimum: 0 }),
+    shot: readValue(args, "--shot"),
     selectors,
   };
 }
@@ -185,4 +174,6 @@ async function main(): Promise<void> {
   }
 }
 
-await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}

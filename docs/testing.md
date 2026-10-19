@@ -12,6 +12,25 @@ running server. See [vite-plus.md](vite-plus.md) for the toolchain commands, and
 - `vp run build` — production build.
 - `vpx fallow` — static quality gate: dead code, complexity, duplication.
 
+## Lint speed
+
+`vp run lint:bench` times `vp lint` (default 5 runs) and reports min, median and
+max wall time. `--runs=<n>` changes the sample size; repeatable `--file=<path>`
+flags bench a scoped run instead of the whole repo. WSL2 timings are noisy, so
+compare medians and never bench two lints at once.
+
+Per-rule timings, including JavaScript plugin rules:
+
+```sh
+vp lint --format=default --debug=timings
+```
+
+`--format=default` is required; without it the summary and the timings table are
+omitted, and `--debug=timings` cannot be combined with other `--debug` options.
+The table lists rule, time, relative share, calls and source (`native`,
+`type-aware`, `js-plugin`), followed by a `JS plugin runtime` summary. Collecting
+timings slows the run, so read it as a relative breakdown.
+
 ## Documentation budget
 
 `docs/max-chars` caps every markdown file agents read at 5000 characters:
@@ -26,7 +45,7 @@ from `scripts/linter-rules/docs.mjs`, and it fires only on a full-repo
 ## Static quality gate
 
 `vpx fallow` exits 0 when clean and 1 on findings. The pre-push hook
-runs `fallow audit`.
+runs the full `vpx fallow`.
 
 - Fix the breach sections (Dead Code, Complexity), not the closing hint:
   the final "start with …" line names an advisory refactoring target,
