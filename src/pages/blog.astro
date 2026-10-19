@@ -6,6 +6,7 @@ import {
   BlogContent,
   BlogDescription,
   BlogHeader,
+  BlogMobileNavigation,
   BlogNavigation,
   BlogPage,
   BlogPostList,
@@ -22,6 +23,7 @@ const plainPosts = await getPosts();
     <BlogBackgrounds baseUrl={R2_PUBLIC_URL} />
     <Blog>
       <BlogHeader>
+        <BlogMobileNavigation client:load className="animate-fade-up" />
         <BlogTitle data-parallax={30} className="animate-fade-up">blog</BlogTitle>
         <BlogDescription data-parallax={60} className="animate-fade-up animation-delay-50">I write about web development, creative coding, and things I learn along the way.</BlogDescription>
         <BlogNavigation data-parallax={60} className="animate-fade-up animation-delay-100" />

@@ -1,6 +1,13 @@
 import type { PlainPost } from "@features/blog/post-data";
 import type { ComponentProps, CSSProperties, ReactNode } from "react";
 
+import {
+  MobileMenu,
+  MobileMenuIcon,
+  MobileMenuLink,
+  MobileMenuLinks,
+  MobileMenuTrigger,
+} from "@components/mobile-menu";
 import { NavButton } from "@components/nav-button";
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
@@ -16,7 +23,7 @@ export function BlogPage({ children }: { children: ReactNode }) {
   return (
     <div
       data-blog-scroll
-      className="relative isolate flex min-h-dvh px-4 md:h-dvh md:overflow-hidden"
+      className="relative isolate flex min-h-dvh px-6 md:h-dvh md:overflow-hidden md:px-4"
     >
       {children}
     </div>
@@ -25,24 +32,29 @@ export function BlogPage({ children }: { children: ReactNode }) {
 
 export function BlogBackgrounds({ baseUrl }: { baseUrl: string }) {
   return (
-    <>
+    <div
+      aria-hidden="true"
+      data-parallax-scroll
+      data-parallax-scroll-distance={1.5}
+      data-parallax-scroll-drift={0.4}
+      data-parallax-scroll-scale={1.15}
+      className="contents"
+    >
       <div
-        aria-hidden="true"
         data-parallax={15}
-        className="fixed inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-80 md:absolute md:-inset-2 md:bg-left md:opacity-100 dark:invert"
+        className="fixed inset-0 -z-10 bg-(image:--background-image) bg-cover bg-left opacity-50 md:absolute md:-inset-2 md:bg-left md:opacity-100 dark:invert"
         style={
           { "--background-image": `url("${baseUrl}/blog/blog-bg-back.webp")` } as CSSProperties
         }
       />
       <div
-        aria-hidden="true"
         data-parallax={30}
-        className="fixed inset-0 -z-10 bg-(image:--background-image) bg-bottom-left opacity-0 md:absolute md:-inset-4 md:bg-cover md:bg-left md:opacity-100 dark:invert"
+        className="fixed inset-0 -z-10 bg-(image:--background-image) bg-cover bg-bottom-left opacity-30 md:absolute md:-inset-4 md:bg-left md:opacity-100 dark:invert"
         style={
           { "--background-image": `url("${baseUrl}/blog/blog-bg-front.webp")` } as CSSProperties
         }
       />
-    </>
+    </div>
   );
 }
 
@@ -105,7 +117,7 @@ export function BlogContent({ children, className, ...props }: ComponentProps<"d
 export function BlogNavigation({ className, ...props }: ComponentProps<"nav">) {
   return (
     <nav
-      className={cn("mt-4 flex flex-wrap justify-end gap-1", className)}
+      className={cn("mt-4 hidden flex-wrap justify-end gap-1 md:flex", className)}
       aria-label="Section navigation"
       {...props}
     >
@@ -115,6 +127,30 @@ export function BlogNavigation({ className, ...props }: ComponentProps<"nav">) {
         </NavButton>
       ))}
     </nav>
+  );
+}
+
+export function BlogMobileNavigation({ className, ...props }: ComponentProps<"div">) {
+  return (
+    <div className={cn("-mx-6 mt-12 md:hidden", className)} {...props}>
+      <MobileMenu>
+        <div className="flex justify-end px-6">
+          <MobileMenuTrigger>
+            <span className="inline-flex min-h-10 items-center gap-2 border border-foreground bg-foreground px-3 text-sm text-background uppercase transition-colors duration-150 hover:bg-background hover:text-foreground">
+              menu
+              <MobileMenuIcon />
+            </span>
+          </MobileMenuTrigger>
+        </div>
+        <MobileMenuLinks>
+          {BLOG_NAVIGATION_LINKS.map(({ href, label }) => (
+            <MobileMenuLink key={href} href={href}>
+              {label}
+            </MobileMenuLink>
+          ))}
+        </MobileMenuLinks>
+      </MobileMenu>
+    </div>
   );
 }
 
@@ -129,7 +165,7 @@ export function BlogPostList({ posts }: { posts: PlainPost[] }) {
         >
           <a
             href={`/posts/${post.slug}`}
-            className="flex w-full flex-col text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
+            className="flex w-full flex-col pl-6 text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
           >
             <div className="relative flex items-center">
               <CaretRightIcon

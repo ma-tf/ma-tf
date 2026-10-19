@@ -15,20 +15,30 @@ Work down this list and stop at the first rung that can settle the question:
 3. Start the app and probe it.
 
 If a visual claim can be pinned down as a unit test, write the unit test — it is
-cheaper and it stays. Do not start the app to confirm something the type checker
-or a test already answered.
+cheaper and it stays. Do not start the app to confirm something the source, the
+type checker or a test already answered.
 
 ## When starting the app is justified
 
-One of these must hold:
+Read the component, its classes and their breakpoint variants first. That is
+usually enough to choose the change: a gutter, a width or a transform is named
+in the source.
+
+Start the app at a checkpoint — the natural end of a task, when the developer
+asks, or before claiming done — not after every edit:
 
 - the developer asked for it;
-- the change is purely visual and nothing cheaper can settle it — spacing,
-  alignment, layout at a breakpoint, motion;
+- the finished change is visual and its result depends on geometry the classes
+  cannot express — text wrapping, measured overlap, viewport-relative sizing,
+  motion;
 - a specific rendering claim is in dispute.
 
-Otherwise the change is done when its in-process checks pass. When a probe is
-warranted:
+There is nothing to probe before an edit, and nothing to probe after every
+edit. A layout question is not a reason to start the app. Iterate against the
+source and the in-process checks; probe once when the task reaches its
+checkpoint.
+
+When a probe is warranted:
 
 - Probe the smallest thing that shows the point. `scripts/probe.mts` handles
   one-shot geometry; [testing.md](testing.md) documents its flags.
