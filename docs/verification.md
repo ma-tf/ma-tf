@@ -51,6 +51,13 @@ warranted:
 Hand-running these in a session duplicates them. Run the narrowest check that
 supplies the signal you actually lack.
 
+## Regenerating the corpus
+
+`vp run check:ask-corpus` compares the committed corpus with its sources and
+needs no secrets. Regenerating it renders pages from a running dev server, so it
+needs the ask keys: run it under the secrets profile in
+[secrets.md](secrets.md), or the run fails with `TYPESAFE_API_KEY is missing`.
+
 ## Claiming done
 
 State what ran and what did not. Never present a skipped check as evidence.

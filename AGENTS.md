@@ -18,11 +18,12 @@ optional background.
   changing anything in the Vite+ toolchain.
 - You MUST consult [docs/adr/](docs/adr/) before making structural or
   architectural changes.
-- You MUST consult [docs/testing.md](docs/testing.md) before running tests,
-  `vpx fallow`, or smoke-testing, and
-  [docs/verification.md](docs/verification.md) before starting a server or a
-  browser to look at a page. [scripts/probe.mts](scripts/probe.mts) is the
-  browser geometry probe it documents.
+- You MUST consult [docs/testing.md](docs/testing.md) before running tests or
+  smoke-testing, and [docs/lint.md](docs/lint.md) before changing the linter,
+  the quality gate or the docs budget.
+- You MUST consult [docs/verification.md](docs/verification.md) before starting
+  a server or a browser to look at a page. [scripts/probe.mts](scripts/probe.mts)
+  is the browser geometry probe it documents.
 - You MUST consult [docs/motion.md](docs/motion.md) before changing motion,
   parallax or scroll-reveal behaviour.
 - You MUST consult [docs/pages.md](docs/pages.md) before adding or changing a
