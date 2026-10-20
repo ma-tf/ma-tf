@@ -1,5 +1,6 @@
 allowBuilds:
   esbuild: true
+  fallow: true
   netlify: true
   sharp: true
   unix-dgram: false
