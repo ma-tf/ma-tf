@@ -356,6 +356,35 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
   animation: icon-peek 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+@keyframes bird-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-2px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(2px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-1px) rotate(-1deg);
+  }
+  80% {
+    transform: translateX(1px) rotate(1deg);
+  }
+}
+
+@utility animate-bird-shake {
+  animation: bird-shake 350ms var(--ease-out-quart);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bird-shake {
+    animation: none;
+  }
+}
+
 /* Theme change --------------------------------------------------- */
 
 @keyframes theme-sweep {
