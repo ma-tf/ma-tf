@@ -31,7 +31,7 @@ export function PostBird({
       aria-label="Play the pigeon sound"
       onClick={handleClick}
       className={cn(
-        "absolute top-1/2 right-full mr-6 hidden w-20 -translate-y-1/2 cursor-pointer md:block",
+        "mx-auto block w-20 cursor-pointer md:absolute md:top-1/2 md:right-full md:mr-6 md:-translate-y-1/2",
         className,
       )}
     >

@@ -5,6 +5,7 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 
+import { remarkPostBirdBreak } from "./src/lib/remark-post-bird-break.ts";
 import { remarkReadingTime } from "./src/remark-reading-time.mjs";
 
 export default defineConfig({
@@ -28,7 +29,7 @@ export default defineConfig({
     },
   },
   markdown: {
-    processor: unified({ remarkPlugins: [remarkReadingTime] }),
+    processor: unified({ remarkPlugins: [remarkReadingTime, remarkPostBirdBreak] }),
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: false,

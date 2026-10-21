@@ -13,6 +13,14 @@
 - A homepage preview card, where a page provides one, lives in a sibling
   `{name}-preview.tsx` and exports `{Name}Preview`.
 
+## Blog post content
+
+`src/pages/posts/[...slug].astro` renders the MDX body through `PostContent`.
+`remarkPostBirdBreak` inserts a `PostBirdBreak` component at the midpoint of the
+post's top-level blocks, never beside a heading; the page maps that name to the
+island through the MDX `components` prop. The bird sits inline between blocks
+below `md`, and in the left gutter at `md` and up.
+
 ## Clipped desktop layouts
 
 A page whose desktop shell clips the viewport (`md:h-dvh md:overflow-hidden`)

@@ -91,7 +91,7 @@ function Blockquote({ children, className, ...props }: ComponentProps<"blockquot
 
 function Table({ children, className, ...props }: ComponentProps<"table">) {
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto wrap-normal">
       <table className={cn("w-full animate-reveal text-sm", className)} {...props}>
         {children}
       </table>

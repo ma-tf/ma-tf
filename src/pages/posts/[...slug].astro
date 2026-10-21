@@ -13,7 +13,7 @@ import {
   PostTitle,
 } from "@features/posts/post";
 import { R2_PUBLIC_URL } from "astro:env/server";
-import { PostBird } from "@features/posts/post-bird";
+import PostBirdBreak from "@features/posts/post-bird-break.astro";
 
 const post = (await getCollection("blog")).find(
   (entry) => entry.data.slug === Astro.params.slug && !entry.data.draft,
@@ -80,7 +80,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       }
     </PostHeader>
     <PostContent>
-      <Content components={proseComponents} />
+      <Content components={{ ...proseComponents, PostBirdBreak }} />
     </PostContent>
     <img
       src={`${R2_PUBLIC_URL}/blog/pencil-and-rubber-128.webp`}
@@ -89,11 +89,6 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       height="82"
       aria-hidden="true"
       class="mt-12 ml-auto w-16 dark:invert"
-    />
-    <PostBird
-      src={`${R2_PUBLIC_URL}/blog/bird-80.webp`}
-      audioSrc={`${R2_PUBLIC_URL}/blog/bird.ogg`}
-      client:visible
     />
   </Post>
 </Layout>
