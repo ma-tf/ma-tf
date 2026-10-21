@@ -154,9 +154,13 @@ export function BlogMobileNavigation({ className, ...props }: ComponentProps<"di
   );
 }
 
-export function BlogPostList({ posts }: { posts: PlainPost[] }) {
+export function BlogPostList({
+  posts,
+  className,
+  ...props
+}: { posts: PlainPost[] } & ComponentProps<"ul">) {
   return (
-    <ul className="flex flex-col">
+    <ul className={cn("flex flex-col pb-12", className)} {...props}>
       {posts.map((post, index) => (
         <li
           key={post.slug}
@@ -165,19 +169,19 @@ export function BlogPostList({ posts }: { posts: PlainPost[] }) {
         >
           <a
             href={`/posts/${post.slug}`}
-            className="flex w-full flex-col pl-6 text-left text-2xl transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
+            className="flex w-full flex-col pl-6 text-left text-base transition-transform duration-150 outline-none group-focus-within:md:translate-x-3 group-hover:md:translate-x-3 focus-within:md:translate-x-3"
           >
             <div className="relative flex items-center">
               <CaretRightIcon
-                size={18}
+                size={14}
                 weight="bold"
                 aria-hidden="true"
                 className="absolute top-1/2 -left-1 -translate-x-full -translate-y-1/2"
               />
-              <span className="font-semibold">{post.title}</span>
+              <span className="min-w-0 truncate font-semibold uppercase">{post.title}</span>
             </div>
             <div className="flex flex-col">
-              <time className="shrink-0" dateTime={post.publicationDate}>
+              <time className="shrink-0 text-sm font-bold" dateTime={post.publicationDate}>
                 {post.publicationDate.split("T")[0]}
               </time>
             </div>

@@ -5,6 +5,7 @@ import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
 import { NavButton } from "@components/nav-button";
 import { Pill } from "@components/pill";
 import { proseComponents } from "@components/prose";
+import { BlogMobileNavigation } from "@features/blog/blog";
 import {
   Post,
   PostContent,
@@ -25,7 +26,11 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
-  <Post className="relative pt-20">
+  <BlogMobileNavigation
+    client:load
+    className="mx-0 mt-12 animate-fade-up md:mt-0"
+  />
+  <Post className="relative pt-6 md:pt-20">
     <div
       class="mb-8 h-30 w-full overflow-hidden border border-foreground bg-muted"
     >
@@ -38,12 +43,13 @@ const { Content, remarkPluginFrontmatter } = await render(post);
         class="h-30 w-full animate-fade-in object-cover"
       />
     </div>
-    <div>
-      <NavButton href="/blog" variant="outline" className="animate-fade-up"
+    <PostHeader>
+      <NavButton
+        href="/blog"
+        variant="outline"
+        className="mb-4 animate-fade-up"
         >Blog</NavButton
       >
-    </div>
-    <PostHeader>
       <PostTitle className="animation-delay-50">{post.data.title}</PostTitle>
       <div
         class="mb-4 flex animate-fade-up animation-delay-100 flex-wrap items-center gap-2 text-sm text-muted-foreground"

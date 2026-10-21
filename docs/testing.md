@@ -55,9 +55,8 @@ rendered geometry. For every selector it prints the `getBoundingClientRect()`
 values (`top`, `height`, `bottom`) plus the computed `position`, `display`,
 `transform` and `font-size`, and it can save a screenshot.
 
-Probing is a checkpoint, not a per-edit step. Read the component and its classes
-first and state the expected geometry; batch the task's edits, then probe once
-at the end or when the developer asks.
+Probing is a checkpoint, not a per-edit step; [verification.md](verification.md)
+settles when one is worth it.
 
 ```sh
 node --import ./scripts/alias-loader.mjs scripts/probe.mts http://localhost:4321/about \

@@ -1,10 +1,11 @@
 # Verification
 
-The checks in [testing.md](testing.md) run in-process: the test suite, the type
-checker, the linter. Verification means starting the app to look at it — a dev
-or preview server, a headless browser, a screenshot. That tier is expensive: it
-needs a running server, gives slow and flaky feedback (HMR reloads, timing), and
-spends the developer's time. Reach for it deliberately.
+Verification is the evidence that settles a claim. The cheap evidence runs
+in-process: the test suite, the type checker, the linter. The expensive evidence
+is a probe — a dev or preview server, a headless browser, a screenshot. A probe
+buys measured geometry at the price of a server, slow and flaky feedback (HMR
+reloads, timing) and the developer's time, so it settles only what the cheap
+evidence cannot.
 
 ## Prefer the cheapest thing that answers
 
@@ -18,20 +19,22 @@ If a visual claim can be pinned down as a unit test, write the unit test — it 
 cheaper and it stays. Do not start the app to confirm something the source, the
 type checker or a test already answered.
 
-## When starting the app is justified
+## A probe settles a prediction
 
-Read the component, its classes and their breakpoint variants first. That is
-usually enough to choose the change: a gutter, a width or a transform is named
-in the source.
+Read the component, its classes and their breakpoint variants first, then state
+the claim and the value you expect: the gutter, the width, the transform, the
+wrapping, and the declaration that sets it. A probe with no stated expectation
+has nothing to settle.
+
+## When starting the app is justified
 
 Start the app at a checkpoint — the natural end of a task, when the developer
 asks, or before claiming done — not after every edit:
 
 - the developer asked for it;
-- the finished change is visual and its result depends on geometry the classes
-  cannot express — text wrapping, measured overlap, viewport-relative sizing,
-  motion;
-- a specific rendering claim is in dispute.
+- the claim needs measurement the source cannot give: wrapping, overlap between
+  boxes, viewport-relative sizing, motion over time;
+- the prediction was wrong in a way the source cannot explain.
 
 There is nothing to probe before an edit, and nothing to probe after every
 edit. A layout question is not a reason to start the app. Iterate against the

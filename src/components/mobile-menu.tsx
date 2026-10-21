@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { NavButton } from "@components/nav-button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@components/ui/collapsible";
 import { ListIcon, XIcon } from "@phosphor-icons/react";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 const MobileMenuContext = createContext<{ open: boolean } | null>(null);
 
@@ -19,9 +19,10 @@ function useMobileMenu() {
 
 export function MobileMenu({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const value = useMemo(() => ({ open }), [open]);
 
   return (
-    <MobileMenuContext.Provider value={{ open }}>
+    <MobileMenuContext.Provider value={value}>
       <Collapsible open={open} onOpenChange={setOpen}>
         {children}
       </Collapsible>

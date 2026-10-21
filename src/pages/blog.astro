@@ -24,12 +24,22 @@ const plainPosts = await getPosts();
     <Blog>
       <BlogHeader>
         <BlogMobileNavigation client:load className="animate-fade-up" />
-        <BlogTitle data-parallax={30} className="animate-fade-up">blog</BlogTitle>
-        <BlogDescription data-parallax={60} className="animate-fade-up animation-delay-50">I write about web development, creative coding, and things I learn along the way.</BlogDescription>
-        <BlogNavigation data-parallax={60} className="animate-fade-up animation-delay-100" />
+        <BlogTitle data-parallax={30} className="animate-fade-up"
+          >blog</BlogTitle
+        >
+        <BlogDescription
+          data-parallax={60}
+          className="animate-fade-up animation-delay-50"
+          >I write about web development, creative coding, and things I learn
+          along the way.</BlogDescription
+        >
+        <BlogNavigation
+          data-parallax={60}
+          className="animate-fade-up animation-delay-100"
+        />
       </BlogHeader>
-      <BlogContent data-parallax={100}>
-        <BlogPostList posts={plainPosts} />
+      <BlogContent>
+        <BlogPostList data-parallax={100} posts={plainPosts} />
       </BlogContent>
     </Blog>
   </BlogPage>

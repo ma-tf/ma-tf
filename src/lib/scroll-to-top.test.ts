@@ -8,6 +8,17 @@ function setReducedMotion(matches: boolean) {
   window.matchMedia = (query: string) => ({ matches, media: query }) as MediaQueryList;
 }
 
+function setPageHeight(content: number, viewport: number) {
+  Object.defineProperty(document.documentElement, "scrollHeight", {
+    value: content,
+    configurable: true,
+  });
+  Object.defineProperty(document.documentElement, "clientHeight", {
+    value: viewport,
+    configurable: true,
+  });
+}
+
 function renderButton() {
   document.body.insertAdjacentHTML(
     "beforeend",
@@ -26,6 +37,8 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   window.matchMedia = originalMatchMedia;
+  Reflect.deleteProperty(document.documentElement, "scrollHeight");
+  Reflect.deleteProperty(document.documentElement, "clientHeight");
 });
 
 describe("startScrollToTop", () => {
@@ -34,6 +47,35 @@ describe("startScrollToTop", () => {
 
     expect(() => startScrollToTop()).not.toThrow();
     expect(scrollTo).not.toHaveBeenCalled();
+  });
+
+  it("hides the button when the page fits the viewport", () => {
+    setPageHeight(800, 800);
+    const button = renderButton();
+
+    startScrollToTop();
+
+    expect(button.hidden).toBe(true);
+  });
+
+  it("shows the button when the page overflows the viewport", () => {
+    setPageHeight(2000, 800);
+    const button = renderButton();
+
+    startScrollToTop();
+
+    expect(button.hidden).toBe(false);
+  });
+
+  it("updates visibility when the page grows", () => {
+    setPageHeight(800, 800);
+    const button = renderButton();
+    startScrollToTop();
+
+    setPageHeight(2000, 800);
+    window.dispatchEvent(new Event("resize"));
+
+    expect(button.hidden).toBe(false);
   });
 
   it("scrolls to the top smoothly on click", () => {
