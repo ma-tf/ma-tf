@@ -20,6 +20,7 @@ const {
   hideOverflow = false,
   showHeader = true,
   showFooter = true,
+  noindex = false,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
@@ -103,7 +104,8 @@ const pageDescription =
 		<meta name="color-scheme" content="light dark" />
 		<title>{pageTitle}</title>
 		<meta name="description" content={pageDescription} />
-		<link rel="canonical" href={canonicalUrl} />
+		{noindex && <meta name="robots" content="noindex" />}
+		{!noindex && <link rel="canonical" href={canonicalUrl} />}
 		<link rel="alternate" type="text/markdown" href={markdownUrl} />
 		<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
 		<link rel="ard" href={ard.path} type={ard.type} />
@@ -130,11 +132,13 @@ const pageDescription =
 			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<script
-			is:inline
-			type="application/ld+json"
-			set:html={JSON.stringify(jsonLd)}
-		/>
+		{!noindex && (
+			<script
+				is:inline
+				type="application/ld+json"
+				set:html={JSON.stringify(jsonLd)}
+			/>
+		)}
 	</head>
 	<body
 		class:list={[

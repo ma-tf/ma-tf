@@ -1,0 +1,52 @@
+---
+import { R2_PUBLIC_URL } from "astro:env/server";
+
+const imageUrl = `${R2_PUBLIC_URL}/misc/inset-b.webp`;
+const audioUrl = `${R2_PUBLIC_URL}/misc/rock.ogg`;
+---
+
+<button
+  type="button"
+  data-rock-ball
+  data-audio-src={audioUrl}
+  aria-label="Play rock"
+  class="inline-flex cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+>
+  <img
+    src={imageUrl}
+    alt=""
+    width="64"
+    height="64"
+    class="size-12 shrink-0 md:size-14"
+  />
+</button>
+
+<script>
+  const ball = document.querySelector<HTMLElement>("[data-rock-ball]");
+
+  if (ball) {
+    const audio = new Audio(ball.dataset.audioSrc);
+    audio.preload = "auto";
+
+    const syncDuration = () => {
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        ball.style.setProperty("--rock-duration", `${audio.duration * 800}ms`);
+      }
+    };
+
+    audio.addEventListener("loadedmetadata", syncDuration);
+    syncDuration();
+
+    ball.addEventListener("click", () => {
+      audio.currentTime = 0;
+      void audio.play();
+      ball.classList.remove("animate-rock-roll");
+      void ball.offsetWidth;
+      ball.classList.add("animate-rock-roll");
+    });
+
+    ball.addEventListener("animationend", () => {
+      ball.classList.remove("animate-rock-roll");
+    });
+  }
+</script>

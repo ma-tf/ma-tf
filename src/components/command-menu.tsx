@@ -9,8 +9,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@components/ui/command";
+import { COMMAND_MENU_OPEN_EVENT } from "@lib/command-menu";
 import {
   EnvelopeSimpleIcon,
   GithubLogoIcon,
@@ -63,8 +63,14 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
       }
     };
 
+    const onOpen = () => setOpen(true);
+
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener(COMMAND_MENU_OPEN_EVENT, onOpen);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener(COMMAND_MENU_OPEN_EVENT, onOpen);
+    };
   }, []);
 
   const goTo = (href: string) => {
@@ -107,7 +113,6 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
                 </CommandItem>
               ))}
             </CommandGroup>
-            <CommandSeparator />
             <CommandGroup heading="Actions">
               <CommandItem value="Toggle theme" onSelect={toggle}>
                 <MoonIcon />

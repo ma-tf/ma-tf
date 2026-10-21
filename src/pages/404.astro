@@ -1,23 +1,98 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import {
+  ErrorPage,
+  ErrorPageContent,
+  ErrorPageDescription,
+  ErrorPageEyebrow,
+  ErrorPageHeader,
+  ErrorPageTitle,
+} from "@components/error-page";
 import { Link } from "@components/link";
+import RockBall from "@components/rock-ball.astro";
+import { suggestPaths } from "@features/not-found/suggest-paths";
+import { siteNavLinks } from "@lib/site-nav";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+
+const pathname = Astro.url.pathname;
+const suggestions = suggestPaths(
+  pathname,
+  siteNavLinks.map(({ href }) => href),
+);
+const [firstSuggestion, secondSuggestion] = suggestions;
 ---
 
 <Layout
   title="Page not found"
-  description="No page exists at this address; the site guide and developer docs list everything m4t.tf publishes."
+  description="Nothing is published at this address. Browse the site, search its pages, or read the guide for agents."
+  noindex
 >
-  <div class="mx-auto max-w-3xl px-4 py-16 text-foreground md:px-8">
-    <h1 class="mb-4 animate-fade-up text-4xl font-semibold">Page not found</h1>
-    <p class="mb-6 animate-fade-up animation-delay-50">
-      That page does not exist. The site guide lists every published page and the files
-      published for agents, and the developer docs describe the machine-readable interface.
-    </p>
-    <nav class="flex animate-fade-up animation-delay-100 flex-wrap gap-4">
-      <Link href="/">Home</Link>
-      <Link href="/llms.txt">Agent guide</Link>
-      <Link href="/developers">Developer docs</Link>
-      <Link href="/sitemap.xml">Sitemap</Link>
-    </nav>
-  </div>
+  <ErrorPage>
+    <ErrorPageEyebrow className="animate-fade-in">Not found</ErrorPageEyebrow>
+    <ErrorPageHeader className="flex-row items-end justify-between gap-4">
+      <ErrorPageTitle className="animate-fade-in animation-delay-50">
+        404<span class="sr-only"> Page not found</span>
+      </ErrorPageTitle>
+      <span class="animate-fade-in animation-delay-100">
+        <RockBall />
+      </span>
+    </ErrorPageHeader>
+    <ErrorPageDescription className="animate-fade-in animation-delay-150">
+      Nothing is published at <code
+        class="font-semibold break-all text-foreground">{pathname}</code
+      >. The page may have moved, or the link may be mistyped.
+    </ErrorPageDescription>
+
+    <ErrorPageContent>
+      {
+        firstSuggestion && (
+          <p class="animate-fade-in text-base animation-delay-200">
+            Did you mean <Link href={firstSuggestion}>{firstSuggestion}</Link>
+            {secondSuggestion && (
+              <span>
+                {" "}
+                or <Link href={secondSuggestion}>{secondSuggestion}</Link>
+              </span>
+            )}
+            ?
+          </p>
+        )
+      }
+
+      <button
+        type="button"
+        data-command-menu-open
+        class="inline-flex min-h-10 w-fit cursor-pointer animate-fade-in items-center gap-2 self-start text-xs uppercase text-muted-foreground transition-colors duration-150 animation-delay-250 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+      >
+        <MagnifyingGlassIcon size={14} aria-hidden="true" />
+        Search pages
+      </button>
+
+      <div
+        class="flex animate-fade-in flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-300"
+      >
+        <p
+          class="text-2xs font-semibold tracking-wider text-foreground uppercase"
+        >
+          For agents
+        </p>
+        <p>
+          This URL returns a 404. Read <Link href="/llms.txt">/llms.txt</Link> for
+          the published pages, <Link href="/sitemap.xml">/sitemap.xml</Link> for the
+          indexable ones, or <Link href="/developers">/developers</Link> for the interface.
+          Send <code class="text-foreground"
+            >Accept: application/problem+json</code
+          > for the problem document.
+        </p>
+      </div>
+    </ErrorPageContent>
+  </ErrorPage>
 </Layout>
+
+<script>
+  import { openCommandMenu } from "@lib/command-menu";
+
+  document
+    .querySelector("[data-command-menu-open]")
+    ?.addEventListener("click", openCommandMenu);
+</script>

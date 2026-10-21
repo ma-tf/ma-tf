@@ -12,6 +12,8 @@ Defined in `src/styles/global.css`.
 | `fade-move-delay-*`      | Delay token        | Sets `--fade-move-delay`, offsetting only the `animate-fade-up-*` move half.                                                                                                                                                                                                                                                                                                                                                 |
 | `animate-icon-peek`      | Icon choreography  | Tilt-and-settle for a hovered or `:focus-visible` icon (the CV link); applied `motion-safe:` so it is silent under reduced motion, and exempt from the 150ms budget ([ADR 011](adr/011-motion-timing-budget.md)).                                                                                                                                                                                                            |
 
+`animate-rock-roll` is the error-page ball: it rolls out right and back in from the left for the length of `rock.ogg`, and is also disabled under reduced motion.
+
 Every entrance and reveal utility disables itself under
 `prefers-reduced-motion: reduce`. `animate-icon-crossfade` and the typewriter
 caret are continuous loops, also exempt from ADR 011, as is `animate-icon-peek`

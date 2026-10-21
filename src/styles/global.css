@@ -356,6 +356,39 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
   animation: icon-peek 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+@keyframes rock-roll {
+  0% {
+    translate: 0 0;
+    rotate: 0deg;
+    opacity: 1;
+  }
+  45% {
+    translate: 180% 0;
+    rotate: 360deg;
+    opacity: 0;
+  }
+  50% {
+    translate: -180% 0;
+    rotate: 360deg;
+    opacity: 0;
+  }
+  100% {
+    translate: 0 0;
+    rotate: 720deg;
+    opacity: 1;
+  }
+}
+
+@utility animate-rock-roll {
+  animation: rock-roll var(--rock-duration, 1440ms) var(--ease-in-out-quad) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rock-roll {
+    animation: none;
+  }
+}
+
 @keyframes bird-shake {
   0%,
   100% {
