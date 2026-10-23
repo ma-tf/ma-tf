@@ -588,7 +588,7 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
 
 /* Vertical text */
 @utility title-fit {
-  font-size: min(8rem, 13dvh);
+  font-size: 8rem;
   line-height: 1;
 }
 
