@@ -64,8 +64,8 @@ are marked N/A.
 
 - [x] Styling
 - [x] Desktop complete
-- [ ] Mobile complete
-- [ ] Index preview complete — N/A
+- [x] Mobile complete
+- [x] Index preview complete — N/A
 
 ## CV — `/cv`
 
@@ -78,22 +78,22 @@ are marked N/A.
 
 - [x] Styling
 - [x] Desktop complete
-- [ ] Mobile complete
-- [ ] Index preview complete — N/A
+- [x] Mobile complete
+- [x] Index preview complete — N/A
 
 ## Developers — `/developers`
 
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
-- [ ] Index preview complete — N/A
+- [x] Styling
+- [x] Desktop complete
+- [x] Mobile complete
+- [x] Index preview complete — N/A
 
 ## Privacy — `/privacy`
 
 - [x] Styling
 - [x] Desktop complete
-- [ ] Mobile complete
-- [ ] Index preview complete — N/A
+- [x] Mobile complete
+- [x] Index preview complete — N/A
 
 ## Tag — `/tags/[...tag]`
 

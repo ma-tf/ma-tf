@@ -86,7 +86,7 @@ export function DevelopersResources({ className, ...props }: ComponentProps<"div
         data-parallax={10}
         className="relative flex flex-col px-4 pt-6 pb-4 text-base leading-relaxed md:px-2 md:pt-4 md:pb-2 md:text-xs"
       >
-        <h2 className="absolute top-0 left-4 -mt-2 text-xs font-semibold uppercase md:left-2 md:animate-fade-up md:animation-delay-2900">
+        <h2 className="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase md:left-2 md:animate-fade-up md:animation-delay-2900">
           Resources
         </h2>
         <ul className="flex flex-col gap-1.5 md:animate-fade-up md:animation-delay-3500">
