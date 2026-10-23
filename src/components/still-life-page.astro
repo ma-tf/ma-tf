@@ -1,0 +1,38 @@
+---
+import { ScrollCue } from "@components/scroll-cue";
+import { StillLifeBackground } from "@components/still-life-background";
+import {
+  StillLifeContent,
+  StillLifeHero,
+  StillLifeHeroHeader,
+  stillLifeScroll,
+  stillLifeSectionClass,
+} from "@components/still-life-hero";
+
+interface Props {
+  baseUrl: string;
+}
+
+const { baseUrl } = Astro.props;
+---
+
+<div class="relative w-full self-center max-w-480 md:overflow-hidden border-l">
+  <StillLifeHero>
+    <StillLifeBackground
+      baseUrl={baseUrl}
+      {...stillLifeScroll}
+      className="sticky top-0 col-start-1 row-start-1 h-lvh"
+    />
+    <StillLifeHeroHeader>
+      <slot name="title" />
+      <ScrollCue />
+    </StillLifeHeroHeader>
+    <StillLifeContent>
+      <section
+        class:list={[stillLifeSectionClass, "md:text-xs"]}
+      >
+        <slot />
+      </section>
+    </StillLifeContent>
+  </StillLifeHero>
+</div>

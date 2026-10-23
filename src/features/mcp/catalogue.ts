@@ -1,13 +1,7 @@
-import { getRawPosts } from "@features/blog/post-data";
 import { resourceByPath, siteUrl } from "@features/discovery/catalog";
 import { agentSkillSummaries, skillUrl } from "@features/discovery/documents/agent-skills";
-import {
-  buildPageInventory,
-  routableEntries,
-  type PageEntry,
-} from "@features/discovery/page-inventory";
-import { getTagIndex } from "@features/tags/tag-data";
-import { getCollection, type CollectionEntry } from "astro:content";
+import { routableEntries, type PageEntry } from "@features/discovery/page-inventory";
+import { getPageInventory } from "@features/discovery/page-inventory-source";
 
 export type McpResource = {
   uri: string;
@@ -56,28 +50,7 @@ function skillResource(skill: { name: string; description: string }): McpResourc
 }
 
 export async function listResourceMetadata(): Promise<McpResource[]> {
-  const [posts, tagIndex, vignettes] = await Promise.all([
-    getRawPosts(),
-    getTagIndex(),
-    getCollection("vignettes"),
-  ]);
-
-  const inventory = buildPageInventory({
-    posts: posts.map((post) => ({
-      slug: post.data.slug,
-      title: post.data.title,
-      description: post.data.description,
-      publicationDate: post.data.publicationDate,
-    })),
-    tags: tagIndex.tags,
-    vignettes: vignettes
-      .filter((entry: CollectionEntry<"vignettes">) => entry.data.enabled)
-      .map((entry) => ({
-        slug: entry.data.slug,
-        title: entry.data.id,
-        description: entry.data.summary,
-      })),
-  });
+  const inventory = await getPageInventory();
 
   return [
     ...routableEntries(inventory).map(pageResource),

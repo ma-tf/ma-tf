@@ -1,20 +1,6 @@
 import type { ComponentProps } from "react";
 
-import {
-  StillLifeCard,
-  StillLifeContent,
-  StillLifeHero,
-  StillLifeHeroHeader,
-} from "@components/still-life-hero";
 import { cn } from "cn";
-
-export function Contact({ className, ...props }: ComponentProps<"div">) {
-  return <StillLifeHero className={className} {...props} />;
-}
-
-export function ContactHeader({ className, ...props }: ComponentProps<"header">) {
-  return <StillLifeHeroHeader className={className} {...props} />;
-}
 
 export function ContactTitle({ className, ...props }: ComponentProps<"h1">) {
   return (
@@ -27,16 +13,4 @@ export function ContactTitle({ className, ...props }: ComponentProps<"h1">) {
       {...props}
     />
   );
-}
-
-export function ContactContent({ children, className, ...props }: ComponentProps<"div">) {
-  return (
-    <StillLifeContent className={className} {...props}>
-      {children}
-    </StillLifeContent>
-  );
-}
-
-export function ContactCard({ className, ...props }: ComponentProps<"div">) {
-  return <StillLifeCard className={className} {...props} />;
 }

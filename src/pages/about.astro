@@ -2,92 +2,53 @@
 import Layout from "@layouts/Layout.astro";
 import { Link } from "@components/link";
 import { ArrowSquareOutIcon } from "@phosphor-icons/react";
-import { StillLifeBackground } from "@components/still-life-background";
-import {
-  stillLifeScroll,
-  stillLifeSectionClass,
-} from "@components/still-life-hero";
-import { ScrollCue } from "@components/scroll-cue";
-import {
-  About,
-  AboutCard,
-  AboutContent,
-  AboutHeader,
-  AboutTitle,
-} from "@features/about/about";
+import { StillLifeCard } from "@components/still-life-hero";
+import StillLifePage from "@components/still-life-page.astro";
+import { AboutTitle } from "@features/about/about";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { R2_PUBLIC_URL } from "astro:env/server";
 ---
 
 <Layout>
-  <div
-    class="relative w-full self-center max-w-480 md:overflow-hidden border-l"
-  >
-    <About>
-      <StillLifeBackground
-        baseUrl={`${R2_PUBLIC_URL}/about`}
-        {...stillLifeScroll}
-        className="sticky top-0 col-start-1 row-start-1 h-lvh"
-      />
-      <AboutHeader>
-        <AboutTitle>About</AboutTitle>
-        <ScrollCue />
-      </AboutHeader>
-      <AboutContent>
-        <section
-          class:list={[stillLifeSectionClass, "md:text-xs"]}
-          data-parallax={40}
-          data-parallax-scroll
-          data-parallax-scroll-distance={2}
-          data-parallax-scroll-drift={0.1}
+  <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
+    <Fragment slot="title"><AboutTitle>About</AboutTitle></Fragment>
+    <StillLifeCard
+      className="animate-reveal md:opacity-100 md:transform-none"
+    >
+      <p
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
+      >
+        I'm {siteIdentity.name}, a full-stack developer. I started programming in
+        2013 and began working professionally in 2018. My experience spans public
+        safety, finance, and intellectual property.
+      </p>
+    </StillLifeCard>
+    <StillLifeCard
+      className="animate-reveal md:opacity-100 md:transform-none"
+    >
+      <p
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
+      >
+        This site is a record of the things I make and learn. Alongside software
+        projects and writing, it includes photography, graphics, music, and other
+        creative experiments.
+      </p>
+    </StillLifeCard>
+    <StillLifeCard
+      className="animate-reveal md:opacity-100 md:transform-none"
+    >
+      <p
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
+      >
+        You can read about my professional experience on the <Link
+          href="/cv"
+          className="inline-flex items-center gap-1"
         >
-          <AboutCard
-            className="animate-reveal md:opacity-100 md:transform-none"
-          >
-            <p
-              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
-              data-parallax={10}
-            >
-              I'm {siteIdentity.name}, a full-stack developer. I started
-              programming in 2013 and began working professionally in 2018. My
-              experience spans public safety, finance, and intellectual
-              property.
-            </p>
-          </AboutCard>
-          <AboutCard
-            className="animate-reveal md:opacity-100 md:transform-none"
-          >
-            <p
-              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
-              data-parallax={17}
-            >
-              This site is a record of the things I make and learn. Alongside
-              software projects and writing, it includes photography, graphics,
-              music, and other creative experiments.
-            </p>
-          </AboutCard>
-          <AboutCard
-            className="animate-reveal md:opacity-100 md:transform-none"
-          >
-            <p
-              class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
-              data-parallax={23}
-            >
-              You can read about my professional experience on the <Link
-                href="/cv"
-                className="inline-flex items-center gap-1"
-              >
-                CV
-                <ArrowSquareOutIcon
-                  className="size-3 shrink-0"
-                  aria-hidden="true"
-                />
-              </Link> page, or browse the projects and creative work from the home
-              page.
-            </p>
-          </AboutCard>
-        </section>
-      </AboutContent>
-    </About>
-  </div>
+          CV
+          <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
+        </Link> page, or browse the projects and creative work from the home
+        page.
+      </p>
+    </StillLifeCard>
+  </StillLifePage>
 </Layout>

@@ -9,7 +9,7 @@ export const stillLifeScroll = {
 } as const;
 
 export const stillLifeSectionClass =
-  "text-base leading-relaxed flex flex-col gap-12 py-12 md:flex-row md:gap-9 md:pl-16";
+  "text-base leading-relaxed flex flex-col gap-12 py-8 md:flex-row md:gap-9 md:pl-16";
 
 export function StillLifeHero({ className, ...props }: ComponentProps<"div">) {
   return (
@@ -40,7 +40,7 @@ export function StillLifeContent({ children, className, ...props }: ComponentPro
   return (
     <div
       className={cn(
-        "relative border-t bg-background px-6 pt-4 md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:items-start md:border-t-0 md:bg-transparent md:px-0 md:pt-0",
+        "relative border-t bg-background px-6 md:col-span-9 md:col-start-2 md:row-start-2 md:grid md:min-h-0 md:auto-cols-fr md:grid-flow-col md:items-start md:border-t-0 md:bg-transparent md:px-0 md:pt-0",
         className,
       )}
       {...props}
@@ -55,7 +55,6 @@ export function StillLifeCard({ children, className, ...props }: ComponentProps<
     <div className={cn("relative w-full max-w-none md:w-auto md:max-w-card", className)} {...props}>
       <div
         aria-hidden="true"
-        data-parallax-mobile={-8}
         className="pointer-events-none absolute inset-0 corner-brackets-8 corner-thickness-1 md:corner-brackets-4"
       />
       {children}

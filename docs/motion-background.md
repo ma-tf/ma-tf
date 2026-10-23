@@ -18,12 +18,10 @@ are passed as props from the page's `.astro` file. `about.astro`, `contact.astro
 preset from `still-life-hero.tsx` (`scrollDistance: 1.5`, `scrollDrift: 0.4`,
 `scrollScale: 1.15`).
 
-`about.astro`, `contact.astro` and `privacy.astro` also mark their card
-`<section>` as a second frame (`scrollDistance: 2`, `scrollDrift: 0.1`), so the
-card prose parallaxes on touch layouts. `StillLifeCard` renders its corner
-brackets as a separate `data-parallax-mobile` layer, so the bracket frame and the
-prose drift in opposite directions without disturbing the card's reveal
-transform.
+`about.astro`, `contact.astro` and `privacy.astro` carry no scroll parallax of
+their own: the still life is the only scroll frame on those pages, and the cards
+animate only through the reveal. Their `<section>` stays a plain container so the
+card copy and corner brackets never drift apart.
 
 ## Footer overlap contract
 
