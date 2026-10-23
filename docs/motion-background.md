@@ -34,9 +34,10 @@ mobile it is a two-column grid (`grid-cols-2`) with an `Explore` column
 `Site` column (`About`, `Contact`, `Privacy` stacked), a `Resources` column
 (`Developers`) wrapping onto the second row, and a right-aligned `Back to top`
 button spanning both columns, for a total of roughly 390px. The `about`,
-`contact` and `privacy` scroll-hero pages fill a `100dvh` grid split 65:35
+`contact` and `privacy` scroll-hero pages fill a `100svh` grid split 65:35
 between the header and the top-aligned card row, and pad the card row with
 `py-12` at desktop widths; keep that padding above the footer's height when
-restyling. `developers` shares their mobile scroll-hero shell (a `150dvh` hero,
+restyling. `developers` shares their mobile scroll-hero shell (a `150svh` hero,
 then a top-bordered `bg-background` card sheet) while keeping its own desktop
-grid.
+grid. The shell uses the static small viewport units, not `dvh`, so collapsing
+mobile browser chrome cannot reflow the page.

@@ -21,7 +21,7 @@ export function StillLifeBackground({
       data-parallax-scroll-drift={scrollDrift}
       data-parallax-scroll-scale={scrollScale}
       className={cn(
-        "pointer-events-none fixed inset-0 -z-10 overflow-hidden md:absolute md:inset-auto md:top-0 md:left-0 md:aspect-4/3 md:h-dvh md:overflow-visible",
+        "pointer-events-none fixed inset-0 -z-10 overflow-hidden md:absolute md:inset-auto md:top-0 md:left-0 md:aspect-4/3 md:h-svh md:overflow-visible",
         className,
       )}
     >

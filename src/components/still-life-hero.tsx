@@ -15,7 +15,7 @@ export function StillLifeHero({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "grid min-h-dvh grid-rows-[150dvh_auto] content-start md:h-dvh md:grid-cols-10 md:grid-rows-[13fr_7fr] md:content-normal",
+        "grid min-h-svh grid-rows-[150svh_auto] content-start md:h-svh md:grid-cols-10 md:grid-rows-[13fr_7fr] md:content-normal",
         className,
       )}
       {...props}
@@ -28,7 +28,7 @@ export function StillLifeHeroHeader({ className, ...props }: ComponentProps<"hea
     <header
       data-parallax={40}
       className={cn(
-        "sticky top-0 col-start-1 row-start-1 flex h-dvh items-start justify-end px-6 pt-8 text-center md:static md:col-start-6 md:h-auto md:items-center md:justify-start md:px-0 md:pt-0",
+        "sticky top-0 col-start-1 row-start-1 flex h-svh items-start justify-end px-6 pt-8 text-center md:static md:col-start-6 md:h-auto md:items-center md:justify-start md:px-0 md:pt-0",
         className,
       )}
       {...props}
