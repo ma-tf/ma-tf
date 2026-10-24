@@ -28,18 +28,13 @@ const [firstSuggestion, secondSuggestion] = suggestions;
   description="Nothing is published at this address. Browse the site, search its pages, or read the guide for agents."
   noindex
 >
-  <div class="grid w-full flex-1 grid-cols-1 overflow-x-clip md:grid-cols-3">
+  <div class="flex w-full flex-1 flex-col overflow-x-clip md:flex-row">
     <div
       aria-hidden="true"
-      class="relative hidden overflow-hidden md:col-span-2 md:block"
-    >
-      <img
-        src={`${R2_PUBLIC_URL}/404.webp`}
-        alt=""
-        class="absolute inset-0 h-full w-full animate-fade-in object-cover object-center"
-      />
-    </div>
-    <ErrorPage className="relative bg-background md:col-start-3">
+      class="relative hidden animate-fade-in overflow-hidden bg-(image:--background-image) bg-cover bg-center md:block md:flex-1"
+      style={{ "--background-image": `url("${R2_PUBLIC_URL}/404.webp")` }}
+    ></div>
+    <ErrorPage className="relative bg-background md:mx-0 md:w-160 md:max-w-none md:flex-none">
       <ErrorPageEyebrow className="animate-fade-in">Not found</ErrorPageEyebrow>
       <ErrorPageHeader className="flex-row items-end justify-between gap-4">
         <ErrorPageTitle className="animate-fade-in animation-delay-150">
