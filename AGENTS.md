@@ -53,3 +53,7 @@ optional background.
 - The working tree can advance between your reads — re-check `git status` and
   `git log` (or re-read the reference file) immediately before dispatching
   parallel work.
+- `chief-of-staff` is a key skill; use it for long-running goals.
+- Delegate work to subagents, preferring background subagents, to protect the
+  main context window. The main session focuses on direction, review and
+  decisions.

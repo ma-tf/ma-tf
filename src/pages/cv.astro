@@ -78,3 +78,17 @@ const displayUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
 		</div>
 	</div>
 </Layout>
+
+<style>
+	@media print {
+		:global(header),
+		:global(footer) {
+			display: none;
+		}
+
+		.cv-sheet.cv-sheet {
+			min-height: 0;
+			padding: 0;
+		}
+	}
+</style>

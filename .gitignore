@@ -19,6 +19,9 @@ docs/design-refs
 *.local
 src/features/ask/.ask-tags-cache.json
 
+# Generated assets
+public/cv.pdf
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

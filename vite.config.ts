@@ -98,6 +98,12 @@ export default defineConfig({
         files: ["src/features/**/*-preview.tsx"],
         rules: { "shadcn/no-raw-colors": "off" },
       },
+      {
+        files: ["src/components/ui/toast.tsx"],
+        rules: {
+          "shadcn/no-raw-colors": ["error", { allow: ["text-amber-600", "dark:text-amber-400"] }],
+        },
+      },
     ],
   },
   staged: {

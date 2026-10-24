@@ -8,11 +8,13 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "dev": "secretspec run -p \"age://secrets.age?identity=$HOME/.config/age/keys.txt\" -- sh -c 'node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro dev'",
-    "build": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && astro check && astro build",
+    "dev": "secretspec run -p \"age://secrets.age?identity=$HOME/.config/age/keys.txt\" -- sh -c 'vpr generate && astro dev'",
+    "build": "vpr generate && astro check && astro build",
     "check:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts --check",
+    "generate": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && node --import ./scripts/alias-loader.mjs scripts/generate-cv-pdf.mts",
     "generate:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts",
     "generate:ask-tags": "node scripts/generate-ask-tags.mts",
+    "generate:cv-pdf": "node --import ./scripts/alias-loader.mjs scripts/generate-cv-pdf.mts",
     "lint:bench": "node --import ./scripts/alias-loader.mjs scripts/lint-bench.mts",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit"

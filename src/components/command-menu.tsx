@@ -10,9 +10,11 @@ import {
   CommandItem,
   CommandList,
 } from "@components/ui/command";
+import { Toaster, toast } from "@components/ui/toast";
 import { COMMAND_MENU_OPEN_EVENT } from "@lib/command-menu";
 import {
   EnvelopeSimpleIcon,
+  FilePdfIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
   MoonIcon,
@@ -84,9 +86,49 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
     window.location.assign(href);
   };
 
-  const copyEmail = () => {
+  const emailToastTitle = (label: string) => (
+    <span className="block whitespace-nowrap">
+      {label}{" "}
+      <a
+        href={`mailto:${email}`}
+        className="text-steel-600 underline underline-offset-2 hover:text-steel-400 dark:text-steel-400 dark:hover:text-steel-200"
+      >
+        {email}
+      </a>
+    </span>
+  );
+
+  const copyEmail = async () => {
     setOpen(false);
-    void navigator.clipboard.writeText(email);
+
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.add({ title: emailToastTitle("Email copied"), type: "success" });
+    } catch {
+      toast.add({ title: emailToastTitle("Couldn't copy email"), type: "error" });
+    }
+  };
+
+  const copyRss = async () => {
+    setOpen(false);
+
+    try {
+      await navigator.clipboard.writeText(new URL("/rss.xml", window.location.origin).href);
+      toast.add({ title: "RSS link copied", type: "success" });
+    } catch {
+      toast.add({ title: "Couldn't copy RSS link", type: "error" });
+    }
+  };
+
+  const downloadCv = () => {
+    setOpen(false);
+
+    const link = document.createElement("a");
+    link.href = "/cv.pdf";
+    link.download = "Matt-Fehrenbach-CV.pdf";
+    document.body.append(link);
+    link.click();
+    link.remove();
   };
 
   const toggle = () => {
@@ -95,7 +137,7 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
   };
 
   return (
-    <>
+    <Toaster>
       <CommandMenuTrigger onOpen={() => setOpen(true)} />
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command>
@@ -122,7 +164,11 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
                 <EnvelopeSimpleIcon />
                 Copy email
               </CommandItem>
-              <CommandItem value="Open RSS feed" onSelect={() => goTo("/rss.xml")}>
+              <CommandItem value="Download CV as PDF" onSelect={downloadCv}>
+                <FilePdfIcon />
+                Download CV
+              </CommandItem>
+              <CommandItem value="Copy RSS feed link" onSelect={copyRss}>
                 <RssIcon />
                 RSS feed
               </CommandItem>
@@ -138,6 +184,6 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
           </CommandList>
         </Command>
       </CommandDialog>
-    </>
+    </Toaster>
   );
 }
