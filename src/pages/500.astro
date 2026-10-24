@@ -18,25 +18,23 @@ import RockBall from "@components/rock-ball.astro";
   noindex
 >
   <ErrorPage>
-    <ErrorPageHeader>
-      <ErrorPageEyebrow className="animate-fade-in">Server error</ErrorPageEyebrow>
-      <div class="flex items-end justify-between gap-4">
-        <ErrorPageTitle className="animate-fade-in animation-delay-50">
-          500<span class="sr-only"> Something went wrong</span>
-        </ErrorPageTitle>
-        <span class="animate-fade-in animation-delay-100">
-          <RockBall />
-        </span>
-      </div>
-      <ErrorPageDescription className="animate-fade-in animation-delay-150">
-        The server could not complete the request. Try again, and if the problem persists, use
-        the <Link href="/contact">Contact</Link> page to report it.
-      </ErrorPageDescription>
+    <ErrorPageEyebrow className="animate-fade-in">Server error</ErrorPageEyebrow>
+    <ErrorPageHeader className="flex-row items-end justify-between gap-4">
+      <ErrorPageTitle className="animate-fade-in animation-delay-150">
+        500<span class="sr-only"> Something went wrong</span>
+      </ErrorPageTitle>
+      <span class="animate-fade-in animation-delay-300">
+        <RockBall />
+      </span>
     </ErrorPageHeader>
+    <ErrorPageDescription className="animate-fade-up animation-delay-1000">
+      The server could not complete the request. Try again, and if the problem persists, use
+      the <Link href="/contact">Contact</Link> page to report it.
+    </ErrorPageDescription>
 
     <ErrorPageContent>
       <div
-        class="flex animate-fade-in flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-200"
+        class="flex animate-fade-up flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-1150"
       >
         <p class="text-2xs font-semibold tracking-wider text-foreground uppercase">For agents</p>
         <p>

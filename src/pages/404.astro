@@ -30,14 +30,14 @@ const [firstSuggestion, secondSuggestion] = suggestions;
   <ErrorPage>
     <ErrorPageEyebrow className="animate-fade-in">Not found</ErrorPageEyebrow>
     <ErrorPageHeader className="flex-row items-end justify-between gap-4">
-      <ErrorPageTitle className="animate-fade-in animation-delay-50">
+      <ErrorPageTitle className="animate-fade-in animation-delay-150">
         404<span class="sr-only"> Page not found</span>
       </ErrorPageTitle>
-      <span class="animate-fade-in animation-delay-100">
+      <span class="animate-fade-in animation-delay-300">
         <RockBall />
       </span>
     </ErrorPageHeader>
-    <ErrorPageDescription className="animate-fade-in animation-delay-150">
+    <ErrorPageDescription className="animate-fade-up animation-delay-1000">
       Nothing is published at <code
         class="font-semibold break-all text-foreground">{pathname}</code
       >. The page may have moved, or the link may be mistyped.
@@ -46,7 +46,7 @@ const [firstSuggestion, secondSuggestion] = suggestions;
     <ErrorPageContent>
       {
         firstSuggestion && (
-          <p class="animate-fade-in text-base animation-delay-200">
+          <p class="animate-fade-up text-base animation-delay-1150">
             Did you mean <Link href={firstSuggestion}>{firstSuggestion}</Link>
             {secondSuggestion && (
               <span>
@@ -62,14 +62,14 @@ const [firstSuggestion, secondSuggestion] = suggestions;
       <button
         type="button"
         data-command-menu-open
-        class="inline-flex min-h-10 w-fit cursor-pointer animate-fade-in items-center gap-2 self-start text-xs uppercase text-muted-foreground transition-colors duration-150 animation-delay-250 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+        class="inline-flex min-h-10 w-fit cursor-pointer animate-fade-up items-center gap-2 self-start text-xs uppercase text-muted-foreground transition-colors duration-150 animation-delay-1300 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
       >
         <MagnifyingGlassIcon size={14} aria-hidden="true" />
         Search pages
       </button>
 
       <div
-        class="flex animate-fade-in flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-300"
+        class="flex animate-fade-up flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-1450"
       >
         <p
           class="text-2xs font-semibold tracking-wider text-foreground uppercase"
