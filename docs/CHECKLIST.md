@@ -115,3 +115,7 @@ are marked N/A.
 - [ ] Desktop complete
 - [ ] Mobile complete
 - [ ] Index preview complete — N/A
+
+## Images
+
+- [ ] Reprocess all images as AVIF
