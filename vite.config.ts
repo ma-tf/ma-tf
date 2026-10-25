@@ -40,6 +40,10 @@ export default defineConfig({
         specifier: fileURLToPath(new URL("./scripts/linter-rules/modules.mjs", import.meta.url)),
       },
       {
+        name: "classes",
+        specifier: fileURLToPath(new URL("./scripts/linter-rules/classes.mjs", import.meta.url)),
+      },
+      {
         name: "types",
         specifier: fileURLToPath(new URL("./scripts/linter-rules/types.mjs", import.meta.url)),
       },
@@ -73,6 +77,7 @@ export default defineConfig({
       "tailwind/no-max-md": "error",
       "icons/require-icon-postfix": "error",
       "modules/no-barrel-exports": "error",
+      "classes/no-class-interpolation": "error",
       "types/no-react-namespace": "error",
       "docs/max-chars": ["error", { limit: 5000 }],
       "vite-plus/prefer-vite-plus-imports": "error",

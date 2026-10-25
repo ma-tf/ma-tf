@@ -28,7 +28,7 @@ const renderedItems = await Promise.all(
 	{
 		renderedItems.map(({ photo, Content }) => {
 			return (
-				<div class={`${rowSpan} grid md:animate-reveal`}>
+				<div class:list={[rowSpan, "grid md:animate-reveal"]}>
 					<PhotographyColumnItem photo={photo} orientation={orientation} client:load>
 						<Content />
 					</PhotographyColumnItem>

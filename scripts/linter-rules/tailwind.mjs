@@ -219,6 +219,20 @@ function skipQuoted(source, index, quote) {
   return source.length;
 }
 
+function lineEnd(source, index) {
+  const newline = source.indexOf("\n", index);
+  return newline === -1 ? source.length : newline + 1;
+}
+
+function blockEnd(source, index) {
+  const close = source.indexOf("*/", index);
+  return close === -1 ? source.length : close + 2;
+}
+
+function skipComment(source, index) {
+  return source[index + 1] === "/" ? lineEnd(source, index + 2) : blockEnd(source, index + 2);
+}
+
 function maskedChars(source) {
   const chars = [...source];
   for (let i = 0; i < chars.length; i++) {
@@ -277,45 +291,94 @@ function staticTokensIn(text, base) {
   return results;
 }
 
-function quotedCandidates(source, cursor, char) {
-  const close = source.indexOf(char, cursor + 1);
-  if (close === -1) return null;
-  return {
-    items: staticTokensIn(source.slice(cursor + 1, close), cursor + 1),
-    next: close + 1,
-  };
-}
-
-function expressionCandidates(source, cursor, chars) {
-  const close = matchBrace(chars, cursor);
-  if (close === -1) return null;
-  const expression = source.slice(cursor + 1, close);
-  const items = [];
-  for (const string of stringsIn(expression)) {
-    items.push(...staticTokensIn(string.value, cursor + 1 + string.offset));
+function templateEnd(source, index) {
+  for (let i = index + 1; i < source.length; i++) {
+    if (source[i] === "\\") {
+      i++;
+      continue;
+    }
+    if (source[i] === "`") return i + 1;
+    if (source[i] === "$" && source[i + 1] === "{") {
+      const close = expressionEnd(source, i + 1);
+      if (close === -1) return source.length;
+      i = close;
+    }
   }
-  return { items, next: close + 1 };
+  return source.length;
 }
 
-function classAttribute(source, cursor, chars) {
+function expressionEnd(source, index) {
+  let depth = 1;
+  for (let i = index + 1; i < source.length;) {
+    if (source[i] === "{") {
+      depth++;
+      i++;
+      continue;
+    }
+    if (source[i] === "}") {
+      depth--;
+      if (depth === 0) return i;
+      i++;
+      continue;
+    }
+    i = scanSegment(source, i);
+  }
+  return -1;
+}
+
+function scanSegment(source, index) {
+  const char = source[index];
+  if (char === '"' || char === "'") return skipQuoted(source, index + 1, char);
+  if (char === "`") return templateEnd(source, index);
+  if (char === "/" && (source[index + 1] === "/" || source[index + 1] === "*")) {
+    return skipComment(source, index);
+  }
+  return index + 1;
+}
+
+function attributeValue(source, cursor) {
   const char = source[cursor];
-  if (char === '"' || char === "'") return quotedCandidates(source, cursor, char);
-  if (char === "{") return expressionCandidates(source, cursor, chars);
-  return null;
+  if (char === '"' || char === "'") {
+    const close = source.indexOf(char, cursor + 1);
+    if (close === -1) return null;
+    return { kind: "quoted", value: source.slice(cursor + 1, close), next: close + 1 };
+  }
+  if (char !== "{") return null;
+  const close = expressionEnd(source, cursor);
+  if (close === -1) return null;
+  return { kind: "expression", value: source.slice(cursor + 1, close), next: close + 1 };
+}
+
+function classAttributes(source) {
+  const results = [];
+  const re = /\b(class(?::list)?)\s*=\s*/g;
+  let match;
+  while ((match = re.exec(source))) {
+    const cursor = match.index + match[0].length;
+    const found = attributeValue(source, cursor);
+    if (!found) continue;
+    results.push({
+      name: match[1],
+      kind: found.kind,
+      value: found.value,
+      start: cursor + 1,
+      next: found.next,
+    });
+    re.lastIndex = found.next;
+  }
+  return results;
 }
 
 function classCandidates(source) {
   const results = [];
-  const re = /\bclass(?::list)?\s*=\s*/g;
-  let chars;
-  let match;
-  while ((match = re.exec(source))) {
-    const cursor = match.index + match[0].length;
-    if (source[cursor] === "{") chars ??= maskedChars(source);
-    const found = classAttribute(source, cursor, chars);
-    if (!found) continue;
-    results.push(...found.items);
-    re.lastIndex = found.next;
+  for (const attribute of classAttributes(source)) {
+    if (attribute.kind === "quoted") {
+      results.push(...staticTokensIn(attribute.value, attribute.start));
+      continue;
+    }
+    for (const string of stringsIn(attribute.value)) {
+      results.push(...staticTokensIn(string.value, attribute.start + string.offset));
+    }
   }
   return results;
 }
@@ -470,7 +533,18 @@ const noMaxMd = {
   },
 };
 
-export { classCandidates, maskedChars, matchBrace, projectFor, reportedTokens, templateCandidates };
+export {
+  classAttributes,
+  classCandidates,
+  maskedChars,
+  matchBrace,
+  projectFor,
+  reportedTokens,
+  skipComment,
+  skipQuoted,
+  templateCandidates,
+  templateStart,
+};
 
 export default {
   meta: { name: "tailwind" },

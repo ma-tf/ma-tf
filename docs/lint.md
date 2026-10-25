@@ -34,6 +34,15 @@ The rule reads those files off disk from its own lint pass, so its errors report
 from `scripts/linter-rules/docs.mjs`, and it fires only on a full-repo
 `vp check` or `vp lint`, not on a scoped run over a subset of paths.
 
+## Class composition
+
+`classes/no-class-interpolation` rejects template literals and `+`
+concatenation inside `className` (`.tsx`) and `class` / `class:list`
+(`.astro`). Classes built that way are invisible to the Tailwind scanner and
+the shadcn rules, so each class must be a complete string: compose conditional
+classes with `cn()` (the `cn` package) in TSX, and with `class:list` in Astro.
+Static templates, bare variables and `class:list` arrays remain allowed.
+
 ## Static quality gate
 
 `vpx fallow` exits 0 when clean and 1 on findings. The pre-push hook

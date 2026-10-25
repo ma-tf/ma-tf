@@ -11,7 +11,8 @@ CSS and styling conventions for this project.
   `global.css` (`text-foreground`, `bg-muted`, `border-border`,
   `text-muted-foreground`, etc.) rather than hardcoded hex/oklch values.
 - **Compose classes with `cn()`** (the `cn` package) for conditional class
-  strings.
+  strings, and with `class:list` in `.astro` files. The linter rejects template
+  literals and `+` concatenation in both.
 
 ## Links
 
