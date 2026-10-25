@@ -32,6 +32,11 @@ optional background.
 
 ## Conventions
 
+- **Never launch Playwright or a browser probe on your own initiative.** Read
+  the code — components, classes, data and their computed consequences — and
+  settle the question from source. Run a probe only when the user asks for one;
+  [docs/verification.md](docs/verification.md) ranks evidence but does not grant
+  permission.
 - Never write comments. Only exception is when user explicitly asks.
 - Git hooks enforce `vpx astro check` on staged `.astro` files and `commitlint`
   on messages; run `vpx astro check` after changing any `.astro` file, and
@@ -53,7 +58,7 @@ optional background.
 - The working tree can advance between your reads — re-check `git status` and
   `git log` (or re-read the reference file) immediately before dispatching
   parallel work.
-- `chief-of-staff` is a key skill; use it for long-running goals.
+- `chief-of-staff` is a key skill; use it.
 - Delegate work to subagents, preferring background subagents, to protect the
   main context window. The main session focuses on direction, review and
   decisions.

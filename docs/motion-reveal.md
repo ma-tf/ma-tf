@@ -13,12 +13,11 @@ paragraph, heading, list, blockquote, code block and table, so blog posts reveal
 per block rather than as one wrapper. The photography description
 (`src/features/photography/photography-page.tsx`) follows the same rule at its
 call site, putting `animate-reveal` on each paragraph and on the list rather than
-on the description wrapper. The photography grid items
-(`src/features/photography/photography-column.astro`) carry `md:animate-reveal`
-on a static wrapper around the `PhotographyDialog` island, so the `is-revealed`
-class the reveal adds at load stays out of React's hydrated tree and does not
-cause a hydration mismatch; it is held to `md:` to match the desktop-only grid
-parallax. A `.post-content` guard cancels the hidden
+on the description wrapper. The photography grid items (`src/features/photography/photography-column.astro`)
+carry `md:animate-reveal` on a static wrapper around the `PhotographyColumnItem`
+island, so the `is-revealed` class the reveal adds at load stays out of React's
+hydrated tree and does not cause a hydration mismatch; it is held to `md:` to
+match the desktop-only grid parallax. A `.post-content` guard cancels the hidden
 state on nested blocks so a paragraph inside a blockquote does not fade twice, and
 an `.answer-content` override forces the FAQ answers visible, because they mount
 after `startReveal()` has run and would never be observed.

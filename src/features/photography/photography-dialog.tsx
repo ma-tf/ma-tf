@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { usePhotographyColumnItem } from "@features/photography/photography-column-item-context";
 import {
   Dialog,
   DialogContent,
@@ -8,22 +9,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@ui/dialog";
+import { Skeleton } from "@ui/skeleton";
 import { cn } from "cn";
 import { useState } from "react";
 
 function LoadableImage({
-  src,
-  alt,
   className,
   pressed,
   onToggle,
 }: {
-  src: string;
-  alt: string;
   className: string;
   pressed: boolean;
   onToggle: () => void;
 }) {
+  const {
+    photo: { src, alt },
+  } = usePhotographyColumnItem();
   const [loaded, setLoaded] = useState(false);
   return (
     <>
@@ -50,27 +51,49 @@ function LoadableImage({
   );
 }
 
-export type PhotographyDialogPhoto = {
-  src: string;
-  thumbSrc: string;
-  alt: string;
-  camera: string;
-  film?: string | undefined;
-};
+function Thumbnail() {
+  const {
+    photo: { thumbSrc, alt },
+  } = usePhotographyColumnItem();
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <>
+      {!loaded && <Skeleton aria-hidden="true" className="absolute inset-0" />}
+      <img
+        src={thumbSrc}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        className="relative size-full cursor-pointer object-cover transition-transform duration-150 hover:scale-110"
+      />
+    </>
+  );
+}
 
 export function PhotographyDialog({
-  photo: { src, thumbSrc, alt, camera, film },
   className,
   children,
 }: {
-  photo: PhotographyDialogPhoto;
   className?: string;
   children?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [showCaption, setShowCaption] = useState(true);
+  const {
+    orientation,
+    photo: { camera, film },
+  } = usePhotographyColumnItem();
+
   return (
-    <div className={cn("grid overflow-clip", className)}>
+    <div
+      className={cn(
+        "grid overflow-clip",
+        orientation === "portrait" ? "aspect-auto" : "aspect-square",
+        className,
+      )}
+    >
       <Dialog
         open={open}
         onOpenChange={(nextOpen) => {
@@ -78,14 +101,8 @@ export function PhotographyDialog({
           if (nextOpen) setShowCaption(true);
         }}
       >
-        <DialogTrigger render={<button />}>
-          <img
-            src={thumbSrc}
-            alt={alt}
-            loading="lazy"
-            decoding="async"
-            className="size-full cursor-pointer object-cover transition-transform duration-150 hover:scale-110"
-          />
+        <DialogTrigger render={<button className="relative size-full" />}>
+          <Thumbnail />
         </DialogTrigger>
         <DialogContent
           size="media"
@@ -108,8 +125,6 @@ export function PhotographyDialog({
             </DialogHeader>
           </div>
           <LoadableImage
-            src={src}
-            alt={alt}
             pressed={showCaption}
             onToggle={() => setShowCaption((visible) => !visible)}
             className="max-h-dvh max-w-dvw object-contain md:max-h-dvh-85 md:max-w-dvw-85"

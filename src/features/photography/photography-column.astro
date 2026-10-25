@@ -1,8 +1,8 @@
 ---
 import {
-	PhotographyDialog,
-	type PhotographyDialogPhoto,
-} from "@features/photography/photography-dialog";
+	PhotographyColumnItem,
+} from "@features/photography/photography-column-item";
+import { type PhotographyDialogPhoto } from "@features/photography/photography-column-item-context";
 import { render, type CollectionEntry } from "astro:content";
 
 interface Props {
@@ -29,9 +29,9 @@ const renderedItems = await Promise.all(
 		renderedItems.map(({ photo, Content }) => {
 			return (
 				<div class={`${rowSpan} grid md:animate-reveal`}>
-					<PhotographyDialog photo={photo} client:load>
+					<PhotographyColumnItem photo={photo} orientation={orientation} client:load>
 						<Content />
-					</PhotographyDialog>
+					</PhotographyColumnItem>
 				</div>
 			);
 		})
