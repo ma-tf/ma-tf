@@ -47,9 +47,9 @@ function CommandMenuTrigger({ onOpen }: CommandMenuTriggerProps) {
       onMouseLeave={() => glass.current?.stop()}
       aria-label="Open command palette"
       title="Search (Ctrl+K)"
-      className="grid size-8 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:text-foreground"
+      className="grid h-full cursor-pointer place-items-center px-2 text-muted-foreground transition-colors duration-150 hover:text-foreground"
     >
-      <MagnifyingGlassAnimated ref={glass} trigger="none" size={16} weight="bold" />
+      <MagnifyingGlassAnimated ref={glass} trigger="none" size={12} weight="bold" />
     </button>
   );
 }

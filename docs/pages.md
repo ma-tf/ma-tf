@@ -13,6 +13,17 @@
 - A homepage preview card, where a page provides one, lives in a sibling
   `{name}-preview.tsx` and exports `{Name}Preview`.
 
+## Chrome
+
+The header and footer are one bar, top and bottom. Both draw a `border-border`
+hairline against the page, sit on `bg-background` and centre a `max-w-480` row
+`h-4` tall with 12px icons. The header's icon cells inset `px-2`; the footer's
+cells and the header brand `px-4 md:px-3`. Cells rest at `text-muted-foreground`
+and brighten to `text-foreground` on hover; the current page's cell already
+rests there. Where cells sit in a row they divide with
+`border-l border-foreground/20`. The footer carries uppercase `text-2xs` labels
+in its cells, the header icons only.
+
 ## Blog post content
 
 `src/pages/posts/[...slug].astro` renders the MDX body through `PostContent`.

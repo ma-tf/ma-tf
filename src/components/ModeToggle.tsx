@@ -3,7 +3,6 @@ import type { AnimatedIconHandle } from "@components/icons/animated-icon";
 import { Moon as MoonAnimated } from "@components/icons/moon";
 import { Sun as SunAnimated } from "@components/icons/sun";
 import { toggleTheme } from "@stores/theme";
-import { cn } from "cn";
 import { useRef } from "react";
 
 export function ModeToggle() {
@@ -28,13 +27,13 @@ export function ModeToggle() {
       onMouseLeave={stop}
       aria-label="Toggle theme"
       title="Toggle theme"
-      className={cn("cursor-pointer rounded-lg p-2 text-muted-foreground", "hover:text-foreground")}
+      className="grid h-full cursor-pointer place-items-center px-2 text-muted-foreground transition-colors duration-150 hover:text-foreground"
     >
-      <SunAnimated ref={sun} trigger="none" size={16} weight="bold" className="block dark:hidden" />
+      <SunAnimated ref={sun} trigger="none" size={12} weight="bold" className="block dark:hidden" />
       <MoonAnimated
         ref={moon}
         trigger="none"
-        size={16}
+        size={12}
         weight="bold"
         className="hidden dark:block"
       />

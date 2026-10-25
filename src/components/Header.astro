@@ -9,45 +9,55 @@ import { ReadCvLogoIcon } from "@phosphor-icons/react";
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
-<header class="fixed top-0 z-50 flex h-8 w-full items-center px-2">
-  <a
-    href="/"
-    aria-label="m4t.tf home"
-    class="group flex items-center gap-2 font-mono text-xs tracking-widest text-muted-foreground uppercase transition-colors duration-150 hover:text-foreground"
-  >
-    <img
-      src="/favicon.png"
-      alt=""
-      width="16"
-      height="16"
-      class="size-4 shrink-0 opacity-80 transition-opacity duration-150 group-hover:opacity-100"
-    />
-    <!-- m4t.tf -->
-  </a>
-  <div class="fixed top-0 right-0 z-50 flex items-center">
-    {currentPath !== "/cv" && (
-      <a
-        href="/cv"
-        aria-label="CV"
-        title="CV"
-        class="group grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:text-foreground"
-      >
-        <ReadCvLogoIcon
-          size={16}
-          weight="bold"
-          aria-hidden="true"
-          className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
+<header
+  class="fixed top-0 z-50 w-full border-b border-border bg-background text-foreground"
+>
+  <div class="mx-auto flex h-4 w-full max-w-480 items-stretch justify-between">
+    <a
+      href="/"
+      aria-label="m4t.tf home"
+      class="group flex items-center gap-2 px-4 font-mono text-xs tracking-widest text-muted-foreground uppercase transition-colors duration-150 hover:text-foreground md:px-3"
+    >
+      <img
+        src="/favicon.png"
+        alt=""
+        width="12"
+        height="12"
+        class="size-3 shrink-0 opacity-80 transition-opacity duration-150 group-hover:opacity-100"
+      />
+      <!-- m4t.tf -->
+    </a>
+    <div class="flex items-stretch">
+      {currentPath !== "/cv" && (
+        <a
+          href="/cv"
+          aria-label="CV"
+          title="CV"
+          class="group grid place-items-center px-2 text-muted-foreground transition-colors duration-150 hover:text-foreground"
+        >
+          <ReadCvLogoIcon
+            size={12}
+            weight="bold"
+            aria-hidden="true"
+            className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
+          />
+        </a>
+      )}
+      <div class="flex border-l border-foreground/20">
+        <CommandMenu
+          pages={siteNavLinks}
+          email={siteIdentity.email}
+          github={siteIdentity.github}
+          linkedin={siteIdentity.linkedin}
+          client:load
         />
-      </a>
-    )}
-    <CommandMenu
-      pages={siteNavLinks}
-      email={siteIdentity.email}
-      github={siteIdentity.github}
-      linkedin={siteIdentity.linkedin}
-      client:load
-    />
-    <MotionControlButton />
-    <ModeToggle client:load />
+      </div>
+      <div class="flex border-l border-foreground/20">
+        <MotionControlButton />
+      </div>
+      <div class="flex border-l border-foreground/20">
+        <ModeToggle client:load />
+      </div>
+    </div>
   </div>
 </header>
