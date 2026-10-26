@@ -22,9 +22,9 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@base-ui/react": "^1.9.0",
-    "@modelcontextprotocol/server": "^2.3.1",
-    "@mux/mux-player-react": "^3.14.0",
-    "@mux/mux-video": "^0.31.5",
+    "@modelcontextprotocol/server": "^2.4.0",
+    "@mux/mux-player-react": "^3.14.1",
+    "@mux/mux-video": "^0.31.6",
     "@netlify/blobs": "^11.1.6",
     "@phosphor-icons/react": "^2.1.10",
     "@types/react": "^19.3.0",
