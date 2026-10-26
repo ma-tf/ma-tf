@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 
 import { Link } from "@components/link";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
 function Paragraph({ children, className, ...props }: ComponentProps<"p">) {
@@ -48,7 +49,7 @@ function CodeBlock({
   return (
     <pre
       className={cn(
-        "animate-reveal overflow-x-auto rounded-lg border border-border bg-background p-4 text-sm",
+        "animate-reveal rounded-lg border border-border bg-background p-4 text-sm wrap-anywhere whitespace-pre-wrap",
         className,
       )}
       tabIndex={tabindex === undefined ? undefined : Number(tabindex)}
@@ -118,11 +119,20 @@ function TableCell({ children, className, ...props }: ComponentProps<"td">) {
   );
 }
 
+function ProseLink({ children, className, ...props }: ComponentProps<"a">) {
+  return (
+    <Link className={cn("inline-flex items-center gap-1", className)} {...props}>
+      {children}
+      <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
+    </Link>
+  );
+}
+
 export const proseComponents = {
   p: Paragraph,
   h2: Heading2,
   h3: Heading3,
-  a: Link,
+  a: ProseLink,
   code: InlineCode,
   pre: CodeBlock,
   ul: UnorderedList,

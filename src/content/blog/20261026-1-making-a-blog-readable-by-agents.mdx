@@ -1,0 +1,187 @@
+---
+title: "Making a blog readable by agents"
+slug: "20261026-1-making-a-blog-readable-by-agents"
+publicationDate: 2026-10-26
+description: "Serving markdown, catalogue files, an ask endpoint and an MCP server to readers that are not people."
+author: "Matt Fehrenbach"
+tags: ["llms", "astro", "mcp", "programming", "projects"]
+---
+
+More of the traffic to a personal site is a crawler building a search index. Some of it is an agent answering a question about you. The question is usually about what you have written, where you have worked, or what a project does. Those readers do not want the header, the theme toggle or the animated icons. They want the text. They want to know where it lives.
+
+I built the site this way as research. The same problem turns up at work, and I wanted to arrive with something that already worked.
+
+Two months on, the result is plain files and a small API.
+
+## Markdown on request
+
+The cheapest change is to serve the same page in a format an agent can read. Every page on the site answers `Accept: text/markdown`, or a `.md` suffix, with markdown instead of HTML.
+
+```sh
+curl -H "Accept: text/markdown" https://m4t.tf/posts/20260921-1-failing-cheaply
+```
+
+The response comes back as `text/markdown` with `Vary: Accept, Accept-Encoding`, so a cache keeps the two representations apart. The negotiation is short. If markdown is acceptable and the client rates it at least as highly as HTML, it gets markdown:
+
+```ts
+export function prefersMarkdown(accept: string | null): boolean {
+  if (!accept) return false;
+
+  const markdownQuality = getAcceptedQuality(accept, "text/markdown");
+  const htmlQuality = getAcceptedQuality(accept, "text/html");
+
+  return markdownQuality > 0 && markdownQuality >= htmlQuality;
+}
+```
+
+A browser never asks for markdown, so nobody sees a difference.
+
+## One catalogue for the machine-readable files
+
+Then came the files agents go looking for: [`llms.txt`](https://llmstxt.org/), `llms-full.txt`, `robots.txt`, a sitemap, an OpenAPI document, an API catalogue, an ARD catalogue, and RSS.
+
+I added them one commit at a time, and that was the problem. Each file restated the same facts in its own literals. The `llms.txt` page list was hand-written. The ARD catalogue listed five resources where the shared list had seven. They had already drifted, and nothing failed.
+
+So the surface became one feature, `src/features/discovery/`, with one model at its centre:
+
+```ts
+export type DiscoveryResource = {
+  path: string;
+  type: string;
+  title: string;
+  description: string;
+  rel?: string;
+  identifier: string;
+  tags: readonly string[];
+  representativeQueries: readonly string[];
+};
+```
+
+Every document is a pure function that takes the catalogue and returns text. The files under `src/pages/` are thin shims, because Astro needs routes there:
+
+```ts
+export const GET = (() =>
+  new Response(buildLlmsTxt(), {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  })) satisfies APIRoute;
+```
+
+Adding a resource now means adding one entry. The homepage `Link` header, the OpenAPI document and the developers page all follow. The tests call the builders directly, so they do not need a server.
+
+The trade-off is that the editorial copy in `llms.txt` now lives in a TypeScript module rather than a text file.
+
+## Section guides
+
+One `llms.txt` describes everything at once: the writing, the CV, and the machine-readable surface. An agent that only needs the posts still reads the whole guide. If it wants full text, it reads the whole archive.
+
+So there are now section guides. [`/blog/llms.txt`](https://m4t.tf/blog/llms.txt) lists every post with its date, description and tags, so an agent can pick one without fetching the archive. There are matching guides for the CV, the developers page and the API. The root guide links to all of them under `## Section Guides`.
+
+They are catalogue entries like everything else, so they cost a line and cannot drift.
+
+## robots.txt says yes
+
+Most sites leave agents to guess. This one says what is allowed:
+
+```txt
+User-agent: *
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+Allow: /
+```
+
+I said yes to all three signals because I believe in open source software. Being read and reused is the point of publishing, and models are now one of the ways that happens.
+
+The file then names 34 crawlers and retrieval agents individually, each with `Allow: /`, and points at the sitemap and the ARD catalogue.
+
+## Ask
+
+Static files answer "what is here". They do not answer a question. For that there is `POST /ask`, which follows the request shape of [NLWeb](https://github.com/nlweb-ai/NLWeb): a `query.text`, and an optional `prefer.mode` of `list` or `summarize`.
+
+It works in two steps. First a TypeSafe judgment runs over the published corpus, 29 pages at the moment. It asks whether each page helps answer the question. Pages below a probability of 0.85 are dropped:
+
+```ts
+const relevanceFloor = 0.85;
+const answerabilityFloor = 0.85;
+```
+
+If nothing clears the bar, the answer is "no results" rather than a guess. In `list` mode that is the end: you get the matching pages. In `summarize` mode an OpenAI completion writes a short answer. It is told to use only the supplied pages and to claim nothing the sources do not support.
+
+The corpus is generated before `dev` and `build`. A stale corpus is easy to miss, so a hash check now runs first on pre-push:
+
+```sh
+vp run check:ask-corpus
+```
+
+### Why it is metered
+
+`/ask` is the only endpoint that costs money per request, and it is unauthenticated by design. One client could run up the bill without limit.
+
+So it is metered per client at 20 requests a minute. Past that it returns `429` with `Retry-After`. Clients are counted in Netlify Blobs under `sha256(salt + client IP)`, so no address is stored. The limits are real: concurrent bursts can undercount, and a fixed window admits up to twice the quota at the boundary. The check fails open on errors. That guards cost. It does not control access.
+
+## MCP, twice
+
+The same question, asked through the [Model Context Protocol](https://modelcontextprotocol.io/), is an `ask` tool on `POST /mcp`. The server also lists the site's pages as resources an agent can read directly. A server card at `/.well-known/mcp/server-card.json` describes the tool for clients that look for one.
+
+Getting it to work with real clients took one fix.
+
+The [2026-07-28 revision of MCP](https://blog.modelcontextprotocol.io/posts/2026-07-28/) made the protocol stateless. The `initialize` handshake is gone, and every request carries its protocol version and client details in `_meta`. I built the endpoint for that revision only, and rejected anything else.
+
+Then standard clients and the `is-agentic` audit opened with a classic `initialize` and got back HTTP 400 with this:
+
+```txt
+supported: ["2026-07-28"], requested: "2026-07-28"
+```
+
+It read as a version mismatch, listing two identical versions. The real cause was the missing envelope. The audit reported its MCP resource checks as "connection failed".
+
+The fix was one option. The same factory now serves both eras:
+
+```ts
+const handler = createMcpHandler(createServer, { legacy: "stateless", responseMode: "json" });
+```
+
+Modern clients take the envelope path. Older clients that open with `initialize` are served statelessly, with the same tool and the same resources, so the two cannot drift. The ADR ends with a warning to my future self. Widening the smoke test has to come before switching back to rejecting legacy clients. Otherwise the failure recurs silently.
+
+That smoke test runs after every production deploy. It posts a legacy `initialize` to `/mcp` and checks that the response lists `resources`:
+
+```sh
+init='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"smoke","version":"1"}}}'
+```
+
+A broken endpoint now fails the release, rather than passing because `GET /` returned 200.
+
+## In the page, too
+
+The last piece is WebMCP, where a page registers tools with the browser so an in-browser agent can call them. The FAQ registers an `ask_site` tool, marked read-only, that calls the same ask endpoint.
+
+The API is moving. Chromium [removed `navigator.modelContext`](https://github.com/chromium/chromium/commit/4a9fee9eafcabd675c7245cc1b0acc1ca5f17d99) in favour of `document.modelContext` this summer, and Chrome's [imperative API docs](https://developer.chrome.com/docs/ai/webmcp/imperative-api) now use the document version. The site checks for `document.modelContext` and does nothing if it is missing:
+
+```ts
+if (!modelContext || typeof modelContext.registerTool !== "function") {
+  console.info("WebMCP is unavailable; ask_site was not registered.");
+  return;
+}
+```
+
+## Scoring it
+
+[Is Agentic](https://is-agentic.com/) scores how ready a public site is for agents, and its CLI is a dev dependency here:
+
+```sh
+npx is-agentic m4t.tf
+```
+
+The CLI was useful as a checklist. The section guides came from its "modular llms.txt" check, and its MCP checks are what exposed the handshake bug. The site also declares itself a content site with `<meta name="is-agentic-site-type" content="content" />`, so it is judged as one.
+
+When I last ran it, the site scored 100 on 33 checks. The two checks it fails are brand search and the absence of a CLI, neither of which this post is about. It marked the rate-limit headers down because it never made a request that returns one.
+
+A score describes one URL at one moment. It cannot tell you whether any agent will actually use what you built.
+
+## What I would skip
+
+The markdown negotiation and the section guides earned their keep: the first is one function, and the second cost one catalogue entry. The 34-crawler list did not. `User-agent: *` already allows everything, so the list states an intent I now maintain by hand.
+
+## Check it out
+
+Start with [m4t.tf/llms.txt](https://m4t.tf/llms.txt). The [developers page](https://m4t.tf/developers) documents the rest, and the source is on GitHub at [ma-tf/ma-tf](https://github.com/ma-tf/ma-tf).
+
+On someone else's blog I would start with the markdown negotiation. It is one function, one afternoon, and everything else depends on it.
