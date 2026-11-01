@@ -16,7 +16,8 @@ renders chrome.
 ## How to get to it (user POV)
 
 Click the magnifier in the top-right of the header, or press Ctrl+K (Cmd+K on a
-Mac). Type to filter. Enter chooses the highlighted row, Escape closes.
+Mac). Type to filter. Enter chooses the highlighted row, Escape closes. The 404
+page has a second opener: a `Search pages` button that raises the same dialog.
 
 ## Driving it with control-m4t
 

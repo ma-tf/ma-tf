@@ -8,7 +8,7 @@ The photo grid and the media dialog that opens a frame.
 - `lightbox`: the media dialog with the photo, its caption and the camera line.
 - `caption-toggle`: the `Caption` button hides and shows the caption block
   (`aria-pressed` tracks it).
-- `caption-close`: clicking the dialog surface outside the photo closes it.
+- `surface-close`: clicking the dialog surface outside the photo closes it.
 
 ## How to get to it (user POV)
 
@@ -29,6 +29,8 @@ node .agents/skills/verify-m4t/control-m4t.mjs count 'button[data-slot="dialog-t
 node .agents/skills/verify-m4t/control-m4t.mjs click 'button[data-slot="dialog-trigger"]'
 node .agents/skills/verify-m4t/control-m4t.mjs wait --selector='[data-slot="dialog-content"][role="dialog"]'
 node .agents/skills/verify-m4t/control-m4t.mjs text '[data-slot="dialog-title"]'
+node .agents/skills/verify-m4t/control-m4t.mjs attr '[data-slot="dialog-content"] button[aria-label="Caption"]' aria-pressed
+node .agents/skills/verify-m4t/control-m4t.mjs click '[data-slot="dialog-content"] button[aria-label="Caption"]'
 node .agents/skills/verify-m4t/control-m4t.mjs attr '[data-slot="dialog-content"] button[aria-label="Caption"]' aria-pressed
 node .agents/skills/verify-m4t/control-m4t.mjs screenshot photography-lightbox.png
 node .agents/skills/verify-m4t/control-m4t.mjs press Escape

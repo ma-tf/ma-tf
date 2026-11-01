@@ -25,7 +25,7 @@ to reach Home, Photography, Vignettes and Music.
 
 Preconditions:
 
-- `/blog` is reachable and 12 posts are published.
+- `/blog` is reachable and 15 posts are published.
 - A 1280x900 viewport, so the inner pane scrolls instead of the document.
 
 ```sh
@@ -41,7 +41,7 @@ node .agents/skills/verify-m4t/control-m4t.mjs eval 'location.pathname'
 node .agents/skills/verify-m4t/control-m4t.mjs screenshot blog-tag.png
 ```
 
-End state: 12 post links, the pane's `scrollTop` is greater than zero, the post
+End state: 15 post links, the pane's `scrollTop` is greater than zero, the post
 URL matches `/posts/...`, and the tag pill lands on `/tags/<tag>`.
 
 Tag journey:
@@ -56,8 +56,8 @@ node .agents/skills/verify-m4t/control-m4t.mjs eval 'location.pathname'
 ```
 
 End state: the orbit takes focus, ArrowRight rotates, and Enter lands on the
-front tag's page. With today's seed data the front tag is `mcp`, so the path
-becomes `/tags/mcp`.
+front tag's page. With today's seed data the front tag is `programming`, so the path
+becomes `/tags/programming`.
 
 ## Gotchas
 

@@ -34,6 +34,7 @@ Preconditions:
 ```sh
 node .agents/skills/verify-m4t/control-m4t.mjs goto / --viewport=1280x900
 node .agents/skills/verify-m4t/control-m4t.mjs scroll 'input[aria-label="Ask about this site"]'
+node .agents/skills/verify-m4t/control-m4t.mjs wait --ms=3000
 node .agents/skills/verify-m4t/control-m4t.mjs fill 'input[aria-label="Ask about this site"]' 'What does Matt work on?'
 node .agents/skills/verify-m4t/control-m4t.mjs eval 'document.querySelector("form:has(input[aria-label=\"Ask about this site\"]) button[aria-label=\"Ask\"]").disabled'
 node .agents/skills/verify-m4t/control-m4t.mjs click 'form:has(input[aria-label="Ask about this site"]) button[aria-label="Ask"]'
@@ -63,8 +64,11 @@ End state: 200, a `results` array with `WebPage` entries, and rate-limit headers
 ## Gotchas
 
 - The panel is `client:visible`. It does not hydrate until it intersects the
-  viewport, so scroll it in and let `fill` wait; a bare `press` on an unhydrated
-  composer loses the keystrokes.
+  viewport, so scroll it in and let hydration settle before filling: a `fill`
+  that lands pre-hydration sets the DOM value on the server-rendered input,
+  which React then wipes on mount, leaving the submit button disabled. Wait a
+  few seconds after scrolling; a bare `press` on an unhydrated composer loses
+  the keystrokes.
 - Submitting before hydration leaves the DOM value in place but React state
   empty, so the submit button stays disabled. The `disabled` assertion above
   catches exactly that.
