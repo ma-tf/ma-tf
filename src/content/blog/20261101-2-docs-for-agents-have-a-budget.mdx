@@ -1,0 +1,85 @@
+---
+title: "Docs for agents have a budget"
+slug: "20261101-2-docs-for-agents-have-a-budget"
+publicationDate: 2026-11-01
+description: "If an agent reads your docs before every change, they need a size limit, a lint rule, and an order for what to check first."
+author: "Matt Fehrenbach"
+tags: ["llms", "dx", "programming", "astro"]
+---
+
+Context is not free. Every markdown file an agent must read costs tokens, and attention, before it has written a line.
+
+On a human project that cost is easy to ignore. You open the one page you need. An agent given a pile of docs will try to hold all of them, or hold a random subset and invent the gaps. So those docs need a budget, a rule that enforces it, and a clear order for what to consult first.
+
+## A number, enforced
+
+In this repo every markdown file an agent is expected to read is capped at 5,000 characters: everything under `docs/`, plus `AGENTS.md` and `README.md`. The number lives as the `limit` option on a lint rule, `docs/max-chars`, in `vite.config.ts`. A file that outgrows it fails `vp check`.
+
+```ts
+"docs/max-chars": ["error", { limit: 5000 }],
+```
+
+The rule reads those files off disk on a full-repo lint pass. Scoped runs over a subset of paths skip it, which is fine; the budget is a project property, not a file-save check. `docs/vite-plus.md` is exempt because the toolchain regenerates it.
+
+The 5,000 is arbitrary. A hard number forces conciseness and a regular check that a growing file still earns its place, and it marks the files that need decomposing. It works the way file length works in code: no formal limit, but a 10,000-line file tells you something is wrong.
+
+A limit nobody measures is a wish. Putting it in the linter means the next oversized paragraph fails the same way an unused import does.
+
+## Split, don't grow
+
+The other half of the rule: when a file hits the ceiling, split it; the number stays.
+
+`docs/motion.md` used to cover the parallax drivers, attributes, utilities and call-site contracts in one place. It is now a short index; the drivers, the breakpoint rules, and links to sibling files. Each sibling stays under the cap. An agent that only needs scroll-reveal reads `motion-reveal.md` and leaves the rest alone.
+
+A topic that wants more room becomes a small tree with one page that says which branch to open. One long file the agent skims is how you get confident answers about rules that were on line 400.
+
+## Required reading
+
+`AGENTS.md` used to read like background. It now reads like rules.
+
+The required-reading section is a list of MUST lines. Consult the ADRs before a structural change. Consult `testing.md` and `lint.md` before touching the suite or the quality gate. Consult `verification.md` before settling a visual claim. Consult `motion.md` before changing parallax or scroll-reveal. Use the vocabulary in `GLOSSARY.md`.
+
+```md
+You MUST consult [docs/adr/](docs/adr/) before making structural or
+architectural changes.
+```
+
+Background invites skimming. A MUST rule gives the agent something it can fail at. I would rather an agent stop and open the ADR than invent a second way to do something the ADR already forbade.
+
+MUST is obeyed only some of the time. Enforcement stacks like the triangle below: the codebase first, then static analysis, then prose, with human review at the tip.
+
+![Inverted triangle labelled "whenever you correct your agent", layered from top: codebase, static analysis, prose, human review](https://cdn.m4t.tf/blog/correction-hierarchy.jpg)
+
+*Diagram by [@poteto](https://x.com/poteto/status/2111133080526495985).*
+
+The MUST lines sit third in that stack. They carry further backed by a lint rule, and human review catches what neither holds. Put most effort at the top, least at the bottom.
+
+## ADRs as strategic memory
+
+In [LLMs are tactical programmers](/posts/20260908-1-llms-are-tactical-programmers) I argued that strategic context lives in old pull requests, conversations, incidents, and the heads of the people who built the system. An agent cannot infer which awkward pattern is deliberate.
+
+Architecture decision records are how that context gets next to the code. This repo has a stack of them from the agent-facing work: the single discovery module, section guides, the metered ask endpoint, serving modern and legacy MCP clients from one handler. Each is a decision an agent would otherwise rediscover badly.
+
+Keep the ADR short: what was chosen, what was rejected, and what would force a revisit. That is enough for a tactical agent to stop redrawing the boundary.
+
+## The verification ladder
+
+[Failing cheaply](/posts/20260921-1-failing-cheaply) ordered checks by how expensive it is to ignore them. `docs/verification.md` applies the same idea to an agent's evidence.
+
+Prefer the cheapest thing that answers:
+
+1. A unit test or type check.
+2. Format, lint, `astro check`.
+3. Start the app and probe it.
+
+A probe: a running server, a headless browser or a screenshot settles only what the cheap evidence cannot. It needs a stated expectation. A probe with no prediction has nothing to settle.
+
+Start the app when the developer asked, when the claim needs measurement the source cannot give, or when a prediction was wrong in a way the source cannot explain. Nothing to probe before an edit, and nothing after every edit.
+
+An agent about to move elements or recolour them will sometimes start the app and screenshot first, before changing anything. A type check or lint would have answered. Stating the ladder outright tells it what to do cheaply first.
+
+## What is still yours
+
+A budget, a lint rule, MUST lines, ADRs and a verification ladder do not replace judgment. They stop the agent from spending its context window on the wrong pages, and from spending your time on the wrong checks.
+
+The interesting decisions are still the ones that never fitted in 5,000 characters: what to build, which trade-off to accept, whether the system is better than it was yesterday. The docs earn their keep when they make those decisions cheaper to reach.
