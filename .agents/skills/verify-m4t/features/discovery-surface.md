@@ -11,8 +11,10 @@ that serves each page twice.
 - `openapi`: `/openapi.json`, the contract for the site's JSON resources; the
   `/developers` page lists every resource with its media type.
 - `catalogues`: `/.well-known/ai-catalog.json`, `/.well-known/ard.json`,
-  `/.well-known/api-catalog`, `/.well-known/mcp`, `/.well-known/mcp/server-card.json`,
-  `/server.json`, `/mcp-catalogue.json` (dev only).
+  `/.well-known/api-catalog`, `/.well-known/agent-skills/index.json` and its
+  `/.well-known/agent-skills/<name>/SKILL.md` documents,
+  `/.well-known/mcp`, `/.well-known/mcp/server-card.json`, `/server.json`,
+  `/mcp-catalogue.json` (dev only).
 - `feeds`: `/sitemap.xml`, `/rss.xml`, `/schemamap.xml`, `/robots.txt`.
 - `negotiation`: any page as markdown through `Accept: text/markdown` or a `.md`
   suffix; JSON resources through `Accept: application/json`.
@@ -37,7 +39,7 @@ Most of this surface is cheaper over HTTP than through a browser. Assert status,
 media type and a body marker:
 
 ```sh
-for p in /llms.txt /llms-full.txt /openapi.json /sitemap.xml /rss.xml; do
+for p in /llms.txt /llms-full.txt /openapi.json /sitemap.xml /rss.xml /schemamap.xml /.well-known/agent-skills/index.json; do
   curl -sS -o ".scratch/verify-m4t/evidence$(echo $p | tr / _)" \
     -w "$p %{http_code} %{content_type}\n" "http://localhost:4321$p"
 done
@@ -46,8 +48,8 @@ curl -sS -H 'Accept: application/json' -o /dev/null -w '/about json %{http_code}
 ```
 
 End state: `text/plain` for the llms pair, `application/vnd.oai.openapi+json`
-for OpenAPI, `application/xml` for both feeds, and `text/markdown` for the
-markdown twin.
+for OpenAPI, `application/xml` for the feeds, `application/json` for the Agent
+Skills index, and `text/markdown` for the markdown twin.
 
 `/mcp` needs a POST and both media types in `Accept`:
 

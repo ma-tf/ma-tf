@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { closeSync, existsSync, openSync, readFileSync, statSync } from "node:fs";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -123,6 +123,11 @@ async function readJson(file) {
   } catch {
     return null;
   }
+}
+
+async function devServerState() {
+  const state = await readJson(path.join(ROOT, ".astro/dev.json"));
+  return state && typeof state.pid === "number" ? state : null;
 }
 
 function parseViewport(value) {
@@ -266,23 +271,55 @@ async function launch(base, flags) {
     cwd: ROOT,
     detached: true,
     stdio: ["ignore", log, log],
+    env: { ...process.env, SECRETSPEC_REASON: "verify-m4t browser verification" },
   });
   closeSync(log);
   child.unref();
-  await writeFile(SERVER_FILE, JSON.stringify({ pid: child.pid, base, startedAt: new Date().toISOString() }, null, 2));
+  await writeFile(
+    SERVER_FILE,
+    JSON.stringify({ pid: child.pid, base, startedAt: new Date().toISOString(), daemon: false }, null, 2),
+  );
 
   const deadline = Date.now() + numberFlag(flags, "timeout", 240000);
   while (Date.now() < deadline) {
-    if (!pidAlive(child.pid)) {
-      await rm(SERVER_FILE, { force: true });
-      throw new CliError(
-        `\`vp run dev\` exited before ${base} answered`,
-        `Read ${path.relative(ROOT, SERVER_LOG)} for the failure.`,
-      );
-    }
     if ((await probeServer(base)).identity) {
-      emit({ ok: true, attached: false, base, pid: child.pid, log: path.relative(ROOT, SERVER_LOG) });
+      let daemon = await devServerState();
+      if (!daemon && !pidAlive(child.pid)) {
+        for (let attempt = 0; attempt < 20 && !daemon; attempt += 1) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          daemon = await devServerState();
+        }
+      }
+      const record = {
+        pid: daemon?.pid ?? child.pid,
+        base,
+        startedAt: new Date().toISOString(),
+        daemon: Boolean(daemon),
+      };
+      await writeFile(SERVER_FILE, JSON.stringify(record, null, 2));
+      emit({
+        ok: true,
+        attached: false,
+        base,
+        pid: record.pid,
+        daemon: record.daemon,
+        log: path.relative(ROOT, SERVER_LOG),
+      });
       return;
+    }
+    if (!pidAlive(child.pid)) {
+      const daemon = await devServerState();
+      if (!daemon) {
+        await rm(SERVER_FILE, { force: true });
+        throw new CliError(
+          `\`vp run dev\` exited before ${base} answered`,
+          `Read ${path.relative(ROOT, SERVER_LOG)} for the failure.`,
+        );
+      }
+      await writeFile(
+        SERVER_FILE,
+        JSON.stringify({ pid: daemon.pid, base, startedAt: new Date().toISOString(), daemon: true }, null, 2),
+      );
     }
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
@@ -295,6 +332,29 @@ async function launch(base, flags) {
 async function stopServer() {
   const owner = await readJson(SERVER_FILE);
   if (!owner) return { ok: true, stopped: false, detail: "no server was started by this CLI" };
+  if (owner.daemon) {
+    const daemon = await devServerState();
+    if (!daemon || daemon.pid !== owner.pid) {
+      await rm(SERVER_FILE, { force: true });
+      return { ok: true, stopped: false, detail: "the recorded dev server had already stopped" };
+    }
+    const line = commandLine(owner.pid);
+    if (!/astro/.test(line)) {
+      throw new CliError(
+        `pid ${owner.pid} no longer looks like the dev server (${line || "unknown"})`,
+        "Refusing to stop it. Inspect the process, then delete .scratch/verify-m4t/server.json.",
+      );
+    }
+    const result = spawnSync("vpx", ["astro", "dev", "stop"], { cwd: ROOT, encoding: "utf8" });
+    await rm(SERVER_FILE, { force: true });
+    if (result.status !== 0) {
+      throw new CliError(
+        `\`vpx astro dev stop\` exited with ${result.status}`,
+        (result.stderr || result.stdout || "").trim() || "Inspect the dev server by hand.",
+      );
+    }
+    return { ok: true, stopped: true, pid: owner.pid, detail: "stopped the background dev server this CLI started" };
+  }
   if (!pidAlive(owner.pid)) {
     await rm(SERVER_FILE, { force: true });
     return { ok: true, stopped: false, detail: "the recorded server had already exited" };
@@ -485,7 +545,17 @@ async function runDaemon() {
         { timeout: 8000 },
       )
       .catch(() => {});
-    await target.waitForTimeout(150);
+    await target
+      .waitForFunction(
+        () =>
+          [...document.querySelectorAll('astro-island[client="load"]')].every((island) =>
+            island.hasAttribute("client-render-time"),
+          ),
+        null,
+        { timeout: 8000 },
+      )
+      .catch(() => {});
+    await target.waitForTimeout(250);
   };
 
   const hydrated = (target, selector) =>
@@ -592,6 +662,7 @@ async function runDaemon() {
 
     async press(args) {
       const target = await getPage();
+      await settle(target);
       await target.keyboard.press(args.key);
       await target.waitForTimeout(args.settleAfter ?? 150);
       return { ok: true, pressed: args.key };

@@ -9,14 +9,14 @@ import { ReadCvLogoIcon } from "@phosphor-icons/react";
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
-<header
-  class="fixed top-0 z-50 w-full border-b border-border bg-background text-foreground"
->
-  <div class="mx-auto flex h-4 w-full max-w-480 items-stretch justify-between">
+<header class="fixed top-0 z-50 w-full overflow-x-clip text-foreground">
+  <div
+    class="relative mx-auto flex h-4 w-full max-w-480 items-stretch justify-between before:pointer-events-none before:absolute before:-top-px before:-left-px before:-z-1 before:drop-shadow-chrome before:content-[url('/mobiletopchrome.png')] md:before:content-[url('/topleftchrome.png')] after:pointer-events-none after:absolute after:-top-0.5 after:-right-0.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-[url('/toprightchrome.png')]"
+  >
     <a
       href="/"
       aria-label="m4t.tf home"
-      class="group flex items-center gap-2 px-4 font-mono text-xs tracking-widest text-muted-foreground uppercase transition-colors duration-150 hover:text-foreground md:px-3"
+      class="group flex items-center gap-2 px-2 font-mono text-xs tracking-widest text-muted-foreground uppercase drop-shadow-emboss transition-colors duration-150 hover:text-foreground"
     >
       <img
         src="/favicon.png"
@@ -28,22 +28,24 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
       <!-- m4t.tf -->
     </a>
     <div class="flex items-stretch">
-      {currentPath !== "/cv" && (
-        <a
-          href="/cv"
-          aria-label="CV"
-          title="CV"
-          class="group grid place-items-center px-2 text-muted-foreground transition-colors duration-150 hover:text-foreground"
-        >
-          <ReadCvLogoIcon
-            size={12}
-            weight="bold"
-            aria-hidden="true"
-            className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
-          />
-        </a>
-      )}
-      <div class="flex border-l border-foreground/20">
+      {
+        currentPath !== "/cv" && (
+          <a
+            href="/cv"
+            aria-label="CV"
+            title="CV"
+            class="group grid place-items-center px-2 text-muted-foreground drop-shadow-emboss transition-colors duration-150 hover:text-foreground dark:text-muted dark:hover:text-background"
+          >
+            <ReadCvLogoIcon
+              size={12}
+              weight="bold"
+              aria-hidden="true"
+              className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
+            />
+          </a>
+        )
+      }
+      <div class="flex border-l border-foreground/20 dark:border-background/20">
         <CommandMenu
           pages={siteNavLinks}
           email={siteIdentity.email}
@@ -52,10 +54,10 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           client:load
         />
       </div>
-      <div class="flex border-l border-foreground/20">
+      <div class="flex border-l border-foreground/20 dark:border-background/20">
         <MotionControlButton />
       </div>
-      <div class="flex border-l border-foreground/20">
+      <div class="flex border-l border-foreground/20 dark:border-background/20">
         <ModeToggle client:load />
       </div>
     </div>

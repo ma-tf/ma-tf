@@ -25,7 +25,7 @@ to reach Home, Photography, Vignettes and Music.
 
 Preconditions:
 
-- `/blog` is reachable and 11 posts are published.
+- `/blog` is reachable and 12 posts are published.
 - A 1280x900 viewport, so the inner pane scrolls instead of the document.
 
 ```sh
@@ -41,7 +41,7 @@ node .agents/skills/verify-m4t/control-m4t.mjs eval 'location.pathname'
 node .agents/skills/verify-m4t/control-m4t.mjs screenshot blog-tag.png
 ```
 
-End state: 11 post links, the pane's `scrollTop` is greater than zero, the post
+End state: 12 post links, the pane's `scrollTop` is greater than zero, the post
 URL matches `/posts/...`, and the tag pill lands on `/tags/<tag>`.
 
 Tag journey:
@@ -56,7 +56,8 @@ node .agents/skills/verify-m4t/control-m4t.mjs eval 'location.pathname'
 ```
 
 End state: the orbit takes focus, ArrowRight rotates, and Enter lands on the
-front tag's page (from `/tags/typescript`, that is `/tags/dx`).
+front tag's page. With today's seed data the front tag is `mcp`, so the path
+becomes `/tags/mcp`.
 
 ## Gotchas
 
@@ -64,7 +65,10 @@ front tag's page (from `/tags/typescript`, that is `/tags/dx`).
   `--pane='[data-blog-scroll-target]'`.
 - The tag pages set `overflow: hidden` on the body and swallow wheel input to
   rotate the orbit; do not expect window scrolling there.
-- Post content comes from MDX in `src/content/posts`; a missing banner or bird
+- The orbit restores its rotation from `sessionStorage` under
+  `ma-tf:orbit-rotation`. Clear that key before asserting a fixed front tag, or
+  the answer depends on the previous tag page visited in the same tab.
+- Post content comes from MDX in `src/content/blog`; a missing banner or bird
   media is a CDN problem, not a route problem.
 - `/tags` itself shows "No tag selected"; only tag links inside posts point at
   individual tag pages.

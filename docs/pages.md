@@ -15,13 +15,18 @@
 
 ## Chrome
 
-The header and footer are one bar, top and bottom. Both draw a `border-border`
-hairline against the page, sit on `bg-background` and centre a `max-w-480` row
-`h-4` tall with 12px icons. The header's icon cells inset `px-2`; the footer's
-cells and the header brand `px-4 md:px-3`. Cells rest at `text-muted-foreground`
+The header and footer are one bar, top and bottom, each centring a `max-w-480`
+row `h-4` tall with 12px icons. The footer draws a `border-border` hairline and
+sits on `bg-background`; the header is transparent, has no bottom border, and
+paints `topleftchrome` and `toprightchrome` as pseudo-element plates at its outer
+corners, offset 8px up and 8px/7px outward. The header's icon cells and brand inset
+`px-2`; the footer's cells use `px-4 md:px-3`. Cells rest at `text-muted-foreground`
 and brighten to `text-foreground` on hover; the current page's cell already
-rests there. Where cells sit in a row they divide with
-`border-l border-foreground/20`. The footer carries uppercase `text-2xs` labels
+rests there. Header controls instead use `dark:text-muted` and hover to
+`dark:text-background`, so they stay dark against the chrome plates while their
+hover animations still play. Where cells sit in a row they divide with
+`border-l border-foreground/20`, which darkens to `dark:border-background/20` in
+the header. The footer carries uppercase `text-2xs` labels
 in its cells, the header icons only.
 
 ## Blog post content

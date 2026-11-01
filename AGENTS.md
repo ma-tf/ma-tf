@@ -35,6 +35,7 @@ optional background.
 - **Never launch Playwright or a browser probe on your own initiative.** Read
   the code — components, classes, data and their computed consequences — and
   settle the question from source. Run a probe only when the user asks for one;
+  using the `verify-m4t` skill is acceptable without asking.
   [docs/verification.md](docs/verification.md) ranks evidence but does not grant
   permission.
 - Never write comments. Only exception is when user explicitly asks.

@@ -26,9 +26,14 @@ node .agents/skills/verify-m4t/control-m4t.mjs launch
   developer's dev server is reused, never restarted.
 - Otherwise starts `vp run dev` in the background, which injects secrets through
   `secretspec`, and waits for the identity marker. Log:
-  `.scratch/verify-m4t/dev-server.log`.
+  `.scratch/verify-m4t/dev-server.log`. The CLI supplies a `SECRETSPEC_REASON`,
+  so an agent-invoked launch decrypts without prompting.
 - `vp run dev` needs `~/.config/age/keys.txt`. Without it `launch` refuses and
   tells you to start the server yourself.
+- Astro runs `astro dev` as a background daemon after `vpr generate`, so the
+  wrapper exits before the site answers. `launch` records the daemon pid from
+  `.astro/dev.json`; `stop` calls `vpx astro dev stop` only while that pid still
+  matches.
 - Never stop or kill a server you did not start ([docs/testing.md](../../../docs/testing.md)).
   `stop` only stops a server this CLI started.
 - Motion sweeps — hover, scroll, timing — belong on `vp run preview` via
