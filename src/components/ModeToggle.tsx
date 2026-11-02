@@ -27,7 +27,7 @@ export function ModeToggle() {
       onMouseLeave={stop}
       aria-label="Toggle theme"
       title="Toggle theme"
-      className="grid h-full cursor-pointer place-items-center px-2 text-muted-foreground drop-shadow-emboss transition-colors duration-150 hover:text-foreground dark:text-muted dark:hover:text-background"
+      className="grid h-full cursor-pointer place-items-center px-1.5 text-muted-foreground transition-colors duration-150 hover:text-foreground"
     >
       <SunAnimated ref={sun} trigger="none" size={12} weight="bold" className="block dark:hidden" />
       <MoonAnimated

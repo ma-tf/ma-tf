@@ -5,18 +5,27 @@ import MotionControlButton from "@components/MotionControlButton.astro";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { siteNavLinks } from "@lib/site-nav";
 import { ReadCvLogoIcon } from "@phosphor-icons/react";
+import { R2_PUBLIC_URL } from "astro:env/server";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const chromeTopMobile = `${R2_PUBLIC_URL}/misc/mobiletopchrome.png`;
+const chromeTopLeft = `${R2_PUBLIC_URL}/misc/topleftchrome.png`;
+const chromeTopRight = `${R2_PUBLIC_URL}/misc/toprightchrome.png`;
 ---
 
 <header class="fixed top-0 z-50 w-full overflow-x-clip text-foreground">
   <div
-    class="relative mx-auto flex h-4 w-full max-w-480 items-stretch justify-between before:pointer-events-none before:absolute before:-top-px before:-left-px before:-z-1 before:drop-shadow-chrome before:content-[url('/mobiletopchrome.png')] md:before:content-[url('/topleftchrome.png')] after:pointer-events-none after:absolute after:-top-0.5 after:-right-0.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-[url('/toprightchrome.png')]"
+    class="relative mx-auto flex h-4 w-full max-w-480 items-stretch justify-between before:pointer-events-none before:absolute before:-top-4 before:-left-83 before:-z-1 before:drop-shadow-chrome before:content-(--chrome-top-mobile) md:before:content-(--chrome-top-left) after:pointer-events-none after:absolute after:-top-1.5 after:-right-3 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-(--chrome-top-right)"
+    style={{
+      "--chrome-top-mobile": `url("${chromeTopMobile}")`,
+      "--chrome-top-left": `url("${chromeTopLeft}")`,
+      "--chrome-top-right": `url("${chromeTopRight}")`,
+    }}
   >
     <a
       href="/"
       aria-label="m4t.tf home"
-      class="group flex items-center gap-2 px-2 font-mono text-xs tracking-widest text-muted-foreground uppercase drop-shadow-emboss transition-colors duration-150 hover:text-foreground"
+      class="group flex items-center gap-2 bg-background/15 hover:bg-background/50 px-2 font-mono text-xs tracking-widest text-muted-foreground uppercase inset-shadow-chip-bottom rounded-b-xs transition-colors duration-150 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50"
     >
       <img
         src="/favicon.png"
@@ -27,14 +36,14 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
       />
       <!-- m4t.tf -->
     </a>
-    <div class="flex items-stretch">
+    <div class="flex items-stretch md:gap-0.5">
       {
         currentPath !== "/cv" && (
           <a
             href="/cv"
             aria-label="CV"
             title="CV"
-            class="group grid place-items-center px-2 text-muted-foreground drop-shadow-emboss transition-colors duration-150 hover:text-foreground dark:text-muted dark:hover:text-background"
+            class="group grid place-items-center px-1.5 text-muted-foreground transition-colors duration-150 hover:text-foreground md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50"
           >
             <ReadCvLogoIcon
               size={12}
@@ -45,7 +54,9 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           </a>
         )
       }
-      <div class="flex border-l border-foreground/20 dark:border-background/20">
+      <div
+        class="flex border-l border-foreground/20 transition-colors duration-150 md:border-l-0 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50 dark:border-background/20"
+      >
         <CommandMenu
           pages={siteNavLinks}
           email={siteIdentity.email}
@@ -54,10 +65,14 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           client:load
         />
       </div>
-      <div class="flex border-l border-foreground/20 dark:border-background/20">
+      <div
+        class="flex border-l border-foreground/20 transition-colors duration-150 md:border-l-0 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50 dark:border-background/20"
+      >
         <MotionControlButton />
       </div>
-      <div class="flex border-l border-foreground/20 dark:border-background/20">
+      <div
+        class="flex border-l border-foreground/20 transition-colors duration-150 md:border-l-0 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50 dark:border-background/20"
+      >
         <ModeToggle client:load />
       </div>
     </div>
