@@ -95,6 +95,17 @@ export default defineConfig({
     },
     overrides: [
       {
+        files: ["**/*.astro"],
+        rules: {
+          "shadcn/no-arbitrary-values": "off",
+          "shadcn/no-inline-styles": "off",
+          "shadcn/no-raw-colors": "off",
+          "shadcn/no-restyle": "off",
+          "shadcn/no-unknown-classes": "off",
+          "shadcn/require-static-classes": "off",
+        },
+      },
+      {
         files: ["src/components/ui/**"],
         rules: {
           "modules/no-barrel-exports": "off",

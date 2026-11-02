@@ -23,6 +23,11 @@ The table lists rule, time, relative share, calls and source (`native`,
 `type-aware`, `js-plugin`), followed by a `JS plugin runtime` summary. Collecting
 timings slows the run, so read it as a relative breakdown.
 
+Shadcn's class rules are off for `.astro` files: Oxlint parses only the
+frontmatter and `<script>` blocks, never the markup, so those rules cannot find
+anything there. The Tailwind rules still read astro markup from disk for the
+same reason.
+
 ## Documentation budget
 
 `docs/max-chars` caps every markdown file agents read at 5000 characters:

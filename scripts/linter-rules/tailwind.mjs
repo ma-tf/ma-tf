@@ -166,19 +166,15 @@ function findProject(dir) {
   }
 }
 
-function projectFor(filename) {
-  const resolved = path.resolve(filename);
-  if (projectFiles.has(resolved)) return projectFiles.get(resolved);
-  const found = findProject(path.dirname(resolved));
-  projectFiles.set(resolved, found);
-  return found;
-}
-
 function projectAt(dir) {
   if (projectFiles.has(dir)) return projectFiles.get(dir);
   const found = findProject(dir);
   projectFiles.set(dir, found);
   return found;
+}
+
+function projectFor(filename) {
+  return projectAt(path.dirname(path.resolve(filename)));
 }
 
 function templateStart(source) {
@@ -501,6 +497,14 @@ function isSourceFile(context, filename) {
   return sourceRelative(context, filename).startsWith(`src${path.sep}`);
 }
 
+const SCRIPT_FILE = /\.(?:[cm]?[jt]sx?)$/;
+
+function fileText(context, filename) {
+  const text = SCRIPT_FILE.test(filename) ? context.sourceCode?.text : undefined;
+  if (typeof text === "string") return text;
+  return readTemplate(filename);
+}
+
 function maxMdVariants(source) {
   const found = source.match(/max-md:[^\s"'`]+/g);
   if (!found) return null;
@@ -523,7 +527,7 @@ const noMaxMd = {
       Program(node) {
         const filename = contextFilename(context);
         if (!isSourceFile(context, filename)) return;
-        const source = readTemplate(filename);
+        const source = fileText(context, filename);
         if (source === null) return;
         const variants = maxMdVariants(source);
         if (!variants) return;
