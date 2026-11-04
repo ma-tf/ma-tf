@@ -1,18 +1,8 @@
 import type { ComponentProps } from "react";
 
 import { SectionIndicator } from "@components/section-indicator";
+import { HomeGrid } from "@features/home/home-grid";
 import { cn } from "cn";
-
-function HomeTitle({ children, className, ...props }: ComponentProps<"span">) {
-  return (
-    <span
-      className={cn("font-heading text-9xl font-semibold tracking-tighter", className)}
-      {...props}
-    >
-      {children}
-    </span>
-  );
-}
 
 function HomeSectionNumber({ className, ...props }: ComponentProps<"span">) {
   return (
@@ -26,9 +16,9 @@ function HomeSectionNumber({ className, ...props }: ComponentProps<"span">) {
   );
 }
 
-function HomeSectionLink({ children, className, ...props }: ComponentProps<"a">) {
+function HomeSectionRow({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <a
+    <div
       className={cn(
         "section group flex items-center gap-8 transition-opacity duration-150 motion-reduce:transition-none",
         className,
@@ -36,51 +26,62 @@ function HomeSectionLink({ children, className, ...props }: ComponentProps<"a">)
       {...props}
     >
       {children}
+    </div>
+  );
+}
+
+function HomeSectionTitleLink({ children, className, ...props }: ComponentProps<"a">) {
+  return (
+    <a className={cn("font-heading text-9xl font-semibold tracking-tighter", className)} {...props}>
+      {children}
     </a>
   );
 }
 
 export function HomePage() {
   return (
-    <nav
-      aria-label="Sections"
-      className="absolute top-1/2 flex -translate-y-1/2 flex-col px-16 has-[>a:focus-visible]:[&>a:not(:hover,:focus-visible)]:opacity-35 has-[>a:hover]:[&>a:not(:hover,:focus-visible)]:opacity-35"
-    >
-      <HomeSectionLink href="/blog">
-        <SectionIndicator />
-        <HomeSectionNumber />
-        <HomeTitle>Blog</HomeTitle>
-      </HomeSectionLink>
+    <div className="relative isolate flex flex-1 flex-col" data-grid-spotlight>
+      <HomeGrid />
+      <nav
+        aria-label="Sections"
+        className="absolute top-1/2 flex -translate-y-1/2 flex-col px-16 has-[a:focus-visible]:[&>div:not(:has(a:hover,a:focus-visible))]:opacity-35 has-[a:hover]:[&>div:not(:has(a:hover,a:focus-visible))]:opacity-35"
+      >
+        <HomeSectionRow>
+          <SectionIndicator />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink href="/blog">Blog</HomeSectionTitleLink>
+        </HomeSectionRow>
 
-      <HomeSectionLink href="/projects">
-        <SectionIndicator />
-        <HomeSectionNumber />
-        <HomeTitle>Projects</HomeTitle>
-      </HomeSectionLink>
+        <HomeSectionRow>
+          <SectionIndicator />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink href="/projects">Projects</HomeSectionTitleLink>
+        </HomeSectionRow>
 
-      <HomeSectionLink href="/photography">
-        <SectionIndicator />
-        <HomeSectionNumber />
-        <HomeTitle>Photography</HomeTitle>
-      </HomeSectionLink>
+        <HomeSectionRow>
+          <SectionIndicator />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink href="/photography">Photography</HomeSectionTitleLink>
+        </HomeSectionRow>
 
-      <HomeSectionLink href="/vignettes">
-        <SectionIndicator />
-        <HomeSectionNumber />
-        <HomeTitle>Vignettes</HomeTitle>
-      </HomeSectionLink>
+        <HomeSectionRow>
+          <SectionIndicator />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink href="/vignettes">Vignettes</HomeSectionTitleLink>
+        </HomeSectionRow>
 
-      <HomeSectionLink href="/graphics">
-        <SectionIndicator />
-        <HomeSectionNumber />
-        <HomeTitle>Graphics</HomeTitle>
-      </HomeSectionLink>
+        <HomeSectionRow>
+          <SectionIndicator />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink href="/graphics">Graphics</HomeSectionTitleLink>
+        </HomeSectionRow>
 
-      <HomeSectionLink href="/music">
-        <SectionIndicator color="taupe" />
-        <HomeSectionNumber />
-        <HomeTitle>Music</HomeTitle>
-      </HomeSectionLink>
-    </nav>
+        <HomeSectionRow>
+          <SectionIndicator color="taupe" />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink href="/music">Music</HomeSectionTitleLink>
+        </HomeSectionRow>
+      </nav>
+    </div>
   );
 }

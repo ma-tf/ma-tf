@@ -8,9 +8,9 @@ const sectionIndicatorVariants = cva(
   {
     variants: {
       color: {
-        gray: "bg-foreground/30 group-hover:w-3.5 group-hover:bg-foreground/30 group-focus-visible:w-3.5 group-focus-visible:bg-foreground/30",
+        gray: "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-foreground/30 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-foreground/30",
         taupe:
-          "bg-foreground/30 group-hover:w-3.5 group-hover:bg-taupe-400 group-hover:dark:bg-taupe-800 group-focus-visible:w-3.5 group-focus-visible:bg-taupe-400 group-focus-visible:dark:bg-taupe-800",
+          "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-taupe-400 group-has-[a:hover]:dark:bg-taupe-800 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-taupe-400 group-has-[a:focus-visible]:dark:bg-taupe-800",
       },
     },
     defaultVariants: {
@@ -24,5 +24,9 @@ export function SectionIndicator({
   color,
   ...props
 }: ComponentProps<"span"> & VariantProps<typeof sectionIndicatorVariants>) {
-  return <span className={cn(sectionIndicatorVariants({ color, className }))} {...props} />;
+  return (
+    <span className={cn("flex w-3.5 shrink-0 justify-start", className)} {...props}>
+      <span className={cn(sectionIndicatorVariants({ color }))} />
+    </span>
+  );
 }

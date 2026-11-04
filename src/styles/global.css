@@ -222,6 +222,58 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   animation-delay: var(--delay, 0s);
 }
 
+@keyframes grid-pan {
+  to {
+    transform: translate(-96px, -96px);
+  }
+}
+
+@utility animate-grid-pan {
+  position: absolute;
+  inset: -96px;
+  background-image:
+    linear-gradient(to right, var(--border) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, var(--border) 1.5px, transparent 1.5px);
+  background-size: 96px 96px;
+  animation: grid-pan 18s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-grid-pan {
+    animation: none;
+  }
+}
+
+@utility grid-spotlight-* {
+  --spotlight-radius: calc(--value(integer) * 1px);
+  opacity: var(--grid-o, 0);
+  mask-image: radial-gradient(
+    circle var(--spotlight-radius) at var(--grid-x, -1000px) var(--grid-y, -1000px),
+    black 0%,
+    transparent 70%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle var(--spotlight-radius) at var(--grid-x, -1000px) var(--grid-y, -1000px),
+    black 0%,
+    transparent 70%
+  );
+}
+
+@utility grid-spotlight-lines-* {
+  --spotlight-strength: calc(--value(integer) * 1%);
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklch, var(--foreground) var(--spotlight-strength), transparent) 1.5px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--foreground) var(--spotlight-strength), transparent) 1.5px,
+      transparent 2px
+    );
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in {
     animation: none;
