@@ -32,7 +32,7 @@ function HomeSectionRow({ children, className, ...props }: ComponentProps<"div">
 
 function HomeSectionTitleLink({ children, className, ...props }: ComponentProps<"a">) {
   return (
-    <a className={cn("font-heading text-9xl font-semibold tracking-tighter", className)} {...props}>
+    <a className={cn("font-heading text-8xl font-semibold tracking-tighter", className)} {...props}>
       {children}
     </a>
   );
@@ -40,46 +40,58 @@ function HomeSectionTitleLink({ children, className, ...props }: ComponentProps<
 
 export function HomePage() {
   return (
-    <div className="relative isolate flex flex-1 flex-col" data-grid-spotlight>
+    <div className="relative isolate flex flex-1 flex-col wash-state" data-grid-spotlight>
       <HomeGrid />
       <nav
         aria-label="Sections"
         className="absolute top-1/2 flex -translate-y-1/2 flex-col px-16 has-[a:focus-visible]:[&>div:not(:has(a:hover,a:focus-visible))]:opacity-35 has-[a:hover]:[&>div:not(:has(a:hover,a:focus-visible))]:opacity-35"
       >
         <HomeSectionRow>
-          <SectionIndicator />
+          <SectionIndicator color="emerald" />
           <HomeSectionNumber />
-          <HomeSectionTitleLink href="/blog">Blog</HomeSectionTitleLink>
+          <HomeSectionTitleLink data-wash="emerald" href="/blog">
+            Blog
+          </HomeSectionTitleLink>
         </HomeSectionRow>
 
         <HomeSectionRow>
           <SectionIndicator />
           <HomeSectionNumber />
-          <HomeSectionTitleLink href="/projects">Projects</HomeSectionTitleLink>
+          <HomeSectionTitleLink data-wash="gray" href="/projects">
+            Projects
+          </HomeSectionTitleLink>
         </HomeSectionRow>
 
         <HomeSectionRow>
           <SectionIndicator />
           <HomeSectionNumber />
-          <HomeSectionTitleLink href="/photography">Photography</HomeSectionTitleLink>
+          <HomeSectionTitleLink data-wash="gray" href="/photography">
+            Photography
+          </HomeSectionTitleLink>
+        </HomeSectionRow>
+
+        <HomeSectionRow>
+          <SectionIndicator color="blue" />
+          <HomeSectionNumber />
+          <HomeSectionTitleLink data-wash="blue" href="/vignettes">
+            Vignettes
+          </HomeSectionTitleLink>
         </HomeSectionRow>
 
         <HomeSectionRow>
           <SectionIndicator />
           <HomeSectionNumber />
-          <HomeSectionTitleLink href="/vignettes">Vignettes</HomeSectionTitleLink>
-        </HomeSectionRow>
-
-        <HomeSectionRow>
-          <SectionIndicator />
-          <HomeSectionNumber />
-          <HomeSectionTitleLink href="/graphics">Graphics</HomeSectionTitleLink>
+          <HomeSectionTitleLink data-wash="gray" href="/graphics">
+            Graphics
+          </HomeSectionTitleLink>
         </HomeSectionRow>
 
         <HomeSectionRow>
           <SectionIndicator color="taupe" />
           <HomeSectionNumber />
-          <HomeSectionTitleLink href="/music">Music</HomeSectionTitleLink>
+          <HomeSectionTitleLink data-wash="taupe" href="/music">
+            Music
+          </HomeSectionTitleLink>
         </HomeSectionRow>
       </nav>
     </div>

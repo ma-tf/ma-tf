@@ -244,6 +244,24 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   }
 }
 
+@utility wash-state {
+  &:has([data-wash]:is(:hover, :focus-visible)) [data-grid] {
+    opacity: 0;
+  }
+  &:has([data-wash="gray"]:is(:hover, :focus-visible)) [data-wash="gray"] {
+    opacity: 1;
+  }
+  &:has([data-wash="taupe"]:is(:hover, :focus-visible)) [data-wash="taupe"] {
+    opacity: 1;
+  }
+  &:has([data-wash="blue"]:is(:hover, :focus-visible)) [data-wash="blue"] {
+    opacity: 1;
+  }
+  &:has([data-wash="emerald"]:is(:hover, :focus-visible)) [data-wash="emerald"] {
+    opacity: 1;
+  }
+}
+
 @utility grid-spotlight-* {
   --spotlight-radius: calc(--value(integer) * 1px);
   opacity: var(--grid-o, 0);

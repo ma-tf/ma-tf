@@ -25,4 +25,14 @@
 
   --color-taupe-400: oklch(0.701 0.05 76);
   --color-taupe-800: oklch(0.381 0.038 76);
+
+  --color-vignettes-400: oklch(0.65 0.06 255);
+  --color-vignettes-800: oklch(0.45 0.05 255);
+
+  --color-emerald-50: oklch(97.9% 0.021 166.113);
+  --color-emerald-100: oklch(95% 0.052 163.051);
+  --color-emerald-400: oklch(76.5% 0.177 163.223);
+  --color-emerald-800: oklch(43.2% 0.095 166.913);
+  --color-emerald-900: oklch(37.8% 0.077 168.94);
+  --color-emerald-950: oklch(26.2% 0.051 172.552);
 }
