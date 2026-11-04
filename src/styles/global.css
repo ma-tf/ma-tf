@@ -553,9 +553,18 @@ html[data-motion="skipped"] .animate-fade-in-scroll {
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.9));
 }
 
-/* Engraved icon highlight for chrome plates */
-@utility drop-shadow-emboss {
-  filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.85)) drop-shadow(0 3px 4px rgb(0 0 0 / 0.35));
+/* Inset shadow on the top, left and right of footer chips */
+@utility inset-shadow-chip {
+  box-shadow:
+    inset 1px 2px 4px rgb(0 0 0 / 0.4),
+    inset -1px 0 4px rgb(0 0 0 / 0.4);
+}
+
+/* Inset shadow on the bottom, left and right of header chips */
+@utility inset-shadow-chip-bottom {
+  box-shadow:
+    inset 1px 0 4px rgb(0 0 0 / 0.4),
+    inset -1px -2px 4px rgb(0 0 0 / 0.4);
 }
 
 /* Corner brackets */

@@ -22,4 +22,7 @@
   --color-sage-800: oklch(0.423 0.037 158);
   --color-sage-900: oklch(0.343 0.022 158);
   --color-sage-950: oklch(0.273 0.014 158);
+
+  --color-taupe-400: oklch(0.701 0.05 76);
+  --color-taupe-800: oklch(0.381 0.038 76);
 }
