@@ -7,7 +7,7 @@ export function PrivacyTitle({ className, ...props }: ComponentProps<"h1">) {
     <h1
       data-parallax-push
       className={cn(
-        "animate-fade-in title-fit font-semibold uppercase animation-delay-1200 vertical-text",
+        "animate-fade-in title-fit font-semibold uppercase select-none animation-delay-1200 vertical-text",
         className,
       )}
       {...props}

@@ -29,6 +29,7 @@ const { baseUrl } = Astro.props;
     </StillLifeHeroHeader>
     <StillLifeContent>
       <section
+        data-parallax={40}
         class:list={[stillLifeSectionClass, "md:text-xs"]}
       >
         <slot />

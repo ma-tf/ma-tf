@@ -6,7 +6,8 @@ import {
 } from "@lib/typewriter";
 
 const CONTROL_SELECTOR = "[data-motion-control]";
-const ENTRANCE_SELECTOR = '[class*="animate-fade-up"], .animate-fade-in';
+const ENTRANCE_SELECTOR =
+  '[class*="animate-fade-up"], [class*="animate-fade-in"]:not([class*="animate-fade-in-scroll"])';
 const TYPEWRITER_SELECTOR = "[data-typewriter]";
 const ENTRANCE_OR_TYPEWRITER = `${ENTRANCE_SELECTOR}, ${TYPEWRITER_SELECTOR}`;
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";

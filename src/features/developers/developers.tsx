@@ -34,7 +34,7 @@ export function DevelopersTitle({ className, ...props }: ComponentProps<"h1">) {
       data-parallax={30}
       data-parallax-push
       className={cn(
-        "animate-fade-in title-fit font-semibold uppercase animation-delay-1200 vertical-text md:text-8xl md:animation-delay-2000",
+        "animate-fade-in title-fit font-semibold uppercase select-none animation-delay-1200 vertical-text md:text-8xl md:animation-delay-2000",
         className,
       )}
       {...props}

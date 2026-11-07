@@ -12,20 +12,24 @@ import { R2_PUBLIC_URL } from "astro:env/server";
   <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
     <Fragment slot="title"><ContactTitle>Contact</ContactTitle></Fragment>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={10}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2000"
     >
       <p
-        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
+        data-parallax={5}
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2300"
       >
         Email me at <Link href="mailto:admin@m4t.tf">admin@m4t.tf</Link> about my
         work, projects, or professional experience.
       </p>
     </StillLifeCard>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={15}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2150"
     >
       <p
-        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
+        data-parallax={10}
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2450"
       >
         For verified facts about my background, see my <Link
           href="/cv"
@@ -37,10 +41,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
       </p>
     </StillLifeCard>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={20}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2300"
     >
       <p
-        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
+        data-parallax={15}
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2600"
       >
         My software projects and open-source work live on <Link
           href="https://github.com/ma-tf"

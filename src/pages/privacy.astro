@@ -12,10 +12,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
   <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
     <Fragment slot="title"><PrivacyTitle>Privacy</PrivacyTitle></Fragment>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={10}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2000"
     >
       <div
-        class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
+        data-parallax={5}
+        class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-2300"
       >
         <p>
           This site does not use first-party analytics, advertising, or tracking
@@ -25,10 +27,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
       </div>
     </StillLifeCard>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={15}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2150"
     >
       <div
-        class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
+        data-parallax={10}
+        class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-2450"
       >
         <p>
           Some pages embed media from Bandcamp and Mixcloud. These services may
@@ -39,10 +43,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
       </div>
     </StillLifeCard>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={20}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2300"
     >
       <div
-        class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
+        data-parallax={15}
+        class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-2600"
       >
         <p>
           If you have a question about privacy on this site, see the <Link

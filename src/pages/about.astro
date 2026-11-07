@@ -13,10 +13,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
   <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
     <Fragment slot="title"><AboutTitle>About</AboutTitle></Fragment>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={10}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2000"
     >
       <p
-        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1050"
+        data-parallax={5}
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2300"
       >
         I'm {siteIdentity.name}, a full-stack developer. I started programming in
         2013 and began working professionally in 2018. My experience spans public
@@ -24,10 +26,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
       </p>
     </StillLifeCard>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={15}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2150"
     >
       <p
-        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1100"
+        data-parallax={10}
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2450"
       >
         This site is a record of the things I make and learn. Alongside software
         projects and writing, it includes photography, graphics, music, and other
@@ -35,10 +39,12 @@ import { R2_PUBLIC_URL } from "astro:env/server";
       </p>
     </StillLifeCard>
     <StillLifeCard
-      className="animate-reveal md:opacity-100 md:transform-none"
+      data-parallax={20}
+      className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2300"
     >
       <p
-        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-1150"
+        data-parallax={15}
+        class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2600"
       >
         You can read about my professional experience on the <Link
           href="/cv"

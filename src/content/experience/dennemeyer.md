@@ -9,4 +9,5 @@ start: "2022-05"
 - Own agent experience (AX): the tooling, conventions and skills that make AI agents productive in the codebase.
 - Prototyped an MCP server exposing SimpleIP's data to agent workflows.
 - Own SimpleIP's observability, taking it from Kubernetes container logs to OpenTelemetry metrics, dashboards, alerting and distributed tracing, and replacing scattered log lines with one structured event per unit of work.
+- Built a C# trace analysis tool that identifies hotspots from dotnet-trace profiler output.
 - Raised test coverage on a brownfield codebase from the teens to 80%, and parallelised the CI pipeline for faster feedback.

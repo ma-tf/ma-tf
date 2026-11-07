@@ -79,6 +79,28 @@ describe("startMotionControl", () => {
     expect(control.dataset.mode).toBe("hidden");
   });
 
+  it("detects responsive-prefixed entrances such as md:animate-fade-in", () => {
+    const entrance = document.createElement("div");
+    entrance.className = "md:animate-fade-in";
+    document.body.append(entrance);
+    const control = renderControl();
+
+    startMotionControl();
+
+    expect(control.dataset.mode).toBe("reset");
+  });
+
+  it("ignores the scroll-driven animate-fade-in-scroll", () => {
+    const scroller = document.createElement("div");
+    scroller.className = "animate-fade-in-scroll";
+    document.body.append(scroller);
+    const control = renderControl();
+
+    startMotionControl();
+
+    expect(control.dataset.mode).toBe("hidden");
+  });
+
   it("starts in reset mode on a repeat visit", () => {
     document.documentElement.dataset.motion = "skipped";
     addEntrance();
