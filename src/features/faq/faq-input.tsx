@@ -25,17 +25,26 @@ function FaqInput({ className, type, value, onFocus, onBlur, ...props }: Compone
     setFading(false);
     if (!idle) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let fadeTimer = 0;
-    const timer = window.setInterval(() => {
-      setFading(true);
-      fadeTimer = window.setTimeout(() => {
-        setSampleIndex((index) => (index + 1) % SAMPLES.length);
-        setFading(false);
-      }, FADE_MS);
-    }, ROTATE_MS);
+    let cancelled = false;
+    let rotateId = 0;
+    let fadeId = 0;
+    const tick = () => {
+      rotateId = window.setTimeout(() => {
+        if (cancelled) return;
+        setFading(true);
+        fadeId = window.setTimeout(() => {
+          if (cancelled) return;
+          setSampleIndex((index) => (index + 1) % SAMPLES.length);
+          setFading(false);
+          tick();
+        }, FADE_MS);
+      }, ROTATE_MS);
+    };
+    tick();
     return () => {
-      window.clearInterval(timer);
-      window.clearTimeout(fadeTimer);
+      cancelled = true;
+      window.clearTimeout(rotateId);
+      window.clearTimeout(fadeId);
     };
   }, [idle]);
 
