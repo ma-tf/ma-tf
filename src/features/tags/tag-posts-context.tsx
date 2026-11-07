@@ -1,7 +1,7 @@
 import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 
 const TAG_POSTS_PAGE_SIZE = 10;
 
@@ -46,11 +46,7 @@ export function TagPostsProvider({
   const totalPages = Math.max(1, Math.ceil(posts.length / TAG_POSTS_PAGE_SIZE));
   const [page, setPage] = useState(0);
 
-  useEffect(() => {
-    setPage(0);
-  }, [tagName]);
-
-  const currentPage = Math.min(page, totalPages - 1);
+  const currentPage = page;
   const value = useMemo<TagPostsValue>(() => {
     const pagePosts = posts.slice(
       currentPage * TAG_POSTS_PAGE_SIZE,

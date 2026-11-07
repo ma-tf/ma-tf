@@ -110,7 +110,12 @@ export function SelectedTagPanel({ selected, postsByTag, allPosts }: SelectedTag
       className="absolute top-0 right-8 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12 xl:left-218"
     >
       <PanelNav />
-      <TagPostsProvider selected={selected} postsByTag={postsByTag} allPosts={allPosts}>
+      <TagPostsProvider
+        key={selected?.tag ?? "blog"}
+        selected={selected}
+        postsByTag={postsByTag}
+        allPosts={allPosts}
+      >
         <TagPosts />
       </TagPostsProvider>
     </div>
