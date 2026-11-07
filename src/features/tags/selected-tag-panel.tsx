@@ -2,61 +2,75 @@ import type { PlainPost } from "@features/blog/post-data";
 import type { Tag } from "@features/tags/tag-data";
 
 import { NavButton } from "@components/nav-button";
-import { useMemo } from "react";
+import { TagPostsProvider, useTagPosts } from "@features/tags/tag-posts-context";
+import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react";
+import { cn } from "cn";
+import { useEffect, useRef } from "react";
 
-type MonthGroup = {
-  key: string;
-  posts: PlainPost[];
-};
-
-function groupPostsByMonth(posts: PlainPost[]): MonthGroup[] {
-  const map = new Map<string, PlainPost[]>();
-  for (const post of posts) {
-    const key = post.publicationDate.slice(0, 7);
-    if (!map.has(key)) map.set(key, []);
-    map.get(key)!.push(post);
-  }
-  return [...map.entries()].map(([key, groupPosts]) => ({ key, posts: groupPosts }));
-}
-
-function useGroupedByTag(postsByTag: Record<string, PlainPost[]>): Record<string, MonthGroup[]> {
-  return useMemo(() => {
-    const result: Record<string, MonthGroup[]> = {};
-    for (const [tag, posts] of Object.entries(postsByTag)) {
-      result[tag] = groupPostsByMonth(posts);
-    }
-    return result;
-  }, [postsByTag]);
-}
-
-function TagPosts({
-  selected,
-  groupedByTag,
-}: {
-  selected: Tag;
-  groupedByTag: Record<string, MonthGroup[]>;
-}) {
-  const groups = groupedByTag[selected.tag] ?? [];
+function TagPostsPagination() {
+  const { currentPage, totalPages, goToPage } = useTagPosts();
   return (
-    <div className="flex flex-col gap-4 overflow-y-auto">
-      <span className="text-3xl font-bold">{selected.tag}</span>
-      {groups.map(({ key, posts }) => (
-        <section key={key} className="flex flex-col gap-2">
-          <span className="text-xs font-medium text-muted-foreground">{`:: ${key}`}</span>
-          <ul className="flex flex-col gap-2">
-            {posts.map((post) => (
-              <li key={post.slug} className="group relative">
-                <a href={`/posts/${post.slug}`} className="block truncate text-xs font-semibold">
-                  <span className="inline-block transition-transform duration-150 group-hover:translate-x-4">
-                    {post.title}
-                  </span>
-                </a>
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-4 bg-linear-to-l from-background to-transparent" />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+    <nav aria-label="Tag posts pages" className="flex w-fit items-center gap-2">
+      <ArrowLeftIcon
+        size={14}
+        aria-label="Previous page"
+        onClick={() => goToPage(currentPage - 1)}
+        className={cn(
+          "shrink-0",
+          currentPage === 0
+            ? "cursor-not-allowed opacity-40"
+            : "cursor-pointer text-foreground transition-colors duration-150 hover:text-foreground/70",
+        )}
+      />
+      <span className="text-xs text-muted-foreground">
+        {currentPage + 1}/{totalPages}
+      </span>
+      <ArrowRightIcon
+        size={14}
+        aria-label="Next page"
+        onClick={() => goToPage(currentPage + 1)}
+        className={cn(
+          "shrink-0",
+          currentPage === totalPages - 1
+            ? "cursor-not-allowed opacity-40"
+            : "cursor-pointer text-foreground transition-colors duration-150 hover:text-foreground/70",
+        )}
+      />
+    </nav>
+  );
+}
+
+function TagPosts() {
+  const { tagName, groups, currentPage, totalPages } = useTagPosts();
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: 0 });
+  }, [currentPage]);
+
+  return (
+    <div className="flex min-h-0 flex-col gap-4">
+      <span className="text-3xl font-bold">{tagName}</span>
+      <div ref={listRef} className="flex min-h-0 flex-col gap-4 overflow-y-auto">
+        {groups.map(({ key, posts }) => (
+          <section key={key} className="flex flex-col gap-2">
+            <span className="text-xs font-medium text-muted-foreground">{`:: ${key}`}</span>
+            <ul className="flex flex-col gap-2">
+              {posts.map((post) => (
+                <li key={post.slug} className="group relative">
+                  <a href={`/posts/${post.slug}`} className="block truncate text-xs font-semibold">
+                    <span className="inline-block transition-transform duration-150 group-hover:translate-x-4">
+                      {post.title}
+                    </span>
+                  </a>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 w-4 bg-linear-to-l from-background to-transparent" />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+      {totalPages > 1 && <TagPostsPagination />}
     </div>
   );
 }
@@ -71,8 +85,6 @@ type SelectedTagPanelProps = {
 };
 
 export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps) {
-  const groupedByTag = useGroupedByTag(postsByTag);
-
   return (
     <div
       data-parallax={60}
@@ -93,7 +105,13 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
           ))}
         </div>
       </nav>
-      {selected ? <TagPosts selected={selected} groupedByTag={groupedByTag} /> : <EmptyPosts />}
+      {selected ? (
+        <TagPostsProvider selected={selected} postsByTag={postsByTag}>
+          <TagPosts />
+        </TagPostsProvider>
+      ) : (
+        <EmptyPosts />
+      )}
     </div>
   );
 }
