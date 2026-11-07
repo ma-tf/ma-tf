@@ -27,6 +27,7 @@ const { baseUrl } = Astro.props;
       <slot name="title" />
       <ScrollCue />
     </StillLifeHeroHeader>
+    <slot name="header-aside" />
     <StillLifeContent>
       <section
         data-parallax={40}

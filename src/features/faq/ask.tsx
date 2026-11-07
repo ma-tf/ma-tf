@@ -32,7 +32,6 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
         aria-label="Ask about this site"
-        placeholder="Ask about this site…"
       />
       <button
         type="submit"
@@ -94,7 +93,7 @@ export function AskPanel() {
   const openQuestion = () => {
     const id = next.current;
     next.current += 1;
-    setUnits((current) => [...current, id]);
+    setUnits((current) => [...current.slice(-1), id]);
   };
 
   return (

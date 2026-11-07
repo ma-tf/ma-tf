@@ -5,13 +5,37 @@ import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { StillLifeCard } from "@components/still-life-hero";
 import StillLifePage from "@components/still-life-page.astro";
 import { AboutTitle } from "@features/about/about";
+import { AskPanel } from "@features/faq/ask";
 import { siteIdentity } from "@features/seo/site-metadata";
+import { askEnabled } from "@lib/feature-flags";
 import { R2_PUBLIC_URL } from "astro:env/server";
 ---
 
 <Layout>
   <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
     <Fragment slot="title"><AboutTitle>About</AboutTitle></Fragment>
+    {askEnabled && (
+    <Fragment slot="header-aside">
+      <StillLifeCard
+        data-parallax={30}
+        className="hidden animate-reveal md:col-span-3 md:col-start-7 md:row-start-1 md:block md:self-end md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2300"
+      >
+        <div
+          data-parallax={10}
+          class="relative flex flex-col px-4 pt-6 pb-4 md:px-2 md:pt-4 md:pb-2"
+        >
+          <h2
+            class="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase md:left-2 md:animate-fade-up md:animation-delay-2900"
+          >
+            Questions
+          </h2>
+          <div class="md:animate-fade-up md:animation-delay-3500">
+            <AskPanel client:visible />
+          </div>
+        </div>
+      </StillLifeCard>
+    </Fragment>
+    )}
     <StillLifeCard
       data-parallax={10}
       className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2000"
@@ -56,5 +80,23 @@ import { R2_PUBLIC_URL } from "astro:env/server";
         page.
       </p>
     </StillLifeCard>
+    {askEnabled && (
+    <StillLifeCard
+      data-parallax={25}
+      className="animate-reveal md:hidden"
+    >
+      <div
+        data-parallax={20}
+        class="relative flex flex-col px-4 pt-6 pb-4"
+      >
+        <h2
+          class="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase"
+        >
+          Questions
+        </h2>
+        <AskPanel client:visible />
+      </div>
+    </StillLifeCard>
+    )}
   </StillLifePage>
 </Layout>

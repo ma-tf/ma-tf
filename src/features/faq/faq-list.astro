@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from "astro:content";
+import { AskPanel } from "@features/faq/ask";
+import { FaqRow } from "@features/faq/faq-row";
+import { askEnabled } from "@lib/feature-flags";
+
+const entries = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order);
+const rows = await Promise.all(
+	entries.map(async (entry) => ({
+		question: entry.data.question,
+		Content: (await render(entry)).Content,
+	})),
+);
+---
+
+<div class="flex w-full flex-col [&>astro-island:not(:last-child)>*]:border-b">
+	{rows.map(({ question, Content }) => (
+		<FaqRow question={question} client:visible>
+			<Content />
+		</FaqRow>
+	))}
+	{askEnabled && <AskPanel client:visible />}
+</div>

@@ -1,5 +1,5 @@
 {
-  "sourceHash": "43c28cb9e7b975c661822d8d0c9f425ac0642a7c256017f8d21ba27376210fe1",
+  "sourceHash": "bf8defcf13925afa2e9b975af7535619af9ed6197d32f008ae86905560b8eb68",
   "pages": [
     {
       "url": "https://m4t.tf/",
@@ -14,7 +14,7 @@
     {
       "url": "https://m4t.tf/about",
       "title": "About",
-      "content": "---\ntitle: \"About | Matt Fehrenbach\"\ndescription: \"About Matt Fehrenbach, a full-stack developer, and the work and interests collected on this site.\"\ncanonical: https://m4t.tf/about\n---\n\n[![](/favicon.png)](/)[](/cv \"CV\")\n\n![](https://cdn.m4t.tf/about/about-bg-hexagons.webp)![](https://cdn.m4t.tf/about/about-bg-chevrons.webp)![](https://cdn.m4t.tf/about/about-bg-zigzag.webp)![](https://cdn.m4t.tf/about/about-bg-table-pedestal.webp)![](https://cdn.m4t.tf/about/about-bg-table-top.webp)![](https://cdn.m4t.tf/about/about-bg-arrows.webp)\n\nAbout\n=====\n\nScroll down\n\nI'm Matt Fehrenbach, a full-stack developer. I started programming in 2013 and began working professionally in 2018. My experience spans public safety, finance, and intellectual property.\n\nThis site is a record of the things I make and learn. Alongside software projects and writing, it includes photography, graphics, music, and other creative experiments.\n\nYou can read about my professional experience on the [CV](/cv) page, or browse the projects and creative work from the home page.\n\nExplore[Blog](/blog)[Photography](/photography)[Graphics](/graphics)[Music](/music)[Vignettes](/vignettes)\n\nSite[About](/about)[Contact](/contact)[Privacy](/privacy)\n\nResources[Developers](/developers)\n\nBack to top"
+      "content": "---\ntitle: \"About | Matt Fehrenbach\"\ndescription: \"About Matt Fehrenbach, a full-stack developer, and the work and interests collected on this site.\"\ncanonical: https://m4t.tf/about\n---\n\n[![](/favicon.png)](/)[](/cv \"CV\")\n\n![](https://cdn.m4t.tf/about/about-bg-hexagons.webp)![](https://cdn.m4t.tf/about/about-bg-chevrons.webp)![](https://cdn.m4t.tf/about/about-bg-zigzag.webp)![](https://cdn.m4t.tf/about/about-bg-table-pedestal.webp)![](https://cdn.m4t.tf/about/about-bg-table-top.webp)![](https://cdn.m4t.tf/about/about-bg-arrows.webp)\n\nAbout\n=====\n\nScroll down\n\nQuestions\n---------\n\nI'm Matt Fehrenbach, a full-stack developer. I started programming in 2013 and began working professionally in 2018. My experience spans public safety, finance, and intellectual property.\n\nThis site is a record of the things I make and learn. Alongside software projects and writing, it includes photography, graphics, music, and other creative experiments.\n\nYou can read about my professional experience on the [CV](/cv) page, or browse the projects and creative work from the home page.\n\nQuestions\n---------\n\nExplore[Blog](/blog)[Photography](/photography)[Graphics](/graphics)[Music](/music)[Vignettes](/vignettes)\n\nSite[About](/about)[Contact](/contact)[Privacy](/privacy)\n\nResources[Developers](/developers)\n\nBack to top"
     },
     {
       "url": "https://m4t.tf/contact",
