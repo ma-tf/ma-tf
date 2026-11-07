@@ -10,19 +10,22 @@ skip, replay and revisit control see
 
 ## Drivers
 
-Two independent drivers are started once by `startParallax()` from
-`Layout.astro`, and each disables itself when its breakpoint or motion condition
-stops holding.
+Three independent drivers run on the homepage. Two are started once by
+`startParallax()` from `Layout.astro`, and each disables itself when its
+breakpoint or motion condition stops holding.
 
 | Driver  | Runs when     | Reads input | Moves                                                                                              |
 | ------- | ------------- | ----------- | -------------------------------------------------------------------------------------------------- |
 | Pointer | width ≥ 768px | `mousemove` | every `[data-parallax]` layer in `document`                                                        |
 | Scroll  | width ≤ 767px | `scroll`    | `[data-parallax*]` layers inside every `[data-parallax-scroll]` frame, plus `[data-parallax-push]` |
+| Sphere  | always        | `rAF` clock | every `svg[data-sphere-grid]` path `d`; axial spin one turn per 960s plus camera sway at 15fps     |
 
 - The breakpoint is `(max-width: 767px)`; the pointer driver is the inverse.
-- Both drivers stand down while `(prefers-reduced-motion: reduce)` matches.
+- All three drivers stand down while `(prefers-reduced-motion: reduce)` matches.
 - The pointer driver eases toward the cursor; the scroll driver is written
-  directly.
+  directly. The sphere driver re-projects the wireframe each frame, so rotation
+  changes the projection itself; like the parallax drivers it is not gated by
+  `data-motion`.
 - While a driver is animating it adds `parallax-active` to `<html>`, which turns
   on `will-change: transform` for parallax layers.
 
