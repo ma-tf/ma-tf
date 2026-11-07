@@ -14,28 +14,28 @@ import { R2_PUBLIC_URL } from "astro:env/server";
 <Layout>
   <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
     <Fragment slot="title"><AboutTitle>About</AboutTitle></Fragment>
-    {askEnabled && (
-    <Fragment slot="header-aside">
-      <StillLifeCard
-        data-parallax={30}
-        className="hidden animate-reveal md:col-span-3 md:col-start-7 md:row-start-1 md:block md:self-end md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2300"
-      >
-        <div
-          data-parallax={10}
-          class="relative flex flex-col px-4 pt-6 pb-4 md:px-2 md:pt-4 md:pb-2"
-        >
-          <h2
-            class="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase md:left-2 md:animate-fade-up md:animation-delay-2900"
+    {
+      askEnabled && (
+        <Fragment slot="header-aside">
+          <StillLifeCard
+            data-parallax={30}
+            className="hidden animate-reveal ml-16 md:col-span-3 md:col-start-7 md:row-start-1 md:block md:self-center md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2300"
           >
-            Questions
-          </h2>
-          <div class="md:animate-fade-up md:animation-delay-3500">
-            <AskPanel client:visible />
-          </div>
-        </div>
-      </StillLifeCard>
-    </Fragment>
-    )}
+            <div
+              data-parallax={10}
+              class="relative flex flex-col px-4 pt-6 pb-4 md:px-2 md:pt-4 md:pb-2"
+            >
+              <h2 class="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase md:left-2 md:animate-fade-up md:animation-delay-2900">
+                Questions
+              </h2>
+              <div class="md:animate-fade-up md:animation-delay-3500">
+                <AskPanel client:visible />
+              </div>
+            </div>
+          </StillLifeCard>
+        </Fragment>
+      )
+    }
     <StillLifeCard
       data-parallax={10}
       className="animate-reveal md:opacity-100 md:transform-none md:animate-fade-in md:animation-delay-2000"
@@ -44,9 +44,9 @@ import { R2_PUBLIC_URL } from "astro:env/server";
         data-parallax={5}
         class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2300"
       >
-        I'm {siteIdentity.name}, a full-stack developer. I started programming in
-        2013 and began working professionally in 2018. My experience spans public
-        safety, finance, and intellectual property.
+        I'm {siteIdentity.name}, a full-stack developer. I started programming
+        in 2013 and began working professionally in 2018. My experience spans
+        public safety, finance, and intellectual property.
       </p>
     </StillLifeCard>
     <StillLifeCard
@@ -58,8 +58,8 @@ import { R2_PUBLIC_URL } from "astro:env/server";
         class="p-4 md:p-2 md:animate-fade-up md:animation-delay-2450"
       >
         This site is a record of the things I make and learn. Alongside software
-        projects and writing, it includes photography, graphics, music, and other
-        creative experiments.
+        projects and writing, it includes photography, graphics, music, and
+        other creative experiments.
       </p>
     </StillLifeCard>
     <StillLifeCard
@@ -76,27 +76,20 @@ import { R2_PUBLIC_URL } from "astro:env/server";
         >
           CV
           <ArrowSquareOutIcon className="size-3 shrink-0" aria-hidden="true" />
-        </Link> page, or browse the projects and creative work from the home
-        page.
+        </Link> page, or browse the projects and creative work from the home page.
       </p>
     </StillLifeCard>
-    {askEnabled && (
-    <StillLifeCard
-      data-parallax={25}
-      className="animate-reveal md:hidden"
-    >
-      <div
-        data-parallax={20}
-        class="relative flex flex-col px-4 pt-6 pb-4"
-      >
-        <h2
-          class="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase"
-        >
-          Questions
-        </h2>
-        <AskPanel client:visible />
-      </div>
-    </StillLifeCard>
-    )}
+    {
+      askEnabled && (
+        <StillLifeCard data-parallax={25} className="animate-reveal md:hidden">
+          <div data-parallax={20} class="relative flex flex-col px-4 pt-6 pb-4">
+            <h2 class="absolute top-0 left-4 -mt-2 text-xs font-semibold tracking-wider uppercase">
+              Questions
+            </h2>
+            <AskPanel client:visible />
+          </div>
+        </StillLifeCard>
+      )
+    }
   </StillLifePage>
 </Layout>
