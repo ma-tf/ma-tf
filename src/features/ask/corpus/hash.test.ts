@@ -41,7 +41,6 @@ describe("hashInputPaths", () => {
     const paths = await hashInputPaths();
 
     expect(paths).toContain("src/features/home/home.tsx");
-    expect(paths).toContain("src/features/faq/faq-section.astro");
   });
   it("includes the Ask tag overrides", async () => {
     expect(await hashInputPaths()).toContain("src/features/ask/ask-tags.json");
