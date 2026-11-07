@@ -49,15 +49,15 @@ function TagPosts() {
   }, [currentPage]);
 
   return (
-    <div className="flex min-h-0 flex-col gap-4">
+    <div className="flex min-h-0 min-w-0 flex-col gap-4">
       <span className="text-3xl font-bold">{tagName}</span>
-      <div ref={listRef} className="flex min-h-0 flex-col gap-4 overflow-y-auto">
+      <div ref={listRef} className="flex min-h-0 min-w-0 flex-col gap-4 overflow-y-auto">
         {groups.map(({ key, posts }) => (
-          <section key={key} className="flex flex-col gap-2">
+          <section key={key} className="flex min-w-0 flex-col gap-2">
             <span className="text-xs font-medium text-muted-foreground">{`:: ${key}`}</span>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex min-w-0 flex-col gap-2">
               {posts.map((post) => (
-                <li key={post.slug} className="group relative">
+                <li key={post.slug} className="group relative min-w-0">
                   <a href={`/posts/${post.slug}`} className="block truncate text-xs font-semibold">
                     <span className="inline-block transition-transform duration-150 group-hover:translate-x-4">
                       {post.title}
