@@ -14,6 +14,7 @@ function sourceFiles(directory: string): string[] {
 
     if (entry.isDirectory()) return sourceFiles(path);
     if (!sourceExtension.test(entry.name) || testFile.test(entry.name)) return [];
+    if (path.includes("/prototypes/")) return [];
 
     return [path];
   });
