@@ -17,9 +17,48 @@ export function HomeGrid() {
         </div>
       </div>
       <Wash color="gray" />
-      <Wash color="taupe" />
-      <Wash color="blue" />
-      <Wash color="emerald" />
+      <Wash color="taupe">
+        <img
+          src="https://cdn.m4t.tf/music/20251014_Japan%206_19.webp"
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover opacity-90 mix-blend-luminosity contrast-105 grayscale"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
+        />
+      </Wash>
+      <Wash color="blue">
+        <img
+          src="https://cdn.m4t.tf/vignettes/bolex-dither-anon2.png"
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left opacity-90 mix-blend-luminosity contrast-105 grayscale"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
+        />
+      </Wash>
+      <Wash color="emerald">
+        <img
+          src="https://cdn.m4t.tf/blog/tags-bg-2.webp"
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left opacity-90 mix-blend-luminosity contrast-105 grayscale"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
+        />
+      </Wash>
     </>
   );
 }
