@@ -5,6 +5,8 @@ import { createServer } from "node:http";
 import { extname, join, normalize, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import type { ParsedArgs } from "@/scripts/argv.mts";
+
 import {
   formatHelp,
   parseArgs,
@@ -57,22 +59,42 @@ for (const [name, value] of Object.entries({
   process.env[name] ??= value;
 }
 
+function isBareOptionFlag(arg: string): boolean {
+  return arg === "--port" || arg === "--host";
+}
+
+function combinedOption(arg: string, next: string | undefined): string | null {
+  if (!isBareOptionFlag(arg)) return null;
+  if (next === undefined) return null;
+  return `${arg}=${next}`;
+}
+
 function normalizeArgv(argv: string[]): string[] {
   const normalized: string[] = [];
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === undefined) continue;
-    if ((arg === "--port" || arg === "--host") && index + 1 < argv.length) {
-      const next = argv[index + 1];
-      if (next !== undefined) {
-        normalized.push(`${arg}=${next}`);
-        index += 1;
-        continue;
-      }
+    const combined = combinedOption(arg, argv[index + 1]);
+    if (combined !== null) {
+      normalized.push(combined);
+      index += 1;
+      continue;
     }
     normalized.push(arg);
   }
   return normalized;
+}
+
+function resolvePreviewPort(args: ParsedArgs): number {
+  return parseNumericFlag(readValue(args, "--port") ?? process.env.PORT, "--port", {
+    fallback: 4321,
+    minimum: 1,
+    whole: true,
+  });
+}
+
+function resolvePreviewHost(args: ParsedArgs): string {
+  return readValue(args, "--host") ?? process.env.HOST ?? "127.0.0.1";
 }
 
 function parseOptions(argv: string[]): { port: number; host: string } {
@@ -80,13 +102,7 @@ function parseOptions(argv: string[]): { port: number; host: string } {
   const args = parseArgs(normalizeArgv(argv), OPTIONS, HELP);
   if (args.positionals.length > 0)
     throw new Error(`Unexpected argument ${args.positionals[0]}\n\n${HELP}`);
-  const port = parseNumericFlag(readValue(args, "--port") ?? process.env.PORT, "--port", {
-    fallback: 4321,
-    minimum: 1,
-    whole: true,
-  });
-  const host = readValue(args, "--host") ?? process.env.HOST ?? "127.0.0.1";
-  return { port, host };
+  return { port: resolvePreviewPort(args), host: resolvePreviewHost(args) };
 }
 
 async function isFile(path: string): Promise<boolean> {
@@ -101,9 +117,13 @@ function contentType(path: string): string {
   return CONTENT_TYPES[extname(path).toLowerCase()] ?? "application/octet-stream";
 }
 
+function isUnsafeRelative(relative: string): boolean {
+  return relative === "" || relative.startsWith("..") || relative.includes(`..${sep}`);
+}
+
 async function serveStatic(pathname: string, res: ServerResponse): Promise<boolean> {
   const relative = normalize(decodeURIComponent(pathname)).replace(/^([/\\])+/, "");
-  if (relative === "" || relative.startsWith("..") || relative.includes(`..${sep}`)) return false;
+  if (isUnsafeRelative(relative)) return false;
   const file = join(distDir, relative);
   if (!file.startsWith(distDir)) return false;
   if (!(await isFile(file))) return false;
@@ -124,17 +144,58 @@ function readBody(req: IncomingMessage): Promise<Buffer | undefined> {
   });
 }
 
+function appendHeaderValue(headers: Headers, name: string, value: string | string[]): void {
+  if (Array.isArray(value)) {
+    for (const entry of value) headers.append(name, entry);
+    return;
+  }
+  headers.set(name, value);
+}
+
 function nodeHeaders(req: IncomingMessage): Headers {
   const headers = new Headers();
   for (const [name, value] of Object.entries(req.headers)) {
     if (value === undefined) continue;
-    if (Array.isArray(value)) {
-      for (const entry of value) headers.append(name, entry);
-    } else {
-      headers.set(name, value);
-    }
+    appendHeaderValue(headers, name, value);
   }
   return headers;
+}
+
+function previewUrl(req: IncomingMessage, host: string, port: number): URL {
+  return new URL(req.url ?? "/", `http://${host}:${port}`);
+}
+
+function previewClientIp(req: IncomingMessage): string {
+  return req.socket.remoteAddress ?? "127.0.0.1";
+}
+
+function previewRequestInit(req: IncomingMessage, body: Buffer | undefined): RequestInit {
+  const init: RequestInit = {
+    method: req.method ?? "GET",
+    headers: nodeHeaders(req),
+  };
+  if (body !== undefined) init.body = new Uint8Array(body);
+  return init;
+}
+
+function logPreview(status: number, pathname: string, started: number): void {
+  console.log(`[${status}] ${pathname} ${Date.now() - started}ms`);
+}
+
+async function writePreviewResponse(
+  res: ServerResponse,
+  response: Response,
+  pathname: string,
+  started: number,
+): Promise<void> {
+  const payload = Buffer.from(await response.arrayBuffer());
+  const headers: Record<string, string> = {};
+  response.headers.forEach((value, key) => {
+    headers[key] = value;
+  });
+  res.writeHead(response.status, headers);
+  res.end(payload);
+  logPreview(response.status, pathname, started);
 }
 
 async function main(): Promise<void> {
@@ -165,29 +226,17 @@ async function main(): Promise<void> {
   const server = createServer(async (req, res) => {
     const started = Date.now();
     try {
-      const url = new URL(req.url ?? "/", `http://${host}:${port}`);
+      const url = previewUrl(req, host, port);
       if (await serveStatic(url.pathname, res)) {
-        console.log(`[${res.statusCode}] ${url.pathname} ${Date.now() - started}ms`);
+        logPreview(res.statusCode, url.pathname, started);
         return;
       }
 
       const body = await readBody(req);
-      const init: RequestInit = {
-        method: req.method ?? "GET",
-        headers: nodeHeaders(req),
-      };
-      if (body !== undefined) init.body = new Uint8Array(body);
-      const request = new Request(url.href, init);
+      const request = new Request(url.href, previewRequestInit(req, body));
 
-      const response = await handler(request, { ip: req.socket.remoteAddress ?? "127.0.0.1" });
-      const payload = Buffer.from(await response.arrayBuffer());
-      const headers: Record<string, string> = {};
-      response.headers.forEach((value, key) => {
-        headers[key] = value;
-      });
-      res.writeHead(response.status, headers);
-      res.end(payload);
-      console.log(`[${response.status}] ${url.pathname} ${Date.now() - started}ms`);
+      const response = await handler(request, { ip: previewClientIp(req) });
+      await writePreviewResponse(res, response, url.pathname, started);
     } catch (error) {
       console.error(error);
       if (!res.headersSent) res.writeHead(500, { "content-type": "text/plain; charset=utf-8" });

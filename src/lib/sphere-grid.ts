@@ -7,6 +7,15 @@ const FRAME_MS = 1000 / 15;
 const MAX_DELTA_MS = 250;
 const TAU = Math.PI * 2;
 
+function updatePaths(paths: SVGPathElement[], strokes: string[]): void {
+  const count = Math.min(paths.length, strokes.length);
+  for (let i = 0; i < count; i++) {
+    const path = paths[i];
+    const d = strokes[i];
+    if (path && d !== undefined) path.setAttribute("d", d);
+  }
+}
+
 export function startSphereGrid() {
   const layers = Array.from(document.querySelectorAll<SVGSVGElement>(SELECTOR)).map((svg) =>
     Array.from(svg.querySelectorAll("path")),
@@ -21,14 +30,7 @@ export function startSphereGrid() {
 
   const render = (theta: number, camX: number, camY: number) => {
     const strokes = sphereStrokes(theta, camX, camY);
-    for (const paths of layers) {
-      const count = Math.min(paths.length, strokes.length);
-      for (let i = 0; i < count; i++) {
-        const path = paths[i];
-        const d = strokes[i];
-        if (path && d !== undefined) path.setAttribute("d", d);
-      }
-    }
+    for (const paths of layers) updatePaths(paths, strokes);
   };
 
   const stop = () => {
