@@ -13,6 +13,15 @@ import { pathToFileURL } from "node:url";
 
 import { startDevServer } from "@/scripts/dev-server.mts";
 
+const renderOnlyAskKeys = {
+  TYPESAFE_API_KEY: "render-only",
+  OPENAI_API_KEY: "render-only",
+};
+
+for (const [name, value] of Object.entries(renderOnlyAskKeys)) {
+  process.env[name] ??= value;
+}
+
 async function readStoredHash(path: string): Promise<string | undefined> {
   try {
     const stored = JSON.parse(await readFile(path, "utf8")) as { sourceHash?: unknown };
