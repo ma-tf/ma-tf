@@ -75,6 +75,28 @@ function TagPosts() {
   );
 }
 
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/photography", label: "Photography" },
+  { href: "/vignettes", label: "Vignettes" },
+  { href: "/music", label: "Music" },
+];
+
+function PanelNav() {
+  return (
+    <nav className="flex items-center justify-end">
+      <div className="flex flex-col gap-1">
+        {NAV_LINKS.map(({ href, label }) => (
+          <NavButton key={href} href={href}>
+            {label}
+          </NavButton>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
 type SelectedTagPanelProps = {
   selected: Tag | null;
   postsByTag: Record<string, PlainPost[]>;
@@ -82,29 +104,13 @@ type SelectedTagPanelProps = {
 };
 
 export function SelectedTagPanel({ selected, postsByTag, allPosts }: SelectedTagPanelProps) {
-  const tagName = selected?.tag ?? "blog";
-  const posts = selected ? (postsByTag[selected.tag] ?? []) : allPosts;
   return (
     <div
       data-parallax={60}
       className="absolute top-0 right-8 z-10 grid h-dvh w-sm grid-rows-[2fr_3fr] px-8 py-12 xl:left-218"
     >
-      <nav className="flex items-center justify-end">
-        <div className="flex flex-col gap-1">
-          {[
-            { href: "/", label: "Home" },
-            { href: "/blog", label: "Blog" },
-            { href: "/photography", label: "Photography" },
-            { href: "/vignettes", label: "Vignettes" },
-            { href: "/music", label: "Music" },
-          ].map(({ href, label }) => (
-            <NavButton key={href} href={href}>
-              {label}
-            </NavButton>
-          ))}
-        </div>
-      </nav>
-      <TagPostsProvider tagName={tagName} posts={posts}>
+      <PanelNav />
+      <TagPostsProvider selected={selected} postsByTag={postsByTag} allPosts={allPosts}>
         <TagPosts />
       </TagPostsProvider>
     </div>
