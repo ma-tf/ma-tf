@@ -10,14 +10,21 @@ type TagContentProps = {
   tags: Tag[];
   selected: Tag | null;
   postsByTag: Record<string, PlainPost[]>;
+  allPosts: PlainPost[];
 };
 
-export function TagContent({ backgroundBaseUrl, tags, selected, postsByTag }: TagContentProps) {
+export function TagContent({
+  backgroundBaseUrl,
+  tags,
+  selected,
+  postsByTag,
+  allPosts,
+}: TagContentProps) {
   return (
     <div className="relative flex w-full max-w-7xl flex-1 self-center border-x">
       <ParallaxBackgrounds baseUrl={backgroundBaseUrl} />
       <TagOrbit tags={tags} selected={selected} />
-      <SelectedTagPanel selected={selected} postsByTag={postsByTag} />
+      <SelectedTagPanel selected={selected} postsByTag={postsByTag} allPosts={allPosts} />
     </div>
   );
 }

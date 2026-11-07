@@ -9,10 +9,12 @@ export type Tag = {
 export async function getTagIndex(): Promise<{
   tags: Tag[];
   postsByTag: Record<string, PlainPost[]>;
+  allPosts: PlainPost[];
 }> {
   const rawPosts = await getRawPosts();
 
   const postsByTag = new Map<string, PlainPost[]>();
+  const allPosts: PlainPost[] = [];
   for (const post of rawPosts) {
     const plain = {
       slug: post.data.slug,
@@ -20,10 +22,12 @@ export async function getTagIndex(): Promise<{
       description: post.data.description,
       publicationDate: post.data.publicationDate.toISOString(),
     };
+    allPosts.push(plain);
     for (const tag of post.data.tags) {
       getOrInit(postsByTag, tag, () => []).push(plain);
     }
   }
+  allPosts.sort((a, b) => b.publicationDate.localeCompare(a.publicationDate));
 
   const tags: Tag[] = [];
   for (const [tag, list] of postsByTag.entries()) {
@@ -32,5 +36,5 @@ export async function getTagIndex(): Promise<{
   }
   tags.sort((a, b) => b.count - a.count);
 
-  return { tags, postsByTag: Object.fromEntries(postsByTag) };
+  return { tags, postsByTag: Object.fromEntries(postsByTag), allPosts };
 }

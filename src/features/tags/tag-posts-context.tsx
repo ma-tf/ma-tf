@@ -1,5 +1,4 @@
 import type { PlainPost } from "@features/blog/post-data";
-import type { Tag } from "@features/tags/tag-data";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
@@ -31,25 +30,24 @@ function groupPostsByMonth(posts: PlainPost[]): TagPostsMonthGroup[] {
 const TagPostsContext = createContext<TagPostsValue | null>(null);
 
 export function TagPostsProvider({
-  selected,
-  postsByTag,
+  tagName,
+  posts,
   children,
 }: {
-  selected: Tag;
-  postsByTag: Record<string, PlainPost[]>;
+  tagName: string;
+  posts: PlainPost[];
   children: ReactNode;
 }) {
-  const allPosts = postsByTag[selected.tag] ?? [];
-  const totalPages = Math.max(1, Math.ceil(allPosts.length / TAG_POSTS_PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(posts.length / TAG_POSTS_PAGE_SIZE));
   const [page, setPage] = useState(0);
 
   useEffect(() => {
     setPage(0);
-  }, [selected.tag]);
+  }, [tagName]);
 
   const currentPage = Math.min(page, totalPages - 1);
   const value = useMemo<TagPostsValue>(() => {
-    const pagePosts = allPosts.slice(
+    const pagePosts = posts.slice(
       currentPage * TAG_POSTS_PAGE_SIZE,
       (currentPage + 1) * TAG_POSTS_PAGE_SIZE,
     );
@@ -57,13 +55,13 @@ export function TagPostsProvider({
       setPage(Math.min(Math.max(next, 0), totalPages - 1));
     };
     return {
-      tagName: selected.tag,
+      tagName,
       groups: groupPostsByMonth(pagePosts),
       currentPage,
       totalPages,
       goToPage,
     };
-  }, [allPosts, currentPage, totalPages, selected.tag]);
+  }, [posts, currentPage, totalPages, tagName]);
 
   return <TagPostsContext.Provider value={value}>{children}</TagPostsContext.Provider>;
 }

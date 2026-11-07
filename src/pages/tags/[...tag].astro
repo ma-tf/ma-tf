@@ -5,7 +5,7 @@ import { getTagIndex } from "@features/tags/tag-data";
 import { R2_PUBLIC_URL } from "astro:env/server";
 
 const data = await getTagIndex();
-const { tags, postsByTag } = data;
+const { tags, postsByTag, allPosts } = data;
 const selected = data.tags.find(({ tag }) => tag === Astro.params.tag) ?? null;
 const backgroundBaseUrl = R2_PUBLIC_URL;
 ---
@@ -29,6 +29,7 @@ const backgroundBaseUrl = R2_PUBLIC_URL;
     tags={tags}
     selected={selected}
     postsByTag={postsByTag}
+    allPosts={allPosts}
     client:load
   />
 </Layout>

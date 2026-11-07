@@ -75,16 +75,15 @@ function TagPosts() {
   );
 }
 
-function EmptyPosts() {
-  return <div>No tag selected</div>;
-}
-
 type SelectedTagPanelProps = {
   selected: Tag | null;
   postsByTag: Record<string, PlainPost[]>;
+  allPosts: PlainPost[];
 };
 
-export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps) {
+export function SelectedTagPanel({ selected, postsByTag, allPosts }: SelectedTagPanelProps) {
+  const tagName = selected?.tag ?? "blog";
+  const posts = selected ? (postsByTag[selected.tag] ?? []) : allPosts;
   return (
     <div
       data-parallax={60}
@@ -105,13 +104,9 @@ export function SelectedTagPanel({ selected, postsByTag }: SelectedTagPanelProps
           ))}
         </div>
       </nav>
-      {selected ? (
-        <TagPostsProvider selected={selected} postsByTag={postsByTag}>
-          <TagPosts />
-        </TagPostsProvider>
-      ) : (
-        <EmptyPosts />
-      )}
+      <TagPostsProvider tagName={tagName} posts={posts}>
+        <TagPosts />
+      </TagPostsProvider>
     </div>
   );
 }
