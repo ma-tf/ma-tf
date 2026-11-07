@@ -4,7 +4,7 @@ import { ModeToggle } from "@components/ModeToggle";
 import MotionControlButton from "@components/MotionControlButton.astro";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { siteNavLinks } from "@lib/site-nav";
-import { ReadCvLogoIcon } from "@phosphor-icons/react";
+import { GithubLogoIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
 import { R2_PUBLIC_URL } from "astro:env/server";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
@@ -15,7 +15,7 @@ const chromeTopRight = `${R2_PUBLIC_URL}/misc/toprightchrome.png`;
 
 <header class="fixed top-0 z-50 w-full overflow-x-clip text-foreground">
   <div
-    class="relative mx-auto flex h-4 w-full max-w-480 items-stretch justify-between before:pointer-events-none before:absolute before:-top-4 before:-left-75.5 before:-z-1 before:drop-shadow-chrome before:content-(--chrome-top-mobile) md:before:content-(--chrome-top-left) after:pointer-events-none after:absolute after:-top-1.5 after:-right-9.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-(--chrome-top-right)"
+    class="relative mx-auto flex h-4 w-full max-w-480 items-stretch justify-between before:pointer-events-none before:absolute before:-top-4 before:-left-69 before:-z-1 before:drop-shadow-chrome before:content-(--chrome-top-mobile) md:before:content-(--chrome-top-left) after:pointer-events-none after:absolute after:-top-1.5 after:-right-9.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-(--chrome-top-right)"
     style={{
       "--chrome-top-mobile": `url("${chromeTopMobile}")`,
       "--chrome-top-left": `url("${chromeTopLeft}")`,
@@ -54,6 +54,20 @@ const chromeTopRight = `${R2_PUBLIC_URL}/misc/toprightchrome.png`;
           </a>
         )
       }
+      <a
+        href={siteIdentity.github}
+        rel="noreferrer"
+        aria-label="GitHub"
+        title="GitHub"
+        class="group grid place-items-center bg-background/15 hover:bg-background/50 px-2 text-muted-foreground inset-shadow-chip-bottom rounded-b-xs transition-colors duration-150 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50"
+      >
+        <GithubLogoIcon
+          size={12}
+          weight="bold"
+          aria-hidden="true"
+          className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
+        />
+      </a>
     </div>
     <div class="flex items-stretch md:gap-0.5">
       <div

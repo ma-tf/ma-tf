@@ -13,7 +13,7 @@ import remarkGfm from "remark-gfm";
 
 function Thinking() {
   return (
-    <p className="flex min-h-7.5 items-center text-lg text-muted-foreground">
+    <p className="flex min-h-7.5 items-center text-base leading-relaxed text-muted-foreground md:text-xs">
       <span role="status" className="shimmer">
         Thinking
       </span>
@@ -44,7 +44,7 @@ function Sources({ sources }: { sources: AskSource[] }) {
 function Answer({ answer, sources }: { answer: string; sources: AskSource[] }) {
   return (
     <>
-      <div className="answer-content text-lg text-foreground">
+      <div className="answer-content text-base leading-relaxed text-foreground md:text-xs">
         <Markdown components={proseComponents} remarkPlugins={[remarkGfm]}>
           {answer}
         </Markdown>
@@ -59,7 +59,7 @@ function Answer({ answer, sources }: { answer: string; sources: AskSource[] }) {
 
 function Refusal({ answer }: { answer: string }) {
   return (
-    <p role="status" className="min-h-7.5 text-lg leading-relaxed text-foreground">
+    <p role="status" className="min-h-7.5 text-base leading-relaxed text-foreground md:text-xs">
       {answer}
     </p>
   );
@@ -69,7 +69,7 @@ function Failure({ onRetry }: { onRetry: () => void }) {
   return (
     <div
       role="alert"
-      className="flex min-h-7.5 flex-wrap items-center gap-3 text-lg leading-relaxed text-muted-foreground"
+      className="flex min-h-7.5 flex-wrap items-center gap-3 text-base leading-relaxed text-muted-foreground md:text-xs"
     >
       <span>Couldn't reach the site agent.</span>
       <button

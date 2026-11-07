@@ -29,6 +29,23 @@ function parseDocument(document: Document): DocumentPayload {
   return { summary: summary.text, pages };
 }
 
+function normalisePath(path: string): string {
+  return path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+}
+
+function isCurrentPage(url: string): boolean {
+  if (typeof window === "undefined" || typeof window.location === "undefined") return false;
+
+  try {
+    return (
+      normalisePath(new URL(url, window.location.origin).pathname) ===
+      normalisePath(window.location.pathname)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function askSite(question: string, signal: AbortSignal): Promise<AskAnswer> {
   const response = await fetch("/ask", {
     method: "POST",
@@ -48,6 +65,8 @@ export async function askSite(question: string, signal: AbortSignal): Promise<As
   return {
     kind: "answer",
     text: payload.summary,
-    sources: payload.pages.map(({ name, url }) => ({ title: name, url })),
+    sources: payload.pages
+      .filter(({ url }) => !isCurrentPage(url))
+      .map(({ name, url }) => ({ title: name, url })),
   };
 }
