@@ -83,7 +83,7 @@ export function buildPageInventory(input: PageInventoryInput): readonly PageEntr
       lastmod: post.publicationDate.toISOString(),
     })),
     ...input.tags.map(({ tag }): PageEntry => ({
-      path: `/tags/${encodeURIComponent(tag)}`,
+      path: `/blog/${encodeURIComponent(tag)}`,
       title: tag,
       description: `Posts tagged ${tag}.`,
       kind: "tag",

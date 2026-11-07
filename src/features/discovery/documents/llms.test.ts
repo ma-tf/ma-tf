@@ -103,8 +103,8 @@ describe("buildBlogLlmsTxt", () => {
   it("indexes the tags and links the full archive", () => {
     const text = buildBlogLlmsTxt(posts);
 
-    expect(text).toContain(`${siteUrl}/tags/astro`);
-    expect(text).toContain(`${siteUrl}/tags/typescript`);
+    expect(text).toContain(`${siteUrl}/blog/astro`);
+    expect(text).toContain(`${siteUrl}/blog/typescript`);
     expect(text).toContain(`${siteUrl}/llms-full.txt`);
   });
 });

@@ -58,7 +58,7 @@ describe("buildPageInventory", () => {
 
   it("adds tags", () => {
     expect(inventory).toContainEqual({
-      path: "/tags/typescript",
+      path: "/blog/typescript",
       title: "typescript",
       description: "Posts tagged typescript.",
       kind: "tag",
@@ -83,7 +83,7 @@ describe("buildPageInventory", () => {
     const paths = encoded.map((entry) => entry.path);
 
     expect(paths).toContain("/posts/a%20b");
-    expect(paths).toContain("/tags/c%2B%2B");
+    expect(paths).toContain("/blog/c%2B%2B");
     expect(paths).toContain("/vignettes/d%2Fe");
   });
 });

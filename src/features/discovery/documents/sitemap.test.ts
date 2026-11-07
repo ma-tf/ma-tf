@@ -14,7 +14,7 @@ const inventory: readonly PageEntry[] = [
     lastmod: "2026-03-01T00:00:00.000Z",
   },
   {
-    path: "/tags/typescript",
+    path: "/blog/typescript",
     title: "typescript",
     description: "Posts tagged typescript.",
     kind: "tag",
@@ -52,10 +52,10 @@ describe("buildSitemap", () => {
 
   it("escapes XML entities in locations", () => {
     const xml = buildSitemap(
-      [{ path: "/tags/a&b", title: "a&b", description: "x", kind: "tag" }],
+      [{ path: "/blog/a&b", title: "a&b", description: "x", kind: "tag" }],
       site,
     );
 
-    expect(xml).toContain("<loc>https://m4t.tf/tags/a&amp;b/</loc>");
+    expect(xml).toContain("<loc>https://m4t.tf/blog/a&amp;b/</loc>");
   });
 });

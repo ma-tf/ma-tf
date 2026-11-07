@@ -19,7 +19,7 @@ export function TagOrbit({ tags, selected }: TagOrbitProps) {
     (tag: Tag | null) => {
       if (!tag) return;
       writeStoredRotation(rotationRef.current);
-      window.location.href = selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`;
+      window.location.href = selected?.tag === tag.tag ? "/blog" : `/blog/${tag.tag}`;
     },
     [selected],
   );
@@ -41,7 +41,7 @@ export function TagOrbit({ tags, selected }: TagOrbitProps) {
         }}
         renderItem={(tag: Tag) => (
           <TagLink
-            href={selected?.tag === tag.tag ? "/tags" : `/tags/${tag.tag}`}
+            href={selected?.tag === tag.tag ? "/blog" : `/blog/${tag.tag}`}
             onClick={(e) => {
               e.preventDefault();
               navigate(tag);

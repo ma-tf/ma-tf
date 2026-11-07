@@ -5,12 +5,12 @@ import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
 import { NavButton } from "@components/nav-button";
 import { Pill } from "@components/pill";
 import { proseComponents } from "@components/prose";
-import { BlogMobileNavigation } from "@features/blog/blog";
 import {
   Post,
   PostContent,
   PostDate,
   PostHeader,
+  PostMobileNavigation,
   PostTitle,
 } from "@features/posts/post";
 import { R2_PUBLIC_URL } from "astro:env/server";
@@ -26,7 +26,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
-  <BlogMobileNavigation
+  <PostMobileNavigation
     client:load
     className="mx-0 mt-12 animate-fade-up md:mt-0"
   />
@@ -73,7 +73,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
           <ul class="animate-fade-up animation-delay-150 flex flex-wrap gap-2">
             {post.data.tags.map((tag) => (
               <li>
-                <Pill href={`/tags/${tag}`}>
+                <Pill href={`/blog/${tag}`}>
                   <span class="inline-flex items-center gap-0 pr-2">
                     <HashIcon size={14} className="shrink-0" />
                     {tag}

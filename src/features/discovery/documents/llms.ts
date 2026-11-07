@@ -186,7 +186,7 @@ export function buildBlogLlmsTxt(posts: ArchivePost[]): string {
     "## Tags",
     "",
     ...tags.map(
-      (tag) => `- [${tag}](${siteUrl}/tags/${encodeURIComponent(tag)}): posts tagged ${tag}`,
+      (tag) => `- [${tag}](${siteUrl}/blog/${encodeURIComponent(tag)}): posts tagged ${tag}`,
     ),
     "",
     "## Retrieval",

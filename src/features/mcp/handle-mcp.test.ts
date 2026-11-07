@@ -603,7 +603,7 @@ describe("handleMcp", () => {
     const uris = resources.map((resource) => resource.uri);
 
     for (const excluded of [
-      "https://m4t.tf/tags/testing",
+      "https://m4t.tf/blog/testing",
       "https://m4t.tf/llms-full.txt",
       "https://m4t.tf/openapi.json",
       "https://m4t.tf/.well-known/api-catalog",

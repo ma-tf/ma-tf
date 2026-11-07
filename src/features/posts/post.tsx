@@ -1,5 +1,12 @@
 import type { ComponentProps } from "react";
 
+import {
+  MobileMenu,
+  MobileMenuIcon,
+  MobileMenuLink,
+  MobileMenuLinks,
+  MobileMenuTrigger,
+} from "@components/mobile-menu";
 import { CalendarIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 
@@ -46,6 +53,37 @@ export function PostContent({ children, className, ...props }: ComponentProps<"d
       {...props}
     >
       {children}
+    </div>
+  );
+}
+
+const POST_NAVIGATION_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/photography", label: "Photography" },
+  { href: "/vignettes", label: "Vignettes" },
+  { href: "/music", label: "Music" },
+] as const;
+
+export function PostMobileNavigation({ className, ...props }: ComponentProps<"div">) {
+  return (
+    <div className={cn("-mx-6 mt-12 md:hidden", className)} {...props}>
+      <MobileMenu>
+        <div className="flex justify-end px-6">
+          <MobileMenuTrigger>
+            <span className="inline-flex min-h-10 items-center gap-2 border border-foreground bg-foreground px-3 text-sm text-background uppercase transition-colors duration-150 hover:bg-background hover:text-foreground">
+              menu
+              <MobileMenuIcon />
+            </span>
+          </MobileMenuTrigger>
+        </div>
+        <MobileMenuLinks>
+          {POST_NAVIGATION_LINKS.map(({ href, label }) => (
+            <MobileMenuLink key={href} href={href}>
+              {label}
+            </MobileMenuLink>
+          ))}
+        </MobileMenuLinks>
+      </MobileMenu>
     </div>
   );
 }
