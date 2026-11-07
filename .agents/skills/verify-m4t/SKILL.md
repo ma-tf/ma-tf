@@ -1,6 +1,6 @@
 ---
 name: verify-m4t
-description: Drive the real m4t.tf site in headless Chromium — navigate, click, fill, snapshot, screenshot, read console and network — to prove a UI change or reproduce a report. Ships a feature map of every journey a visitor can take. Use when asked to verify behaviour, reproduce a bug, or capture evidence from the running site.
+description: Screenshot, measure, geometry, verify behaviour — drive the real m4t.tf site in headless Chromium to prove a UI change or reproduce a report. Navigate, click, fill, snapshot, read console and network. Ships a feature map of every journey a visitor can take.
 ---
 
 # Verify m4t.tf
@@ -8,12 +8,12 @@ description: Drive the real m4t.tf site in headless Chromium — navigate, click
 One lever — `control-m4t.mjs` — plus a feature map. Every command prints one
 JSON object. A failure carries `error` and `hint`; read the hint before retrying.
 
-Browser evidence is a checkpoint, not a per-edit step. Use it when the developer
-asks, when a claim needs measurement the source cannot give, or at the end of a
-task before claiming done ([docs/verification.md](../../../docs/verification.md)).
-Cheaper rungs come first: a test, `vpx astro check`, `vp check`. This repo also
-requires an explicit request before a browser probe ([AGENTS.md](../../../AGENTS.md));
-a failing test or a hunch is not one.
+Browser evidence is a checkpoint, not a per-edit step. Probe when the
+developer asks for a screenshot, measurement, or verification, when a claim
+needs measurement the source cannot give, or at the end of a task before
+claiming done ([docs/verification.md](../../../docs/verification.md)).
+Cheaper rungs come first: a test, `vpx astro check`, `vp check`. A failing
+test or a hunch is not a request.
 
 ## Launch
 
@@ -120,8 +120,10 @@ you started.
 ## Helpers
 
 - `node .agents/skills/verify-m4t/control-m4t.mjs --help` — full command list.
-- `scripts/probe.mts` — one-shot geometry and screenshot; prefer it when you only
-  need measurements ([docs/testing.md](../../../docs/testing.md)).
+- `scripts/probe.mts` — one-shot geometry; prefer it when a single measurement
+  settles the claim. Prefer this skill when screenshots or interaction evidence
+  are needed. Never write ad-hoc measure scripts in `/tmp` or the repo root;
+  put a reusable harness in `scripts/` instead.
 - Feature map — [features/README.md](features/README.md).
 
 ## The map
@@ -131,10 +133,10 @@ you started.
 | [Command palette](features/command-palette.md) | any page with the header | Selecting a page routes; an action shows its toast and side effect |
 | [Blog reading](features/blog-reading.md) | `/blog`, `/posts/<slug>`, `/tags/<tag>` | The pane scrolls, a post opens, a tag pill lands on its tag page |
 | [Photography lightbox](features/photography-lightbox.md) | `/photography` | A frame opens, the caption toggles, the dialog closes |
-| [Ask](features/ask.md) | `/` (FAQ section), `POST /ask` | A question returns prose and sources from published pages |
+| [Ask](features/ask.md) | `/about` (Questions card), `POST /ask` | A question returns prose and sources from published pages |
 | [Discovery surface](features/discovery-surface.md) | `/llms.txt`, `/openapi.json`, `/mcp`, `/.well-known/*` | Each resource answers with its declared media type |
 
-Not mapped yet: `/music`, `/vignettes/<slug>`, `/graphics`, `/cv`, `/about`,
+Not mapped yet: `/music`, `/vignettes/<slug>`, `/graphics`, `/cv`,
 `/contact`, `/privacy`, `/404`, `/500`, `/prototypes/*`. Add a file as you prove
 one; a proof that drives only a convenient entry point is incomplete when the map
 lists others.

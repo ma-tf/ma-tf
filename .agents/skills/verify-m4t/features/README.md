@@ -9,7 +9,7 @@ the recipe.
 - The site answers at `http://localhost:4321` (or the `--base` you pass), running
   from this checkout.
 - `node .agents/skills/verify-m4t/control-m4t.mjs doctor` reports `healthy`.
-- Seed data is fixed: 12 published posts, 24 photography frames, 7 enabled
+- Seed data is fixed: 15 published posts, 24 photography frames, 7 enabled
   vignettes.
 - Ask needs `TYPESAFE_API_KEY` and `OPENAI_API_KEY`; `vp run dev` injects them
   through `secretspec`.
@@ -61,6 +61,6 @@ observable result.
 ## Not mapped yet
 
 `/music` and `/vignettes/<slug>` (Bandcamp, Mixcloud and Mux playback),
-`/graphics` (a stub), `/cv` and the `cv.pdf` generator, `/about`, `/contact`,
+`/graphics` (a stub), `/cv` and the `cv.pdf` generator, `/contact`,
 `/privacy`, `/404`, `/500`, and `/prototypes/*` (untracked work in progress).
 Add one file per feature as you prove it.

@@ -48,8 +48,9 @@ curl -sS -H 'Accept: application/json' -o /dev/null -w '/about json %{http_code}
 ```
 
 End state: `text/plain` for the llms pair, `application/vnd.oai.openapi+json`
-for OpenAPI, `application/xml` for the feeds, `application/json` for the Agent
-Skills index, and `text/markdown` for the markdown twin.
+(with `;version=3.1` — match by prefix, not strict equality) for OpenAPI,
+`application/xml` for the feeds, `application/json` for the Agent Skills
+index, and `text/markdown` for the markdown twin.
 
 `/mcp` needs a POST and both media types in `Accept`:
 

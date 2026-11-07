@@ -25,7 +25,7 @@ to reach Home, Photography, Vignettes and Music.
 
 Preconditions:
 
-- `/blog` is reachable and 12 posts are published.
+- `/blog` is reachable and 15 posts are published.
 - A 1280x900 viewport, so the inner pane scrolls instead of the document.
 
 ```sh
@@ -41,7 +41,7 @@ node .agents/skills/verify-m4t/control-m4t.mjs eval 'location.pathname'
 node .agents/skills/verify-m4t/control-m4t.mjs screenshot blog-tag.png
 ```
 
-End state: 12 post links, the pane's `scrollTop` is greater than zero, the post
+End state: 15 post links, the pane's `scrollTop` is greater than zero, the post
 URL matches `/posts/...`, and the tag pill lands on `/tags/<tag>`.
 
 Tag journey:
@@ -56,8 +56,26 @@ node .agents/skills/verify-m4t/control-m4t.mjs eval 'location.pathname'
 ```
 
 End state: the orbit takes focus, ArrowRight rotates, and Enter lands on the
-front tag's page. With today's seed data the front tag is `mcp`, so the path
-becomes `/tags/mcp`.
+front tag's page. With today's seed data the front tag at clean
+`sessionStorage` is `programming`, so clear `ma-tf:orbit-rotation` first or
+assert the pathname matches `/tags/<tag>` rather than a fixed tag.
+
+Selected-tag pagination (`TAG_POSTS_PAGE_SIZE = 10` in
+`tag-posts-context.tsx`): only tags with more than 10 posts paginate —
+currently `programming` (13 → 2 pages) and `llms` (11 → 2 pages). The list
+shows the page slice, and `nav[aria-label="Tag posts pages"]` shows
+`current/total`:
+
+```sh
+node .agents/skills/verify-m4t/control-m4t.mjs goto /tags/programming --viewport=1280x900
+node .agents/skills/verify-m4t/control-m4t.mjs count 'a[href^="/posts/"]'
+node .agents/skills/verify-m4t/control-m4t.mjs click '[aria-label="Next page"]'
+node .agents/skills/verify-m4t/control-m4t.mjs count 'a[href^="/posts/"]'
+```
+
+End state: 10 post links showing `1/2`, then 3 links showing `2/2`. The
+prev/next controls are `svg[aria-label]` icons with `onClick`, not buttons,
+and the nav only renders when `totalPages > 1`.
 
 ## Gotchas
 
