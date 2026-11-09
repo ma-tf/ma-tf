@@ -1,12 +1,55 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
+import {
+  ProjectRow,
+  ProjectRowBody,
+  ProjectRowContent,
+  ProjectRowNumber,
+  ProjectRowTitle,
+  ProjectRowTopic,
+  ProjectRowTopics,
+  Projects,
+  ProjectsContent,
+  ProjectsDescription,
+  ProjectsHeader,
+  ProjectsTitle,
+} from "@features/projects/projects";
+
+const entries = await getCollection("projects");
+const projects = entries.map((entry) => ({
+  title: entry.data.title,
+  url: entry.data.url,
+  topics: entry.data.topics,
+  body: entry.body ?? "",
+}));
 ---
 
-<Layout>
-  <div class="flex justify-center py-8">
-    <div class="max-w-2xl px-8">
-      <h2 class="animate-fade-up text-lg">projects</h2>
-      <p class="animate-fade-up animation-delay-50 text-muted-foreground">Projects work coming soon.</p>
-    </div>
-  </div>
+<Layout title="Projects" description="Projects by Matt Fehrenbach.">
+  <Projects>
+    <ProjectsHeader>
+      <ProjectsTitle>projects</ProjectsTitle>
+      <ProjectsDescription>
+        Software and side projects I build and ship.
+      </ProjectsDescription>
+    </ProjectsHeader>
+    <ProjectsContent>
+      {
+        projects.map((project, index) => (
+          <ProjectRow>
+            <ProjectRowNumber>{String(index + 1).padStart(2, "0")}</ProjectRowNumber>
+            <ProjectRowTitle href={project.url}>{project.title}</ProjectRowTitle>
+            <ProjectRowContent>
+              <ProjectRowBody>{project.body}</ProjectRowBody>
+              <ProjectRowTopics>
+                {project.topics.map((topic) => (
+                  <ProjectRowTopic>{topic}</ProjectRowTopic>
+                ))}
+              </ProjectRowTopics>
+            </ProjectRowContent>
+          </ProjectRow>
+        ))
+      }
+    </ProjectsContent>
+  </Projects>
 </Layout>

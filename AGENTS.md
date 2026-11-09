@@ -32,12 +32,12 @@ optional background.
 
 ## Conventions
 
-- **Never launch Playwright or a browser probe on your own initiative.** Read
-  the code — components, classes, data and their computed consequences — and
-  settle the question from source. Run a probe only when the user asks for one;
-  using the `verify-m4t` skill is acceptable without asking.
-  [docs/verification.md](docs/verification.md) ranks evidence but does not grant
-  permission.
+- **Verify visual claims with the probe, not source reading alone.** When a claim
+  needs measurement the source cannot give (alignment, overlap, viewport-relative
+  sizing), state the prediction, then run [scripts/probe.mts](scripts/probe.mts)
+  or the `verify-m4t` skill against the running dev server.
+  [docs/verification.md](docs/verification.md) ranks the evidence and sets the
+  cost rules — probe at checkpoints, not after every edit.
 - Never write comments. Only exception is when user explicitly asks.
 - Git hooks enforce `vpx astro check` on staged `.astro` files and `commitlint`
   on messages; run `vpx astro check` after changing any `.astro` file, and
