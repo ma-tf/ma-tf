@@ -35,7 +35,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="taupe">
         <img
-          src="https://cdn.m4t.tf/music/20251014_Japan%206_19.webp"
+          src="https://cdn.m4t.tf/music/japan-6-19.avif"
           alt=""
           loading="eager"
           decoding="async"
