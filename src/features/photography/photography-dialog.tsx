@@ -120,7 +120,10 @@ export function PhotographyDialog({
             <DialogHeader>
               <DialogTitle>{children}</DialogTitle>
               <DialogDescription>
-                Shot by the {camera} {film ? ` on ${film}` : null}
+                Shot by the{" "}
+                <span className="text-ember-600 dark:text-ember-400">
+                  {camera} {film ? ` on ${film}` : null}
+                </span>
               </DialogDescription>
             </DialogHeader>
           </div>

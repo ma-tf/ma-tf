@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { NavButton } from "@components/nav-button";
 import {
   Photography,
+  PhotographyCameras,
   PhotographyContent,
   PhotographyDescription,
   PhotographyGrid,
@@ -14,7 +15,9 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
   return (
     <Photography>
       <PhotographyHeader>
-        <PhotographyTitle className="animate-fade-up">photography</PhotographyTitle>
+        <PhotographyTitle className="animate-fade-up">
+          photography<span className="text-ember-600 dark:text-ember-400">.</span>
+        </PhotographyTitle>
         <nav
           className="flex w-fit animate-fade-up flex-col items-stretch gap-1 animation-delay-50"
           aria-label="Section navigation"
@@ -34,16 +37,19 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
           </p>
           <ul className="animate-reveal">
             <li>
-              a <span className="italic">Canon EOS-1V</span> as my primary camera with swappable
-              lenses;
+              a <span className="text-ember-600 italic dark:text-ember-400">Canon EOS-1V</span> as
+              my primary camera with swappable lenses;
             </li>
             <li>
-              an <span className="italic">Olympus mju mini Digital</span> for when I want retro
-              digital shots;
+              an{" "}
+              <span className="text-ember-600 italic dark:text-ember-400">
+                Olympus mju mini Digital
+              </span>{" "}
+              for when I want retro digital shots;
             </li>
             <li>
-              a <span className="italic">Ricoh Mirai</span> when I need an all rounder bridge
-              camera.
+              a <span className="text-ember-600 italic dark:text-ember-400">Ricoh Mirai</span> when
+              I need an all rounder bridge camera.
             </li>
           </ul>
           <p className="animate-reveal">
@@ -59,6 +65,7 @@ export function PhotographyPage({ children }: { children: ReactNode }) {
             frame costs something, so each one has to be intentional, and the anticipation of
             waiting for a roll to come back is part of the appeal.
           </p>
+          <PhotographyCameras />
         </PhotographyDescription>
         <PhotographyGrid>{children}</PhotographyGrid>
       </PhotographyContent>

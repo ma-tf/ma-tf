@@ -227,6 +227,11 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   -webkit-mask-image: radial-gradient(ellipse at center, rgb(0 0 0 / 0.3) 25%, black 70%);
 }
 
+@utility mask-mirrored-fade-l {
+  mask-image: linear-gradient(to right, black, transparent);
+  -webkit-mask-image: linear-gradient(to right, black, transparent);
+}
+
 @utility sphere-vector {
   stroke-width: 0.75px;
   vector-effect: non-scaling-stroke;
@@ -246,6 +251,9 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     opacity: 1;
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-visible)) [data-wash="emerald"] {
+    opacity: 1;
+  }
+  &:has([data-wash="ember"]:is(:hover, :focus-visible)) [data-wash="ember"] {
     opacity: 1;
   }
 }

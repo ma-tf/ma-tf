@@ -15,25 +15,24 @@ import {
 import "../styles/global.css";
 
 const {
-  title,
-  description,
-  hideOverflow = false,
-  showHeader = true,
-  showFooter = true,
-  noindex = false,
+	title,
+	description,
+	hideOverflow = false,
+	showHeader = true,
+	showFooter = true,
+	noindex = false,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const markdownPath =
-	Astro.url.pathname === "/" ? "/index.md" : `${Astro.url.pathname.replace(/\/+$/, "")}.md`;
+	Astro.url.pathname === "/"
+		? "/index.md"
+		: `${Astro.url.pathname.replace(/\/+$/, "")}.md`;
 const markdownUrl = new URL(markdownPath, siteUrl).href;
 const ard = resourceByRel("ard");
 const agentSkills = resourceByRel("agent-skills");
-const ogImage = new URL(
-	siteIdentity.ogImagePath,
-	`${R2_PUBLIC_URL}/`,
-);
+const ogImage = new URL(siteIdentity.ogImagePath, `${R2_PUBLIC_URL}/`);
 const faqAnswers =
 	Astro.url.pathname === "/"
 		? (await getCollection("faq"))
@@ -52,7 +51,9 @@ const pageTitle =
 			? `${pageName} | ${siteIdentity.name}`
 			: `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 const pageDescription =
-	description ?? pageDescriptionFor(Astro.url.pathname) ?? siteIdentity.description;
+	description ??
+	pageDescriptionFor(Astro.url.pathname) ??
+	siteIdentity.description;
 ---
 
 <script is:inline>
@@ -64,7 +65,9 @@ const pageDescription =
 <script is:inline>
 	const readVisited = () => {
 		try {
-			const stored = JSON.parse(sessionStorage.getItem("visited-pages") || "[]");
+			const stored = JSON.parse(
+				sessionStorage.getItem("visited-pages") || "[]",
+			);
 			return Array.isArray(stored) ? stored : [];
 		} catch {
 			return [];
@@ -136,13 +139,15 @@ const pageDescription =
 			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		{!noindex && (
-			<script
-				is:inline
-				type="application/ld+json"
-				set:html={JSON.stringify(jsonLd)}
-			/>
-		)}
+		{
+			!noindex && (
+				<script
+					is:inline
+					type="application/ld+json"
+					set:html={JSON.stringify(jsonLd)}
+				/>
+			)
+		}
 	</head>
 	<body
 		class:list={[
@@ -154,13 +159,14 @@ const pageDescription =
 		<main class="flex flex-1 flex-col">
 			<slot />
 		</main>
-		{askEnabled && (
-			<script>
-				import { registerAskTool } from "@features/faq/ask-tool";
-
-				registerAskTool();
-			</script>
-		)}
+		{
+			askEnabled && (
+				<script>
+					import {registerAskTool} from "@features/faq/ask-tool";
+					registerAskTool();
+				</script>
+			)
+		}
 		{showFooter && <Footer />}
 	</body>
 </html>

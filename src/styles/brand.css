@@ -29,6 +29,10 @@
   --color-vignettes-400: oklch(0.65 0.06 255);
   --color-vignettes-800: oklch(0.45 0.05 255);
 
+  --color-ember-400: oklch(0.71 0.18 28);
+  --color-ember-600: oklch(0.55 0.19 28);
+  --color-ember-800: oklch(0.42 0.14 28);
+
   --color-emerald-50: oklch(97.9% 0.021 166.113);
   --color-emerald-100: oklch(95% 0.052 163.051);
   --color-emerald-400: oklch(76.5% 0.177 163.223);

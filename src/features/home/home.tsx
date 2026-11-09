@@ -63,9 +63,9 @@ export function HomePage() {
         </HomeSectionRow>
 
         <HomeSectionRow>
-          <SectionIndicator />
+          <SectionIndicator color="ember" />
           <HomeSectionNumber />
-          <HomeSectionTitleLink data-wash="gray" href="/photography">
+          <HomeSectionTitleLink data-wash="ember" href="/photography">
             Photography
           </HomeSectionTitleLink>
         </HomeSectionRow>

@@ -12,6 +12,7 @@ const washVariants = cva(
         taupe: "bg-linear-to-l from-taupe-400/50 to-transparent to-75% dark:from-taupe-800/50",
         blue: "bg-linear-to-l from-vignettes-400/50 to-transparent to-75% dark:from-vignettes-800/50",
         emerald: "bg-linear-to-l from-emerald-100 to-transparent dark:from-emerald-900",
+        ember: "bg-linear-to-l from-ember-400/60 to-transparent dark:from-ember-800/60",
       },
     },
     defaultVariants: {

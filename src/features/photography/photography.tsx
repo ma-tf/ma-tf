@@ -60,6 +60,67 @@ export function PhotographyGrid({ children, className, ...props }: ComponentProp
   );
 }
 
+export function PhotographyCameras({ className, ...props }: ComponentProps<"div">) {
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-3 items-center justify-items-center gap-4 py-8 indent-0",
+        className,
+      )}
+      {...props}
+    >
+      <button
+        type="button"
+        data-camera
+        aria-label="Shake the Canon EOS-1V"
+        className="cursor-pointer"
+      >
+        <img
+          src="https://cdn.m4t.tf/photography/canoneos1v.png"
+          width={554}
+          height={421}
+          alt="Canon EOS-1V"
+          loading="lazy"
+          decoding="async"
+          className="h-auto w-32 animate-reveal drop-shadow-chrome"
+        />
+      </button>
+      <button
+        type="button"
+        data-camera
+        aria-label="Shake the Olympus mju mini Digital"
+        className="cursor-pointer"
+      >
+        <img
+          src="https://cdn.m4t.tf/photography/olympusmjumini.png"
+          width={554}
+          height={421}
+          alt="Olympus mju mini Digital"
+          loading="lazy"
+          decoding="async"
+          className="h-auto w-32 animate-reveal drop-shadow-chrome"
+        />
+      </button>
+      <button
+        type="button"
+        data-camera
+        aria-label="Shake the Ricoh Mirai"
+        className="cursor-pointer"
+      >
+        <img
+          src="https://cdn.m4t.tf/photography/ricohmirai.png"
+          width={554}
+          height={421}
+          alt="Ricoh Mirai"
+          loading="lazy"
+          decoding="async"
+          className="h-auto w-32 animate-reveal drop-shadow-chrome"
+        />
+      </button>
+    </div>
+  );
+}
+
 export function PhotographyContent({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
