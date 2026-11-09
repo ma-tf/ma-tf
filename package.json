@@ -62,7 +62,7 @@
     "@types/node": "^26.6.6",
     "@types/turndown": "^5.0.6",
     "astro": "^7.4.7",
-    "fallow": "^3.40.0",
+    "fallow": "^3.41.0",
     "happy-dom": "^21.0.4",
     "is-agentic": "^1.0.1",
     "mdast-util-to-string": "^4.0.0",
