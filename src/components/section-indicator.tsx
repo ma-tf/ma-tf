@@ -16,6 +16,7 @@ const sectionIndicatorVariants = cva(
           "group-has-[[data-title]:hover]:bg-emerald-400 group-has-[[data-title]:hover]:dark:bg-emerald-800 group-has-[[data-title]:focus-within]:bg-emerald-400 group-has-[[data-title]:focus-within]:dark:bg-emerald-800",
         ember:
           "group-has-[[data-title]:hover]:bg-ember-400 group-has-[[data-title]:hover]:dark:bg-ember-800 group-has-[[data-title]:focus-within]:bg-ember-400 group-has-[[data-title]:focus-within]:dark:bg-ember-800",
+        plum: "group-has-[[data-title]:hover]:bg-plum-400 group-has-[[data-title]:hover]:dark:bg-plum-800 group-has-[[data-title]:focus-within]:bg-plum-400 group-has-[[data-title]:focus-within]:dark:bg-plum-800",
       },
     },
     defaultVariants: {

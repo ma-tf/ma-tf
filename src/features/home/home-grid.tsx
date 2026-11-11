@@ -17,6 +17,7 @@ export function HomeGrid() {
         </div>
       </div>
       <Wash color="gray" />
+      <Wash color="plum" />
       <Wash color="ember">
         <div aria-hidden="true" className="absolute inset-0 flex items-start justify-end">
           <img
@@ -25,7 +26,7 @@ export function HomeGrid() {
             loading="eager"
             decoding="async"
             fetchPriority="high"
-            className="h-auto w-4/5 -scale-x-100 mask-mirrored-fade-l mix-blend-luminosity contrast-105 grayscale"
+            className="h-full w-4/5 -scale-x-100 mask-mirrored-fade-l object-cover mix-blend-luminosity contrast-105"
           />
         </div>
         <span
@@ -40,7 +41,7 @@ export function HomeGrid() {
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover mix-blend-luminosity contrast-105 grayscale"
+          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover mix-blend-luminosity contrast-105"
         />
         <span
           aria-hidden="true"
@@ -54,7 +55,7 @@ export function HomeGrid() {
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left mix-blend-luminosity contrast-105 grayscale"
+          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left mix-blend-luminosity contrast-105"
         />
         <span
           aria-hidden="true"
@@ -68,7 +69,7 @@ export function HomeGrid() {
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left mix-blend-luminosity contrast-105 grayscale"
+          className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left mix-blend-luminosity contrast-105"
         />
         <span
           aria-hidden="true"

@@ -138,6 +138,7 @@ export default defineConfig({
     alias: {
       "astro:middleware": "astro/virtual-modules/middleware.js",
       "@/": fileURLToPath(new URL("./", import.meta.url)),
+      "@components": fileURLToPath(new URL("./src/components", import.meta.url)),
       "@content": fileURLToPath(new URL("./src/content", import.meta.url)),
       "@features": fileURLToPath(new URL("./src/features", import.meta.url)),
       "@lib": fileURLToPath(new URL("./src/lib", import.meta.url)),

@@ -237,6 +237,21 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   vector-effect: non-scaling-stroke;
 }
 
+@utility tilt-x-* {
+  --tilt-x: calc(--value(integer) * 1deg);
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+@utility -tilt-x-* {
+  --tilt-x: calc(--value(integer) * -1deg);
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+@utility tilt-y-* {
+  --tilt-y: calc(--value(integer) * 1deg);
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
 @utility wash-state {
   &:has([data-wash]:is(:hover, :focus-within)) [data-grid] {
     opacity: 0;
@@ -245,7 +260,8 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-wash="taupe"],
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-wash="blue"],
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-wash="emerald"],
-  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-wash="ember"] {
+  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-wash="ember"],
+  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-wash="plum"] {
     opacity: 1;
   }
 }
