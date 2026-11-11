@@ -4,18 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 
 const sectionIndicatorVariants = cva(
-  "h-10 w-0.5 shrink-0 transition-[width,background-color] duration-150 motion-reduce:transition-none",
+  "h-10 w-0.5 shrink-0 bg-foreground/30 transition-[width,background-color] duration-150 group-has-[[data-title]:focus-within]:w-3.5 group-has-[[data-title]:hover]:w-3.5 motion-reduce:transition-none",
   {
     variants: {
       color: {
-        gray: "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-foreground/30 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-foreground/30",
+        gray: "",
         taupe:
-          "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-taupe-400 group-has-[a:hover]:dark:bg-taupe-800 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-taupe-400 group-has-[a:focus-visible]:dark:bg-taupe-800",
-        blue: "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-vignettes-400 group-has-[a:hover]:dark:bg-vignettes-800 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-vignettes-400 group-has-[a:focus-visible]:dark:bg-vignettes-800",
+          "group-has-[[data-title]:hover]:bg-taupe-400 group-has-[[data-title]:hover]:dark:bg-taupe-800 group-has-[[data-title]:focus-within]:bg-taupe-400 group-has-[[data-title]:focus-within]:dark:bg-taupe-800",
+        blue: "group-has-[[data-title]:hover]:bg-vignettes-400 group-has-[[data-title]:hover]:dark:bg-vignettes-800 group-has-[[data-title]:focus-within]:bg-vignettes-400 group-has-[[data-title]:focus-within]:dark:bg-vignettes-800",
         emerald:
-          "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-emerald-400 group-has-[a:hover]:dark:bg-emerald-800 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-emerald-400 group-has-[a:focus-visible]:dark:bg-emerald-800",
+          "group-has-[[data-title]:hover]:bg-emerald-400 group-has-[[data-title]:hover]:dark:bg-emerald-800 group-has-[[data-title]:focus-within]:bg-emerald-400 group-has-[[data-title]:focus-within]:dark:bg-emerald-800",
         ember:
-          "bg-foreground/30 group-has-[a:hover]:w-3.5 group-has-[a:hover]:bg-ember-400 group-has-[a:hover]:dark:bg-ember-800 group-has-[a:focus-visible]:w-3.5 group-has-[a:focus-visible]:bg-ember-400 group-has-[a:focus-visible]:dark:bg-ember-800",
+          "group-has-[[data-title]:hover]:bg-ember-400 group-has-[[data-title]:hover]:dark:bg-ember-800 group-has-[[data-title]:focus-within]:bg-ember-400 group-has-[[data-title]:focus-within]:dark:bg-ember-800",
       },
     },
     defaultVariants: {

@@ -238,22 +238,14 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
 }
 
 @utility wash-state {
-  &:has([data-wash]:is(:hover, :focus-visible)) [data-grid] {
+  &:has([data-wash]:is(:hover, :focus-within)) [data-grid] {
     opacity: 0;
   }
-  &:has([data-wash="gray"]:is(:hover, :focus-visible)) [data-wash="gray"] {
-    opacity: 1;
-  }
-  &:has([data-wash="taupe"]:is(:hover, :focus-visible)) [data-wash="taupe"] {
-    opacity: 1;
-  }
-  &:has([data-wash="blue"]:is(:hover, :focus-visible)) [data-wash="blue"] {
-    opacity: 1;
-  }
-  &:has([data-wash="emerald"]:is(:hover, :focus-visible)) [data-wash="emerald"] {
-    opacity: 1;
-  }
-  &:has([data-wash="ember"]:is(:hover, :focus-visible)) [data-wash="ember"] {
+  &:has([data-wash="gray"]:is(:hover, :focus-within)) [data-wash="gray"],
+  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-wash="taupe"],
+  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-wash="blue"],
+  &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-wash="emerald"],
+  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-wash="ember"] {
     opacity: 1;
   }
 }
