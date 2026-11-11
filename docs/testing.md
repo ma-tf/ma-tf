@@ -67,8 +67,12 @@ node --import ./scripts/alias-loader.mjs scripts/probe.mts http://localhost:4321
 
 - `--viewport=<width>x<height>` — viewport size (required).
 - `--scroll=<y>` — scroll to a vertical offset before probing.
+- `--hover=<selector>` — hover the first match before probing.
+- `--focus=<selector>` — focus the first match before probing.
+- `--click=<selector>` — click the first match before probing (may navigate).
 - `--shot=<path>` — save a viewport screenshot.
-- `--wait=<ms>` — wait after load and scroll before probing.
+- `--clip=<x,y,w,h>` — clip the screenshot region (needs `--shot`).
+- `--wait=<ms>` — wait after load, scroll and interaction before probing.
 
 Playwright is pinned to the Chromium build already cached under
 `~/.cache/ms-playwright`, so the probe needs no browser download.

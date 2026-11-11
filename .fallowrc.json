@@ -16,5 +16,6 @@
     "src/components/icons/**",
     "src/components/ui/**",
     "doctor.config.ts"
-  ]
+  ],
+  "ignoreBinaries": ["secretspec"]
 }

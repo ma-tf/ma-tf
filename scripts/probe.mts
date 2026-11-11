@@ -29,8 +29,12 @@ type Options = {
   url: string;
   viewport: Viewport;
   scroll: number;
+  hover: string | undefined;
+  focus: string | undefined;
+  click: string | undefined;
   wait: number;
   shot: string | undefined;
+  clip: { x: number; y: number; width: number; height: number } | undefined;
   selectors: string[];
 };
 
@@ -45,7 +49,27 @@ const OPTIONS = [
     placeholder: "<y>",
     description: "Scroll to a vertical offset before probing",
   },
+  {
+    name: "--hover",
+    placeholder: "<selector>",
+    description: "Hover the first match before probing",
+  },
+  {
+    name: "--focus",
+    placeholder: "<selector>",
+    description: "Focus the first match before probing",
+  },
+  {
+    name: "--click",
+    placeholder: "<selector>",
+    description: "Click the first match before probing (may navigate)",
+  },
   { name: "--shot", placeholder: "<path>", description: "Save a screenshot to the given path" },
+  {
+    name: "--clip",
+    placeholder: "<x,y,w,h>",
+    description: "Clip the screenshot region (needs --shot)",
+  },
   {
     name: "--wait",
     placeholder: "<ms>",
@@ -87,10 +111,43 @@ function parseOptions(argv: string[]): Options {
     url,
     viewport: parseViewport(readValue(args, "--viewport")),
     scroll: parseNumericFlag(readValue(args, "--scroll"), "--scroll", { fallback: 0, minimum: 0 }),
+    hover: readValue(args, "--hover"),
+    focus: readValue(args, "--focus"),
+    click: readValue(args, "--click"),
     wait: parseNumericFlag(readValue(args, "--wait"), "--wait", { fallback: 0, minimum: 0 }),
     shot: readValue(args, "--shot"),
+    clip: parseClip(readValue(args, "--clip"), Boolean(readValue(args, "--shot"))),
     selectors,
   };
+}
+
+function clipNumbers(value: string): number[] | null {
+  const parts = value.split(",").map(Number);
+  if (parts.length !== 4) return null;
+  if (!parts.every((part) => Number.isFinite(part) && part >= 0)) return null;
+  return parts;
+}
+
+function clipParts(value: string): [number, number, number, number] | null {
+  const parts = clipNumbers(value);
+  if (!parts) return null;
+  const [x = 0, y = 0, width = 0, height = 0] = parts;
+  if (width * height === 0) return null;
+  return [x, y, width, height];
+}
+
+export function parseClip(
+  value: string | undefined,
+  hasShot: boolean,
+): { x: number; y: number; width: number; height: number } | undefined {
+  if (value === undefined) return undefined;
+  if (!hasShot) throw new Error("--clip needs --shot to save the clipped region into");
+  const parts = clipParts(value);
+  if (!parts) {
+    throw new Error(`--clip must look like 180,40,220,160 with a non-zero size, got "${value}"`);
+  }
+  const [x, y, width, height] = parts;
+  return { x, y, width, height };
 }
 
 function round(value: number): number {
@@ -112,13 +169,29 @@ function formatResult(result: ProbeResult): string {
   ].join("  ");
 }
 
-async function preparePage(page: Page, options: Options): Promise<void> {
+async function runInteractions(page: Page, options: Options): Promise<void> {
+  const interactions = [
+    [options.hover, "hover"],
+    [options.focus, "focus"],
+    [options.click, "click"],
+  ] as const;
+  for (const [selector, method] of interactions) {
+    if (selector) await page.locator(selector).first()[method]();
+  }
+}
+
+export async function preparePage(page: Page, options: Options): Promise<void> {
   await page.goto(options.url, { waitUntil: "load" });
   await page.evaluate(() => document.fonts.ready);
 
   if (options.scroll > 0) await page.evaluate((y) => window.scrollTo(0, y), options.scroll);
+  await runInteractions(page, options);
   if (options.wait > 0) await page.waitForTimeout(options.wait);
-  if (options.shot) await page.screenshot({ path: options.shot });
+  if (options.shot) {
+    await page.screenshot(
+      options.clip ? { path: options.shot, clip: options.clip } : { path: options.shot },
+    );
+  }
 }
 
 function collectResults(page: Page, selectors: string[]): Promise<ProbeResult[]> {
