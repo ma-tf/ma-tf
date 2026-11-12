@@ -4,6 +4,15 @@ import { TagContent } from "@features/tags/tag-content";
 import { getTagIndex } from "@features/tags/tag-data";
 import { R2_PUBLIC_URL } from "astro:env/server";
 
+export async function getStaticPaths() {
+  const { tags } = await getTagIndex();
+
+  return [
+    { params: { tag: undefined } },
+    ...tags.map(({ tag }) => ({ params: { tag } })),
+  ];
+}
+
 const data = await getTagIndex();
 const { tags, postsByTag, allPosts } = data;
 const selected = data.tags.find(({ tag }) => tag === Astro.params.tag) ?? null;

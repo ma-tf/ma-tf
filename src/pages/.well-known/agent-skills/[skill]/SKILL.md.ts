@@ -1,6 +1,13 @@
 import type { APIRoute } from "astro";
 
-import { agentSkillMarkdown } from "@features/discovery/documents/agent-skills";
+import {
+  agentSkillMarkdown,
+  agentSkillSummaries,
+} from "@features/discovery/documents/agent-skills";
+
+export function getStaticPaths() {
+  return agentSkillSummaries().map(({ name }) => ({ params: { skill: name } }));
+}
 
 export const GET = (({ params }) => {
   const markdown = agentSkillMarkdown(params.skill ?? "");

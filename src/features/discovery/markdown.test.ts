@@ -1,3 +1,4 @@
+import { htmlToMarkdown } from "@features/discovery/html-markdown";
 import { formatMarkdownResponse } from "@features/discovery/markdown";
 import { describe, expect, it } from "vite-plus/test";
 
@@ -38,5 +39,11 @@ describe("formatMarkdownResponse", () => {
     const response = new Response("plain", { headers: { "Content-Type": "text/plain" } });
 
     expect(await formatMarkdownResponse(response, false).then((r) => r.text())).toBe("plain");
+  });
+
+  it("converts HTML to the same Markdown the response formatter serves", async () => {
+    const response = await formatMarkdownResponse(htmlResponse(page), false);
+
+    expect(await response.text()).toBe(await htmlToMarkdown(page));
   });
 });

@@ -8,6 +8,14 @@ import {
   VignettesMobileMenu,
 } from "@features/vignettes/vignettes-menu";
 
+export async function getStaticPaths() {
+  const vignettes = await getCollection("vignettes");
+
+  return vignettes
+    .filter(({ data }) => data.enabled)
+    .map(({ data }) => ({ params: { slug: data.slug } }));
+}
+
 const vignettes = (await getCollection("vignettes"))
   .filter(({ data }) => data.enabled)
   .sort((a, b) => a.data.order - b.data.order)

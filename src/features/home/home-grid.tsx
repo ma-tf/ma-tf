@@ -21,11 +21,10 @@ export function HomeGrid() {
       <Wash color="ember">
         <div aria-hidden="true" className="absolute inset-0 flex items-start justify-end">
           <img
-            src="https://cdn.m4t.tf/photography/luxembourg-19-statues.avif"
+            data-src="https://cdn.m4t.tf/photography/luxembourg-19-statues.avif"
             alt=""
-            loading="eager"
+            loading="lazy"
             decoding="async"
-            fetchPriority="high"
             className="h-full w-4/5 -scale-x-100 mask-mirrored-fade-l object-cover mix-blend-luminosity contrast-105"
           />
         </div>
@@ -36,11 +35,10 @@ export function HomeGrid() {
       </Wash>
       <Wash color="taupe">
         <img
-          src="https://cdn.m4t.tf/music/japan-6-19.avif"
+          data-src="https://cdn.m4t.tf/music/japan-6-19.avif"
           alt=""
-          loading="eager"
+          loading="lazy"
           decoding="async"
-          fetchPriority="high"
           className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover mix-blend-luminosity contrast-105"
         />
         <span
@@ -50,11 +48,10 @@ export function HomeGrid() {
       </Wash>
       <Wash color="blue">
         <img
-          src="https://cdn.m4t.tf/vignettes/bolex-dither-anon2.png"
+          data-src="https://cdn.m4t.tf/vignettes/bolex-dither-anon2.png"
           alt=""
-          loading="eager"
+          loading="lazy"
           decoding="async"
-          fetchPriority="high"
           className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left mix-blend-luminosity contrast-105"
         />
         <span
@@ -64,11 +61,10 @@ export function HomeGrid() {
       </Wash>
       <Wash color="emerald">
         <img
-          src="https://cdn.m4t.tf/blog/tags-bg-2.webp"
+          data-src="https://cdn.m4t.tf/blog/tags-bg-2.webp"
           alt=""
-          loading="eager"
+          loading="lazy"
           decoding="async"
-          fetchPriority="high"
           className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left mix-blend-luminosity contrast-105"
         />
         <span
@@ -76,6 +72,12 @@ export function HomeGrid() {
           className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
         />
       </Wash>
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "(function(){var seen={};function load(color){if(!color||seen[color])return;seen[color]=1;var img=document.querySelector('span[data-wash=\"'+color+'\"] img[data-src]');if(img&&img.getAttribute('data-src')){img.setAttribute('src',img.getAttribute('data-src'));img.removeAttribute('data-src');}}function onEvent(e){var t=e.target&&e.target.closest?e.target.closest('[data-title][data-wash]'):null;if(t)load(t.getAttribute('data-wash'));}document.addEventListener('pointerover',onEvent,{passive:true});document.addEventListener('focusin',onEvent);})();",
+        }}
+      />
     </>
   );
 }

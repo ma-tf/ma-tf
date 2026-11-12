@@ -10,6 +10,8 @@ import {
   originValidationResponse,
 } from "@modelcontextprotocol/server";
 
+export const prerender = false;
+
 const allowedHostnames = ["m4t.tf", ...localhostAllowedHostnames()];
 const allowedOrigins = ["m4t.tf", ...localhostAllowedOrigins()];
 

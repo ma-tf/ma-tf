@@ -2,6 +2,8 @@ import type { APIRoute } from "astro";
 
 import { listResourceMetadata } from "@features/mcp/catalogue";
 
+export const prerender = false;
+
 export const GET = (async () => {
   if (!import.meta.env.DEV) return new Response(null, { status: 404 });
 

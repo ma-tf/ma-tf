@@ -161,8 +161,7 @@ export function HomePage() {
           </HomeSectionTitle>
         </HomeSectionRow>
       </nav>
-      <div className="absolute top-1/2 right-16 hidden -translate-y-1/2 flex-col md:flex">
-        hello world
+      <div className="absolute top-1/2 right-16 -translate-y-1/2 flex-col md:flex">
         <img
           src="/home-prev-top2.png"
           alt=""
@@ -170,7 +169,7 @@ export function HomePage() {
           loading="eager"
           decoding="async"
           width={481}
-          className="drop-shadow-chrome"
+          className="hidden drop-shadow-chrome"
         />
         <img
           src="/home-prev-bottom2.png"
@@ -180,7 +179,7 @@ export function HomePage() {
           decoding="async"
           width={483}
           data-preview-bottom
-          className="-translate-y-5 drop-shadow-chrome transition-transform duration-150 motion-reduce:transition-none"
+          className="hidden -translate-y-5 drop-shadow-chrome transition-transform duration-150 motion-reduce:transition-none"
         />
       </div>
     </div>

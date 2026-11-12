@@ -8,6 +8,7 @@ import {
   corpusOutputPath,
   corpusSourceHash,
 } from "@features/ask/corpus/hash";
+import { htmlToMarkdown } from "@features/discovery/html-markdown";
 import { readFile, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
@@ -108,11 +109,16 @@ async function loadPage(
   });
 
   if (!response.ok) throw new Error(`Could not render published page ${localUrl.href}`);
-  if (!response.headers.get("Content-Type")?.startsWith("text/markdown")) {
-    throw new Error(`Expected a Markdown twin for ${localUrl.href}`);
+  const contentType = response.headers.get("Content-Type") ?? "";
+  const body = await response.text();
+  const content = contentType.startsWith("text/markdown")
+    ? body
+    : contentType.startsWith("text/html")
+      ? await htmlToMarkdown(body)
+      : null;
+  if (content === null) {
+    throw new Error(`Could not render published page ${localUrl.href} as Markdown`);
   }
-
-  const content = await response.text();
   const url = new URL(path, canonicalOrigin).href;
 
   return { url, title: pageTitle(content, url), content };
@@ -157,7 +163,11 @@ async function loadResourceBody(uri: string, origin: string): Promise<string> {
 
   if (!response.ok) throw new Error(`Could not read the MCP resource ${uri}`);
 
-  return response.text();
+  const body = await response.text();
+
+  return (response.headers.get("Content-Type") ?? "").startsWith("text/html")
+    ? htmlToMarkdown(body)
+    : body;
 }
 
 async function main(): Promise<void> {

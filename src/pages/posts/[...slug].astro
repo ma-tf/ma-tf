@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
+import { getRawPosts } from "@features/blog/post-data";
 import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
 import { NavButton } from "@components/nav-button";
 import { Pill } from "@components/pill";
@@ -15,6 +16,12 @@ import {
 } from "@features/posts/post";
 import { R2_PUBLIC_URL } from "astro:env/server";
 import PostBirdBreak from "@features/posts/post-bird-break.astro";
+
+export async function getStaticPaths() {
+  const posts = await getRawPosts();
+
+  return posts.map((post) => ({ params: { slug: post.data.slug } }));
+}
 
 const post = (await getCollection("blog")).find(
   (entry) => entry.data.slug === Astro.params.slug && !entry.data.draft,

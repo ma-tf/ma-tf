@@ -36,6 +36,8 @@ function logOnBodyEnd(response: Response, event: WideEvent): Response {
 }
 
 export const wideEventMiddleware: MiddlewareHandler = async (context, next) => {
+  if (context.isPrerendered) return next();
+
   const { pathname } = context.url;
   const api = isApiPath(pathname);
   const event = beginRequest(context.request, { path: pathname, method: context.request.method });
