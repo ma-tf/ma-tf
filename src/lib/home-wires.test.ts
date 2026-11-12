@@ -119,6 +119,13 @@ describe("wirePaths", () => {
     }
   });
 
+  it("starts the pair at a caller-supplied origin", () => {
+    const [first, second] = wirePaths(0, { x: 118, y: 418 }, { x: 128, y: 418 }, [0, 0], 0, 0, 20);
+
+    expect(first).toMatch(/^M 20,0 C/);
+    expect(second).toMatch(/^M 30,0 C/);
+  });
+
   it("shifts each wire by its own offset", () => {
     const [restA, restB] = wirePaths(0, { x: 118, y: 418 }, { x: 128, y: 418 });
     const [swayedA, swayedB] = wirePaths(0, { x: 118, y: 418 }, { x: 128, y: 418 }, [10, -5]);

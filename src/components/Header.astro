@@ -15,7 +15,7 @@ const chromeTopRight = `${R2_PUBLIC_URL}/misc/toprightchrome.png`;
 
 <header class="fixed top-0 z-50 w-full overflow-x-clip text-foreground">
   <div
-    class="relative mx-auto flex h-4 w-full items-stretch justify-between before:pointer-events-none before:absolute before:-top-4 before:-left-69 before:-z-1 before:drop-shadow-chrome before:content-(--chrome-top-mobile) md:before:content-(--chrome-top-left) after:pointer-events-none after:absolute after:-top-1.5 after:-right-9.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-(--chrome-top-right)"
+    class="relative mx-auto flex h-4 w-full items-stretch justify-between before:pointer-events-none before:absolute before:-top-4 before:right-0 before:left-auto before:-z-1 before:drop-shadow-chrome before:content-(--chrome-top-mobile) md:before:right-auto md:before:-left-69 md:before:content-(--chrome-top-left) after:pointer-events-none after:absolute after:-top-1.5 after:-right-9.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-(--chrome-top-right)"
     style={{
       "--chrome-top-mobile": `url("${chromeTopMobile}")`,
       "--chrome-top-left": `url("${chromeTopLeft}")`,

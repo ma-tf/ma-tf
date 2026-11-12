@@ -29,6 +29,8 @@ type WireShape = {
 };
 
 const ORIGIN_X = 60;
+const MOBILE_ORIGIN_X = 20;
+const MOBILE_QUERY = "(max-width: 767px)";
 const ORIGIN_SPREAD = 3;
 const ORIGIN_PAIR_GAP = 10;
 const BASE_STIFFNESS = 30;
@@ -126,9 +128,10 @@ export function wirePaths(
   offsets: [number, number] = [0, 0],
   sagA = 0,
   sagB = sagA,
+  originX = ORIGIN_X,
 ): [string, string] {
-  const anchorA = ORIGIN_X + index * ORIGIN_SPREAD;
-  const anchorB = ORIGIN_X + ORIGIN_PAIR_GAP + index * ORIGIN_SPREAD;
+  const anchorA = originX + index * ORIGIN_SPREAD;
+  const anchorB = originX + ORIGIN_PAIR_GAP + index * ORIGIN_SPREAD;
   return [
     singleWirePath(anchorA, landingA, WIRE_SHAPES[0], offsets[0], sagA),
     singleWirePath(anchorB, landingB, WIRE_SHAPES[1], offsets[1], sagB),
@@ -142,6 +145,7 @@ export function startHomeWires(): void {
   if (markers.length === 0) return;
   const paths = Array.from(svg.querySelectorAll<SVGPathElement>(PATH_SELECTOR));
   const pairCount = Math.floor(markers.length / 2);
+  const originFor = () => (window.matchMedia(MOBILE_QUERY).matches ? MOBILE_ORIGIN_X : ORIGIN_X);
 
   const readPairEnds = (pair: number): [WirePoint, WirePoint] | null => {
     const rectA = markers[pair * 2]?.getBoundingClientRect();
@@ -161,7 +165,7 @@ export function startHomeWires(): void {
     sagA: number,
     sagB: number,
   ) => {
-    const [firstD, secondD] = wirePaths(pair, first, second, offsets, sagA, sagB);
+    const [firstD, secondD] = wirePaths(pair, first, second, offsets, sagA, sagB, originFor());
     paths[pair * 2]?.setAttribute("d", firstD);
     paths[pair * 2 + 1]?.setAttribute("d", secondD);
   };
