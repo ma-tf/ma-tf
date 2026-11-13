@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 
+import { CDN_BASE } from "@lib/cdn";
 import { cn } from "cn";
 
 export function Photography({ children, className, ...props }: ComponentProps<"div">) {
@@ -76,7 +77,7 @@ export function PhotographyCameras({ className, ...props }: ComponentProps<"div"
         className="cursor-pointer"
       >
         <img
-          src="https://cdn.m4t.tf/photography/canoneos1v.png"
+          src={`${CDN_BASE}/photography/canoneos1v.png`}
           width={554}
           height={421}
           alt="Canon EOS-1V"
@@ -92,7 +93,7 @@ export function PhotographyCameras({ className, ...props }: ComponentProps<"div"
         className="cursor-pointer"
       >
         <img
-          src="https://cdn.m4t.tf/photography/olympusmjumini.png"
+          src={`${CDN_BASE}/photography/olympusmjumini.png`}
           width={554}
           height={421}
           alt="Olympus mju mini Digital"
@@ -108,7 +109,7 @@ export function PhotographyCameras({ className, ...props }: ComponentProps<"div"
         className="cursor-pointer"
       >
         <img
-          src="https://cdn.m4t.tf/photography/ricohmirai.png"
+          src={`${CDN_BASE}/photography/ricohmirai.png`}
           width={554}
           height={421}
           alt="Ricoh Mirai"

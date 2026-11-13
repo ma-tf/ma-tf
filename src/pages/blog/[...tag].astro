@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { TagContent } from "@features/tags/tag-content";
 import { getTagIndex } from "@features/tags/tag-data";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 
 export async function getStaticPaths() {
   const { tags } = await getTagIndex();
@@ -16,7 +16,6 @@ export async function getStaticPaths() {
 const data = await getTagIndex();
 const { tags, postsByTag, allPosts } = data;
 const selected = data.tags.find(({ tag }) => tag === Astro.params.tag) ?? null;
-const backgroundBaseUrl = R2_PUBLIC_URL;
 ---
 
 <Layout
@@ -31,10 +30,9 @@ const backgroundBaseUrl = R2_PUBLIC_URL;
   <div
     class="absolute inset-0 -z-10 bg-emerald-50 dark:bg-emerald-950"
     aria-hidden="true"
-  >
-  </div>
+  ></div>
   <TagContent
-    backgroundBaseUrl={backgroundBaseUrl}
+    backgroundBaseUrl={CDN_BASE}
     tags={tags}
     selected={selected}
     postsByTag={postsByTag}

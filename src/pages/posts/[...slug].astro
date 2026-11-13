@@ -14,7 +14,7 @@ import {
   PostMobileNavigation,
   PostTitle,
 } from "@features/posts/post";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 import PostBirdBreak from "@features/posts/post-bird-break.astro";
 
 export async function getStaticPaths() {
@@ -42,7 +42,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       class="mb-8 h-30 w-full overflow-hidden border border-foreground bg-muted"
     >
       <img
-        src={`${R2_PUBLIC_URL}/blog/sats2-540-crop.webp`}
+        src={`${CDN_BASE}/blog/sats2-540-crop.webp`}
         alt="Two satellite dishes on a desert ridge beneath a hazy orange sky."
         width="540"
         height="127"
@@ -96,7 +96,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       <Content components={{ ...proseComponents, PostBirdBreak }} />
     </PostContent>
     <img
-      src={`${R2_PUBLIC_URL}/blog/pencil-and-rubber-128.webp`}
+      src={`${CDN_BASE}/blog/pencil-and-rubber-128.webp`}
       alt=""
       width="128"
       height="82"

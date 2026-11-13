@@ -1,5 +1,6 @@
 import { Wash } from "@components/wash";
 import { Sphere } from "@features/home/sphere";
+import { CDN_BASE } from "@lib/cdn";
 
 export function HomeGrid() {
   return (
@@ -21,7 +22,7 @@ export function HomeGrid() {
       <Wash color="ember">
         <div aria-hidden="true" className="absolute inset-0 flex items-start justify-end">
           <img
-            data-src="https://cdn.m4t.tf/photography/luxembourg-19-statues.avif"
+            data-src={`${CDN_BASE}/photography/luxembourg-19-statues.avif`}
             alt=""
             loading="lazy"
             decoding="async"
@@ -35,7 +36,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="taupe">
         <img
-          data-src="https://cdn.m4t.tf/music/japan-6-19.avif"
+          data-src={`${CDN_BASE}/music/japan-6-19.avif`}
           alt=""
           loading="lazy"
           decoding="async"
@@ -48,7 +49,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="blue">
         <img
-          data-src="https://cdn.m4t.tf/vignettes/bolex-dither-anon2.png"
+          data-src={`${CDN_BASE}/vignettes/bolex-dither-anon2.png`}
           alt=""
           loading="lazy"
           decoding="async"
@@ -61,7 +62,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="emerald">
         <img
-          data-src="https://cdn.m4t.tf/blog/tags-bg-2.webp"
+          data-src={`${CDN_BASE}/blog/tags-bg-2.webp`}
           alt=""
           loading="lazy"
           decoding="async"

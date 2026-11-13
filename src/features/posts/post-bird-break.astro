@@ -1,12 +1,12 @@
 ---
 import { PostBird } from "@features/posts/post-bird";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 ---
 
 <div class="md:contents">
   <PostBird
-    src={`${R2_PUBLIC_URL}/blog/bird-80.webp`}
-    audioSrc={`${R2_PUBLIC_URL}/blog/bird.ogg`}
+    src={`${CDN_BASE}/blog/bird-80.webp`}
+    audioSrc={`${CDN_BASE}/blog/bird.ogg`}
     client:visible
   />
 </div>

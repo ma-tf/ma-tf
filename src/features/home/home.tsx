@@ -4,6 +4,7 @@ import { SectionIndicator } from "@components/section-indicator";
 import { HomeGrid } from "@features/home/home-grid";
 import { HomeLight } from "@features/home/home-light";
 import { HomeWires } from "@features/home/home-wires";
+import { CDN_BASE } from "@lib/cdn";
 import { cn } from "cn";
 
 function HomeSectionNumber({ className, ...props }: ComponentProps<"span">) {
@@ -66,7 +67,7 @@ function HomeSectionTitle({
             className="pointer-events-none absolute top-1/2 left-0 z-10 mt-1 -ml-5 w-49 -translate-y-1/2 md:-ml-1"
           >
             <img
-              src="https://cdn.m4t.tf/misc/home-page-dec2.png"
+              src={`${CDN_BASE}/misc/home-page-dec2.png`}
               alt=""
               aria-hidden="true"
               loading="eager"
@@ -117,7 +118,7 @@ export function HomePage() {
       <HomeWires />
       <nav
         aria-label="Sections"
-        className="relative -ml-32 flex flex-col gap-y-10 px-16 py-16 perspective-midrange md:absolute md:top-1/2 md:ml-0 md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
+        className="relative -ml-24 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-midrange md:absolute md:top-1/2 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
       >
         <HomeSectionRow className="-tilt-x-32 tilt-y-16">
           <HomeSectionDecorators />

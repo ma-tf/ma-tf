@@ -12,7 +12,7 @@ import {
 } from "@components/error-page";
 import { Link } from "@components/link";
 import RockBall from "@components/rock-ball.astro";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 ---
 
 <Layout
@@ -24,7 +24,7 @@ import { R2_PUBLIC_URL } from "astro:env/server";
     <div
       aria-hidden="true"
       class="relative hidden animate-fade-in overflow-hidden bg-(image:--background-image) bg-cover bg-center md:block md:flex-1"
-      style={{ "--background-image": `url("${R2_PUBLIC_URL}/500.webp")` }}
+      style={{ "--background-image": `url("${CDN_BASE}/500.webp")` }}
     ></div>
     <ErrorPage className="relative bg-background md:mx-0 md:w-160 md:max-w-none md:flex-none">
       <ErrorPageEyebrow className="animate-fade-in">Server error</ErrorPageEyebrow>

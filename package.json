@@ -13,7 +13,7 @@
     "check:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts --check",
     "generate": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts && node --import ./scripts/alias-loader.mjs scripts/generate-cv-pdf.mts",
     "generate:ask-corpus": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-corpus.mts",
-    "generate:ask-tags": "node scripts/generate-ask-tags.mts",
+    "generate:ask-tags": "node --import ./scripts/alias-loader.mjs scripts/generate-ask-tags.mts",
     "generate:cv-pdf": "node --import ./scripts/alias-loader.mjs scripts/generate-cv-pdf.mts",
     "lint:bench": "node --import ./scripts/alias-loader.mjs scripts/lint-bench.mts",
     "preview": "vpr generate && astro build && node --import ./scripts/alias-loader.mjs scripts/preview-server.mts",

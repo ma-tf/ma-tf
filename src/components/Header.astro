@@ -5,12 +5,12 @@ import MotionControlButton from "@components/MotionControlButton.astro";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { siteNavLinks } from "@lib/site-nav";
 import { GithubLogoIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
-const chromeTopMobile = `${R2_PUBLIC_URL}/misc/mobiletopchrome.png`;
-const chromeTopLeft = `${R2_PUBLIC_URL}/misc/topleftchrome.png`;
-const chromeTopRight = `${R2_PUBLIC_URL}/misc/toprightchrome.png`;
+const chromeTopMobile = `${CDN_BASE}/misc/mobiletopchrome.png`;
+const chromeTopLeft = `${CDN_BASE}/misc/topleftchrome.png`;
+const chromeTopRight = `${CDN_BASE}/misc/toprightchrome.png`;
 ---
 
 <header class="fixed top-0 z-50 w-full overflow-x-clip text-foreground">

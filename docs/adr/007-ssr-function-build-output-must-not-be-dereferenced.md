@@ -46,6 +46,6 @@ so the production workflow requests the site and fails on anything other than HT
 
 - A tagged commit is built twice: once by the dev workflow on `master`, once by the production
   workflow on the tag.
-- The `R2_*` and `PUBLIC_PREVIEW_*` environment block is duplicated across both workflows, because
+- The `PUBLIC_PREVIEW_*` environment block is duplicated across both workflows, because
   factoring the build into a reusable workflow would introduce the job boundary this ADR forbids.
 - A previously built artifact cannot be re-deployed without rebuilding.

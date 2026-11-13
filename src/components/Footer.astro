@@ -1,7 +1,7 @@
 ---
 import { ArrowUpIcon, BracketsCurlyIcon } from "@phosphor-icons/react";
 import { exploreLinks } from "@lib/site-nav";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 
 const columns = [
   {
@@ -26,7 +26,7 @@ const columns = [
 ].filter((column) => column.links.length > 0);
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
-const chromeBottom = `${R2_PUBLIC_URL}/misc/bottomleftchrome.png`;
+const chromeBottom = `${CDN_BASE}/misc/bottomleftchrome.png`;
 ---
 
 <footer

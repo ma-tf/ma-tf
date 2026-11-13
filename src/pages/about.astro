@@ -8,11 +8,11 @@ import { AboutTitle } from "@features/about/about";
 import { AskPanel } from "@features/faq/ask";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { askEnabled } from "@lib/feature-flags";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 ---
 
 <Layout>
-  <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
+  <StillLifePage baseUrl={`${CDN_BASE}/about`}>
     <Fragment slot="title"><AboutTitle>About</AboutTitle></Fragment>
     {
       askEnabled && (

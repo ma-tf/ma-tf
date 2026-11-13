@@ -16,7 +16,7 @@ import { StillLifeBackground } from "@components/still-life-background";
 import { stillLifeScroll } from "@components/still-life-hero";
 import { ScrollCue } from "@components/scroll-cue";
 import { askRateLimit } from "@lib/rate-limits";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 ---
 
 <Layout
@@ -26,7 +26,7 @@ import { R2_PUBLIC_URL } from "astro:env/server";
   <div class="relative w-full self-center max-w-480 md:overflow-hidden border-l">
     <Developers>
       <StillLifeBackground
-        baseUrl={`${R2_PUBLIC_URL}/about`}
+        baseUrl={`${CDN_BASE}/about`}
         {...stillLifeScroll}
         className="sticky top-0 col-start-1 row-start-1 h-lvh"
       />

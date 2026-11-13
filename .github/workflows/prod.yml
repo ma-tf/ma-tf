@@ -28,7 +28,6 @@ jobs:
       - run: vpx playwright install --with-deps chromium
       - run: vp run build
         env:
-          R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}
           PUBLIC_PREVIEW_GRAPHICS: ${{ vars.PUBLIC_PREVIEW_GRAPHICS }}
           PUBLIC_ASK_ENABLED: ${{ vars.PUBLIC_ASK_ENABLED }}
       - name: Check deploy secrets

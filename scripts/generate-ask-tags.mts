@@ -1,3 +1,4 @@
+import { CDN_BASE } from "@lib/cdn";
 import { createHash } from "node:crypto";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { loadEnvFile } from "node:process";
@@ -169,9 +170,6 @@ try {
 const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
 
-const cdn = process.env.R2_PUBLIC_URL;
-if (!cdn) throw new Error("R2_PUBLIC_URL is not set");
-
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === "string");
 }
@@ -188,7 +186,7 @@ function hashInput(seed: unknown): string {
 }
 
 function photoUrl(image: string): string {
-  return `${encodeURI(`${cdn}/${image}`)}_thumb.webp`;
+  return `${encodeURI(`${CDN_BASE}/${image}`)}_thumb.webp`;
 }
 
 function readLimit(): number | undefined {

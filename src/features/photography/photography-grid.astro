@@ -1,14 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import PhotographyColumn from "@features/photography/photography-column.astro";
-import { R2_PUBLIC_URL } from "astro:env/server";
-
-const r2 = R2_PUBLIC_URL;
+import { CDN_BASE } from "@lib/cdn";
 
 const photography = await getCollection("photography");
 
 const processed = photography.map((photography) => {
-	const base = encodeURI(`${r2}/${photography.data.image}`);
+	const base = encodeURI(`${CDN_BASE}/${photography.data.image}`);
 
 	return {
 		photography,

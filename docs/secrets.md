@@ -30,9 +30,8 @@ truth for what exists and where.
 `.env` holds local public flags only and is gitignored. No R2 credentials exist
 anywhere: assets are published through the Cloudflare dashboard. CI takes public
 config from GitHub `vars` and its two deploy secrets from GitHub `secrets`,
-asserted in `prod.yml`. `R2_PUBLIC_URL` is declared in the Astro `env.schema`,
-which defaults it to the CDN base; code reads it through `astro:env/server`,
-never through `import.meta.env`.
+asserted in `prod.yml`. CDN links come from `CDN_BASE` in `src/lib/cdn.ts`, not
+an environment variable.
 
 `git commit --no-verify` bypasses the hook, so this is a guardrail, not
 enforcement.

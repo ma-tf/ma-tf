@@ -5,11 +5,11 @@ import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { StillLifeCard } from "@components/still-life-hero";
 import StillLifePage from "@components/still-life-page.astro";
 import { PrivacyTitle } from "@features/privacy/privacy";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 ---
 
 <Layout>
-  <StillLifePage baseUrl={`${R2_PUBLIC_URL}/about`}>
+  <StillLifePage baseUrl={`${CDN_BASE}/about`}>
     <Fragment slot="title"><PrivacyTitle>Privacy</PrivacyTitle></Fragment>
     <StillLifeCard
       data-parallax={10}

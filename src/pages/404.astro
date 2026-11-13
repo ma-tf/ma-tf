@@ -12,7 +12,7 @@ import {
 } from "@components/error-page";
 import { Link } from "@components/link";
 import RockBall from "@components/rock-ball.astro";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 import { suggestPaths } from "@features/not-found/suggest-paths";
 import { siteNavLinks } from "@lib/site-nav";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
@@ -34,7 +34,7 @@ const [firstSuggestion, secondSuggestion] = suggestions;
     <div
       aria-hidden="true"
       class="relative hidden animate-fade-in overflow-hidden bg-(image:--background-image) bg-cover bg-center md:block md:flex-1"
-      style={{ "--background-image": `url("${R2_PUBLIC_URL}/404.webp")` }}
+      style={{ "--background-image": `url("${CDN_BASE}/404.webp")` }}
     ></div>
     <ErrorPage className="relative bg-background md:mx-0 md:w-160 md:max-w-none md:flex-none">
       <ErrorPageEyebrow className="animate-fade-in">Not found</ErrorPageEyebrow>

@@ -2,7 +2,7 @@
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import { getCollection } from "astro:content";
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 import { mcpPath, resourceByRel } from "@features/discovery/catalog";
 import { askEnabled } from "@lib/feature-flags";
 import {
@@ -32,7 +32,7 @@ const markdownPath =
 const markdownUrl = new URL(markdownPath, siteUrl).href;
 const ard = resourceByRel("ard");
 const agentSkills = resourceByRel("agent-skills");
-const ogImage = new URL(siteIdentity.ogImagePath, `${R2_PUBLIC_URL}/`);
+const ogImage = new URL(siteIdentity.ogImagePath, `${CDN_BASE}/`);
 const faqAnswers =
 	Astro.url.pathname === "/"
 		? (await getCollection("faq"))
@@ -135,8 +135,8 @@ const pageDescription =
 		<meta property="og:locale" content="en_GB" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="is-agentic-site-type" content="content" />
-		<link rel="preconnect" href="https://cdn.m4t.tf" />
-		<link rel="dns-prefetch" href="https://cdn.m4t.tf" />
+		<link rel="preconnect" href={CDN_BASE} />
+		<link rel="dns-prefetch" href={CDN_BASE} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link

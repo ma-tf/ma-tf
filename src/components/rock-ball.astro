@@ -1,8 +1,8 @@
 ---
-import { R2_PUBLIC_URL } from "astro:env/server";
+import { CDN_BASE } from "@lib/cdn";
 
-const imageUrl = `${R2_PUBLIC_URL}/misc/inset-b.webp`;
-const audioUrl = `${R2_PUBLIC_URL}/misc/rock.ogg`;
+const imageUrl = `${CDN_BASE}/misc/inset-b.webp`;
+const audioUrl = `${CDN_BASE}/misc/rock.ogg`;
 ---
 
 <button
