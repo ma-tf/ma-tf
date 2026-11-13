@@ -19,8 +19,8 @@ The header and footer bars stay transparent so the corner plates ghost through
 behind the chip fills; the effect must read identically in light and dark
 modes. Plates live on R2 under `misc/`, never in `public/`. Plate URLs reach
 the `before`/`after` pseudo-elements as `--chrome-*` properties through
-`style`, read with `content-[var(--chrome-*)]`, keeping every Tailwind class
-a complete string.
+`style`, read with a `content-(--chrome-top-left)` class, keeping every
+Tailwind class a complete string.
 
 ## Blog post content
 

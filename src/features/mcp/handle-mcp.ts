@@ -6,7 +6,8 @@ import type {
   ServerOptions,
 } from "@modelcontextprotocol/server";
 
-import { askInputSchema, askOutputSchema, askTool, type AskInput } from "@features/mcp/ask";
+import { askTool } from "@features/mcp/ask";
+import { askInputSchema, askOutputSchema, type AskInput } from "@features/mcp/ask-schema";
 import {
   askToolAnnotations,
   askToolDescription,

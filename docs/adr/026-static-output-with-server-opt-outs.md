@@ -13,11 +13,14 @@ its own opt-in, and the flags duplicated what the default could state once.
 
 The default is flipped: `output: "static"` in `astro.config.mjs`, so
 prerendering is the default and every per-page `prerender = true` flag is
-removed. Six routes opt back out with `export const prerender = false`:
+removed. Seven routes opt back out with `export const prerender = false`:
 
 - `ask.ts`: POST-only streaming endpoint with per-client metering
   (see ADR 013 and ADR 014).
 - `mcp.ts`: POST-only MCP handler with per-request host and origin validation.
+- `.well-known/mcp.ts`: the MCP manifest shares its URL prefix with the server
+  card at `.well-known/mcp/server-card.json`, and static output cannot hold a
+  file and a directory under the same name.
 - `api/llms.txt.ts`: part of the `/api/*` surface, which bypasses the discovery
   middleware (see ADR 013) and stays served by the function.
 - `404.astro`: suggests paths from the requested URL, so it renders per request.
@@ -27,7 +30,7 @@ removed. Six routes opt back out with `export const prerender = false`:
 
 The dynamic `[...tag]`, `[...slug]`, `[slug]` and skill-shim routes keep their
 `getStaticPaths` functions, which static output still requires. The Netlify
-adapter stays: it now serves only the six opt-outs. Tailwind, the remark
+adapter stays: it now serves only the seven opt-outs. Tailwind, the remark
 plugins and the env schema are untouched.
 
 ## Consequences
@@ -50,5 +53,5 @@ plugins and the env schema are untouched.
   records it without fixing it.
 - A route that needs request-time behaviour must remember to opt out; without
   `prerender = false` static output bakes its build-time response.
-- The deploy still needs the SSR function for the six opt-outs, so ADR 007's
+- The deploy still needs the SSR function for the seven opt-outs, so ADR 007's
   single-filesystem constraint on the build output stands.

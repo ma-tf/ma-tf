@@ -3,6 +3,8 @@ import type { APIRoute } from "astro";
 import { buildMcpManifest } from "@features/discovery/documents/mcp-manifest";
 import { askEnabled } from "@lib/feature-flags";
 
+export const prerender = false;
+
 export const GET = (() =>
   askEnabled
     ? Response.json(buildMcpManifest(), {

@@ -1,5 +1,5 @@
 import { mcpPath, siteUrl } from "@features/discovery/catalog";
-import { askInputSchema } from "@features/mcp/ask";
+import { askInputSchema } from "@features/mcp/ask-schema";
 import {
   askToolAnnotations,
   askToolDescription,
