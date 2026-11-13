@@ -1,96 +1,16 @@
 ---
-import { CommandMenu } from "@components/command-menu";
-import { ModeToggle } from "@components/ModeToggle";
-import MotionControlButton from "@components/MotionControlButton.astro";
+import { Header } from "@components/header";
 import { siteIdentity } from "@features/seo/site-metadata";
 import { siteNavLinks } from "@lib/site-nav";
-import { GithubLogoIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
-import { CDN_BASE } from "@lib/cdn";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
-const chromeTopMobile = `${CDN_BASE}/misc/mobiletopchrome.png`;
-const chromeTopLeft = `${CDN_BASE}/misc/topleftchrome.png`;
-const chromeTopRight = `${CDN_BASE}/misc/toprightchrome.png`;
 ---
 
-<header class="fixed top-0 z-50 w-full overflow-x-clip text-foreground">
-  <div
-    class="relative mx-auto flex h-4 w-full items-stretch justify-between before:pointer-events-none before:absolute before:-top-4 before:right-0 before:left-auto before:-z-1 before:drop-shadow-chrome before:content-(--chrome-top-mobile) md:before:right-auto md:before:-left-69 md:before:content-(--chrome-top-left) after:pointer-events-none after:absolute after:-top-1.5 after:-right-9.5 after:-z-1 after:drop-shadow-chrome after:content-none md:after:content-(--chrome-top-right)"
-    style={{
-      "--chrome-top-mobile": `url("${chromeTopMobile}")`,
-      "--chrome-top-left": `url("${chromeTopLeft}")`,
-      "--chrome-top-right": `url("${chromeTopRight}")`,
-    }}
-  >
-    <div class="flex items-stretch gap-0.5">
-      <a
-        href="/"
-        aria-label="m4t.tf home"
-        class="group flex items-center gap-2 bg-background/15 hover:bg-background/50 px-2 font-mono text-xs tracking-widest text-muted-foreground uppercase inset-shadow-chip-bottom rounded-b-xs transition-colors duration-150 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50"
-      >
-        <img
-          src="/favicon.png"
-          alt=""
-          width="12"
-          height="12"
-          class="size-3 shrink-0 opacity-80 transition-opacity duration-150 group-hover:opacity-100"
-        />
-        <!-- m4t.tf -->
-      </a>
-      {
-        currentPath !== "/cv" && (
-          <a
-            href="/cv"
-            aria-label="CV"
-            title="CV"
-            class="group grid place-items-center bg-background/15 hover:bg-background/50 px-2 text-muted-foreground inset-shadow-chip-bottom rounded-b-xs transition-colors duration-150 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50"
-          >
-            <ReadCvLogoIcon
-              size={12}
-              weight="bold"
-              aria-hidden="true"
-              className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
-            />
-          </a>
-        )
-      }
-      <a
-        href={siteIdentity.github}
-        rel="noreferrer"
-        aria-label="GitHub"
-        title="GitHub"
-        class="group grid place-items-center bg-background/15 hover:bg-background/50 px-2 text-muted-foreground inset-shadow-chip-bottom rounded-b-xs transition-colors duration-150 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50"
-      >
-        <GithubLogoIcon
-          size={12}
-          weight="bold"
-          aria-hidden="true"
-          className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
-        />
-      </a>
-    </div>
-    <div class="flex items-stretch md:gap-0.5">
-      <div
-        class="flex border-l border-foreground/20 transition-colors duration-150 md:border-l-0 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50 dark:border-background/20"
-      >
-        <CommandMenu
-          pages={siteNavLinks}
-          email={siteIdentity.email}
-          github={siteIdentity.github}
-          linkedin={siteIdentity.linkedin}
-          client:idle
-        />
-      </div>
-      <div
-        class="flex border-l border-foreground/20 transition-colors duration-150 md:border-l-0 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50 dark:border-background/20"
-      >
-        <MotionControlButton />
-      </div>
-      <div
-        class="flex border-l border-foreground/20 transition-colors duration-150 md:border-l-0 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip-bottom md:rounded-b-xs md:dark:bg-white/15 md:dark:hover:bg-white/50 dark:border-background/20"
-      >
-        <ModeToggle client:load />
-      </div>
-    </div>
-  </div>
-</header>
+<Header
+  currentPath={currentPath}
+  pages={siteNavLinks}
+  email={siteIdentity.email}
+  github={siteIdentity.github}
+  linkedin={siteIdentity.linkedin}
+  client:load
+/>
