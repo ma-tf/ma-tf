@@ -243,7 +243,7 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
         </div>
         <MobileHeaderMenu />
       </div>
-      <HeaderBar className="hidden before:-top-4 before:-left-69 before:content-(--chrome-top-left) after:-top-1.5 after:-right-9.5 after:content-(--chrome-top-right) md:flex">
+      <HeaderBar className="hidden before:-top-4 before:-left-69 before:content-(--chrome-top-left) after:-top-1.5 after:-right-9.5 after:content-(--chrome-top-right) has-data-[mode=hidden]:after:-right-15.5 md:flex">
         <div className="flex items-stretch gap-0.5">
           <HeaderControl>
             <HeaderChip href="/" aria-label="m4t.tf home">
