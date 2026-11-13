@@ -181,6 +181,7 @@ function MobileHeaderMenu() {
   );
 }
 
+/* TODO: extract components properly */
 export function Header({ currentPath, pages, email, github, linkedin }: HeaderProps) {
   const showCv = currentPath !== "/cv";
 
@@ -229,7 +230,7 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
               </HeaderChip>
             </HeaderControl>
           </div>
-          <div className="flex items-stretch gap-0.5 pr-7.5">
+          <div className="flex items-stretch gap-0.5 pr-8">
             <HeaderControl className="w-7.5 justify-center">
               <CommandMenu pages={pages} email={email} github={github} linkedin={linkedin} />
             </HeaderControl>

@@ -21,7 +21,7 @@ const LABELS: Record<Exclude<MotionMode, "hidden">, string> = {
   reset: "Reset animations",
 };
 
-let activeControl: HTMLElement | null = null;
+let activeControls = new Set<HTMLElement>();
 let teardown: (() => void) | null = null;
 
 const initialMode = (): MotionMode | null => {
@@ -34,22 +34,24 @@ const initialMode = (): MotionMode | null => {
 };
 
 export function startMotionControl() {
-  const control = document.querySelector<HTMLElement>(CONTROL_SELECTOR);
-  if (!control) return;
-  if (control === activeControl) return;
+  const controls = Array.from(document.querySelectorAll<HTMLElement>(CONTROL_SELECTOR));
+  if (controls.length === 0) return;
+  if (controls.every((control) => activeControls.has(control))) return;
 
   teardown?.();
 
-  activeControl = control;
+  activeControls = new Set(controls);
 
   const running = new Set<Animation>();
   let fallback = 0;
 
   const setMode = (mode: MotionMode) => {
-    control.dataset.mode = mode;
-    if (mode === "hidden") return;
-    control.setAttribute("aria-label", LABELS[mode]);
-    control.setAttribute("title", LABELS[mode]);
+    for (const control of controls) {
+      control.dataset.mode = mode;
+      if (mode === "hidden") continue;
+      control.setAttribute("aria-label", LABELS[mode]);
+      control.setAttribute("title", LABELS[mode]);
+    }
   };
 
   const settleIfIdle = () => {
@@ -79,24 +81,24 @@ export function startMotionControl() {
   };
 
   const onClick = () => {
-    if (control.dataset.mode === "reset") reset();
+    if (controls[0]?.dataset.mode === "reset") reset();
     else skip();
   };
 
   const onTypewriterStart = () => setMode("skip");
   const onTypewriterEnd = () => settleIfIdle();
 
-  control.addEventListener("click", onClick);
+  for (const control of controls) control.addEventListener("click", onClick);
   window.addEventListener(TYPEWRITER_START_EVENT, onTypewriterStart);
   window.addEventListener(TYPEWRITER_END_EVENT, onTypewriterEnd);
 
   teardown = () => {
     window.clearTimeout(fallback);
-    control.removeEventListener("click", onClick);
+    for (const control of controls) control.removeEventListener("click", onClick);
     window.removeEventListener(TYPEWRITER_START_EVENT, onTypewriterStart);
     window.removeEventListener(TYPEWRITER_END_EVENT, onTypewriterEnd);
     running.clear();
-    if (activeControl === control) activeControl = null;
+    activeControls = new Set();
     teardown = null;
   };
 

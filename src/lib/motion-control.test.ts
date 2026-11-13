@@ -14,7 +14,8 @@ function renderControl() {
     "beforeend",
     '<button type="button" data-motion-control></button>',
   );
-  const control = document.querySelector<HTMLElement>("[data-motion-control]");
+  const controls = document.querySelectorAll<HTMLElement>("[data-motion-control]");
+  const control = controls[controls.length - 1];
   if (!control) throw new Error("motion control missing");
   return control;
 }
@@ -152,6 +153,23 @@ describe("startMotionControl", () => {
     startMotionControl();
 
     expect(control.dataset.mode).toBe("reset");
+  });
+
+  it("keeps every control in sync", () => {
+    addEntrance().getAnimations = () => [finishedAnimation()];
+    const first = renderControl();
+    const second = renderControl();
+
+    startMotionControl();
+
+    expect(first.dataset.mode).toBe("reset");
+    expect(second.dataset.mode).toBe("reset");
+
+    window.dispatchEvent(new Event(TYPEWRITER_START_EVENT));
+
+    expect(first.dataset.mode).toBe("skip");
+    expect(second.dataset.mode).toBe("skip");
+    expect(second.getAttribute("aria-label")).toBe("Skip animations");
   });
 
   it("typewriter start forces skip mode until it ends", () => {

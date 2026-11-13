@@ -12,10 +12,11 @@
 - The typewriter on `/developers` is treated as an entrance: `startTypewriter`
   declines under reduced motion or any `data-motion` value, and the control can
   finish it at once (ADR 019).
-- The control is a server-rendered component plus the deferred
-  `src/lib/motion-control.ts`, so it decides skip/reset before React would
-  hydrate; `global.css` picks the icon from `data-mode` and `data-motion`
-  ([ADR 019](adr/019-replay-motion-control.md)).
+- Every `[data-motion-control]` stays in sync: the header renders one in each
+  bar, and `startMotionControl()` drives them all. The control is a
+  server-rendered component plus the deferred `src/lib/motion-control.ts`, so it
+  decides skip/reset before React would hydrate; `global.css` picks the icon
+  from `data-mode` and `data-motion` ([ADR 019](adr/019-replay-motion-control.md)).
 - The reset icon turns counter-clockwise on hover or `:focus-visible`, a CSS
   keyframe beside the crossfade in `global.css`. It is interaction-triggered icon
   choreography, exempt from the 150ms budget
