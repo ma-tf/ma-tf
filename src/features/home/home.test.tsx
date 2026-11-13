@@ -18,7 +18,7 @@ describe("HomePage decorators", () => {
 
     expect(html).toContain("perspective-midrange");
     expect(html).toContain("tilt-y-16");
-    expect(html).toContain("w-192 shrink-0");
+    expect(html).toContain("w-3xl shrink-0");
     expect(html).toContain("md:w-auto");
     expect(html).not.toContain("md:tilt-");
     expect(html).not.toContain("md:perspective-midrange");
