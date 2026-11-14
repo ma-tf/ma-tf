@@ -39,11 +39,14 @@ function HeaderBar({ className, children, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "relative mx-auto flex h-4 w-full items-stretch justify-between before:pointer-events-none before:absolute before:-z-1 before:drop-shadow-chrome after:pointer-events-none after:absolute after:-z-1 after:drop-shadow-chrome",
+        "relative mx-auto flex h-7.5 w-full items-stretch justify-between md:h-4",
+        "before:pointer-events-none before:absolute before:-top-5.5 before:-left-1 before:-z-1 before:h-7.5 before:w-full before:drop-shadow-chrome before:content-(--chrome-mobile) md:before:-top-4 md:before:-left-69 md:before:h-auto md:before:w-auto md:before:content-(--chrome-top-left)",
+        "after:pointer-events-none after:absolute after:-z-1 after:drop-shadow-chrome md:after:-top-1.5 md:after:-right-9.5 md:after:content-(--chrome-top-right) md:has-data-[mode=hidden]:after:-right-15.5",
         className,
       )}
       style={
         {
+          "--chrome-mobile": `url("/mobilebottomchrome.png")`,
           "--chrome-top-left": `url("${CDN_BASE}/misc/topleftchrome.png")`,
           "--chrome-top-right": `url("${CDN_BASE}/misc/toprightchrome.png")`,
         } as CSSProperties
@@ -55,9 +58,23 @@ function HeaderBar({ className, children, ...props }: ComponentProps<"div">) {
   );
 }
 
+function HeaderGroup({ className, children, ...props }: ComponentProps<"div">) {
+  return (
+    <div className={cn("flex items-stretch gap-0.5", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
 function HeaderChip({ className, children, ...props }: ComponentProps<"a">) {
   return (
-    <a className={cn("group flex h-full items-center justify-center px-2", className)} {...props}>
+    <a
+      className={cn(
+        "group flex h-full w-full items-center justify-center px-0 md:w-auto md:px-2",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </a>
   );
@@ -67,7 +84,7 @@ function HeaderControl({ className, children }: { className?: string; children: 
   return (
     <div
       className={cn(
-        "flex items-stretch rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50",
+        "flex w-7.5 items-stretch justify-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground md:w-auto md:justify-normal dark:bg-white/15 dark:hover:bg-white/50",
         className,
       )}
     >
@@ -140,10 +157,6 @@ function MobileHeaderMenuSummary({ className, children, ...props }: ComponentPro
   );
 }
 
-function MobileHeaderMenuRow({ children }: { children: ReactNode }) {
-  return <div className="border-t border-foreground first:border-t-0">{children}</div>;
-}
-
 function MobileHeaderMenu() {
   const [open, setOpen] = useState(false);
 
@@ -154,44 +167,43 @@ function MobileHeaderMenu() {
         <XIcon size={16} weight="bold" aria-hidden="true" className="hidden group-open:block" />
       </MobileHeaderMenuSummary>
       <div className="flex flex-col">
-        <MobileHeaderMenuRow>
-          <NavButton href="/about" variant="solid" full>
+        <div className="flex flex-col group-open:translate-y-1">
+          <NavButton href="/about" variant="outline" full className="border-none">
             About
           </NavButton>
-        </MobileHeaderMenuRow>
-        <MobileHeaderMenuRow>
-          <NavButton href="/contact" variant="solid" full>
+          <NavButton href="/contact" variant="outline" full className="border-none">
             Contact
           </NavButton>
-        </MobileHeaderMenuRow>
-        <MobileHeaderMenuRow>
-          <NavButton href="/privacy" variant="solid" full>
+          <NavButton href="/privacy" variant="outline" full className="border-none">
             Privacy
           </NavButton>
-        </MobileHeaderMenuRow>
-        <div className="h-0.5 w-full bg-background" />
-        <MobileHeaderMenuRow>
-          <NavButton href="/developers" variant="solid" full>
+          <NavButton href="/developers" variant="outline" full className="border-x-0 border-t-0">
             Developers
           </NavButton>
-        </MobileHeaderMenuRow>
-        <div className="h-7.5 w-full bg-background" />
+        </div>
+        <div
+          className="relative -z-10 h-7.5 w-full before:absolute before:inset-0 before:-translate-x-25 before:-translate-y-6.5 before:content-(--chrome-mobile)"
+          style={{ "--chrome-mobile": `url("/mobiletopchrome.png")` } as CSSProperties}
+        />
       </div>
     </MobileHeaderMenuDetails>
   );
 }
 
-/* TODO: extract components properly */
 export function Header({ currentPath, pages, email, github, linkedin }: HeaderProps) {
   const showCv = currentPath !== "/cv";
 
   return (
     <HeaderShell>
-      <div className="relative w-full md:hidden">
-        <div className="flex h-7.5 w-full items-stretch justify-between bg-background">
-          <div className="flex items-stretch gap-0.5">
+      <div className="relative w-full md:contents">
+        <div
+          className="absolute inset-x-0 top-8 -z-10 h-7.5 w-full before:absolute before:inset-0 before:-translate-x-25 before:-translate-y-8 before:content-(--chrome-mobile) md:hidden"
+          style={{ "--chrome-mobile": `url("/mobiletopchrome.png")` } as CSSProperties}
+        />
+        <HeaderBar>
+          <HeaderGroup>
             <HeaderControl>
-              <HeaderChip href="/" aria-label="m4t.tf home" className="w-7.5 px-0">
+              <HeaderChip href="/" aria-label="m4t.tf home">
                 <img
                   src="/favicon.png"
                   alt=""
@@ -202,8 +214,8 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
               </HeaderChip>
             </HeaderControl>
             {showCv && (
-              <HeaderControl className="w-7.5 justify-center">
-                <HeaderChip href="/cv" aria-label="CV" title="CV" className="w-full px-0">
+              <HeaderControl>
+                <HeaderChip href="/cv" aria-label="CV" title="CV">
                   <ReadCvLogoIcon
                     size={12}
                     weight="bold"
@@ -213,14 +225,8 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
                 </HeaderChip>
               </HeaderControl>
             )}
-            <HeaderControl className="w-7.5 justify-center">
-              <HeaderChip
-                href={github}
-                aria-label="GitHub"
-                title="GitHub"
-                rel="noreferrer"
-                className="w-full px-0"
-              >
+            <HeaderControl>
+              <HeaderChip href={github} aria-label="GitHub" title="GitHub" rel="noreferrer">
                 <GithubLogoIcon
                   size={12}
                   weight="bold"
@@ -229,69 +235,21 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
                 />
               </HeaderChip>
             </HeaderControl>
-          </div>
-          <div className="flex items-stretch gap-0.5 pr-8">
-            <HeaderControl className="w-7.5 justify-center">
+          </HeaderGroup>
+          <HeaderGroup className="pr-8 md:pr-0">
+            <HeaderControl>
               <CommandMenu pages={pages} email={email} github={github} linkedin={linkedin} />
             </HeaderControl>
-            <HeaderControl className="w-7.5 justify-center has-data-[mode=hidden]:hidden">
+            <HeaderControl className="has-data-[mode=hidden]:hidden">
               <MotionControlButton />
             </HeaderControl>
-            <HeaderControl className="w-7.5 justify-center">
+            <HeaderControl>
               <ModeToggle />
             </HeaderControl>
-          </div>
-        </div>
+          </HeaderGroup>
+        </HeaderBar>
         <MobileHeaderMenu />
       </div>
-      <HeaderBar className="hidden before:-top-4 before:-left-69 before:content-(--chrome-top-left) after:-top-1.5 after:-right-9.5 after:content-(--chrome-top-right) has-data-[mode=hidden]:after:-right-15.5 md:flex">
-        <div className="flex items-stretch gap-0.5">
-          <HeaderControl>
-            <HeaderChip href="/" aria-label="m4t.tf home">
-              <img
-                src="/favicon.png"
-                alt=""
-                width="12"
-                height="12"
-                className="size-3 shrink-0 opacity-80 transition-opacity duration-150 group-hover:opacity-100"
-              />
-            </HeaderChip>
-          </HeaderControl>
-          {showCv && (
-            <HeaderControl>
-              <HeaderChip href="/cv" aria-label="CV" title="CV">
-                <ReadCvLogoIcon
-                  size={12}
-                  weight="bold"
-                  aria-hidden="true"
-                  className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
-                />
-              </HeaderChip>
-            </HeaderControl>
-          )}
-          <HeaderControl>
-            <HeaderChip href={github} aria-label="GitHub" title="GitHub" rel="noreferrer">
-              <GithubLogoIcon
-                size={12}
-                weight="bold"
-                aria-hidden="true"
-                className="motion-safe:group-hover:animate-icon-peek motion-safe:group-focus-visible:animate-icon-peek"
-              />
-            </HeaderChip>
-          </HeaderControl>
-        </div>
-        <div className="flex items-stretch gap-0.5">
-          <HeaderControl>
-            <CommandMenu pages={pages} email={email} github={github} linkedin={linkedin} />
-          </HeaderControl>
-          <HeaderControl className="has-data-[mode=hidden]:hidden">
-            <MotionControlButton />
-          </HeaderControl>
-          <HeaderControl>
-            <ModeToggle />
-          </HeaderControl>
-        </div>
-      </HeaderBar>
     </HeaderShell>
   );
 }
