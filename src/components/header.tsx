@@ -39,7 +39,7 @@ function HeaderBar({ className, children, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "relative mx-auto flex h-7.5 w-full items-stretch justify-between md:h-4",
+        "relative z-10 mx-auto flex h-7.5 w-full items-stretch justify-between md:h-4",
         "before:pointer-events-none before:absolute before:-top-5.5 before:-left-1 before:-z-1 before:h-7.5 before:w-full before:drop-shadow-chrome before:content-(--chrome-mobile) md:before:-top-4 md:before:-left-69 md:before:h-auto md:before:w-auto md:before:content-(--chrome-top-left)",
         "after:pointer-events-none after:absolute after:-z-1 after:drop-shadow-chrome md:after:-top-1.5 md:after:-right-9.5 md:after:content-(--chrome-top-right) md:has-data-[mode=hidden]:after:-right-15.5",
         className,
@@ -119,32 +119,10 @@ function MotionControlButton() {
   );
 }
 
-function MobileHeaderMenuDetails({
-  className,
-  children,
-  open,
-  onToggle,
-  onOpenChange,
-  ...props
-}: ComponentProps<"details"> & { onOpenChange: (open: boolean) => void }) {
+function MobileHeaderMenuSummary({ className, children, ...props }: ComponentProps<"button">) {
   return (
-    <details
-      className={cn("group md:hidden", className)}
-      open={open}
-      onToggle={(event) => {
-        onOpenChange(event.currentTarget.open);
-        onToggle?.(event);
-      }}
-      {...props}
-    >
-      {children}
-    </details>
-  );
-}
-
-function MobileHeaderMenuSummary({ className, children, ...props }: ComponentProps<"summary">) {
-  return (
-    <summary
+    <button
+      type="button"
       aria-label="Menu"
       className={cn(
         "absolute top-0 right-0 z-10 grid size-7.5 cursor-pointer list-none place-items-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50",
@@ -153,7 +131,7 @@ function MobileHeaderMenuSummary({ className, children, ...props }: ComponentPro
       {...props}
     >
       {children}
-    </summary>
+    </button>
   );
 }
 
@@ -161,32 +139,48 @@ function MobileHeaderMenu() {
   const [open, setOpen] = useState(false);
 
   return (
-    <MobileHeaderMenuDetails open={open} onOpenChange={setOpen}>
-      <MobileHeaderMenuSummary>
-        <ListIcon size={16} weight="bold" aria-hidden="true" className="group-open:hidden" />
-        <XIcon size={16} weight="bold" aria-hidden="true" className="hidden group-open:block" />
+    <div className="md:hidden">
+      <MobileHeaderMenuSummary
+        aria-controls="mobile-menu"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        {open ? (
+          <XIcon size={16} weight="bold" aria-hidden="true" />
+        ) : (
+          <ListIcon size={16} weight="bold" aria-hidden="true" />
+        )}
       </MobileHeaderMenuSummary>
-      <div className="flex flex-col">
-        <div className="flex flex-col group-open:translate-y-1">
-          <NavButton href="/about" variant="outline" full className="border-none">
-            About
-          </NavButton>
-          <NavButton href="/contact" variant="outline" full className="border-none">
-            Contact
-          </NavButton>
-          <NavButton href="/privacy" variant="outline" full className="border-none">
-            Privacy
-          </NavButton>
-          <NavButton href="/developers" variant="outline" full className="border-x-0 border-t-0">
-            Developers
-          </NavButton>
+      <div
+        id="mobile-menu"
+        inert={!open}
+        className={cn(
+          "grid transition-[grid-template-rows] duration-150 ease-out motion-reduce:transition-none",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className={cn("flex flex-col bg-background", open && "translate-y-1")}>
+            <NavButton href="/about" variant="outline" full className="border-none">
+              About
+            </NavButton>
+            <NavButton href="/contact" variant="outline" full className="border-none">
+              Contact
+            </NavButton>
+            <NavButton href="/privacy" variant="outline" full className="border-none">
+              Privacy
+            </NavButton>
+            <NavButton href="/developers" variant="outline" full className="border-x-0 border-t-0">
+              Developers
+            </NavButton>
+          </div>
+          <div
+            className="relative -z-10 h-7.5 w-full before:absolute before:inset-0 before:-translate-x-25 before:-translate-y-6.5 before:content-(--chrome-mobile)"
+            style={{ "--chrome-mobile": `url("/mobiletopchrome.png")` } as CSSProperties}
+          />
         </div>
-        <div
-          className="relative -z-10 h-7.5 w-full before:absolute before:inset-0 before:-translate-x-25 before:-translate-y-6.5 before:content-(--chrome-mobile)"
-          style={{ "--chrome-mobile": `url("/mobiletopchrome.png")` } as CSSProperties}
-        />
       </div>
-    </MobileHeaderMenuDetails>
+    </div>
   );
 }
 
