@@ -46,7 +46,7 @@ function HeaderBar({ className, children, ...props }: ComponentProps<"div">) {
       )}
       style={
         {
-          "--chrome-mobile": `url("/mobilebottomchrome.png")`,
+          "--chrome-mobile": `url("${CDN_BASE}/misc/mobilebottomchrome.png")`,
           "--chrome-top-left": `url("${CDN_BASE}/misc/topleftchrome.png")`,
           "--chrome-top-right": `url("${CDN_BASE}/misc/toprightchrome.png")`,
         } as CSSProperties
@@ -176,7 +176,9 @@ function MobileHeaderMenu() {
           </div>
           <div
             className="relative -z-10 h-7.5 w-full before:absolute before:inset-0 before:-translate-x-25 before:-translate-y-6.5 before:content-(--chrome-mobile)"
-            style={{ "--chrome-mobile": `url("/mobiletopchrome.png")` } as CSSProperties}
+            style={
+              { "--chrome-mobile": `url("${CDN_BASE}/misc/mobiletopchrome.png")` } as CSSProperties
+            }
           />
         </div>
       </div>
@@ -192,7 +194,9 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
       <div className="relative w-full md:contents">
         <div
           className="absolute inset-x-0 top-8 -z-10 h-7.5 w-full before:absolute before:inset-0 before:-translate-x-25 before:-translate-y-8 before:content-(--chrome-mobile) md:hidden"
-          style={{ "--chrome-mobile": `url("/mobiletopchrome.png")` } as CSSProperties}
+          style={
+            { "--chrome-mobile": `url("${CDN_BASE}/misc/mobiletopchrome.png")` } as CSSProperties
+          }
         />
         <HeaderBar>
           <HeaderGroup>
