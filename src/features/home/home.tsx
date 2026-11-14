@@ -118,7 +118,7 @@ export function HomePage() {
       <HomeWires />
       <nav
         aria-label="Sections"
-        className="relative -ml-24 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-midrange md:absolute md:top-1/2 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
+        className="relative mt-4 -ml-28 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-midrange sm:-ml-14 md:absolute md:top-1/2 md:mt-0 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
       >
         <HomeSectionRow className="-tilt-x-32 tilt-y-16">
           <HomeSectionDecorators />
