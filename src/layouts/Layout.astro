@@ -19,7 +19,7 @@ const {
 	description,
 	hideOverflow = false,
 	showHeader = true,
-	showFooter = true,
+	showFooter = "both",
 	noindex = false,
 } = Astro.props;
 
@@ -173,6 +173,6 @@ const pageDescription =
 				</script>
 			)
 		}
-		{showFooter && <Footer />}
+		{showFooter !== "none" && <Footer show={showFooter} />}
 	</body>
 </html>

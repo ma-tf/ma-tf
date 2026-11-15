@@ -17,7 +17,12 @@
 
 The header and footer bars stay transparent so the corner plates ghost through
 behind the chip fills; the effect must read identically in light and dark
-modes. Plates live on R2 under `misc/`, never in `public/`. Plate URLs reach
+modes. Plates live on R2 under `misc/`, never in `public/`.
+
+`Layout` takes `showFooter` as `"both"` (the default), `"mobile"`, `"desktop"`
+or `"none"`, naming where the footer shows. The homepage passes `"desktop"`,
+so its section nav replaces the mobile grid of footer links while the chrome
+bar stays. Plate URLs reach
 the `before`/`after` pseudo-elements as `--chrome-*` properties through
 `style`, read with a `content-(--chrome-top-left)` class, keeping every
 Tailwind class a complete string.
