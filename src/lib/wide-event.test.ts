@@ -4,6 +4,7 @@ import {
   beginRequest,
   captureError,
   current,
+  degrade,
   deferEmission,
   enrich,
   finish,
@@ -103,6 +104,48 @@ describe("captureError", () => {
 
   it("is a no-op with no ambient event", () => {
     captureError(new Error("boom"));
+
+    expect(current()).toBeUndefined();
+  });
+});
+
+describe("degrade", () => {
+  it("records a reason and the error message", () => {
+    const event = beginRequest(request(), route);
+
+    runWith(event, () => {
+      degrade("hits", "read_failed", new Error("offline"));
+    });
+
+    expect(event.degraded).toEqual({ hits: { reason: "read_failed", message: "offline" } });
+  });
+
+  it("records a reason without an error", () => {
+    const event = beginRequest(request(), route);
+
+    runWith(event, () => {
+      degrade("uniques", "no_salt");
+    });
+
+    expect(event.degraded).toEqual({ uniques: { reason: "no_salt" } });
+  });
+
+  it("accumulates stages on one event", () => {
+    const event = beginRequest(request(), route);
+
+    runWith(event, () => {
+      degrade("hits", "read_failed");
+      degrade("uniques", "no_client_ip");
+    });
+
+    expect(event.degraded).toEqual({
+      hits: { reason: "read_failed" },
+      uniques: { reason: "no_client_ip" },
+    });
+  });
+
+  it("is a no-op with no ambient event", () => {
+    degrade("hits", "read_failed");
 
     expect(current()).toBeUndefined();
   });

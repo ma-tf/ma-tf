@@ -21,11 +21,13 @@ import { CDN_BASE } from "@lib/cdn";
       >
         <p>
           This site does not use first-party analytics, advertising, or tracking
-          cookies. Its only measurement is a single anonymous total: each browser
-          session adds one to a global hit count, with no cookies, no identifiers
-          and no IP addresses stored. It does not provide forms that collect
-          personal information, and no personal information is intentionally
-          stored by the site.
+          cookies. Its only measurement is a global anonymous hit total and a
+          daily unique-visitor count. Each browser session adds one to the hit
+          total, and each day's uniques are counted from a salted hash of the
+          request address. The address itself is never stored, the hash cannot be
+          reversed to an address, and there are no cookies and no identifiers. It
+          does not provide forms that collect personal information, and no
+          personal information is intentionally stored by the site.
         </p>
       </div>
     </StillLifeCard>

@@ -1,6 +1,7 @@
 const COUNTED_KEY = "hits-counted";
 
 export function startHitsTracking(): void {
+  if (navigator.webdriver) return;
   if (sessionStorage.getItem(COUNTED_KEY) !== null) return;
 
   sessionStorage.setItem(COUNTED_KEY, "true");

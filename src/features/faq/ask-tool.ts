@@ -75,7 +75,5 @@ export function registerAskTool(): void {
     return;
   }
 
-  void modelContext.registerTool(makeTool()).catch((error: unknown) => {
-    console.warn("ask_site registration failed", error);
-  });
+  void modelContext.registerTool(makeTool()).catch(() => undefined);
 }

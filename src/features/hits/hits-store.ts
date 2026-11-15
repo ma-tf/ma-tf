@@ -1,3 +1,5 @@
+import { degrade } from "@lib/wide-event";
+
 type Hits = { count: number };
 
 async function hitsStore() {
@@ -14,7 +16,7 @@ export async function readHits(): Promise<number> {
 
     return entry?.count ?? 0;
   } catch (error) {
-    console.warn("Hits read skipped: blob store error", error);
+    degrade("hits", "read_failed", error);
 
     return 0;
   }
@@ -33,7 +35,7 @@ export async function incrementHits(): Promise<number> {
 
     return count;
   } catch (error) {
-    console.warn("Hits increment skipped: blob store error", error);
+    degrade("hits", "increment_failed", error);
 
     return lastKnown;
   }

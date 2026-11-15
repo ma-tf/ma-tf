@@ -27,9 +27,9 @@ it has been consumed, so the stream only enriches it. See
 Each stage enriches the event instead of logging on its own:
 
 - `src/lib/rate-limit-middleware.ts` returns the `429` response when a client is
-  over quota, so the event records `status_code: 429`. It keeps its own
-  `console.warn` when the check fails open: no client IP, a missing
-  `RATE_LIMIT_SALT`, or a blob-store error.
+  over quota, so the event records `status_code: 429`. When the check fails open
+  — no client IP, a missing `RATE_LIMIT_SALT`, or a blob-store error — it calls
+  `degrade`, which records the fallback under `degraded.rate_limit`.
 - `src/features/ask/typesafe-ai.ts` records the judgment duration; `answer.ts`
   records the completion duration, model, token counts and answer length.
 - `src/features/ask/nlweb-stream.ts` and `src/features/mcp/ask.ts` capture a

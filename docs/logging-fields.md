@@ -37,6 +37,7 @@ named in the source column.
 | `error.name`                      | string  | `Error` instances and plain objects that carry one                     |
 | `error.stack`                     | string  | `Error` instances                                                      |
 | `error.phase`                     | string  | where it was captured: `middleware`, `ask`, `stream_step` or `mcp_ask` |
+| `degraded.<stage>`                | object  | `degrade`: `reason`, plus `message` when an error was passed           |
 
 `path` and `status_code` are always present: `path` is required at
 construction, `status_code` is required by `finish`. `outcome` is set only by

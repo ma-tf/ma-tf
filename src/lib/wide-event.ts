@@ -117,6 +117,16 @@ export function captureError(
   }
 }
 
+export function degrade(stage: string, reason: string, error?: unknown): void {
+  const serialised = error === undefined ? undefined : serializeError(error);
+  const detail =
+    serialised && typeof serialised.message === "string"
+      ? { reason, message: serialised.message }
+      : { reason };
+
+  enrich({ degraded: { [stage]: detail } });
+}
+
 export function deferEmission(): void {
   const event = current();
   if (!event) return;

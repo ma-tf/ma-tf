@@ -23,6 +23,9 @@ event without it being threaded through arguments.
 - `captureError(error, context?, event?)` records the failure under `error`,
   merging the call-site `context` with the serialised error: name, message and
   stack for an `Error`, message only for a string.
+- `degrade(stage, reason, error?)` records a non-fatal fallback under
+  `degraded[stage]`: the reason code and, when an error is given, its message.
+  A request that limps on is not an `error`; it is a degradation.
 - Both accept an optional explicit `event` for code that runs after the request
   scope has closed, such as the SSE stream.
 - `deferEmission()` marks the event so the middleware logs it when the response
@@ -31,8 +34,8 @@ event without it being threaded through arguments.
 - `finish(event, { status_code, outcome })` stamps the status, derives
   `duration_ms` and returns the event. It does not write anything.
 
-A call to `enrich`, `captureError` or `deferEmission` outside a `runWith` is a
-no-op, so a callee can enrich unconditionally.
+A call to `enrich`, `captureError`, `degrade` or `deferEmission` outside a
+`runWith` is a no-op, so a callee can enrich unconditionally.
 
 ## Also in this topic
 

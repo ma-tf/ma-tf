@@ -1,6 +1,7 @@
 import type { RateLimit } from "@lib/rate-limits";
 
 import { rateLimitPolicyValue } from "@lib/rate-limits";
+import { degrade } from "@lib/wide-event";
 import { createHash } from "node:crypto";
 
 type Window = { count: number; windowStart: number };
@@ -76,12 +77,12 @@ export async function enforceRateLimit(
   const salt = process.env.RATE_LIMIT_SALT;
 
   if (!ip) {
-    console.warn(`Rate limit for ${limit.name} skipped: no client IP`);
+    degrade("rate_limit", "no_client_ip");
     return { limited: null, headers: empty };
   }
 
   if (!salt) {
-    console.warn(`Rate limit for ${limit.name} skipped: RATE_LIMIT_SALT is not set`);
+    degrade("rate_limit", "no_salt");
     return { limited: null, headers: empty };
   }
 
@@ -113,7 +114,7 @@ export async function enforceRateLimit(
 
     return { limited: null, headers };
   } catch (error) {
-    console.warn(`Rate limit for ${limit.name} skipped: blob store error`, error);
+    degrade("rate_limit", "store_error", error);
 
     return { limited: null, headers: empty };
   }
