@@ -1,4 +1,4 @@
-import { clientIp, clientKey } from "@lib/rate-limit-middleware";
+import { visitorHash } from "@lib/visitor-hash";
 import { degrade } from "@lib/wide-event";
 
 const prefix = "unique";
@@ -15,23 +15,7 @@ export function utcDay(now: Date = new Date()): string {
 }
 
 export function uniqueHash(request: Request): string | null {
-  const ip = clientIp(request);
-
-  if (!ip) {
-    degrade("uniques", "no_client_ip");
-
-    return null;
-  }
-
-  const salt = process.env.RATE_LIMIT_SALT;
-
-  if (!salt) {
-    degrade("uniques", "no_salt");
-
-    return null;
-  }
-
-  return clientKey(ip, salt);
+  return visitorHash(request, "uniques");
 }
 
 export async function recordUnique(hash: string): Promise<void> {

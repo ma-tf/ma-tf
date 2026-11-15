@@ -2,7 +2,7 @@ import type { RateLimit } from "@lib/rate-limits";
 
 import { askRateLimit } from "@lib/rate-limits";
 
-const apiPaths = new Set<string>(["/api/hits", "/ask", "/mcp"]);
+const apiPaths = new Set<string>(["/api/hits", "/api/presence", "/ask", "/mcp"]);
 
 const apiPathLimits = new Map<string, RateLimit>([["/ask", askRateLimit]]);
 

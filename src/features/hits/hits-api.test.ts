@@ -13,8 +13,13 @@ const uniques = vi.hoisted(() => ({
   utcDay: vi.fn(),
 }));
 
+const presence = vi.hoisted(() => ({
+  countOnline: vi.fn(),
+}));
+
 vi.mock("@features/hits/hits-store", () => hits);
 vi.mock("@features/hits/uniques-store", () => uniques);
+vi.mock("@features/presence/presence-store", () => presence);
 
 const today = "2026-11-14";
 
@@ -30,20 +35,23 @@ describe("hits endpoint", () => {
     uniques.recordUnique.mockReset();
     uniques.uniqueHash.mockReset();
     uniques.utcDay.mockReset();
+    presence.countOnline.mockReset();
     uniques.utcDay.mockReturnValue(today);
     uniques.countUniques.mockResolvedValue(0);
     uniques.recordUnique.mockResolvedValue(undefined);
+    presence.countOnline.mockResolvedValue(0);
   });
 
-  it("returns today's hits and uniques", async () => {
+  it("returns today's hits, uniques and online count", async () => {
     hits.readHits.mockResolvedValue(41);
     uniques.countUniques.mockResolvedValue(7);
+    presence.countOnline.mockResolvedValue(3);
 
     const response = await GET();
 
     expect(response.status).toBe(200);
     expect(response.headers.get("Cache-Control")).toBe("no-store");
-    expect(await response.json()).toEqual({ hits: 41, uniques: 7 });
+    expect(await response.json()).toEqual({ hits: 41, uniques: 7, online: 3 });
     expect(uniques.countUniques).toHaveBeenCalledWith(today);
   });
 
@@ -84,6 +92,15 @@ describe("hits endpoint", () => {
 
     const response = await GET();
 
-    expect(await response.json()).toEqual({ hits: 41, uniques: 0 });
+    expect(await response.json()).toEqual({ hits: 41, uniques: 0, online: 0 });
+  });
+
+  it("falls back to zero online when the presence count fails", async () => {
+    hits.readHits.mockResolvedValue(41);
+    presence.countOnline.mockRejectedValue(new Error("offline"));
+
+    const response = await GET();
+
+    expect(await response.json()).toEqual({ hits: 41, uniques: 0, online: 0 });
   });
 });

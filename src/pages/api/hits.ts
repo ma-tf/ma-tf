@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 
 import { incrementHits, readHits } from "@features/hits/hits-store";
 import { countUniques, recordUnique, uniqueHash, utcDay } from "@features/hits/uniques-store";
+import { countOnline } from "@features/presence/presence-store";
 
 export const prerender = false;
 
@@ -15,9 +16,13 @@ function jsonResponse(body: unknown): Response {
 }
 
 export const GET = (async () => {
-  const [hits, uniques] = await Promise.all([readHits(), countUniques(utcDay()).catch(() => 0)]);
+  const [hits, uniques, online] = await Promise.all([
+    readHits(),
+    countUniques(utcDay()).catch(() => 0),
+    countOnline().catch(() => 0),
+  ]);
 
-  return jsonResponse({ hits, uniques });
+  return jsonResponse({ hits, uniques, online });
 }) satisfies APIRoute;
 
 export const POST = (async ({ request }: { request: Request }) => {
