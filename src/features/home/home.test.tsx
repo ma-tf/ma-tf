@@ -1,4 +1,5 @@
 import { HomePage } from "@features/home/home";
+import { DEFAULT_PLACEMENT } from "@lib/fragment-placement";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vite-plus/test";
 
@@ -22,5 +23,18 @@ describe("HomePage decorators", () => {
     expect(html).toContain("md:w-auto");
     expect(html).not.toContain("md:tilt-");
     expect(html).not.toContain("md:perspective-midrange");
+  });
+
+  it("renders the fragment layer hidden and decorative until placement", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html).toContain("data-home-fragments");
+    expect(html).toContain('aria-hidden="true"');
+    expect(html.match(/data-home-fragment="true"/g)).toHaveLength(6);
+    expect(html.match(/data-fragments-avoid/g)).toHaveLength(13);
+    expect(html).toContain("Lorem ipsum dolor sit amet");
+    expect(html).toContain("w-56 font-mono text-xs");
+    expect(html).toContain("transition-opacity ease-in-out");
+    expect(DEFAULT_PLACEMENT.width).toBe(224);
   });
 });

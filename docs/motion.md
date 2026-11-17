@@ -42,6 +42,18 @@ frame can tune its own travel and overscan. The still-life pages use two frames 
 the background (`scale: 1.15`) and the card section (`scale: 1`, so the text is
 not scaled).
 
+## Fragment loop
+
+`startHomeFragments()` (`src/lib/home-fragments.ts`) runs only where the homepage
+layer exists. It places up to three `[data-home-fragment]` blocks at seeded
+positions clear of every `[data-fragments-avoid]` element, fades the first in at
+load, follows with the next two six seconds apart, then retires the oldest every
+six seconds as a replacement fades in. It is continuous decorative motion:
+exempt from the 150ms budget of [ADR 011](adr/011-motion-timing-budget.md) and
+not governed by the motion control. `prefers-reduced-motion` shows the placed
+blocks without the loop. A `ResizeObserver` refreshes the reserved boxes when an
+obstacle grows; window resizes keep the visible count.
+
 ## Theme transitions
 
 Theme changes sweep through the View Transitions API. See

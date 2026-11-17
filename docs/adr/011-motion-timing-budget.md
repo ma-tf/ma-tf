@@ -15,7 +15,7 @@ different interfaces, and the longer values made the site feel sluggish.
   scroll position rather than time (`animate-fade-in-scroll`); trigger-based
   reveals whose duration is declared at the call site (`animate-reveal-<ms>`,
   default 500ms); and continuous decorative loops (`animate-icon-crossfade`,
-  `animate-spin`, `caret-blink`).
+  `animate-spin`, `caret-blink`, and the homepage fragment crossfade).
 - Also exempt: interaction-triggered icon choreography. The animated Phosphor
   icons in `src/components/icons/**`, and the CSS keyframes for the CV and reset
   icons in `src/styles/global.css`, run for up to about a second, because there
@@ -47,4 +47,5 @@ different interfaces, and the longer values made the site feel sluggish.
 - `src/components/ui/accordion.tsx`
 - `src/features/vignettes/vignette-thumbnail.tsx`
 - `src/components/icons/**`
+- `src/lib/home-fragments.ts`
 - Page-load entrance delays across `src/pages/` and `src/features/`

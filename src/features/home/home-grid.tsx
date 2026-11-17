@@ -2,6 +2,9 @@ import { Wash } from "@components/wash";
 import { Sphere } from "@features/home/sphere";
 import { CDN_BASE } from "@lib/cdn";
 
+const TRANSPARENT_IMAGE =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 export function HomeGrid() {
   return (
     <>
@@ -22,6 +25,7 @@ export function HomeGrid() {
       <Wash color="ember">
         <div aria-hidden="true" className="absolute inset-0 flex items-start justify-end">
           <img
+            src={TRANSPARENT_IMAGE}
             data-src={`${CDN_BASE}/photography/luxembourg-19-statues.avif`}
             alt=""
             loading="lazy"
@@ -36,6 +40,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="taupe">
         <img
+          src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/music/japan-6-19.avif`}
           alt=""
           loading="lazy"
@@ -49,6 +54,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="blue">
         <img
+          src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/vignettes/bolex-dither-anon2.png`}
           alt=""
           loading="lazy"
@@ -62,6 +68,7 @@ export function HomeGrid() {
       </Wash>
       <Wash color="emerald">
         <img
+          src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/blog/tags-bg-2.webp`}
           alt=""
           loading="lazy"

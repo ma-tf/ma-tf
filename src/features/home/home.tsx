@@ -1,8 +1,10 @@
 import type { ComponentProps } from "react";
 
 import { SectionIndicator } from "@components/section-indicator";
+import { HomeFragments } from "@features/home/home-fragments";
 import { HomeGrid } from "@features/home/home-grid";
 import { HomeLight } from "@features/home/home-light";
+import { HomePrev } from "@features/home/home-prev";
 import { HomeWires } from "@features/home/home-wires";
 import { CDN_BASE } from "@lib/cdn";
 import { cn } from "cn";
@@ -54,6 +56,7 @@ function HomeSectionTitle({
     <span
       className="group/title pointer-events-auto relative flex items-center focus-within:z-10 hover:z-10"
       data-title
+      data-fragments-avoid
       data-wash={dataWash}
     >
       <span
@@ -64,6 +67,7 @@ function HomeSectionTitle({
         <HomeSectionTitleLink className={cn("relative pl-4 md:pl-12", className)} {...props}>
           <span
             aria-hidden="true"
+            data-fragments-avoid
             className="pointer-events-none absolute top-1/2 left-0 z-10 mt-1 -ml-5 w-49 -translate-y-1/2 md:-ml-1"
           >
             <img
@@ -111,11 +115,12 @@ function HomeSectionDecorators() {
 export function HomePage() {
   return (
     <div
-      className="relative isolate flex flex-1 flex-col overflow-clip wash-state has-[[data-title]:focus-within]:[&_img[data-preview-bottom]]:translate-y-45 has-[[data-title]:hover]:[&_img[data-preview-bottom]]:translate-y-45"
+      className="relative isolate wash-state flex flex-1 flex-col overflow-clip has-[[data-title]:focus-within]:[&_img[data-preview-bottom]]:-translate-y-10 has-[[data-title]:hover]:[&_img[data-preview-bottom]]:-translate-y-10"
       data-grid-spotlight
     >
       <HomeGrid />
       <HomeWires />
+      <HomeFragments />
       <nav
         aria-label="Sections"
         className="relative mt-4 -ml-28 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-midrange sm:-ml-14 md:absolute md:top-1/2 md:mt-0 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
@@ -162,27 +167,7 @@ export function HomePage() {
           </HomeSectionTitle>
         </HomeSectionRow>
       </nav>
-      <div className="absolute top-1/2 right-16 -translate-y-1/2 flex-col md:flex">
-        <img
-          src="/home-prev-top2.png"
-          alt=""
-          aria-hidden="true"
-          loading="eager"
-          decoding="async"
-          width={481}
-          className="hidden drop-shadow-chrome"
-        />
-        <img
-          src="/home-prev-bottom2.png"
-          alt=""
-          aria-hidden="true"
-          loading="eager"
-          decoding="async"
-          width={483}
-          data-preview-bottom
-          className="hidden -translate-y-5 drop-shadow-chrome transition-transform duration-150 motion-reduce:transition-none"
-        />
-      </div>
+      <HomePrev />
     </div>
   );
 }
