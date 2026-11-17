@@ -27,6 +27,7 @@ import {
   m,
   useReducedMotion,
   type MotionStyle,
+  type SVGMotionProps,
   type Transition,
   type Variants,
 } from "motion/react";
@@ -441,7 +442,7 @@ export const AnimatedIcon = React.forwardRef<AnimatedIconHandle, InternalProps>(
             ? { whileInView: "active", viewport: { once: false, amount: 0.6 } }
             : null)}
           {...handlers}
-          {...rest}
+          {...(rest as unknown as SVGMotionProps<SVGSVGElement>)}
         >
           {/* Whole-icon motion rides a group inside the frame, so the frame can clip
               it. Motion propagates the variant down from the <svg>, so this animates
