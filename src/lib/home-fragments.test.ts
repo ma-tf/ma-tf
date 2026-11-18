@@ -39,15 +39,25 @@ function rect(x: number, y: number, width: number, height: number) {
 }
 
 function mockReduced(matches = false) {
+  const listeners: Array<() => void> = [];
+  let reduced = matches;
   vi.spyOn(window, "matchMedia").mockImplementation(
     (query) =>
       ({
-        matches: query === "(prefers-reduced-motion: reduce)" ? matches : false,
+        get matches() {
+          return query === "(prefers-reduced-motion: reduce)" ? reduced : false;
+        },
         media: query,
-        addEventListener: () => {},
+        addEventListener: (_type: string, listener: () => void) => {
+          listeners.push(listener);
+        },
         removeEventListener: () => {},
       }) as unknown as MediaQueryList,
   );
+  return (value: boolean) => {
+    reduced = value;
+    for (const listener of listeners) listener();
+  };
 }
 
 function mockFrames() {
@@ -180,17 +190,92 @@ describe("fragment runtime", () => {
     expect(transition.state.visible).toHaveLength(1);
     expect(transition.effects.some((effect) => effect.type === "retire")).toBe(true);
   });
+
+  it("clears the layer and shows the first topic fragment on hover", () => {
+    const transition = reduceFragments(grown(), {
+      type: "topic",
+      topic: "ember",
+      slots: [2, 3, 4],
+    });
+
+    expect(transition.effects.filter((effect) => effect.type === "hide")).toHaveLength(6);
+    expect(transition.state.topic).toBe("ember");
+    expect(transition.state.visible.map((fragment) => fragment.slot)).toEqual([2]);
+    expect(transition.effects.some((effect) => effect.type === "schedule")).toBe(true);
+  });
+
+  it("grows a topic to three, then rotates it", () => {
+    let state = reduceFragments(grown(), {
+      type: "topic",
+      topic: "ember",
+      slots: [2, 3, 4],
+    }).state;
+    expect(state.visible.map((fragment) => fragment.slot)).toEqual([2]);
+
+    state = reduceFragments(state, { type: "tick" }).state;
+    expect(state.visible.map((fragment) => fragment.slot)).toEqual([2, 3]);
+
+    state = reduceFragments(state, { type: "tick" }).state;
+    expect(state.visible.map((fragment) => fragment.slot)).toEqual([2, 3, 4]);
+
+    const rotated = reduceFragments(state, { type: "tick" });
+    expect(rotated.state.visible.map((fragment) => fragment.slot)).toEqual([3, 4, 2]);
+    expect(rotated.effects.some((effect) => effect.type === "reveal")).toBe(true);
+    expect(rotated.effects.some((effect) => effect.type === "schedule")).toBe(true);
+  });
+
+  it("holds a single-fragment topic without rotating", () => {
+    const state = reduceFragments(grown(), {
+      type: "topic",
+      topic: "gray",
+      slots: [3],
+    }).state;
+    expect(state.visible.map((fragment) => fragment.slot)).toEqual([3]);
+
+    const held = reduceFragments(state, { type: "tick" });
+    expect(held.state.visible.map((fragment) => fragment.slot)).toEqual([3]);
+    expect(held.effects.some((effect) => effect.type === "schedule")).toBe(false);
+  });
+
+  it("resumes the seeded loop when the pointer leaves", () => {
+    const hovered = reduceFragments(grown(), {
+      type: "topic",
+      topic: "ember",
+      slots: [2, 3, 4],
+    }).state;
+
+    const resumed = reduceFragments(hovered, { type: "topic", topic: null, slots: [] });
+
+    expect(resumed.state.topic).toBeNull();
+    expect(resumed.state.visible).toHaveLength(1);
+    expect(resumed.effects.some((effect) => effect.type === "schedule")).toBe(true);
+  });
+
+  it("places every topic fragment under reduced motion", () => {
+    const reduced = reduceFragments(grown(), { type: "reduced", value: true }).state;
+    const transition = reduceFragments(reduced, {
+      type: "topic",
+      topic: "ember",
+      slots: [2, 3, 4],
+    });
+
+    expect(transition.state.visible.map((fragment) => fragment.slot)).toEqual([2, 3, 4]);
+    expect(transition.effects.some((effect) => effect.type === "schedule")).toBe(false);
+  });
 });
 
 describe("startHomeFragments", () => {
   function renderPage() {
     document.body.innerHTML = [
       "<div data-home-fragments>",
-      ...Array.from(
-        { length: 6 },
-        (_, index) => `<p data-home-fragment hidden class="invisible opacity-0">${index}</p>`,
+      ...["ember", "ember", "ember", "gray", "taupe", "taupe"].map(
+        (topic, index) =>
+          `<p data-home-fragment data-fragment-topic="${topic}" hidden class="invisible opacity-0">fragment ${index}</p>`,
       ),
       "</div>",
+      '<span data-title data-wash="ember"></span>',
+      '<span data-title data-wash="gray"></span>',
+      '<span data-title data-wash="taupe"></span>',
       '<span data-fragments-avoid data-kind="title"></span>',
       '<div data-fragments-avoid data-kind="prev"></div>',
       "<footer data-fragments-avoid></footer>",
@@ -242,6 +327,35 @@ describe("startHomeFragments", () => {
     expect(shown()).toHaveLength(3);
   });
 
+  it("types each fragment in without a caret", () => {
+    vi.useFakeTimers();
+    const root = renderPage();
+    mockReduced();
+    mockFrames();
+    mockObserver();
+
+    startHomeFragments();
+
+    const first = Array.from(root.querySelectorAll<HTMLElement>("[data-home-fragment]")).find(
+      (fragment) => !fragment.hidden,
+    );
+    if (!first) throw new Error("missing fragment");
+    expect(first.classList.contains("typewriter-active")).toBe(true);
+    expect(first.querySelector(".typewriter-caret")).toBeNull();
+
+    const chars = first.querySelectorAll(".typewriter-char");
+    expect(chars.length).toBeGreaterThan(1);
+    expect(first.querySelectorAll(".typewriter-char-typed")).toHaveLength(0);
+
+    vi.advanceTimersByTime(20);
+    const typed = first.querySelectorAll(".typewriter-char-typed").length;
+    expect(typed).toBeGreaterThan(0);
+    expect(typed).toBeLessThan(chars.length);
+
+    vi.advanceTimersByTime(1000);
+    expect(first.querySelectorAll(".typewriter-char-typed")).toHaveLength(chars.length);
+  });
+
   it("shows every placed fragment under reduced motion", () => {
     const root = renderPage();
     mockReduced(true);
@@ -256,7 +370,92 @@ describe("startHomeFragments", () => {
     expect(visible).toHaveLength(3);
     for (const fragment of visible) {
       expect(fragment.style.opacity).toBe("1");
+      expect(fragment.classList.contains("typewriter-active")).toBe(false);
     }
+    expect(root.querySelector(".typewriter-char")).toBeNull();
+  });
+
+  it("completes typing when reduced motion turns on", () => {
+    vi.useFakeTimers();
+    const root = renderPage();
+    const setReduced = mockReduced();
+    mockFrames();
+    mockObserver();
+
+    startHomeFragments();
+
+    const first = Array.from(root.querySelectorAll<HTMLElement>("[data-home-fragment]")).find(
+      (fragment) => !fragment.hidden,
+    );
+    if (!first) throw new Error("missing fragment");
+
+    vi.advanceTimersByTime(20);
+    expect(first.querySelectorAll(".typewriter-char-typed").length).toBeLessThan(
+      first.querySelectorAll(".typewriter-char").length,
+    );
+
+    setReduced(true);
+
+    expect(first.querySelectorAll(".typewriter-char")).toHaveLength(10);
+    expect(first.querySelectorAll(".typewriter-char-typed")).toHaveLength(10);
+  });
+
+  it("grows a title's fragments to three, rotates, and resumes on leave", () => {
+    vi.useFakeTimers();
+    const root = renderPage();
+    mockReduced();
+    mockFrames();
+    mockObserver();
+
+    startHomeFragments();
+
+    const fragments = Array.from(root.querySelectorAll<HTMLElement>("[data-home-fragment]"));
+    const shown = () => fragments.filter((fragment) => !fragment.hidden);
+    const typed = (fragment: HTMLElement) =>
+      fragment.querySelectorAll(".typewriter-char-typed").length;
+
+    vi.advanceTimersByTime(12000);
+    expect(shown()).toHaveLength(3);
+
+    const title = document.querySelector<HTMLElement>('[data-title][data-wash="ember"]');
+    if (!title) throw new Error("missing title");
+    title.dispatchEvent(new Event("pointerenter"));
+
+    expect(shown()).toEqual([fragments[0]]);
+
+    vi.advanceTimersByTime(DEFAULT_RUNTIME.topicHold);
+    expect(shown()).toEqual([fragments[0], fragments[1]]);
+
+    vi.advanceTimersByTime(DEFAULT_RUNTIME.topicHold);
+    expect(shown()).toEqual([fragments[0], fragments[1], fragments[2]]);
+    expect(typed(fragments[1]!)).toBe(10);
+
+    vi.advanceTimersByTime(DEFAULT_RUNTIME.topicHold);
+    expect(shown()).toEqual([fragments[0], fragments[1], fragments[2]]);
+    expect(typed(fragments[0]!)).toBeLessThan(10);
+    expect(typed(fragments[2]!)).toBe(10);
+
+    title.dispatchEvent(new Event("pointerleave"));
+    expect(shown()).toHaveLength(1);
+  });
+
+  it("places a title's fragments on hover under reduced motion", () => {
+    const root = renderPage();
+    mockReduced(true);
+    mockFrames();
+    mockObserver();
+
+    startHomeFragments();
+
+    const title = document.querySelector<HTMLElement>('[data-title][data-wash="ember"]');
+    if (!title) throw new Error("missing title");
+    title.dispatchEvent(new Event("pointerenter"));
+
+    const fragments = Array.from(root.querySelectorAll<HTMLElement>("[data-home-fragment]"));
+    const shown = fragments.filter((fragment) => !fragment.hidden);
+    expect(shown).toEqual([fragments[0], fragments[1], fragments[2]]);
+    for (const fragment of shown) expect(fragment.style.opacity).toBe("1");
+    expect(root.querySelector(".typewriter-char")).toBeNull();
   });
 
   it("shows nothing when the layer has no size", () => {

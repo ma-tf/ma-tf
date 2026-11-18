@@ -9,10 +9,12 @@ import {
   type FragmentSize,
   type PlacementOptions,
 } from "@lib/fragment-placement";
+import { finishTypeText, typeText } from "@lib/typewriter";
 
 export type RuntimeConfig = {
   visible: number;
   hold: number;
+  topicHold: number;
   fade: number;
   debounce: number;
 };
@@ -20,6 +22,7 @@ export type RuntimeConfig = {
 export const DEFAULT_RUNTIME: RuntimeConfig = {
   visible: 3,
   hold: 6000,
+  topicHold: 2000,
   fade: 700,
   debounce: 150,
 };
@@ -39,6 +42,9 @@ export type FragmentState = {
   visible: VisibleFragment[];
   retiring: number[];
   pending: FragmentBox[];
+  topic: string | null;
+  topicSlots: number[];
+  topicIndex: number;
   tick: number;
   reduced: boolean;
   paused: boolean;
@@ -49,6 +55,7 @@ export type FragmentEvent =
   | { type: "tick" }
   | { type: "resize"; size: FragmentSize; reserved: FragmentBox[] }
   | { type: "obstacles"; reserved: FragmentBox[] }
+  | { type: "topic"; topic: string | null; slots: number[] }
   | { type: "reduced"; value: boolean }
   | { type: "visibility"; value: "hidden" | "visible" }
   | { type: "retired"; slot: number };
@@ -82,6 +89,9 @@ export function initialFragmentsState(
     visible: [],
     retiring: [],
     pending: [],
+    topic: null,
+    topicSlots: [],
+    topicIndex: 0,
     tick: 0,
     reduced: false,
     paused: false,
@@ -179,6 +189,139 @@ function reset(
   return { state: next, effects };
 }
 
+function hideAll(state: FragmentState, effects: FragmentEffect[]) {
+  for (const slot of state.slots) effects.push({ type: "hide", slot });
+}
+
+function resumeSeeded(state: FragmentState): FragmentTransition {
+  if (!state.size) {
+    const effects: FragmentEffect[] = [{ type: "stop" }];
+    hideAll(state, effects);
+    return {
+      state: {
+        ...state,
+        visible: [],
+        retiring: [],
+        pending: [],
+        tick: 0,
+        topic: null,
+        topicSlots: [],
+        topicIndex: 0,
+      },
+      effects,
+    };
+  }
+  return reset(
+    { ...state, topic: null, topicSlots: [], topicIndex: 0 },
+    state.size,
+    state.reserved,
+    1,
+  );
+}
+
+function showTopic(state: FragmentState): FragmentTransition {
+  const effects: FragmentEffect[] = [{ type: "stop" }];
+  hideAll(state, effects);
+
+  const base: FragmentState = {
+    ...state,
+    visible: [],
+    retiring: [],
+    pending: [],
+    tick: 0,
+    topicIndex: 0,
+  };
+
+  if (!state.size || state.topicSlots.length === 0) return { state: base, effects };
+
+  const slots = state.reduced || state.paused ? state.topicSlots : state.topicSlots.slice(0, 1);
+  const visible: VisibleFragment[] = [];
+
+  for (const [index, slot] of slots.entries()) {
+    const box = planFragment(
+      hashSeed(`${state.seed}:topic:${state.tick + index}`),
+      state.size,
+      state.reserved,
+      visible.map((fragment) => fragment.box),
+      state.placement,
+    );
+    if (!box) break;
+    visible.push({ slot, box });
+    effects.push({ type: "place", slot, box }, { type: "reveal", slot });
+  }
+
+  if (visible.length === 0) return { state: base, effects };
+
+  const next = { ...base, visible, topicIndex: visible.length - 1, tick: visible.length };
+  if (!state.reduced && !state.paused) {
+    effects.push({ type: "schedule", delay: state.config.topicHold });
+  }
+  return { state: next, effects };
+}
+
+function topicTick(state: FragmentState): FragmentTransition {
+  if (!canRun(state) || !state.size) return { state, effects: [{ type: "stop" }] };
+
+  const target = Math.min(state.config.visible, state.topicSlots.length);
+  const seed = hashSeed(`${state.seed}:topic:${state.tick}`);
+
+  if (state.visible.length < target) {
+    const nextIndex = state.topicIndex + 1;
+    const slot = state.topicSlots[nextIndex];
+    if (slot === undefined) return { state, effects: [{ type: "stop" }] };
+
+    const box = planFragment(
+      seed,
+      state.size,
+      state.reserved,
+      visibleBoxes(state),
+      state.placement,
+    );
+    if (!box) return { state, effects: [{ type: "stop" }] };
+
+    return {
+      state: {
+        ...state,
+        tick: state.tick + 1,
+        topicIndex: nextIndex,
+        visible: [...state.visible, { slot, box }],
+      },
+      effects: [
+        { type: "place", slot, box },
+        { type: "reveal", slot },
+        { type: "schedule", delay: state.config.topicHold },
+      ],
+    };
+  }
+
+  if (state.topicSlots.length < 2) return { state, effects: [{ type: "stop" }] };
+
+  const outgoing = state.visible[0];
+  if (!outgoing) return { state, effects: [{ type: "stop" }] };
+
+  const box = planFragment(
+    seed,
+    state.size,
+    state.reserved,
+    state.visible.slice(1).map((fragment) => fragment.box),
+    state.placement,
+  );
+  if (!box) return { state, effects: [{ type: "stop" }] };
+
+  return {
+    state: {
+      ...state,
+      tick: state.tick + 1,
+      visible: [...state.visible.slice(1), { slot: outgoing.slot, box }],
+    },
+    effects: [
+      { type: "place", slot: outgoing.slot, box },
+      { type: "reveal", slot: outgoing.slot },
+      { type: "schedule", delay: state.config.topicHold },
+    ],
+  };
+}
+
 function scheduleHold(state: FragmentState): FragmentTransition {
   return {
     state,
@@ -271,6 +414,7 @@ function churn(state: FragmentState): FragmentTransition {
 }
 
 function tick(state: FragmentState): FragmentTransition {
+  if (state.topic !== null) return topicTick(state);
   if (!canRun(state) || !state.size) return { state, effects: [{ type: "stop" }] };
   if (state.visible.length < state.config.visible) {
     const grown = grow(state);
@@ -282,6 +426,7 @@ function tick(state: FragmentState): FragmentTransition {
 function reduced(state: FragmentState, value: boolean): FragmentTransition {
   if (value === state.reduced) return { state, effects: [] };
   const next = { ...state, reduced: value };
+  if (state.topic !== null) return showTopic(next);
   if (!state.size) return { state: next, effects: [] };
   return reset(
     next,
@@ -299,7 +444,12 @@ function visibility(state: FragmentState, value: "hidden" | "visible"): Fragment
     return { state: { ...state, paused }, effects: [] };
   return {
     state: { ...state, paused },
-    effects: [{ type: "schedule", delay: state.config.hold }],
+    effects: [
+      {
+        type: "schedule",
+        delay: state.topic !== null ? state.config.topicHold : state.config.hold,
+      },
+    ],
   };
 }
 
@@ -309,15 +459,29 @@ export function reduceFragments(state: FragmentState, event: FragmentEvent): Fra
       return start(state, event);
     case "tick":
       return tick(state);
-    case "resize":
+    case "resize": {
+      if (state.topic !== null) {
+        return showTopic({ ...state, size: event.size, reserved: event.reserved });
+      }
       return reset(
         state,
         event.size,
         event.reserved,
         state.reduced ? state.config.visible : Math.max(1, state.visible.length),
       );
+    }
     case "obstacles":
       return { state: { ...state, reserved: event.reserved }, effects: [] };
+    case "topic": {
+      const next = {
+        ...state,
+        topic: event.topic,
+        topicSlots: event.slots,
+        topicIndex: 0,
+        tick: 0,
+      };
+      return event.topic === null ? resumeSeeded(next) : showTopic(next);
+    }
     case "reduced":
       return reduced(state, event.value);
     case "visibility":
@@ -353,8 +517,14 @@ export function createFragmentsRuntime(
 const LAYER_SELECTOR = "[data-home-fragments]";
 const FRAGMENT_SELECTOR = "[data-home-fragment]";
 const OBSTACLE_SELECTOR = "[data-fragments-avoid]";
+const TITLE_SELECTOR = "[data-title][data-wash]";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const startedLayers = new WeakSet<Element>();
+
+type RevealToken = {
+  cancelled: boolean;
+  cancel: () => void;
+};
 
 function rectBox(element: Element, bounds: DOMRect): FragmentBox {
   const rect = element.getBoundingClientRect();
@@ -374,13 +544,22 @@ export function startHomeFragments() {
   if (elements.length === 0) return;
   startedLayers.add(root);
 
+  const topicSlots = new Map<string, number[]>();
+  elements.forEach((element, index) => {
+    const topic = element.dataset.fragmentTopic;
+    if (!topic) return;
+    const slots = topicSlots.get(topic) ?? [];
+    slots.push(index);
+    topicSlots.set(topic, slots);
+  });
+
   const obstacles = Array.from(document.querySelectorAll<Element>(OBSTACLE_SELECTOR));
   const reduced = window.matchMedia(REDUCED_MOTION_QUERY);
   const seed = seedFromHash(window.location.hash, Date.now());
   const config = DEFAULT_RUNTIME;
   const runtime = createFragmentsRuntime(seed, config, DEFAULT_PLACEMENT, elements.length);
   const fadeTimers = new Map<number, number>();
-  const revealTokens = new Map<number, { cancelled: boolean }>();
+  const reveals = new Map<number, { cancel: () => void }>();
   let holdTimer: number | undefined;
   let resizeTimer: number | undefined;
 
@@ -413,10 +592,10 @@ export function startHomeFragments() {
   };
 
   const clearReveal = (slot: number) => {
-    const token = revealTokens.get(slot);
-    if (!token) return;
-    token.cancelled = true;
-    revealTokens.delete(slot);
+    const current = reveals.get(slot);
+    if (!current) return;
+    current.cancel();
+    reveals.delete(slot);
   };
 
   const applySchedule = (delay: number) => {
@@ -442,19 +621,31 @@ export function startHomeFragments() {
     element.style.top = `${box.y}px`;
     element.hidden = false;
     element.classList.remove("invisible");
-    element.style.opacity = "0";
+    element.style.transitionDuration = "0s";
+    element.style.opacity = "1";
   };
 
   const applyReveal = (slot: number) => {
     const element = elements[slot];
     if (!element) return;
     clearReveal(slot);
-    const token = { cancelled: false };
-    revealTokens.set(slot, token);
+
+    const token: RevealToken = {
+      cancelled: false,
+      cancel: () => {
+        token.cancelled = true;
+      },
+    };
+    reveals.set(slot, token);
+
     window.requestAnimationFrame(() => {
       if (token.cancelled) return;
-      revealTokens.delete(slot);
-      element.style.opacity = "1";
+      element.style.transitionDuration = `${config.fade}ms`;
+      if (runtime.state().reduced) {
+        finishTypeText(element);
+        return;
+      }
+      reveals.set(slot, typeText(element, { caret: false }));
     });
   };
 
@@ -463,6 +654,7 @@ export function startHomeFragments() {
     if (!element) return;
     clearFade(slot);
     clearReveal(slot);
+    element.style.transitionDuration = `${config.fade}ms`;
     element.style.opacity = "0";
     const timer = window.setTimeout(() => {
       fadeTimers.delete(slot);
@@ -531,6 +723,28 @@ export function startHomeFragments() {
       value: document.hidden ? "hidden" : "visible",
     });
   });
+
+  const enterTitle = (event: Event) => {
+    const title = event.currentTarget as HTMLElement;
+    const topic = title.dataset.wash;
+    if (!topic) return;
+    dispatch({ type: "topic", topic, slots: topicSlots.get(topic) ?? [] });
+  };
+
+  const leaveTitle = (event: Event) => {
+    const title = event.currentTarget as HTMLElement;
+    const next =
+      event instanceof FocusEvent || event instanceof MouseEvent ? event.relatedTarget : null;
+    if (next instanceof Node && title.contains(next)) return;
+    dispatch({ type: "topic", topic: null, slots: [] });
+  };
+
+  for (const title of document.querySelectorAll<HTMLElement>(TITLE_SELECTOR)) {
+    title.addEventListener("pointerenter", enterTitle);
+    title.addEventListener("pointerleave", leaveTitle);
+    title.addEventListener("focusin", enterTitle);
+    title.addEventListener("focusout", leaveTitle);
+  }
 
   if (reduced.matches) dispatch({ type: "reduced", value: true });
   dispatch({

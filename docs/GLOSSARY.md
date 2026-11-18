@@ -17,7 +17,8 @@ sitemap and the decision gate derive their page lists from.
 _Avoid_: page list, route table
 
 **Fragment**:
-A decorative, seeded block of text that crossfades across the homepage.
+A decorative, seeded block of text that types in and fades out across the homepage,
+cycling a section's copy while its title is hovered.
 _Avoid_: random text, lorem block
 
 **Discovery resource**:

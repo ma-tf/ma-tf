@@ -46,13 +46,25 @@ not scaled).
 
 `startHomeFragments()` (`src/lib/home-fragments.ts`) runs only where the homepage
 layer exists. It places up to three `[data-home-fragment]` blocks at seeded
-positions clear of every `[data-fragments-avoid]` element, fades the first in at
+positions clear of every `[data-fragments-avoid]` element, types the first in at
 load, follows with the next two six seconds apart, then retires the oldest every
-six seconds as a replacement fades in. It is continuous decorative motion:
-exempt from the 150ms budget of [ADR 011](adr/011-motion-timing-budget.md) and
-not governed by the motion control. `prefers-reduced-motion` shows the placed
-blocks without the loop. A `ResizeObserver` refreshes the reserved boxes when an
-obstacle grows; window resizes keep the visible count.
+six seconds as a replacement types in. Typing reuses the typewriter's character
+spans and interval (`src/lib/typewriter.ts`) at the hero's pace, without a caret
+and without the motion-control events.
+
+Hovering or focusing a section title (`[data-title][data-wash]`) clears the
+layer and grows the fragments tagged with that title's wash
+(`data-fragment-topic`) one every two seconds until three are visible, then
+rotates them, each re-typing at a fresh position every two seconds; a
+single-fragment title holds. Leaving clears the contextual set and restarts the
+seeded loop.
+
+The loop is continuous decorative motion: exempt from the 150ms budget of
+[ADR 011](adr/011-motion-timing-budget.md) and not governed by the motion
+control. `prefers-reduced-motion` shows placed blocks whole, without typing or
+the loop, and a hovered title's fragments all at once. A `ResizeObserver`
+refreshes the reserved boxes when an obstacle grows; window resizes keep the
+visible count.
 
 ## Theme transitions
 
