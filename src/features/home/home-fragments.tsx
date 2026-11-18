@@ -25,7 +25,7 @@ export function HomeFragments() {
           key={copy}
           data-home-fragment
           hidden
-          className="invisible absolute w-56 font-mono text-2xs leading-relaxed text-muted-foreground opacity-0 transition-opacity ease-in-out motion-reduce:transition-none"
+          className="invisible absolute w-56 font-mono text-2xs leading-snug text-muted-foreground opacity-0 transition-opacity ease-in-out motion-reduce:transition-none"
         >
           {copy}
         </p>
