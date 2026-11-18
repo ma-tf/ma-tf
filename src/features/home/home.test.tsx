@@ -16,6 +16,12 @@ describe("HomePage decorators", () => {
     expect(html).toContain("data-home-wires-front");
   });
 
+  it("lifts the bottom plate only for washes that carry an image", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html).not.toContain("data-preview-bottom:-translate-y-10");
+  });
+
   it("freezes the mobile fan with a fixed composition width", () => {
     const html = renderToStaticMarkup(<HomePage />);
 

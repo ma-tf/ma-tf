@@ -283,6 +283,12 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash]:is(:hover, :focus-within)) [data-prev-led="green"] {
     opacity: 1;
   }
+  &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-preview-bottom],
+  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-preview-bottom],
+  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-preview-bottom],
+  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-preview-bottom] {
+    translate: 0 calc(var(--spacing) * -10);
+  }
 }
 
 @utility grid-spotlight-* {
