@@ -38,8 +38,8 @@ const STIFFNESS_CYCLE = 3;
 const STIFFNESS_STEP = 0.1;
 const DAMPING_RATIO = 0.3;
 const SECOND_WIRE_DRIVE_RATIO = 0.6;
-const IDLE_PX = 2.5;
-const IDLE_HZ = 0.0625;
+const IDLE_PX = 7;
+const IDLE_HZ = 0.1875;
 const PAIR_PHASE_STEP = 0.9;
 const SAG_STIFFNESS = 25;
 const SAG_DAMPING_RATIO = 0.8;
@@ -62,6 +62,7 @@ const FRONT_SVG_SELECTOR = "svg[data-home-wires-front]";
 const SHELL_SELECTOR = "[data-grid-spotlight]";
 const NAV_SELECTOR = 'nav[aria-label="Sections"]';
 const MARKER_SELECTOR = "span[data-wire-landing]";
+const REVEAL_SELECTOR = "[data-prev-reveal]";
 const PATH_SELECTOR = "path[data-home-wire]";
 const FRONT_PATH_SELECTOR = "path[data-home-wire-front]";
 const TITLE_SELECTOR = "[data-title]";
@@ -151,6 +152,12 @@ export function startHomeWires(): void {
   const frontSvg = document.querySelector<SVGSVGElement>(FRONT_SVG_SELECTOR);
   const frontPaths = Array.from(document.querySelectorAll<SVGPathElement>(FRONT_PATH_SELECTOR));
   const pairCount = Math.floor(markers.length / 2);
+  const linkedPairs = Array.from(
+    { length: pairCount },
+    (_, pair) => markers[pair * 2]?.hasAttribute("data-wire-linked") ?? false,
+  );
+  const reveal = document.querySelector<HTMLElement>(REVEAL_SELECTOR);
+  const bandHeight = () => reveal?.getBoundingClientRect().height ?? 0;
   const originFor = () => (window.matchMedia(MOBILE_QUERY).matches ? MOBILE_ORIGIN_X : ORIGIN_X);
   const frontSlot = (pair: number) =>
     markers.slice(0, pair * 2).filter((marker) => marker.hasAttribute("data-wire-linked")).length *
@@ -243,8 +250,11 @@ export function startHomeWires(): void {
   const paintRest = () => {
     for (let pair = 0; pair < pairCount; pair++) {
       const ends = readPairEnds(pair);
-      if (ends) paintPair(pair, ends[0], ends[1], [0, 0], 0, 0);
-      else clearPair(pair);
+      if (!ends || (linkedPairs[pair] && bandHeight() < 1)) {
+        clearPair(pair);
+        continue;
+      }
+      paintPair(pair, ends[0], ends[1], [0, 0], 0, 0);
     }
   };
 
@@ -309,6 +319,10 @@ export function startHomeWires(): void {
       const drive = idleDrive(timeS, pair, stiffness);
       stepSpring(motion.sway[0], dt, stiffness, DAMPING_RATIO, drive);
       stepSpring(motion.sway[1], dt, stiffness, DAMPING_RATIO, drive * SECOND_WIRE_DRIVE_RATIO);
+      if (linkedPairs[pair] && bandHeight() < 1) {
+        clearPair(pair);
+        continue;
+      }
       paintPair(
         pair,
         ends[0],

@@ -71,6 +71,36 @@ function mockPoints(left: number, top: number) {
   }
 }
 
+function renderLinkedPair() {
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    [
+      '<svg data-home-wires><path data-home-wire d=""></path><path data-home-wire d=""></path></svg>',
+      '<svg data-home-wires-front><path data-home-wire-front d=""></path><path data-home-wire-front d=""></path></svg>',
+      '<div data-prev-reveal"></div>',
+      "<span data-wire-landing data-wire-linked></span><span data-wire-landing></span>",
+    ].join(""),
+  );
+  const reveal = document.querySelector<HTMLElement>("[data-prev-reveal]");
+  let height = 0;
+  if (reveal) {
+    vi.spyOn(reveal, "getBoundingClientRect").mockImplementation(() => ({
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      x: 0,
+      y: 0,
+      width: 0,
+      height,
+      toJSON: () => {},
+    }));
+  }
+  return (value: number) => {
+    height = value;
+  };
+}
+
 beforeEach(() => {
   document.body.innerHTML = "";
 });
@@ -230,6 +260,51 @@ describe("trackSpeed", () => {
 
     expect(trackSpeed(tracker, { x: 180, y: 400 }, 0.016)).toBeGreaterThan(0);
     expect(tracker.x).toBe(180);
+  });
+});
+
+describe("linked cable visibility", () => {
+  it("hides the linked cables while the band is closed under reduced motion", () => {
+    setReducedMotion(true);
+    const setBandHeight = renderLinkedPair();
+    mockPoints(100, 400);
+    startHomeWires();
+    const path = document.querySelector("path[data-home-wire-front]");
+
+    expect(path?.getAttribute("d")).toBe("");
+
+    setBandHeight(192);
+    window.dispatchEvent(new Event("resize"));
+
+    expect(path?.getAttribute("d")).toContain("M ");
+
+    setBandHeight(0);
+    window.dispatchEvent(new Event("resize"));
+
+    expect(path?.getAttribute("d")).toBe("");
+  });
+
+  it("paints the linked cables only while the band is open", () => {
+    setReducedMotion(false);
+    mockRafQueue();
+    const setBandHeight = renderLinkedPair();
+    mockPoints(100, 400);
+    startHomeWires();
+    const path = document.querySelector("path[data-home-wire-front]");
+
+    flushFrames(5);
+
+    expect(path?.getAttribute("d")).toBe("");
+
+    setBandHeight(192);
+    flushFrames(5);
+
+    expect(path?.getAttribute("d")).toContain("M ");
+
+    setBandHeight(0);
+    flushFrames(5);
+
+    expect(path?.getAttribute("d")).toBe("");
   });
 });
 
