@@ -101,6 +101,22 @@ export function HomePrev() {
           decoding="async"
           className="block max-w-none"
         />
+        <span
+          aria-hidden="true"
+          data-prev-led="red"
+          className="pointer-events-none absolute top-7.25 left-115.5 grid size-3 -translate-x-1/2 -translate-y-1/2 place-items-center opacity-100 transition-opacity duration-150 motion-reduce:transition-none"
+        >
+          <span className="size-1.5 rounded-full bg-ember-400 mix-blend-color-dodge" />
+          <span className="absolute -inset-1 rounded-full bg-ember-400 opacity-80 mix-blend-color-dodge blur-sm" />
+        </span>
+        <span
+          aria-hidden="true"
+          data-prev-led="green"
+          className="pointer-events-none absolute top-7.25 left-118 grid size-3 -translate-x-1/2 -translate-y-1/2 place-items-center opacity-0 transition-opacity duration-150 motion-reduce:transition-none"
+        >
+          <span className="size-1.5 rounded-full bg-emerald-400 mix-blend-color-dodge" />
+          <span className="absolute -inset-1 rounded-full bg-emerald-400 opacity-80 mix-blend-color-dodge blur-sm" />
+        </span>
         <span aria-hidden="true" data-wire-landing className={cn(landing, "right-1 bottom-0")} />
       </span>
       <svg

@@ -12,6 +12,7 @@ describe("HomePage decorators", () => {
     expect(html).toContain("invisible");
     expect(html).toContain("Blog");
     expect(html.match(/data-wire-landing/g)).toHaveLength(18);
+    expect(html.match(/data-prev-led/g)).toHaveLength(2);
     expect(html).toContain("data-home-wires-front");
   });
 
