@@ -28,7 +28,7 @@ card copy and corner brackets never drift apart.
 `startStillLifeDripShader()` (`src/lib/still-life-drip-shader.ts`) renders a
 WebGL metaball drop that swells under the drawn mushroom cap, necks, falls to
 the objects' floor line and splashes, refracting the art through itself. One
-4s cycle on a canvas inside the still-life parallax positioner, so pointer
+8.5s cycle on a canvas inside the still-life parallax positioner, so pointer
 and scroll drift keep it pinned to the cap; the canvas is transparent at rest
 and the loop skips rendering between splashes. It is continuous decorative
 motion — exempt from the 150ms budget of
