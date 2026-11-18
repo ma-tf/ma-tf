@@ -18,8 +18,6 @@ const CROP = { x: 40, y: 560, width: 320, height: 440 } as const;
 const ANCHOR = { x: 175, y: 650 } as const;
 const FLOOR_Y = 890;
 
-export type DripContentBox = { scale: number; originX: number; originY: number };
-
 export function resolveContentBox(boxWidth: number, boxHeight: number, cover: boolean) {
   const fit = boxWidth / IMAGE_WIDTH;
   const fill = boxHeight / IMAGE_HEIGHT;
@@ -417,7 +415,16 @@ export function startStillLifeDripShader() {
   let raf = 0;
   let t0 = 0;
 
-  const drawFrame = (state: DripFieldState) => {
+  const uploadSpecks = (specks: DripSpeck[]) => {
+    for (let i = 0; i < 3; i += 1) {
+      const location = u.specks[i];
+      if (!location) continue;
+      const speck = specks[i] ?? { x: 0, y: 0, r: 0, alpha: 0 };
+      gl.uniform4f(location, speck.x, speck.y, speck.r, speck.alpha);
+    }
+  };
+
+  const uploadState = (state: DripFieldState) => {
     gl.uniform1f(u.dark, dark ? 1 : 0);
     gl.uniform1f(u.dropX, geometry.anchorX);
     gl.uniform1f(u.dropY, state.dropY);
@@ -429,13 +436,11 @@ export function startStillLifeDripShader() {
     gl.uniform1f(u.alpha, state.alpha);
     gl.uniform1f(u.ripple, state.ripple);
     gl.uniform1f(u.floorY, geometry.floorY);
-    for (let i = 0; i < 3; i += 1) {
-      const speck = state.specks[i];
-      const location = u.specks[i];
-      if (location) {
-        gl.uniform4f(location, speck?.x ?? 0, speck?.y ?? 0, speck?.r ?? 0, speck?.alpha ?? 0);
-      }
-    }
+    uploadSpecks(state.specks);
+  };
+
+  const drawFrame = (state: DripFieldState) => {
+    uploadState(state);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   };
 

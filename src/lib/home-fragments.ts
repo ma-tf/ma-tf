@@ -219,6 +219,28 @@ function resumeSeeded(state: FragmentState): FragmentTransition {
   );
 }
 
+function placeTopicSlots(
+  state: FragmentState,
+  size: FragmentSize,
+  slots: number[],
+  effects: FragmentEffect[],
+): VisibleFragment[] {
+  const visible: VisibleFragment[] = [];
+  for (const [index, slot] of slots.entries()) {
+    const box = planFragment(
+      hashSeed(`${state.seed}:topic:${state.tick + index}`),
+      size,
+      state.reserved,
+      visible.map((fragment) => fragment.box),
+      state.placement,
+    );
+    if (!box) break;
+    visible.push({ slot, box });
+    effects.push({ type: "place", slot, box }, { type: "reveal", slot });
+  }
+  return visible;
+}
+
 function showTopic(state: FragmentState): FragmentTransition {
   const effects: FragmentEffect[] = [{ type: "stop" }];
   hideAll(state, effects);
@@ -232,24 +254,10 @@ function showTopic(state: FragmentState): FragmentTransition {
     topicIndex: 0,
   };
 
-  if (!state.size || state.topicSlots.length === 0) return { state: base, effects };
+  if (!state.size) return { state: base, effects };
 
   const slots = state.reduced || state.paused ? state.topicSlots : state.topicSlots.slice(0, 1);
-  const visible: VisibleFragment[] = [];
-
-  for (const [index, slot] of slots.entries()) {
-    const box = planFragment(
-      hashSeed(`${state.seed}:topic:${state.tick + index}`),
-      state.size,
-      state.reserved,
-      visible.map((fragment) => fragment.box),
-      state.placement,
-    );
-    if (!box) break;
-    visible.push({ slot, box });
-    effects.push({ type: "place", slot, box }, { type: "reveal", slot });
-  }
-
+  const visible = placeTopicSlots(state, state.size, slots, effects);
   if (visible.length === 0) return { state: base, effects };
 
   const next = { ...base, visible, topicIndex: visible.length - 1, tick: visible.length };
