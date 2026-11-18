@@ -63,6 +63,15 @@ export function StillLifeBackground({
         className="absolute inset-0 h-full w-full origin-top-left animate-fade-in object-cover object-left animation-delay-900 md:-inset-5 md:scale-110 md:object-contain dark:invert"
         data-parallax={35}
       />
+      {/* Droplet temporarily disabled — uncomment to restore.
+      <div
+        className="absolute inset-0 h-full w-full origin-top-left md:-inset-5 md:scale-110"
+        data-parallax-x={27}
+        data-parallax-y={27}
+      >
+        <canvas className="absolute" data-still-life-drip-canvas />
+      </div>
+      */}
     </div>
   );
 }

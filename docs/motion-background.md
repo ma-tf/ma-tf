@@ -23,6 +23,24 @@ their own: the still life is the only scroll frame on those pages, and the cards
 animate only through the reveal. Their `<section>` stays a plain container so the
 card copy and corner brackets never drift apart.
 
+## Drip
+
+`startStillLifeDripShader()` (`src/lib/still-life-drip-shader.ts`) renders a
+WebGL metaball drop that swells under the drawn mushroom cap, necks, falls to
+the objects' floor line and splashes, refracting the art through itself. One
+4s cycle on a canvas inside the still-life parallax positioner, so pointer
+and scroll drift keep it pinned to the cap; the canvas is transparent at rest
+and the loop skips rendering between splashes. It is continuous decorative
+motion — exempt from the 150ms budget of
+[ADR 011](adr/011-motion-timing-budget.md) and not gated by `data-motion`.
+`prefers-reduced-motion` draws one static frame of the hanging drop; no
+WebGL means no drip. Refraction samples composite crops
+(`public/still-life-drip-light.webp`, `-dark.webp`) rather than the CDN art,
+because `cdn.m4t.tf` sends no `Access-Control-Allow-Origin` and WebGL
+rejects non-CORS uploads: regenerate the crops whenever the still-life art
+changes, compositing the six layers in z-order with ImageMagick and inverting
+only the `dark:invert` layers over the dark background.
+
 ## Footer overlap contract
 
 `src/components/Footer.astro` is in-flow (`static`) below 768px and a fixed
