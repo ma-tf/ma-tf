@@ -4,6 +4,8 @@ import { exploreLinks } from "@lib/site-nav";
 import { CDN_BASE } from "@lib/cdn";
 
 const { show = "both" } = Astro.props;
+const showDesktop = show === "desktop";
+const showMobile = show === "mobile";
 
 const columns = [
   {
@@ -35,8 +37,8 @@ const chromeBottom = `${CDN_BASE}/misc/bottomleftchrome.png`;
   data-fragments-avoid
   class:list={[
     "static z-50 w-full overflow-x-clip text-foreground md:fixed md:bottom-0 md:h-4",
-    show === "desktop" && "hidden md:block",
-    show === "mobile" && "md:hidden",
+    showDesktop && "hidden md:block",
+    showMobile && "md:hidden",
   ]}
 >
   <nav
