@@ -115,7 +115,7 @@ function HomeSectionDecorators() {
 export function HomePage() {
   return (
     <div
-      className="relative isolate wash-state flex flex-1 flex-col overflow-clip has-[[data-title]:focus-within]:[&_img[data-preview-bottom]]:-translate-y-10 has-[[data-title]:hover]:[&_img[data-preview-bottom]]:-translate-y-10"
+      className="relative isolate wash-state flex flex-1 flex-col overflow-clip has-[[data-title]:focus-within]:**:data-preview-bottom:-translate-y-10 has-[[data-title]:hover]:**:data-preview-bottom:-translate-y-10"
       data-grid-spotlight
     >
       <HomeGrid />

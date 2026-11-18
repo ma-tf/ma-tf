@@ -1,4 +1,4 @@
-const WIRE_PAIRS = 6;
+const WIRE_PAIRS = 8;
 const WIRES_PER_PAIR = 2;
 
 export function HomeWires() {

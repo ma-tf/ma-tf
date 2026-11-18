@@ -277,12 +277,6 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash]:is(:hover, :focus-within)) [data-prev-reveal] {
     grid-template-rows: 1fr;
   }
-  &:has([data-wash]:is(:hover, :focus-within)) [data-prev-slack] {
-    opacity: 0;
-  }
-  &:has([data-wash]:is(:hover, :focus-within)) [data-prev-taut] {
-    opacity: 1;
-  }
 }
 
 @utility grid-spotlight-* {

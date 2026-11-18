@@ -11,7 +11,8 @@ describe("HomePage decorators", () => {
     expect(html).toContain("bg-foreground/30");
     expect(html).toContain("invisible");
     expect(html).toContain("Blog");
-    expect(html.match(/data-wire-landing/g)).toHaveLength(12);
+    expect(html.match(/data-wire-landing/g)).toHaveLength(18);
+    expect(html).toContain("data-home-wires-front");
   });
 
   it("freezes the mobile fan with a fixed composition width", () => {
