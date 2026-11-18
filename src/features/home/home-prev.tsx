@@ -93,7 +93,7 @@ export function HomePrev() {
                 <div
                   key={wash}
                   data-prev-image={wash}
-                  className="relative col-start-1 row-start-1 hidden w-full transition-[display] transition-discrete delay-300 duration-0 motion-reduce:transition-none"
+                  className="relative col-start-1 row-start-1 hidden w-full overflow-clip transition-[display] transition-discrete delay-300 duration-0 motion-reduce:transition-none"
                 >
                   <span
                     aria-hidden="true"
@@ -105,6 +105,14 @@ export function HomePrev() {
                     loading="lazy"
                     decoding="async"
                     className={cn("h-auto w-full opacity-60", homePrevImageClasses[wash])}
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-full animate-scanline"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 crt-mask"
                   />
                 </div>
               ))}
