@@ -169,7 +169,7 @@ describe("fragment runtime", () => {
   it("cycles a single fragment when only one box fits", () => {
     const reserved = [
       { x: 0, y: 0, width: 1440, height: 32 },
-      { x: 0, y: 176, width: 1440, height: 724 },
+      { x: 0, y: 200, width: 1440, height: 700 },
       { x: 0, y: 0, width: 32, height: 900 },
       { x: 304, y: 0, width: 1136, height: 900 },
     ];

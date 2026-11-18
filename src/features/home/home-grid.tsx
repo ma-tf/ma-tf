@@ -33,10 +33,6 @@ export function HomeGrid() {
             className="h-full w-4/5 -scale-x-100 mask-mirrored-fade-l object-cover mix-blend-luminosity contrast-105"
           />
         </div>
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
-        />
       </Wash>
       <Wash color="taupe">
         <img
@@ -46,10 +42,6 @@ export function HomeGrid() {
           loading="lazy"
           decoding="async"
           className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover mix-blend-luminosity contrast-105"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
         />
       </Wash>
       <Wash color="blue">
@@ -61,10 +53,6 @@ export function HomeGrid() {
           decoding="async"
           className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left mix-blend-luminosity contrast-105"
         />
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
-        />
       </Wash>
       <Wash color="emerald">
         <img
@@ -74,10 +62,6 @@ export function HomeGrid() {
           loading="lazy"
           decoding="async"
           className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left mix-blend-luminosity contrast-105"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"
         />
       </Wash>
       <script

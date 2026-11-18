@@ -25,16 +25,23 @@ describe("HomePage decorators", () => {
     expect(html).not.toContain("md:perspective-midrange");
   });
 
+  it("fades section photos to transparency rather than the page background", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html).not.toContain("bg-linear-to-r from-background");
+  });
+
   it("renders the fragment layer hidden and decorative until placement", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
     expect(html).toContain("data-home-fragments");
     expect(html).toContain('aria-hidden="true"');
-    expect(html.match(/data-home-fragment="true"/g)).toHaveLength(6);
+    expect(html.match(/data-home-fragment="true"/g)).toHaveLength(12);
     expect(html.match(/data-fragments-avoid/g)).toHaveLength(13);
-    expect(html).toContain("Lorem ipsum dolor sit amet");
-    expect(html).toContain("w-56 font-mono text-xs");
+    expect(html).toContain("Notes, essays and changelogs");
+    expect(html).toContain("w-56 font-mono text-2xs");
     expect(html).toContain("transition-opacity ease-in-out");
     expect(DEFAULT_PLACEMENT.width).toBe(224);
+    expect(DEFAULT_PLACEMENT.height).toBe(120);
   });
 });
