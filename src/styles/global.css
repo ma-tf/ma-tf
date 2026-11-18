@@ -253,9 +253,6 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
 }
 
 @utility wash-state {
-  &:has([data-wash]:is(:hover, :focus-within)) [data-grid] {
-    opacity: 0;
-  }
   &:has([data-wash="gray"]:is(:hover, :focus-within)) [data-wash="gray"],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-wash="taupe"],
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-wash="blue"],
@@ -264,13 +261,18 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-wash="plum"] {
     opacity: 1;
   }
-  &:has([data-wash="gray"]:is(:hover, :focus-within)) [data-prev-text="gray"],
-  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-text="taupe"],
-  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-text="blue"],
-  &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-text="emerald"],
-  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-text="ember"],
-  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-text="plum"] {
+  &:has([data-wash]:is(:hover, :focus-within)) [data-prev-image] {
+    display: none;
+    transition: display 0s;
+  }
+  &:has([data-wash="gray"]:is(:hover, :focus-within)) [data-prev-image="gray"],
+  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-image="taupe"],
+  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-image="blue"],
+  &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-image="emerald"],
+  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-image="ember"],
+  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-image="plum"] {
     display: block;
+    transition: display 0s;
   }
   &:has([data-wash]:is(:hover, :focus-within)) [data-prev-reveal] {
     grid-template-rows: 1fr;

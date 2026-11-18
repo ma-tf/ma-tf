@@ -1,51 +1,17 @@
+import { washTintClasses, type WashColor } from "@components/wash";
+import { CDN_BASE } from "@lib/cdn";
 import { cn } from "cn";
 
-type HomePrevWash = "emerald" | "plum" | "ember" | "blue" | "gray" | "taupe";
-
-type HomePrevCopy = {
-  lead: string | null;
-  paragraphs: string[];
+const homePrevImages: Partial<Record<WashColor, string>> = {
+  emerald: "/tags-prev.png",
+  ember: `${CDN_BASE}/photography/luxembourg-19-statues.avif`,
+  blue: "/bolex-dither-anon3.png",
+  taupe: `${CDN_BASE}/music/japan-6-19.avif`,
 };
 
-const homePrevCopy: Record<HomePrevWash, HomePrevCopy> = {
-  emerald: {
-    lead: "Latest writing.",
-    paragraphs: ["Every topic covered by writing on the m4t.tf blog."],
-  },
-  plum: {
-    lead: "Things I build and ship.",
-    paragraphs: [
-      "A selection of projects I have built in my spare time, spanning film photography tools, terminal interfaces, and this very site.",
-    ],
-  },
-  ember: {
-    lead: "Digital and analogue photography.",
-    paragraphs: [
-      "In my spare time I am an amateur photographer. I shoot on both digital and film, and have collected a small family of cameras over the years, each covering a different use case.",
-      "The cameras I use include: a Canon EOS-1V as my primary camera with swappable lenses; an Olympus mju mini Digital for when I want retro digital shots; a Ricoh Mirai when I need an all rounder bridge camera. They have served me well so far.",
-      "I scan every roll myself on a Nikon CoolScan V ED using SilverFast, and colour correct the frames in SilverFast HDR. It's a slow, hands-on part of the process, but it's become as much a part of the craft as the shooting itself.",
-    ],
-  },
-  blue: {
-    lead: "Experimental motion work; exploring through the lens.",
-    paragraphs: [
-      "A series of short motion studies, shot on location in the quiet hours. Small observations of a place and the details that give it character. Photographs freeze a single instant, but some places only come alive in motion. The speed of a moving train, the swing of shoes on a wire, the rolling waves on a beach during sunset. These studies are an attempt to hold on to those moving moments.",
-      "The Bolex H-16 SBM offers a portable way to create true filmic experiences without electricity as a hard requirement. Using 30 metre film reels and a wind-up motor, I can shoot scenes up to 30 seconds long with a maximum of approximately 2 minutes and 45 seconds of footage per reel. For my own convenience, I use a battery powered Kern Vario-Switar 16-100mm lens. The battery powers the auto exposure and the in-built electric motor for zooming.",
-      "Everything is shot on 16mm film. Its grain and tonal latitude give the footage a texture that digital struggles to match, and the format's soft, rounded frame corners come straight from the lens and gate rather than any filter. Shooting on film is an exercise in economy. Each scene is a single take with no chance to delete or reshoot without paying for the footage again, so every second has to be deliberate. That constraint is part of what makes the format so rewarding.",
-    ],
-  },
-  gray: {
-    lead: "Digital illustrations and visual experiments.",
-    paragraphs: [
-      "Visual experiments and illustrations made for the joy of it. Studies of form and colour, and other loose ends.",
-    ],
-  },
-  taupe: {
-    lead: "Original compositions, remixes, and live recordings.",
-    paragraphs: [
-      "My music splits into two strands. The drum and bass leans into an atmospheric style. Long evolving pads sit under chopped breaks, the space left between them doing as much work as the drums themselves. It is built around tension and groove - breaks cut up and re-assembled, with percussion threading through the gaps to keep things moving forward. The ambient work moves slower, toward darker, more sinister soundscapes. Drone and texture over melody, made to fill a room rather than hold a hook.",
-    ],
-  },
+const homePrevImageClasses: Partial<Record<WashColor, string>> = {
+  ember: "-scale-x-100",
+  blue: "object-right",
 };
 
 const cables = [
@@ -123,18 +89,23 @@ export function HomePrev() {
         >
           <div className="min-h-0 overflow-hidden">
             <div className="grid">
-              {Object.entries(homePrevCopy).map(([wash, { lead, paragraphs }]) => (
+              {(Object.keys(homePrevImages) as WashColor[]).map((wash) => (
                 <div
                   key={wash}
-                  data-prev-text={wash}
-                  className="col-start-1 row-start-1 hidden space-y-2 p-6 pr-8 text-sm leading-tight text-foreground transition-[display] transition-discrete duration-300 motion-reduce:transition-none"
+                  data-prev-image={wash}
+                  className="relative col-start-1 row-start-1 hidden w-full transition-[display] transition-discrete delay-300 duration-0 motion-reduce:transition-none"
                 >
-                  {lead ? (
-                    <p className="text-xs tracking-widest uppercase opacity-70">{lead}</p>
-                  ) : null}
-                  {paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
+                  <span
+                    aria-hidden="true"
+                    className={cn("absolute inset-0", washTintClasses[wash])}
+                  />
+                  <img
+                    src={homePrevImages[wash]}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className={cn("h-auto w-full opacity-60", homePrevImageClasses[wash])}
+                  />
                 </div>
               ))}
             </div>

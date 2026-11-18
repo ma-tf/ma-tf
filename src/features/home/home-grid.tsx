@@ -28,9 +28,10 @@ export function HomeGrid() {
             src={TRANSPARENT_IMAGE}
             data-src={`${CDN_BASE}/photography/luxembourg-19-statues.avif`}
             alt=""
+            hidden
             loading="lazy"
             decoding="async"
-            className="h-full w-4/5 -scale-x-100 mask-mirrored-fade-l object-cover mix-blend-luminosity contrast-105"
+            className="h-full w-4/5 -scale-x-100 mask-mirrored-fade-l object-cover opacity-60"
           />
         </div>
       </Wash>
@@ -39,9 +40,10 @@ export function HomeGrid() {
           src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/music/japan-6-19.avif`}
           alt=""
+          hidden
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover mix-blend-luminosity contrast-105"
+          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover opacity-60"
         />
       </Wash>
       <Wash color="blue">
@@ -49,9 +51,10 @@ export function HomeGrid() {
           src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/vignettes/bolex-dither-anon2.png`}
           alt=""
+          hidden
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left mix-blend-luminosity contrast-105"
+          className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left opacity-60"
         />
       </Wash>
       <Wash color="emerald">
@@ -59,9 +62,10 @@ export function HomeGrid() {
           src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/blog/tags-bg-2.webp`}
           alt=""
+          hidden
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left mix-blend-luminosity contrast-105"
+          className="absolute inset-0 h-full w-full translate-x-4/9 mask-l-from-black mask-l-to-transparent object-cover object-top-left opacity-60"
         />
       </Wash>
       <script
