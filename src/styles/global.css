@@ -239,17 +239,30 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
 
 @utility tilt-x-* {
   --tilt-x: calc(--value(integer) * 1deg);
-  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform: translateZ(var(--tilt-z, 0px)) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
 }
 
 @utility -tilt-x-* {
   --tilt-x: calc(--value(integer) * -1deg);
-  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform: translateZ(var(--tilt-z, 0px)) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
 }
 
 @utility tilt-y-* {
   --tilt-y: calc(--value(integer) * 1deg);
-  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform: translateZ(var(--tilt-z, 0px)) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+}
+
+@utility -tilt-z-* {
+  --tilt-z: calc(--value(integer) * -1px);
+}
+
+@utility -tilt-y-* {
+  --tilt-y: calc(--value(integer) * -1deg);
+  transform: translateZ(var(--tilt-z, 0px)) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
 }
 
 @utility wash-state {
