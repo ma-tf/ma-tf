@@ -22,7 +22,7 @@ export type PlacementOptions = {
 export const DEFAULT_PLACEMENT: PlacementOptions = {
   width: 224,
   height: 120,
-  edge: 24,
+  edge: 64,
   candidateStep: 32,
   reservedGap: 24,
   fragmentGap: 48,

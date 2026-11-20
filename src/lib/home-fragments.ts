@@ -27,6 +27,9 @@ export const DEFAULT_RUNTIME: RuntimeConfig = {
   debounce: 150,
 };
 
+const CURVE_RADIUS = 2000;
+const CURVE_LIMIT = 12;
+
 type VisibleFragment = {
   slot: number;
   box: FragmentBox;
@@ -696,6 +699,17 @@ export function startHomeFragments() {
     clearReveal(slot);
     element.style.left = `${box.x}px`;
     element.style.top = `${box.y}px`;
+    const size = runtime.state().size;
+    if (size) {
+      const offset = box.y + box.height / 2 - size.height / 2;
+      const ratio = Math.max(-1, Math.min(1, offset / CURVE_RADIUS));
+      const angle = Math.max(
+        -CURVE_LIMIT,
+        Math.min(CURVE_LIMIT, (Math.asin(ratio) * 180) / Math.PI),
+      );
+      const depth = CURVE_RADIUS * (1 - Math.cos((angle * Math.PI) / 180));
+      element.style.transform = `translateZ(${depth.toFixed(2)}px) rotateX(${angle.toFixed(2)}deg)`;
+    }
     element.hidden = false;
     element.classList.remove("invisible");
     element.style.transitionDuration = "0s";

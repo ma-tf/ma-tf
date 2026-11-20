@@ -102,7 +102,7 @@ export function HomeFragments() {
     <div
       aria-hidden="true"
       data-home-fragments
-      className="pointer-events-none absolute inset-0 z-0 hidden overflow-clip md:block"
+      className="pointer-events-none absolute inset-0 z-0 hidden overflow-clip perspective-midrange md:block"
     >
       {homeFragmentCopy.map((fragment) => (
         <p

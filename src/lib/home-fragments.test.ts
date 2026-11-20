@@ -178,10 +178,10 @@ describe("fragment runtime", () => {
 
   it("cycles a single fragment when only one box fits", () => {
     const reserved = [
-      { x: 0, y: 0, width: 1440, height: 32 },
-      { x: 0, y: 200, width: 1440, height: 700 },
-      { x: 0, y: 0, width: 32, height: 900 },
-      { x: 304, y: 0, width: 1136, height: 900 },
+      { x: 0, y: 0, width: 1440, height: 40 },
+      { x: 0, y: 208, width: 1440, height: 692 },
+      { x: 0, y: 0, width: 40, height: 900 },
+      { x: 312, y: 0, width: 1128, height: 900 },
     ];
     const state = started(42, reserved).state;
     expect(state.visible).toHaveLength(1);
@@ -340,6 +340,13 @@ describe("startHomeFragments", () => {
     expect(shown()[0]?.style.top).toMatch(/px$/);
     expect(shown()[0]?.style.transitionDuration).toBe(`${DEFAULT_RUNTIME.fade}ms`);
     expect(shown()[0]?.classList.contains("invisible")).toBe(false);
+
+    const first = shown()[0];
+    if (!first) throw new Error("missing fragment");
+    expect(first.style.transform).toMatch(/^translateZ\([\d.]+px\) rotateX\(-?[\d.]+deg\)$/);
+    const angle = Number(/rotateX\((-?[\d.]+)deg\)/.exec(first.style.transform)?.[1]);
+    const centre = Number.parseFloat(first.style.top) + 60;
+    expect(Math.sign(angle)).toBe(centre < SIZE.height / 2 ? -1 : 1);
 
     vi.advanceTimersByTime(12000);
     expect(shown()).toHaveLength(3);

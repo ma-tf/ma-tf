@@ -64,7 +64,7 @@ The loop is continuous decorative motion: exempt from the 150ms budget of
 control. `prefers-reduced-motion` shows placed blocks whole, without typing or
 the loop, and a hovered title's fragments all at once. A `ResizeObserver`
 refreshes the reserved boxes when an obstacle grows; window resizes keep the
-visible count.
+visible count. Fragments follow a gentler 2000px curve, tilting up to 12°.
 
 ## Theme transitions
 
