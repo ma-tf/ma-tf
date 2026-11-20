@@ -267,60 +267,74 @@ function showTopic(state: FragmentState): FragmentTransition {
   return { state: next, effects };
 }
 
-function topicTick(state: FragmentState): FragmentTransition {
-  if (!canRun(state) || !state.size) return { state, effects: [{ type: "stop" }] };
+function stopped(state: FragmentState): FragmentTransition {
+  return { state, effects: [{ type: "stop" }] };
+}
 
-  const target = Math.min(state.config.visible, state.topicSlots.length);
-  const seed = hashSeed(`${state.seed}:topic:${state.tick}`);
+function planReplacement(
+  state: FragmentState,
+  size: FragmentSize,
+  seed: number,
+  remaining: VisibleFragment[],
+  outgoing: VisibleFragment,
+): FragmentBox | undefined {
+  const blockers = remaining.map((fragment) => fragment.box);
+  return (
+    planFragment(seed, size, state.reserved, [...blockers, outgoing.box], state.placement) ??
+    planFragment(seed, size, state.reserved, blockers, state.placement)
+  );
+}
 
-  if (state.visible.length < target) {
-    const nextIndex = state.topicIndex + 1;
-    const slot = state.topicSlots[nextIndex];
-    if (slot === undefined) return { state, effects: [{ type: "stop" }] };
+function growTopic(state: FragmentState): FragmentTransition {
+  if (!state.size) return stopped(state);
 
-    const box = planFragment(
-      seed,
-      state.size,
-      state.reserved,
-      visibleBoxes(state),
-      state.placement,
-    );
-    if (!box) return { state, effects: [{ type: "stop" }] };
-
-    return {
-      state: {
-        ...state,
-        tick: state.tick + 1,
-        topicIndex: nextIndex,
-        visible: [...state.visible, { slot, box }],
-      },
-      effects: [
-        { type: "place", slot, box },
-        { type: "reveal", slot },
-        { type: "schedule", delay: state.config.topicHold },
-      ],
-    };
-  }
-
-  if (state.topicSlots.length < 2) return { state, effects: [{ type: "stop" }] };
-
-  const outgoing = state.visible[0];
-  if (!outgoing) return { state, effects: [{ type: "stop" }] };
+  const nextIndex = state.topicIndex + 1;
+  const slot = state.topicSlots[nextIndex];
+  if (slot === undefined) return stopped(state);
 
   const box = planFragment(
-    seed,
+    hashSeed(`${state.seed}:topic:${state.tick}`),
     state.size,
     state.reserved,
-    state.visible.slice(1).map((fragment) => fragment.box),
+    visibleBoxes(state),
     state.placement,
   );
-  if (!box) return { state, effects: [{ type: "stop" }] };
+  if (!box) return stopped(state);
 
   return {
     state: {
       ...state,
       tick: state.tick + 1,
-      visible: [...state.visible.slice(1), { slot: outgoing.slot, box }],
+      topicIndex: nextIndex,
+      visible: [...state.visible, { slot, box }],
+    },
+    effects: [
+      { type: "place", slot, box },
+      { type: "reveal", slot },
+      { type: "schedule", delay: state.config.topicHold },
+    ],
+  };
+}
+
+function nextTopicSlot(state: FragmentState) {
+  const index = (state.topicIndex + 1) % state.topicSlots.length;
+  const slot = state.topicSlots[index];
+  if (slot === undefined) return undefined;
+  if (state.visible.some((fragment) => fragment.slot === slot)) return undefined;
+  return { index, slot };
+}
+
+function retypeTopic(
+  state: FragmentState,
+  outgoing: VisibleFragment,
+  remaining: VisibleFragment[],
+  box: FragmentBox,
+): FragmentTransition {
+  return {
+    state: {
+      ...state,
+      tick: state.tick + 1,
+      visible: [...remaining, { slot: outgoing.slot, box }],
     },
     effects: [
       { type: "place", slot: outgoing.slot, box },
@@ -328,6 +342,59 @@ function topicTick(state: FragmentState): FragmentTransition {
       { type: "schedule", delay: state.config.topicHold },
     ],
   };
+}
+
+function cycleTopic(
+  state: FragmentState,
+  outgoing: VisibleFragment,
+  remaining: VisibleFragment[],
+  box: FragmentBox,
+  next: { index: number; slot: number },
+): FragmentTransition {
+  return {
+    state: {
+      ...state,
+      tick: state.tick + 1,
+      topicIndex: next.index,
+      visible: [...remaining, { slot: next.slot, box }],
+      retiring: [...state.retiring, outgoing.slot],
+    },
+    effects: [
+      { type: "retire", slot: outgoing.slot },
+      { type: "place", slot: next.slot, box },
+      { type: "reveal", slot: next.slot },
+      { type: "schedule", delay: state.config.topicHold },
+    ],
+  };
+}
+
+function rotateTopic(state: FragmentState): FragmentTransition {
+  if (!state.size) return stopped(state);
+  if (state.topicSlots.length < 2) return stopped(state);
+
+  const outgoing = state.visible[0];
+  if (!outgoing) return stopped(state);
+
+  const remaining = state.visible.slice(1);
+  const box = planReplacement(
+    state,
+    state.size,
+    hashSeed(`${state.seed}:topic:${state.tick}`),
+    remaining,
+    outgoing,
+  );
+  if (!box) return stopped(state);
+
+  const next = nextTopicSlot(state);
+  if (!next) return retypeTopic(state, outgoing, remaining, box);
+  return cycleTopic(state, outgoing, remaining, box, next);
+}
+
+function topicTick(state: FragmentState): FragmentTransition {
+  if (!canRun(state) || !state.size) return stopped(state);
+
+  const target = Math.min(state.config.visible, state.topicSlots.length);
+  return state.visible.length < target ? growTopic(state) : rotateTopic(state);
 }
 
 function scheduleHold(state: FragmentState): FragmentTransition {
@@ -390,11 +457,13 @@ function churn(state: FragmentState): FragmentTransition {
   if (!outgoing) return scheduleHold(state);
 
   const remaining = state.visible.slice(1);
-  const blockers = remaining.map((fragment) => fragment.box);
-  const seed = hashSeed(`${state.seed}:${state.tick}`);
-  const box =
-    planFragment(seed, state.size, state.reserved, [...blockers, outgoing.box], state.placement) ??
-    planFragment(seed, state.size, state.reserved, blockers, state.placement);
+  const box = planReplacement(
+    state,
+    state.size,
+    hashSeed(`${state.seed}:${state.tick}`),
+    remaining,
+    outgoing,
+  );
   if (!box) return scheduleHold(state);
 
   const occupied = new Set([

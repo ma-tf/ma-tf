@@ -62,12 +62,20 @@ describe("HomePage decorators", () => {
     expect(html).not.toContain("bg-linear-to-r from-background");
   });
 
+  it("gives every title four fragments to rotate through", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    for (const topic of ["emerald", "plum", "ember", "blue", "gray", "taupe"]) {
+      expect(html.match(new RegExp(`data-fragment-topic="${topic}"`, "g"))).toHaveLength(4);
+    }
+  });
+
   it("renders the fragment layer hidden and decorative until placement", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
     expect(html).toContain("data-home-fragments");
     expect(html).toContain('aria-hidden="true"');
-    expect(html.match(/data-home-fragment="true"/g)).toHaveLength(12);
+    expect(html.match(/data-home-fragment="true"/g)).toHaveLength(24);
     expect(html.match(/data-fragments-avoid/g)).toHaveLength(13);
     expect(html).toContain("Notes, essays and changelogs");
     expect(html).toContain("w-56 font-mono text-2xs");

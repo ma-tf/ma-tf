@@ -55,9 +55,9 @@ and without the motion-control events.
 Hovering or focusing a section title (`[data-title][data-wash]`) clears the
 layer and grows the fragments tagged with that title's wash
 (`data-fragment-topic`) one every two seconds until three are visible, then
-rotates them, each re-typing at a fresh position every two seconds; a
-single-fragment title holds. Leaving clears the contextual set and restarts the
-seeded loop.
+retires the oldest and brings in the next unseen fragment every two seconds,
+so the rotation keeps turning up new copy. A title with no spare fragment
+re-types its three in place; leaving restarts the seeded loop.
 
 The loop is continuous decorative motion: exempt from the 150ms budget of
 [ADR 011](adr/011-motion-timing-budget.md) and not governed by the motion

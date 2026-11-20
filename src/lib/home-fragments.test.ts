@@ -204,11 +204,11 @@ describe("fragment runtime", () => {
     expect(transition.effects.some((effect) => effect.type === "schedule")).toBe(true);
   });
 
-  it("grows a topic to three, then rotates it", () => {
+  it("grows a topic to three, then cycles in a fourth fragment", () => {
     let state = reduceFragments(grown(), {
       type: "topic",
       topic: "ember",
-      slots: [2, 3, 4],
+      slots: [2, 3, 4, 5],
     }).state;
     expect(state.visible.map((fragment) => fragment.slot)).toEqual([2]);
 
@@ -219,7 +219,31 @@ describe("fragment runtime", () => {
     expect(state.visible.map((fragment) => fragment.slot)).toEqual([2, 3, 4]);
 
     const rotated = reduceFragments(state, { type: "tick" });
+    expect(rotated.state.visible.map((fragment) => fragment.slot)).toEqual([3, 4, 5]);
+    expect(rotated.state.retiring).toEqual([2]);
+    expect(rotated.effects).toContainEqual({ type: "retire", slot: 2 });
+    expect(rotated.effects.some((effect) => effect.type === "reveal")).toBe(true);
+    expect(rotated.effects.some((effect) => effect.type === "schedule")).toBe(true);
+
+    const retired = reduceFragments(rotated.state, { type: "retired", slot: 2 }).state;
+    const cycled = reduceFragments(retired, { type: "tick" }).state;
+    expect(cycled.visible.map((fragment) => fragment.slot)).toEqual([4, 5, 2]);
+  });
+
+  it("re-types a full topic in place when it has no spare fragments", () => {
+    let state = reduceFragments(grown(), {
+      type: "topic",
+      topic: "ember",
+      slots: [2, 3, 4],
+    }).state;
+
+    state = reduceFragments(state, { type: "tick" }).state;
+    state = reduceFragments(state, { type: "tick" }).state;
+
+    const rotated = reduceFragments(state, { type: "tick" });
     expect(rotated.state.visible.map((fragment) => fragment.slot)).toEqual([3, 4, 2]);
+    expect(rotated.state.retiring).toEqual([]);
+    expect(rotated.effects.some((effect) => effect.type === "retire")).toBe(false);
     expect(rotated.effects.some((effect) => effect.type === "reveal")).toBe(true);
     expect(rotated.effects.some((effect) => effect.type === "schedule")).toBe(true);
   });
@@ -268,7 +292,7 @@ describe("startHomeFragments", () => {
   function renderPage() {
     document.body.innerHTML = [
       "<div data-home-fragments>",
-      ...["ember", "ember", "ember", "gray", "taupe", "taupe"].map(
+      ...["ember", "ember", "ember", "ember", "gray", "taupe", "taupe"].map(
         (topic, index) =>
           `<p data-home-fragment data-fragment-topic="${topic}" hidden class="invisible opacity-0">fragment ${index}</p>`,
       ),
@@ -400,7 +424,7 @@ describe("startHomeFragments", () => {
     expect(first.querySelectorAll(".typewriter-char-typed")).toHaveLength(10);
   });
 
-  it("grows a title's fragments to three, rotates, and resumes on leave", () => {
+  it("grows a title's fragments to three, cycles a fourth, and resumes on leave", () => {
     vi.useFakeTimers();
     const root = renderPage();
     mockReduced();
@@ -431,9 +455,12 @@ describe("startHomeFragments", () => {
     expect(typed(fragments[1]!)).toBe(10);
 
     vi.advanceTimersByTime(DEFAULT_RUNTIME.topicHold);
-    expect(shown()).toEqual([fragments[0], fragments[1], fragments[2]]);
-    expect(typed(fragments[0]!)).toBeLessThan(10);
-    expect(typed(fragments[2]!)).toBe(10);
+    expect(shown()).toEqual([fragments[0], fragments[1], fragments[2], fragments[3]]);
+    expect(typed(fragments[0]!)).toBe(10);
+    expect(typed(fragments[3]!)).toBeLessThan(10);
+
+    vi.advanceTimersByTime(DEFAULT_RUNTIME.fade);
+    expect(shown()).toEqual([fragments[1], fragments[2], fragments[3]]);
 
     title.dispatchEvent(new Event("pointerleave"));
     expect(shown()).toHaveLength(1);
@@ -453,7 +480,7 @@ describe("startHomeFragments", () => {
 
     const fragments = Array.from(root.querySelectorAll<HTMLElement>("[data-home-fragment]"));
     const shown = fragments.filter((fragment) => !fragment.hidden);
-    expect(shown).toEqual([fragments[0], fragments[1], fragments[2]]);
+    expect(shown).toEqual([fragments[0], fragments[1], fragments[2], fragments[3]]);
     for (const fragment of shown) expect(fragment.style.opacity).toBe("1");
     expect(root.querySelector(".typewriter-char")).toBeNull();
   });
