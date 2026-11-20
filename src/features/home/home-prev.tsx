@@ -59,7 +59,7 @@ function PrevImageLayer({
         alt=""
         loading="lazy"
         decoding="async"
-        className={cn("h-full w-full object-contain opacity-60", homePrevImageClasses[wash])}
+        className={cn("h-full w-full object-contain opacity-40", homePrevImageClasses[wash])}
       />
     </div>
   );
@@ -78,9 +78,12 @@ function PrevScreen({ children, className, ...props }: ComponentProps<"div">) {
       </span>
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-full animate-scanline"
+        className="pointer-events-none absolute inset-x-0 top-0 h-full animate-scanline opacity-50"
       />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-0 crt-mask" />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 crt-mask opacity-50"
+      />
     </div>
   );
 }
@@ -171,7 +174,7 @@ export function HomePrev({ className, ...props }: ComponentProps<"div">) {
       aria-hidden="true"
       data-fragments-avoid
       className={cn(
-        "absolute top-1/2 right-16 isolate hidden -translate-y-1/2 flex-col items-start md:flex",
+        "absolute top-35 right-16 isolate hidden flex-col items-start md:flex",
         className,
       )}
       {...props}

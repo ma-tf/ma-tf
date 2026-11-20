@@ -115,7 +115,7 @@ function HomeSectionDecorators() {
 export function HomePage() {
   return (
     <div
-      className="relative isolate flex wash-state flex-1 flex-col overflow-clip"
+      className="relative isolate wash-state flex flex-1 flex-col overflow-clip"
       data-grid-spotlight
     >
       <HomeGrid />
@@ -125,42 +125,42 @@ export function HomePage() {
         aria-label="Sections"
         className="relative mt-4 -ml-28 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-midrange sm:-ml-14 md:absolute md:top-1/2 md:mt-0 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
       >
-        <HomeSectionRow className="-tilt-x-24 -tilt-y-10 -tilt-z-100">
+        <HomeSectionRow>
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="emerald" href="/blog">
             Blog
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-x-14 -tilt-y-10 -tilt-z-50">
+        <HomeSectionRow>
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="plum" href="/projects">
             Projects
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-x-6 -tilt-y-10">
+        <HomeSectionRow>
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="ember" href="/photography">
             Photography
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-y-10 tilt-x-6">
+        <HomeSectionRow>
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="blue" href="/vignettes">
             Vignettes
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-y-10 tilt-x-14 -tilt-z-50">
+        <HomeSectionRow>
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="gray" href="/graphics">
             Graphics
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-y-10 tilt-x-24 -tilt-z-100">
+        <HomeSectionRow>
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="taupe" href="/music">
             Music

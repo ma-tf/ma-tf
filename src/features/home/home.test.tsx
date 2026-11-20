@@ -26,9 +26,6 @@ describe("HomePage decorators", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
     expect(html).toContain("perspective-midrange");
-    expect(html).toContain("-tilt-y-10");
-    expect(html.match(/-tilt-z-100/g)).toHaveLength(2);
-    expect(html.match(/-tilt-z-50/g)).toHaveLength(2);
     expect(html).toContain("w-3xl shrink-0");
     expect(html).toContain("md:w-auto");
     expect(html).not.toContain("md:tilt-");
