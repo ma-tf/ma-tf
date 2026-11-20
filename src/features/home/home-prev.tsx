@@ -174,7 +174,7 @@ export function HomePrev({ className, ...props }: ComponentProps<"div">) {
       aria-hidden="true"
       data-fragments-avoid
       className={cn(
-        "absolute top-35 right-16 isolate hidden flex-col items-start md:flex",
+        "absolute top-35 right-16 isolate hidden -tilt-y-6 tilt-z-14 flex-col items-start md:flex",
         className,
       )}
       {...props}

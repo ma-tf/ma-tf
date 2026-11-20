@@ -32,6 +32,18 @@ describe("HomePage decorators", () => {
     expect(html).not.toContain("md:perspective-midrange");
   });
 
+  it("curves the section stack on one convex surface", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html.match(/-tilt-x-19/g)).toHaveLength(1);
+    expect(html.match(/tilt-x-19/g)).toHaveLength(2);
+    expect(html.match(/tilt-z-53/g)).toHaveLength(2);
+    expect(html.match(/tilt-z-19/g)).toHaveLength(2);
+    expect(html.match(/tilt-z-2/g)).toHaveLength(2);
+    expect(html.match(/tilt-z-14/g)).toHaveLength(1);
+    expect(html.match(/-tilt-y-6/g)).toHaveLength(1);
+  });
+
   it("swipes preview images on one screen without cropping them", () => {
     const html = renderToStaticMarkup(<HomePage />);
 

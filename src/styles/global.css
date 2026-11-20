@@ -255,6 +255,12 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     rotateY(var(--tilt-y, 0deg));
 }
 
+@utility tilt-z-* {
+  --tilt-z: calc(--value(integer) * 1px);
+  transform: translateZ(var(--tilt-z, 0px)) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+}
+
 @utility -tilt-z-* {
   --tilt-z: calc(--value(integer) * -1px);
 }
