@@ -273,9 +273,9 @@ describe("startHomeFragments", () => {
           `<p data-home-fragment data-fragment-topic="${topic}" hidden class="invisible opacity-0">fragment ${index}</p>`,
       ),
       "</div>",
-      '<span data-title data-wash="ember"></span>',
-      '<span data-title data-wash="gray"></span>',
-      '<span data-title data-wash="taupe"></span>',
+      '<span data-title data-wash="ember"><a href="/photography">ember</a></span>',
+      '<span data-title data-wash="gray"><a href="/graphics">gray</a></span>',
+      '<span data-title data-wash="taupe"><a href="/music">taupe</a></span>',
       '<span data-fragments-avoid data-kind="title"></span>',
       '<div data-fragments-avoid data-kind="prev"></div>',
       "<footer data-fragments-avoid></footer>",
@@ -456,6 +456,44 @@ describe("startHomeFragments", () => {
     expect(shown).toEqual([fragments[0], fragments[1], fragments[2]]);
     for (const fragment of shown) expect(fragment.style.opacity).toBe("1");
     expect(root.querySelector(".typewriter-char")).toBeNull();
+  });
+
+  it("drops a restored title focus when the pointer enters another title", () => {
+    renderPage();
+    mockReduced();
+    mockFrames();
+    mockObserver();
+
+    startHomeFragments();
+
+    const ember = document.querySelector<HTMLElement>('[data-title][data-wash="ember"]');
+    const gray = document.querySelector<HTMLElement>('[data-title][data-wash="gray"]');
+    const focused = ember?.querySelector<HTMLAnchorElement>("a");
+    if (!ember || !gray || !focused) throw new Error("missing titles");
+    focused.focus();
+    expect(document.activeElement).toBe(focused);
+
+    gray.dispatchEvent(new Event("pointerenter"));
+
+    expect(document.activeElement).not.toBe(focused);
+  });
+
+  it("keeps a title's focus when the pointer enters that title", () => {
+    renderPage();
+    mockReduced();
+    mockFrames();
+    mockObserver();
+
+    startHomeFragments();
+
+    const ember = document.querySelector<HTMLElement>('[data-title][data-wash="ember"]');
+    const focused = ember?.querySelector<HTMLAnchorElement>("a");
+    if (!ember || !focused) throw new Error("missing title");
+    focused.focus();
+
+    ember.dispatchEvent(new Event("pointerenter"));
+
+    expect(document.activeElement).toBe(focused);
   });
 
   it("shows nothing when the layer has no size", () => {

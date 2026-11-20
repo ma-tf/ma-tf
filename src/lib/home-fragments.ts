@@ -734,6 +734,15 @@ export function startHomeFragments() {
 
   const enterTitle = (event: Event) => {
     const title = event.currentTarget as HTMLElement;
+    const active = document.activeElement;
+    if (
+      event.type === "pointerenter" &&
+      active instanceof HTMLElement &&
+      active.closest(TITLE_SELECTOR) &&
+      !title.contains(active)
+    ) {
+      active.blur();
+    }
     const topic = title.dataset.wash;
     if (!topic) return;
     dispatch({ type: "topic", topic, slots: topicSlots.get(topic) ?? [] });
