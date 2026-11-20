@@ -115,7 +115,7 @@ function HomeSectionDecorators() {
 export function HomePage() {
   return (
     <div
-      className="relative isolate wash-state flex flex-1 flex-col overflow-clip"
+      className="relative isolate flex wash-state flex-1 flex-col overflow-clip"
       data-grid-spotlight
     >
       <HomeGrid />

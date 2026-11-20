@@ -35,6 +35,18 @@ describe("HomePage decorators", () => {
     expect(html).not.toContain("md:perspective-midrange");
   });
 
+  it("swipes preview images on one screen without cropping them", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html).toContain("data-prev-screen");
+    expect(html).toContain("data-prev-loading");
+    expect(html.match(/data-prev-image=/g)).toHaveLength(4);
+    expect(html).not.toContain("transition-[display]");
+    expect(html).toContain("object-contain");
+    expect(html.match(/animate-scanline/g)).toHaveLength(1);
+    expect(html.match(/crt-mask/g)).toHaveLength(1);
+  });
+
   it("fades section photos to transparency rather than the page background", () => {
     const html = renderToStaticMarkup(<HomePage />);
 

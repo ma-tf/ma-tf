@@ -265,7 +265,54 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     rotateY(var(--tilt-y, 0deg));
 }
 
+@keyframes preview-wipe-out {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+
+@keyframes preview-wipe-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes preview-loading {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @utility wash-state {
+  [data-prev-screen] {
+    aspect-ratio: 3 / 2;
+    transition: aspect-ratio 100ms ease-out 300ms;
+  }
+  [data-prev-loading] {
+    opacity: 0;
+  }
+  [data-prev-screen][data-loading] [data-prev-loading] {
+    animation: preview-loading 100ms linear 300ms both;
+  }
+  [data-prev-image] {
+    clip-path: inset(100% 0 0 0);
+    animation: preview-wipe-out 300ms ease-out both;
+  }
   &:has([data-wash="gray"]:is(:hover, :focus-within)) [data-wash="gray"],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-wash="taupe"],
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-wash="blue"],
@@ -274,20 +321,29 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-wash="plum"] {
     opacity: 1;
   }
-  &:has([data-wash]:is(:hover, :focus-within)) [data-prev-image] {
-    display: none;
-    transition: display 0s;
-  }
-  &:has([data-wash="gray"]:is(:hover, :focus-within)) [data-prev-image="gray"],
-  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-image="taupe"],
-  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-image="blue"],
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-image="emerald"],
   &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-image="ember"],
-  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-image="plum"] {
-    display: block;
-    transition: display 0s;
+  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-image="blue"],
+  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-image="taupe"] {
+    clip-path: inset(0 0 0 0);
+    animation: preview-wipe-in 300ms ease-out 400ms both;
   }
-  &:has([data-wash]:is(:hover, :focus-within)) [data-prev-reveal] {
+  &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-screen] {
+    aspect-ratio: 3 / 2;
+  }
+  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-screen] {
+    aspect-ratio: 97 / 80;
+  }
+  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-screen] {
+    aspect-ratio: 5 / 2;
+  }
+  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-screen] {
+    aspect-ratio: 2213 / 1440;
+  }
+  &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-reveal],
+  &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-reveal],
+  &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-reveal],
+  &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-reveal] {
     grid-template-rows: 1fr;
   }
   &:has([data-wash]:is(:hover, :focus-within)) [data-prev-led="red"] {
@@ -301,6 +357,15 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-preview-bottom],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-preview-bottom] {
     translate: 0 calc(var(--spacing) * -10);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wash-state [data-prev-screen],
+  .wash-state [data-prev-image],
+  .wash-state [data-prev-loading] {
+    transition: none;
+    animation: none;
   }
 }
 
