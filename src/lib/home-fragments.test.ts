@@ -460,7 +460,7 @@ describe("startHomeFragments", () => {
 
   it("drops a restored title focus when the pointer enters another title", () => {
     renderPage();
-    mockReduced();
+    mockReduced(true);
     mockFrames();
     mockObserver();
 
@@ -480,7 +480,7 @@ describe("startHomeFragments", () => {
 
   it("keeps a title's focus when the pointer enters that title", () => {
     renderPage();
-    mockReduced();
+    mockReduced(true);
     mockFrames();
     mockObserver();
 
