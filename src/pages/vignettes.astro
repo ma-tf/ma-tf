@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import { getCollection } from "astro:content";
 
 const firstVignette = (await getCollection("vignettes"))
