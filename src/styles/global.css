@@ -301,13 +301,15 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
 @utility wash-state {
   [data-prev-screen] {
     aspect-ratio: 3 / 2;
+  }
+  [data-prev-screen][data-prev-opened] {
     transition: aspect-ratio 100ms ease-out 300ms;
   }
   [data-prev-loading] {
     opacity: 0;
   }
   [data-prev-screen][data-loading] [data-prev-loading] {
-    animation: preview-loading 100ms linear 300ms both;
+    animation: preview-loading 1000ms linear 300ms both;
   }
   [data-prev-image] {
     clip-path: inset(100% 0 0 0);
@@ -326,7 +328,7 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-image="blue"],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-image="taupe"] {
     clip-path: inset(0 0 0 0);
-    animation: preview-wipe-in 300ms ease-out 400ms both;
+    animation: preview-wipe-in 300ms ease-out 1300ms both;
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-screen] {
     aspect-ratio: 3 / 2;
@@ -362,6 +364,7 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
 
 @media (prefers-reduced-motion: reduce) {
   .wash-state [data-prev-screen],
+  .wash-state [data-prev-screen][data-prev-opened],
   .wash-state [data-prev-image],
   .wash-state [data-prev-loading] {
     transition: none;

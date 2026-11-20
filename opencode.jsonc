@@ -52,6 +52,21 @@
     },
     {
       "action": "shell",
+      "resource": "*git reset*",
+      "effect": "ask",
+    },
+    {
+      "action": "shell",
+      "resource": "*git restore*",
+      "effect": "ask",
+    },
+    {
+      "action": "shell",
+      "resource": "*git rm --cached*",
+      "effect": "ask",
+    },
+    {
+      "action": "shell",
       "resource": "npm *",
       "effect": "deny",
     },
