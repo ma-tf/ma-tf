@@ -173,44 +173,44 @@ export function HomePrev({ className, ...props }: ComponentProps<"div">) {
     <div
       aria-hidden="true"
       data-fragments-avoid
-      className={cn(
-        "absolute top-35 right-16 isolate hidden -tilt-y-6 tilt-z-14 flex-col items-start md:flex",
-        className,
-      )}
+      data-parallax={24}
+      className={cn("absolute top-35 right-16 hidden md:block", className)}
       {...props}
     >
-      <img
-        src="/home-prev-top2.png"
-        alt=""
-        loading="eager"
-        decoding="async"
-        className="relative z-10 max-w-none drop-shadow-chrome"
-      />
-      <WireLanding className="top-1 right-5" origin="120,118" />
-      <WireLanding className="top-1 right-1" />
-      <WireLanding className="top-3 right-5" origin="116,114" />
-      <WireLanding className="top-3 right-1" />
-      <WireLanding className="top-0.5 right-1" linked />
-      <PrevBand>
-        <PrevScreen>
-          {(Object.keys(homePrevImages) as WashColor[]).map((wash) => (
-            <PrevImageLayer key={wash} wash={wash} />
-          ))}
-        </PrevScreen>
-      </PrevBand>
-      <BottomPlate>
+      <div className="relative isolate flex -tilt-y-6 tilt-z-14 flex-col items-start">
         <img
-          src="/home-prev-bottom3.png"
+          src="/home-prev-top2.png"
           alt=""
           loading="eager"
           decoding="async"
-          className="block max-w-none"
+          className="relative z-10 max-w-none drop-shadow-chrome"
         />
-        <PrevLed tone="red" className="left-115.5 opacity-100" />
-        <PrevLed tone="green" className="left-118 opacity-0" />
-        <WireLanding className="right-1 bottom-0" />
-      </BottomPlate>
-      <FrontWires />
+        <WireLanding className="top-1 right-5" origin="120,118" />
+        <WireLanding className="top-1 right-1" />
+        <WireLanding className="top-3 right-5" origin="116,114" />
+        <WireLanding className="top-3 right-1" />
+        <WireLanding className="top-0.5 right-1" linked />
+        <PrevBand>
+          <PrevScreen>
+            {(Object.keys(homePrevImages) as WashColor[]).map((wash) => (
+              <PrevImageLayer key={wash} wash={wash} />
+            ))}
+          </PrevScreen>
+        </PrevBand>
+        <BottomPlate>
+          <img
+            src="/home-prev-bottom3.png"
+            alt=""
+            loading="eager"
+            decoding="async"
+            className="block max-w-none"
+          />
+          <PrevLed tone="red" className="left-115.5 opacity-100" />
+          <PrevLed tone="green" className="left-118 opacity-0" />
+          <WireLanding className="right-1 bottom-0" />
+        </BottomPlate>
+        <FrontWires />
+      </div>
     </div>
   );
 }

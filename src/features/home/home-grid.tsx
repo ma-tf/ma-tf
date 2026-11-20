@@ -20,9 +20,9 @@ export function HomeGrid() {
           <Sphere variant="spotlight" />
         </div>
       </div>
-      <Wash color="gray" />
-      <Wash color="plum" />
-      <Wash color="ember">
+      <Wash color="gray" className="-inset-4" data-parallax={30} />
+      <Wash color="plum" className="-inset-4" data-parallax={30} />
+      <Wash color="ember" className="-inset-4" data-parallax={30}>
         <div aria-hidden="true" className="absolute inset-0 flex items-start justify-end">
           <img
             src={TRANSPARENT_IMAGE}
@@ -35,7 +35,7 @@ export function HomeGrid() {
           />
         </div>
       </Wash>
-      <Wash color="taupe">
+      <Wash color="taupe" className="-inset-4" data-parallax={30}>
         <img
           src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/music/japan-6-19.avif`}
@@ -46,7 +46,7 @@ export function HomeGrid() {
           className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover opacity-60"
         />
       </Wash>
-      <Wash color="blue">
+      <Wash color="blue" className="-inset-4" data-parallax={30}>
         <img
           src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/vignettes/bolex-dither-anon2.png`}
@@ -57,7 +57,7 @@ export function HomeGrid() {
           className="absolute inset-0 h-full w-full mask-l-from-black mask-l-to-transparent mask-l-to-75% object-cover object-bottom-left opacity-60"
         />
       </Wash>
-      <Wash color="emerald">
+      <Wash color="emerald" className="-inset-4" data-parallax={30}>
         <img
           src={TRANSPARENT_IMAGE}
           data-src={`${CDN_BASE}/blog/tags-bg-2.webp`}

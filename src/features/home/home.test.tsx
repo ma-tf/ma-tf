@@ -70,6 +70,18 @@ describe("HomePage decorators", () => {
     }
   });
 
+  it("drifts the scene by depth", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+    const count = (factor: string) =>
+      html.match(new RegExp(`data-parallax="${factor}"`, "g")) ?? [];
+
+    expect(html.match(/data-parallax=/g)).toHaveLength(14);
+    expect(count("10")).toHaveLength(6);
+    expect(count("22")).toHaveLength(1);
+    expect(count("24")).toHaveLength(1);
+    expect(count("30")).toHaveLength(6);
+  });
+
   it("renders the fragment layer hidden and decorative until placement", () => {
     const html = renderToStaticMarkup(<HomePage />);
 

@@ -57,6 +57,7 @@ function HomeSectionTitle({
       className="group/title pointer-events-auto relative flex items-center focus-within:z-10 hover:z-10"
       data-title
       data-fragments-avoid
+      data-parallax={10}
       data-wash={dataWash}
     >
       <span
