@@ -2,7 +2,7 @@ const SCREEN_SELECTOR = "[data-prev-screen]";
 const REVEAL_SELECTOR = "[data-prev-reveal]";
 const TITLE_SELECTOR = "[data-title][data-wash]";
 const IMAGE_SELECTOR = "[data-prev-image]";
-const LOADING_MS = 1500;
+const LOADING_MS = 800;
 const startedScreens = new WeakSet<Element>();
 
 export function startHomePreview() {

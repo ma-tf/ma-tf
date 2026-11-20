@@ -64,7 +64,7 @@ describe("startHomePreview", () => {
     startHomePreview();
 
     title("emerald").dispatchEvent(new Event("pointerenter"));
-    vi.advanceTimersByTime(1300);
+    vi.advanceTimersByTime(700);
 
     expect(screen().dataset.loading).toBe("");
 

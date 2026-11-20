@@ -6,6 +6,7 @@ import { cn } from "cn";
 
 const homePrevImages: Partial<Record<WashColor, string>> = {
   emerald: "/tags-prev.png",
+  plum: "/projects-prev2.jpg",
   ember: `${CDN_BASE}/photography/luxembourg-19-statues.avif`,
   blue: "/bolex-dither-anon3.png",
   taupe: `${CDN_BASE}/music/japan-6-19.avif`,
@@ -73,7 +74,7 @@ function PrevScreen({ children, className, ...props }: ComponentProps<"div">) {
         data-prev-loading
         className="pointer-events-none absolute inset-0 z-10 grid place-items-center font-mono text-2xs tracking-widest text-muted-foreground uppercase"
       >
-        Loading
+        <span>Loading</span>
       </span>
       <span
         aria-hidden="true"

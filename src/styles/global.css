@@ -309,7 +309,12 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     opacity: 0;
   }
   [data-prev-screen][data-loading] [data-prev-loading] {
-    animation: preview-loading 1000ms linear 300ms both;
+    animation: preview-loading 500ms linear 300ms both;
+  }
+  [data-prev-screen][data-loading] [data-prev-loading] > span::after {
+    content: "...";
+    display: inline-block;
+    animation: ellipsis 400ms steps(4, jump-none) 300ms both;
   }
   [data-prev-image] {
     clip-path: inset(100% 0 0 0);
@@ -324,14 +329,18 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     opacity: 1;
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-image="emerald"],
+  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-image="plum"],
   &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-image="ember"],
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-image="blue"],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-image="taupe"] {
     clip-path: inset(0 0 0 0);
-    animation: preview-wipe-in 300ms ease-out 1300ms both;
+    animation: preview-wipe-in 300ms ease-out 800ms both;
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-screen] {
     aspect-ratio: 3 / 2;
+  }
+  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-screen] {
+    aspect-ratio: 640 / 310;
   }
   &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-screen] {
     aspect-ratio: 97 / 80;
@@ -343,6 +352,7 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     aspect-ratio: 2213 / 1440;
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-reveal],
+  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-reveal],
   &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-prev-reveal],
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-reveal],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-reveal] {
@@ -355,6 +365,7 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     opacity: 1;
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-preview-bottom],
+  &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-preview-bottom],
   &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-preview-bottom],
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-preview-bottom],
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-preview-bottom] {
@@ -366,9 +377,13 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   .wash-state [data-prev-screen],
   .wash-state [data-prev-screen][data-prev-opened],
   .wash-state [data-prev-image],
-  .wash-state [data-prev-loading] {
+  .wash-state [data-prev-loading],
+  .wash-state [data-prev-loading] > span::after {
     transition: none;
     animation: none;
+  }
+  .wash-state [data-prev-screen][data-loading] [data-prev-loading] {
+    opacity: 1;
   }
 }
 

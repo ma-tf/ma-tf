@@ -40,7 +40,7 @@ describe("HomePage decorators", () => {
 
     expect(html).toContain("data-prev-screen");
     expect(html).toContain("data-prev-loading");
-    expect(html.match(/data-prev-image=/g)).toHaveLength(4);
+    expect(html.match(/data-prev-image=/g)).toHaveLength(5);
     expect(html).not.toContain("transition-[display]");
     expect(html).toContain("object-contain");
     expect(html.match(/animate-scanline/g)).toHaveLength(1);
