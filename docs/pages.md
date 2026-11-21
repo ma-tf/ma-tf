@@ -48,11 +48,3 @@ absent. The file is generated rather than committed: `vp run dev` and `vp run
 build` regenerate it, and Chromium must be installed locally with `vpx
 playwright install chromium`. CI installs it with `vpx playwright install
 --with-deps chromium`.
-
-## Clipped desktop layouts
-
-A page whose desktop shell clips the viewport (`md:h-dvh md:overflow-hidden`)
-scrolls an inner pane instead of the document, so wheel input over the rest of
-the shell must be routed to that pane. The blog does this with
-`startBlogScroll()` (`src/lib/blog-scroll.ts`): `data-blog-scroll` marks the
-shell (`BlogPage`), `data-blog-scroll-target` the pane (`BlogContent`).

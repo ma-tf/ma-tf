@@ -21,9 +21,15 @@ export function TagContent({
   allPosts,
 }: TagContentProps) {
   return (
-    <div className="relative flex w-full max-w-7xl flex-1 self-center border-x">
+    <div className="relative flex w-full max-w-7xl flex-1 flex-col self-center border-x md:flex-row">
       <ParallaxBackgrounds baseUrl={backgroundBaseUrl} />
-      <TagOrbit tags={tags} selected={selected} />
+      <div className="relative aspect-video min-h-56 shrink-0 overflow-hidden md:contents">
+        <TagOrbit tags={tags} selected={selected} />
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-50 z-10 h-64 bg-linear-to-b from-transparent to-background md:hidden"
+      />
       <SelectedTagPanel selected={selected} postsByTag={postsByTag} allPosts={allPosts} />
     </div>
   );
