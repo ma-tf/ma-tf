@@ -1,33 +1,43 @@
-import type { CSSProperties } from "react";
-
 export function ParallaxBackgrounds({ baseUrl }: { baseUrl: string }) {
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden bg-background">
-      <div
-        data-parallax={10}
-        className="absolute -inset-2.5 bg-(image:--background-image) page-bg-1200 bg-top-left bg-no-repeat md:page-bg-cap-1440"
-        style={{ "--background-image": `url("${baseUrl}/blog/tags-bg-1.webp")` } as CSSProperties}
-      />
-      <div
-        data-parallax={20}
-        className="absolute -inset-2.5 bg-(image:--background-image) page-bg-1200 bg-top-left bg-no-repeat md:page-bg-cap-1440"
-        style={{ "--background-image": `url("${baseUrl}/blog/tags-bg-2.webp")` } as CSSProperties}
-      />
-      <div
-        data-parallax={30}
-        className="absolute -inset-2.5 bg-(image:--background-image) page-bg-1200 bg-top-left bg-no-repeat md:page-bg-cap-1440 dark:invert"
-        style={{ "--background-image": `url("${baseUrl}/blog/tags-bg-3.webp")` } as CSSProperties}
-      />
-      <div
-        data-parallax={40}
-        className="absolute -inset-2.5 bg-(image:--background-image) page-bg-1200 bg-top-left bg-no-repeat md:page-bg-cap-1440 dark:invert"
-        style={{ "--background-image": `url("${baseUrl}/blog/tags-bg-4.webp")` } as CSSProperties}
-      />
-      <div
-        data-parallax={50}
-        className="absolute -inset-5 -right-32 hidden bg-(image:--background-image) page-bg-1440 bg-top-right bg-no-repeat md:block xl:right-0 xl:bg-top-left dark:invert"
-        style={{ "--background-image": `url("${baseUrl}/blog/tags-bg-5.webp")` } as CSSProperties}
-      />
+    <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden bg-background">
+      <div className="absolute -top-2.5 -left-2.5 h-450 w-600 origin-top-left scale-50 md:scale-35 lg:scale-45 xl:scale-60">
+        <img
+          data-parallax={10}
+          src={`${baseUrl}/blog/tags-bg-1.avif`}
+          alt=""
+          decoding="async"
+          className="absolute top-0 left-0 max-w-none"
+        />
+        <img
+          data-parallax={20}
+          src={`${baseUrl}/blog/tags-bg-2.avif`}
+          alt=""
+          decoding="async"
+          className="absolute top-0 left-0 max-w-none"
+        />
+        <img
+          data-parallax={30}
+          src={`${baseUrl}/blog/tags-bg-3.avif`}
+          alt=""
+          decoding="async"
+          className="absolute top-1.5 left-2 max-w-none dark:invert"
+        />
+        <img
+          data-parallax={40}
+          src={`${baseUrl}/blog/tags-bg-4.avif`}
+          alt=""
+          decoding="async"
+          className="absolute top-0 left-0 max-w-none dark:invert"
+        />
+        <img
+          data-parallax={50}
+          src={`${baseUrl}/blog/tags-bg-5.avif`}
+          alt=""
+          decoding="async"
+          className="absolute top-0 left-352 hidden max-w-none md:block dark:invert"
+        />
+      </div>
     </div>
   );
 }

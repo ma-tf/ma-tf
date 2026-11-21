@@ -5,10 +5,10 @@ import { CDN_BASE } from "@lib/cdn";
 import { cn } from "cn";
 
 const homePrevImages: Partial<Record<WashColor, string>> = {
-  emerald: "/tags-prev.png",
-  plum: "/projects-prev2.jpg",
+  emerald: `${CDN_BASE}/misc/tags-prev.avif`,
+  plum: `${CDN_BASE}/misc/projects-prev2.avif`,
   ember: `${CDN_BASE}/photography/luxembourg-19-statues.avif`,
-  blue: "/bolex-dither-anon3.png",
+  blue: `${CDN_BASE}/misc/bolex-dither-anon3.png`,
   taupe: `${CDN_BASE}/music/japan-6-19.avif`,
 };
 
@@ -179,7 +179,7 @@ export function HomePrev({ className, ...props }: ComponentProps<"div">) {
     >
       <div className="relative isolate flex -tilt-y-6 tilt-z-14 flex-col items-start">
         <img
-          src="/home-prev-top2.png"
+          src={`${CDN_BASE}/misc/home-prev-top2.png`}
           alt=""
           loading="eager"
           decoding="async"
@@ -199,7 +199,7 @@ export function HomePrev({ className, ...props }: ComponentProps<"div">) {
         </PrevBand>
         <BottomPlate>
           <img
-            src="/home-prev-bottom3.png"
+            src={`${CDN_BASE}/misc/home-prev-bottom3.png`}
             alt=""
             loading="eager"
             decoding="async"
