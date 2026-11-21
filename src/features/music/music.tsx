@@ -54,7 +54,7 @@ export function MusicHeader({ children, className, ...props }: ComponentProps<"d
 export function MusicNavigation() {
   return (
     <nav
-      className="flex animate-fade-up flex-wrap justify-end gap-1 animation-delay-50"
+      className="flex w-fit animate-fade-up flex-col items-stretch gap-1 self-end animation-delay-50 md:w-full md:flex-row md:flex-wrap md:justify-end"
       aria-label="Section navigation"
     >
       {MUSIC_NAVIGATION_LINKS.map(({ href, label }) => (
