@@ -25,11 +25,14 @@ describe("HomePage decorators", () => {
   it("freezes the mobile fan with a fixed composition width", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
-    expect(html).toContain("perspective-midrange");
+    expect(html).toContain("perspective-distant");
     expect(html).toContain("w-3xl shrink-0");
     expect(html).toContain("md:w-auto");
     expect(html).not.toContain("md:tilt-");
-    expect(html).not.toContain("md:perspective-midrange");
+    expect(html).toContain("md:perspective-midrange");
+    expect(html.match(/-translate-x-2/g)).toHaveLength(2);
+    expect(html.match(/-translate-x-3/g)).toHaveLength(2);
+    expect(html.match(/md:translate-x-0/g)).toHaveLength(4);
   });
 
   it("curves the section stack on one convex surface", () => {

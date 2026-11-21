@@ -124,7 +124,7 @@ export function HomePage() {
       <HomeFragments />
       <nav
         aria-label="Sections"
-        className="relative mt-4 -ml-28 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-midrange sm:-ml-14 md:absolute md:top-1/2 md:mt-0 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
+        className="relative mt-9 -ml-28 flex w-3xl shrink-0 flex-col gap-y-10 px-16 py-16 perspective-distant sm:-ml-14 md:absolute md:top-1/2 md:mt-0 md:ml-0 md:w-auto md:-translate-y-1/2 md:gap-y-8 md:py-0 md:perspective-midrange has-[[data-title]:focus-within]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35 has-[[data-title]:hover]:[&>div:not(:has([data-title]:hover,[data-title]:focus-within))]:opacity-35"
       >
         <HomeSectionRow className="-tilt-x-19 tilt-z-53">
           <HomeSectionDecorators />
@@ -133,28 +133,28 @@ export function HomePage() {
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-x-11 tilt-z-19">
+        <HomeSectionRow className="-translate-x-2 -tilt-x-11 tilt-z-19 md:translate-x-0">
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="plum" href="/projects">
             Projects
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="-tilt-x-4 tilt-z-2">
+        <HomeSectionRow className="-translate-x-3 -tilt-x-4 tilt-z-2 md:translate-x-0">
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="ember" href="/photography">
             Photography
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="tilt-x-4 tilt-z-2">
+        <HomeSectionRow className="-translate-x-3 tilt-x-4 tilt-z-2 md:translate-x-0">
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="blue" href="/vignettes">
             Vignettes
           </HomeSectionTitle>
         </HomeSectionRow>
 
-        <HomeSectionRow className="tilt-x-11 tilt-z-19">
+        <HomeSectionRow className="-translate-x-2 tilt-x-11 tilt-z-19 md:translate-x-0">
           <HomeSectionDecorators />
           <HomeSectionTitle data-wash="gray" href="/graphics">
             Graphics
