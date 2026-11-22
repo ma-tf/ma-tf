@@ -239,8 +239,8 @@ importers:
         specifier: ^1.5.5
         version: 1.5.5
       openai:
-        specifier: ^7.60.0
-        version: 7.60.0(undici@8.12.4)(ws@8.23.0)(zod@4.6.7)
+        specifier: ^7.62.0
+        version: 7.62.0(undici@8.12.4)(ws@8.23.0)(zod@4.6.7)
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -294,8 +294,8 @@ importers:
         specifier: ^21.2.3
         version: 21.2.3
       '@readme/openapi-parser':
-        specifier: ^10.0.0
-        version: 10.0.0(openapi-types@12.1.3)
+        specifier: ^11.0.0
+        version: 11.0.0(@scalar/openapi-types@0.9.10)
       '@shadcn/lint':
         specifier: ^0.2.5
         version: 0.2.5(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0))
@@ -312,8 +312,8 @@ importers:
         specifier: ^7.4.13
         version: 7.4.13(@astrojs/markdown-remark@7.3.10(supports-color@11.0.0))(@netlify/blobs@11.1.9(supports-color@11.0.0))(@types/node@26.6.6)(@volar/typescript@2.4.31(typescript@6.0.3))(esbuild@0.28.1)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1)
       fallow:
-        specifier: ^3.44.0
-        version: 3.44.0
+        specifier: ^3.45.0
+        version: 3.45.0
       happy-dom:
         specifier: ^21.0.4
         version: 21.0.4
@@ -324,8 +324,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       netlify:
-        specifier: ^27.20.0
-        version: 27.20.0(@types/node@26.6.6)(bare-buffer@3.7.3)(picomatch@4.0.7)(supports-color@11.0.0)(unstorage@1.17.6(@netlify/blobs@11.1.9(supports-color@11.0.0)))
+        specifier: ^27.20.1
+        version: 27.20.1(@types/node@26.6.6)(bare-buffer@3.7.3)(picomatch@4.0.7)(supports-color@11.0.0)(unstorage@1.17.6(@netlify/blobs@11.1.9(supports-color@11.0.0)))
       playwright:
         specifier: ^1.65.1
         version: 1.65.1
@@ -350,9 +350,9 @@ importers:
 
 packages:
 
-  '@apidevtools/json-schema-ref-parser@15.5.2':
-    resolution: {integrity: sha512-B+C9Ok0DF/rjANIUHgwcV5/d4C72MB7f2IbKFL8jDGcGq2qn3yr893s8vAn2kbhmyaelAin0JK8EKF9P1+y7aQ==}
-    engines: {node: '>=20'}
+  '@apidevtools/json-schema-ref-parser@16.0.8':
+    resolution: {integrity: sha512-I/VwYjPV/OTQegEhO+ITP2cFUChohqMJ6pNSXx2Q2dLCbGGa5WWT1ATCFhjseapSCcfcFxk04Bg07dgwSs+Pxw==}
+    engines: {node: '>=22.19.0'}
     peerDependencies:
       '@types/json-schema': ^7.0.15
 
@@ -1137,47 +1137,47 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@fallow-cli/darwin-arm64@3.44.0':
-    resolution: {integrity: sha512-BpUhIB+Uv2PfqN2gK8oPd5Fe3s1V8cZKmVE+1oLhiTr5BVxNX7MWa8UhqbbCF+TaLwwWAEBsucepo/hPCh5dMw==}
+  '@fallow-cli/darwin-arm64@3.45.0':
+    resolution: {integrity: sha512-b0bT8vC5ZxfDQqzgKmgbiwigKwV8TK0NEC+P/lfd5EntEE4Iy3fNbKeoA7jz/swb6qm9bwhIgPEcSzxjilBxjw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@fallow-cli/darwin-x64@3.44.0':
-    resolution: {integrity: sha512-z4V12gHbRCry/D8REdN2sRbIUvvTDJ+1PchIqgkl6cmfkQU6WjZ0lee1D0YIBxL8+9NtbKlgj6uF9J9nbVXD2A==}
+  '@fallow-cli/darwin-x64@3.45.0':
+    resolution: {integrity: sha512-cGKvlsgGtLvx3YTPJ57lRm4AqxEQnfJkQssIa5iCZ+6i283gsJnlv/HsaO8SE5eeYsIkdrtuQwJ/wrDE5kzysQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@fallow-cli/linux-arm64-gnu@3.44.0':
-    resolution: {integrity: sha512-4aMbSoXgURAedwo6Ms2cg1QLgz9XBN9KLbKVDWdLYu5l5d9kFlSdu6FduGa9REXbhHD55vtp0cg5KtH4hBWA2g==}
+  '@fallow-cli/linux-arm64-gnu@3.45.0':
+    resolution: {integrity: sha512-2ikz1/TDF1emUnEtqSwsHWwLiqCUb3YX3qjki+t/SXMJwbKRmeNFqZaE+JBRL/+IisMNjvwwY4iKkJSpwn8nFQ==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@fallow-cli/linux-arm64-musl@3.44.0':
-    resolution: {integrity: sha512-BWsGDJg8XPzLUMhgliDVKpeYcd+9eexp4DGn/3tcm0WDxp+GsM3YRG2dy/fDew67fVG2GdSvxKhxs7UfWs1H6w==}
+  '@fallow-cli/linux-arm64-musl@3.45.0':
+    resolution: {integrity: sha512-Vyzh/4UBj/FQTZqrddpCmbrHmksV+I4JqfL000+YpsOzxgh0I4YMZwDVQGxhDmpvVREWn2OgbdwKJQ/fNw0PyQ==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@fallow-cli/linux-x64-gnu@3.44.0':
-    resolution: {integrity: sha512-/n/WHl7vnmOn5s139x2NNCcn9R7e2zJVE8oSEdEOcpe5nTwudmBLCPmnB9Gq7pddOtfKFmaP/rbWjoiVgSEOMw==}
+  '@fallow-cli/linux-x64-gnu@3.45.0':
+    resolution: {integrity: sha512-6zBnK8373ZJmvOaeltveP5rimxO/f35iXKGLXyQBtGmlVuTb/SBLf6c3yuFpTi/UEcyVEkJGwkkCZpGW8SPkLA==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@fallow-cli/linux-x64-musl@3.44.0':
-    resolution: {integrity: sha512-f+vZ8+uVD3khlumQMXTmAq8VA6pRrT496WEKLBE+Et6w3B+pGwJQLTGdZUHXxqXID6MnY5hEGAKqK9IQxi8l/w==}
+  '@fallow-cli/linux-x64-musl@3.45.0':
+    resolution: {integrity: sha512-nBPgIZ8raHvGvyih0k5AOZ3lqIQ4mle1nrdxLCDL9V7q0G+d1Ng++Tp6R+jXAmYvAYqiNbiF44v8Oh5b2dyDHQ==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@fallow-cli/win32-arm64-msvc@3.44.0':
-    resolution: {integrity: sha512-mQYmj+vWZpBxuZq8ier9tKbtDhA48LrRgl8EQYH/1Pyeo3nnBuxJPCDE1yOP3tvR4NXJs0e5JREaVkQ9CvX2Jw==}
+  '@fallow-cli/win32-arm64-msvc@3.45.0':
+    resolution: {integrity: sha512-3IcYK6TGq4U7NMMS9S6H5PZJ1bx4jOIPBZbRuDU2yKtNQK4oSOtpaBE1J/mtDPhZdtd86wvjEYYI0EjUXzf7fA==}
     cpu: [arm64]
     os: [win32]
 
-  '@fallow-cli/win32-x64-msvc@3.44.0':
-    resolution: {integrity: sha512-RMb7QYuS6dg7Yhb33CLM7SnhWjpyI42K62w5Uv2tn+UumC16RaKwlPc6UNeRuvrADtGGpgJoeKFJfXSvZEO9DQ==}
+  '@fallow-cli/win32-x64-msvc@3.45.0':
+    resolution: {integrity: sha512-kEv7k0ZUy6eJ970iKHZG/4vwazucz2vQ4PhSFe+6HwCGioTpFn/ZBtmHl3koP3ZXens/TNKzhGW65MsEJ6yJfA==}
     cpu: [x64]
     os: [win32]
 
@@ -2908,15 +2908,15 @@ packages:
     peerDependencies:
       ajv: 4.11.8 - 8
 
-  '@readme/openapi-parser@10.0.0':
-    resolution: {integrity: sha512-i00ADeEJ24QoVS3QDM66bZxyTdIT0zoPtYxA4xS4L5Zw/3ivt0smzIjf1GSma3/uArSGXTG+oJf0gnieH2iSbQ==}
-    engines: {node: '>=20'}
+  '@readme/openapi-parser@11.0.0':
+    resolution: {integrity: sha512-8dEfU4yIJg8BuFLDHg4tiKZQODQKpyZCHge7WpTA2CAtdCgJVBYFnO3BpmxFvI5zW5AkfJEK0hXKzGRCsxzQlw==}
+    engines: {node: '>=22.19.0'}
     peerDependencies:
-      openapi-types: '>=7'
+      '@scalar/openapi-types': '>=0.9.0'
 
-  '@readme/openapi-schemas@4.0.0':
-    resolution: {integrity: sha512-hrG//9/+RpOZTrUDirU4OzfMqaxCdY5BMpr3YuLf3Rje9rfNsydQJsH9iCPTie9ZRu9xe+0OUD4fHe0JmGwa2w==}
-    engines: {node: '>=20'}
+  '@readme/openapi-schemas@5.0.0':
+    resolution: {integrity: sha512-6Ow9rLabv8I8PUJcO/elcRgihux34HpfuJGhPneuHkv2WSoarkqnSRTmnr0K0igkeDcOcpPS2CM3tZnGIIE2tA==}
+    engines: {node: '>=22'}
 
   '@rolldown/binding-android-arm-eabi@1.2.19':
     resolution: {integrity: sha512-e+Ebe0WT+9tbXmNKPIiC8YrWAHYwug3m6i4p3rZGGulfZri1jtI4HslT+OZnFf/OIHowWF71DTlHwXBP2SiA7A==}
@@ -3131,6 +3131,10 @@ packages:
     peerDependenciesMeta:
       rollup:
         optional: true
+
+  '@scalar/openapi-types@0.9.10':
+    resolution: {integrity: sha512-rQVlvSLXvP3ljCY7BqKeJ07EjqtzJyaj1OTMVRVRBftmNmxupmmx1xNTnuLnaJIfGnrNEFLW7kyJofzH43wUPg==}
+    engines: {node: '>=22'}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -5109,8 +5113,8 @@ packages:
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
 
-  fallow@3.44.0:
-    resolution: {integrity: sha512-0XeBIsE2Dp31b/sUOhvxzHNC6+TpJotle2saQjjTW4DACyBQR9unovYIL5f1gcQsIpvEoKcRlNmic+dCr/e4Qg==}
+  fallow@3.45.0:
+    resolution: {integrity: sha512-KJnlOBV/a3cDYafnO8/dqStEDARQPiL1R+65JQ2l9u+r9sgyt0JNNbDK0J1zsZWng+7SQvukeanuNhn0LmNa3g==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -6612,8 +6616,8 @@ packages:
     resolution: {integrity: sha512-DLMUFnyCrRAncRJhDC2yNbSTcpEukp+nczID/na3XdIHQFokPveK69xel642cQHgUGszctsOSeCePqPpY25W6Q==}
     engines: {node: '>= 10'}
 
-  netlify@27.20.0:
-    resolution: {integrity: sha512-rMx3wOxJ5S16oJCyxIxndeLt9ATrErWYCLUcl0b2wjRqBC1L29Tb1Le/+/7lbTbUaeeShK6c2Fru2FNuipGYmw==}
+  netlify@27.20.1:
+    resolution: {integrity: sha512-BeZNE3I2j7Su4CujzkYENNRRZ/7DNidmyREdprntibNwEvRdPUz3E+x7PZ8mp4OOfkHntFFIrf2XXR8dZwZVng==}
     engines: {node: '>=22.13.0'}
     hasBin: true
 
@@ -6783,8 +6787,8 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  openai@7.60.0:
-    resolution: {integrity: sha512-vipS79MnBZX6zpWjMGdRQazRcbYc3CxGUNZYLpd8YANeq1ZlTAZeHctkeUJvqDVcET7+kHI2osGWyhk3Co9odg==}
+  openai@7.62.0:
+    resolution: {integrity: sha512-dehzgY2anBfU3H+FfWHCVjhb9ZRYzahzNpvmMExTmMaeU11i51NJIMJPDctgLiP4+pCh53KIsLVQ66ucKyDNMA==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
@@ -6809,9 +6813,6 @@ packages:
         optional: true
       zod:
         optional: true
-
-  openapi-types@12.1.3:
-    resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -8153,10 +8154,6 @@ packages:
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
-  undici@6.29.1:
-    resolution: {integrity: sha512-EvRlUt/QqAEvXdQeRMYUfwOQsfzpDztykrG2owGEE/rBOBoYv9uF39ZzsNDh4lTFHhTr2XOZjKkYgueD12ZmGA==}
-    engines: {node: '>=18.17'}
-
   undici@7.30.2:
     resolution: {integrity: sha512-mLyPQnHwUxaM/rideoK/+KL8DaAJLRl4aBCfmX444aCSLnIaomqPLtNRe2jdCYcsk5wZzXrDIQC8ZeYNRAYyIA==}
     engines: {node: '>=20.18.1'}
@@ -8770,11 +8767,10 @@ packages:
 
 snapshots:
 
-  '@apidevtools/json-schema-ref-parser@15.5.2(@types/json-schema@7.0.15)':
+  '@apidevtools/json-schema-ref-parser@16.0.8(@types/json-schema@7.0.15)':
     dependencies:
       '@types/json-schema': 7.0.15
       js-yaml: 5.5.0
-      undici: 6.29.1
 
   '@astrojs/astro2tsx@0.1.4':
     dependencies:
@@ -9691,28 +9687,28 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@fallow-cli/darwin-arm64@3.44.0':
+  '@fallow-cli/darwin-arm64@3.45.0':
     optional: true
 
-  '@fallow-cli/darwin-x64@3.44.0':
+  '@fallow-cli/darwin-x64@3.45.0':
     optional: true
 
-  '@fallow-cli/linux-arm64-gnu@3.44.0':
+  '@fallow-cli/linux-arm64-gnu@3.45.0':
     optional: true
 
-  '@fallow-cli/linux-arm64-musl@3.44.0':
+  '@fallow-cli/linux-arm64-musl@3.45.0':
     optional: true
 
-  '@fallow-cli/linux-x64-gnu@3.44.0':
+  '@fallow-cli/linux-x64-gnu@3.45.0':
     optional: true
 
-  '@fallow-cli/linux-x64-musl@3.44.0':
+  '@fallow-cli/linux-x64-musl@3.45.0':
     optional: true
 
-  '@fallow-cli/win32-arm64-msvc@3.44.0':
+  '@fallow-cli/win32-arm64-msvc@3.45.0':
     optional: true
 
-  '@fallow-cli/win32-x64-msvc@3.44.0':
+  '@fallow-cli/win32-x64-msvc@3.45.0':
     optional: true
 
   '@fastify/accept-negotiator@2.1.2': {}
@@ -11274,17 +11270,17 @@ snapshots:
       leven: 3.1.0
       picocolors: 1.1.1
 
-  '@readme/openapi-parser@10.0.0(openapi-types@12.1.3)':
+  '@readme/openapi-parser@11.0.0(@scalar/openapi-types@0.9.10)':
     dependencies:
-      '@apidevtools/json-schema-ref-parser': 15.5.2(@types/json-schema@7.0.15)
+      '@apidevtools/json-schema-ref-parser': 16.0.8(@types/json-schema@7.0.15)
       '@readme/better-ajv-errors': 2.4.0(ajv@8.20.0)
-      '@readme/openapi-schemas': 4.0.0
+      '@readme/openapi-schemas': 5.0.0
+      '@scalar/openapi-types': 0.9.10
       '@types/json-schema': 7.0.15
       ajv: 8.20.0
       ajv-draft-04: 1.0.0(ajv@8.20.0)
-      openapi-types: 12.1.3
 
-  '@readme/openapi-schemas@4.0.0':
+  '@readme/openapi-schemas@5.0.0':
     dependencies:
       '@types/json-schema': 7.0.15
 
@@ -11399,6 +11395,8 @@ snapshots:
       '@types/estree': 1.0.10
       estree-walker: 2.0.2
       picomatch: 4.0.7
+
+  '@scalar/openapi-types@0.9.10': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -13519,18 +13517,18 @@ snapshots:
 
   extend@3.0.2: {}
 
-  fallow@3.44.0:
+  fallow@3.45.0:
     dependencies:
       detect-libc: 2.1.2
     optionalDependencies:
-      '@fallow-cli/darwin-arm64': 3.44.0
-      '@fallow-cli/darwin-x64': 3.44.0
-      '@fallow-cli/linux-arm64-gnu': 3.44.0
-      '@fallow-cli/linux-arm64-musl': 3.44.0
-      '@fallow-cli/linux-x64-gnu': 3.44.0
-      '@fallow-cli/linux-x64-musl': 3.44.0
-      '@fallow-cli/win32-arm64-msvc': 3.44.0
-      '@fallow-cli/win32-x64-msvc': 3.44.0
+      '@fallow-cli/darwin-arm64': 3.45.0
+      '@fallow-cli/darwin-x64': 3.45.0
+      '@fallow-cli/linux-arm64-gnu': 3.45.0
+      '@fallow-cli/linux-arm64-musl': 3.45.0
+      '@fallow-cli/linux-x64-gnu': 3.45.0
+      '@fallow-cli/linux-x64-musl': 3.45.0
+      '@fallow-cli/win32-arm64-msvc': 3.45.0
+      '@fallow-cli/win32-x64-msvc': 3.45.0
 
   fast-decode-uri-component@1.0.1: {}
 
@@ -15271,7 +15269,7 @@ snapshots:
 
   neotraverse@1.0.2: {}
 
-  netlify@27.20.0(@types/node@26.6.6)(bare-buffer@3.7.3)(picomatch@4.0.7)(supports-color@11.0.0)(unstorage@1.17.6(@netlify/blobs@11.1.9(supports-color@11.0.0))):
+  netlify@27.20.1(@types/node@26.6.6)(bare-buffer@3.7.3)(picomatch@4.0.7)(supports-color@11.0.0)(unstorage@1.17.6(@netlify/blobs@11.1.9(supports-color@11.0.0))):
     dependencies:
       '@fastify/static': 10.1.11
       '@inquirer/prompts': 8.8.0(@types/node@26.6.6)
@@ -15556,13 +15554,11 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@7.60.0(undici@8.12.4)(ws@8.23.0)(zod@4.6.7):
+  openai@7.62.0(undici@8.12.4)(ws@8.23.0)(zod@4.6.7):
     optionalDependencies:
       undici: 8.12.4
       ws: 8.23.0
       zod: 4.6.7
-
-  openapi-types@12.1.3: {}
 
   optionator@0.9.4:
     dependencies:
@@ -17256,8 +17252,6 @@ snapshots:
   uncrypto@0.1.3: {}
 
   undici-types@8.9.0: {}
-
-  undici@6.29.1: {}
 
   undici@7.30.2: {}
 
