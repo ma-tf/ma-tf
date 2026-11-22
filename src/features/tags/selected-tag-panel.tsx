@@ -105,15 +105,15 @@ export function SelectedTagPanel({ selected, postsByTag, allPosts }: SelectedTag
   return (
     <div
       data-parallax={60}
-      className="relative z-20 flex w-full flex-col gap-3 px-4 pt-8 pb-8 md:absolute md:top-0 md:right-8 md:z-10 md:grid md:h-dvh md:w-sm md:grid-rows-[2fr_3fr] md:gap-0 md:px-8 md:py-12 xl:left-218"
+      className="relative z-20 flex w-full flex-col gap-3 px-4 pt-20 pb-8 md:absolute md:top-0 md:right-8 md:z-10 md:grid md:h-dvh md:w-sm md:grid-rows-[2fr_3fr] md:gap-0 md:px-8 md:py-12 xl:left-218"
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-8 bg-linear-to-b from-transparent to-background/50 md:hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-20 bg-linear-to-b from-transparent to-background md:hidden"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-8 bottom-0 -z-10 bg-background/50 md:hidden"
+        className="pointer-events-none absolute inset-x-0 top-20 bottom-0 -z-10 bg-background md:hidden"
       />
       <PanelNav />
       <TagPostsProvider

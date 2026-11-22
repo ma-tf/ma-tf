@@ -1,6 +1,12 @@
 export function ParallaxBackgrounds({ baseUrl }: { baseUrl: string }) {
   return (
-    <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden bg-background">
+    <div
+      aria-hidden="true"
+      data-parallax-scroll
+      data-parallax-scroll-distance={1.5}
+      data-parallax-scroll-drift={0.4}
+      className="fixed inset-0 -z-10 overflow-hidden bg-background md:absolute"
+    >
       <div className="absolute -top-2.5 -left-2.5 h-450 w-600 origin-top-left scale-50 md:scale-35 lg:scale-45 xl:scale-60">
         <img
           data-parallax={10}

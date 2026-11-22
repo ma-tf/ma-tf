@@ -21,7 +21,7 @@ export function TagContent({
   allPosts,
 }: TagContentProps) {
   return (
-    <div className="relative flex w-full max-w-7xl flex-1 flex-col self-center border-x pt-24 md:flex-row md:pt-0">
+    <div className="relative flex w-full max-w-7xl flex-1 flex-col self-center border-x pt-12 md:flex-row md:pt-0">
       <ParallaxBackgrounds baseUrl={backgroundBaseUrl} />
       <div className="relative aspect-video min-h-56 shrink-0 overflow-hidden md:contents">
         <TagOrbit tags={tags} selected={selected} />
