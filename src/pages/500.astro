@@ -22,12 +22,20 @@ import { CDN_BASE } from "@lib/cdn";
 >
   <div class="flex w-full flex-1 flex-col overflow-x-clip md:flex-row">
     <div
-      aria-hidden="true"
-      class="relative hidden animate-fade-in overflow-hidden bg-(image:--background-image) bg-cover bg-center md:block md:flex-1"
-      style={{ "--background-image": `url("${CDN_BASE}/500.webp")` }}
-    ></div>
-    <ErrorPage className="relative bg-background md:mx-0 md:w-160 md:max-w-none md:flex-none">
-      <ErrorPageEyebrow className="animate-fade-in">Server error</ErrorPageEyebrow>
+      data-parallax-scroll
+      class="relative aspect-video w-full shrink-0 overflow-hidden md:aspect-auto md:w-auto md:flex-1 md:shrink"
+    >
+      <div
+        aria-hidden="true"
+        data-parallax-mobile={-45}
+        class="absolute -inset-20 animate-fade-in bg-(image:--background-image) bg-cover bg-center md:inset-0"
+        style={{ "--background-image": `url("${CDN_BASE}/500.webp")` }}
+      ></div>
+    </div>
+    <ErrorPage className="relative mb-0 min-h-auto bg-background md:mx-0 md:min-h-dvh md:w-160 md:max-w-none md:flex-none">
+      <ErrorPageEyebrow className="animate-fade-in">
+        Server error
+      </ErrorPageEyebrow>
       <ErrorPageHeader className="flex-row items-end justify-between gap-4">
         <ErrorPageTitle className="animate-fade-in animation-delay-150">
           500<span class="sr-only"> Something went wrong</span>
