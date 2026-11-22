@@ -11,7 +11,6 @@ import {
   PostContent,
   PostDate,
   PostHeader,
-  PostMobileNavigation,
   PostTitle,
 } from "@features/posts/post";
 import { CDN_BASE } from "@lib/cdn";
@@ -33,10 +32,6 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
-  <PostMobileNavigation
-    client:load
-    className="mx-0 mt-12 animate-fade-up md:mt-0"
-  />
   <Post className="relative pt-6 md:pt-20">
     <div
       class="mb-8 h-30 w-full overflow-hidden border border-foreground bg-muted"
