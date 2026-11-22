@@ -21,11 +21,8 @@ import { CDN_BASE } from "@lib/cdn";
       >
         <p>
           The site has no analytics, advertising or tracking cookies. It keeps
-          three anonymous counts: one hit per browser session, one entry a day
-          for unique readers, and readers active in the last 90 seconds. The
-          last two use a salted hash of the request address; the address itself
-          is never stored and the hash cannot be reversed to one. No cookie or
-          identifier is written to your device.
+          three anonymous counts: a hit per browser session, a daily unique
+          reader, and readers active in the last 90 seconds.
         </p>
       </div>
     </StillLifeCard>
@@ -38,10 +35,9 @@ import { CDN_BASE } from "@lib/cdn";
         class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-2450"
       >
         <p>
-          The site has no forms that collect personal information. Some pages
-          embed media from Bandcamp and Mixcloud, which may receive requests
-          from your browser under their own privacy policies. The site also
-          loads the Inter font from Google Fonts.
+          The last two counts use a salted, irreversible hash of the request
+          address, which is never stored. No cookie or identifier is written to
+          your device, and no forms collect personal information.
         </p>
       </div>
     </StillLifeCard>
@@ -54,7 +50,9 @@ import { CDN_BASE } from "@lib/cdn";
         class="flex flex-col gap-3 p-4 md:p-2 md:animate-fade-up md:animation-delay-2600"
       >
         <p>
-          If you have a question about privacy on this site, see the <Link
+          Some pages embed media from Bandcamp and Mixcloud under their own
+          privacy policies, and the site loads Inter from Google Fonts. Privacy
+          questions go to the <Link
             href="/contact"
             className="inline-flex items-center gap-1"
           >

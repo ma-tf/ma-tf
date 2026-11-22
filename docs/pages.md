@@ -25,8 +25,11 @@ so its section nav replaces the mobile grid of footer links while the chrome
 bar stays. Plate URLs reach
 the `before`/`after` pseudo-elements as `--chrome-*` properties through
 `style`, read with a `content-(--chrome-top-left)` class, keeping every
-Tailwind class a complete string. Below `md`, the footer carries a top border
-instead of the fixed desktop bar.
+Tailwind class a complete string. The top-right plate shifts by the motion
+chip's width once the control hides, and on `/cv` the top-left plate moves a
+chip's width further off the left edge because the CV chip is omitted, so each
+plate follows the chip group's width. Below `md`, the footer carries a top
+border instead of the fixed desktop bar.
 
 ## Blog post content
 

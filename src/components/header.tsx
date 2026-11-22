@@ -198,7 +198,7 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
             { "--chrome-mobile": `url("${CDN_BASE}/misc/mobiletopchrome.png")` } as CSSProperties
           }
         />
-        <HeaderBar>
+        <HeaderBar className={cn(!showCv && "md:before:-left-76")}>
           <HeaderGroup>
             <HeaderControl>
               <HeaderChip href="/" aria-label="m4t.tf home">

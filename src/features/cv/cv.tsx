@@ -51,7 +51,13 @@ export function CurriculumVitaeRole({ children, className, ...props }: Component
 
 export function CurriculumVitaeContact({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("flex gap-4 text-sm text-muted-foreground", className)} {...props}>
+    <div
+      className={cn(
+        "cv-contact flex flex-col gap-1 text-sm text-muted-foreground md:flex-row md:gap-4",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </div>
   );

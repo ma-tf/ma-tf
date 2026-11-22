@@ -1140,6 +1140,11 @@ html.dark pre[data-language] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: 1fr;
   }
+
+  .cv-contact {
+    flex-direction: row;
+    gap: 1rem;
+  }
 }
 
 @utility cv-sheet {
