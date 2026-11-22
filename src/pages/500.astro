@@ -27,8 +27,8 @@ import { CDN_BASE } from "@lib/cdn";
     >
       <div
         aria-hidden="true"
-        data-parallax-mobile={-45}
-        class="absolute -inset-20 animate-fade-in bg-(image:--background-image) bg-cover bg-center md:inset-0"
+        data-parallax={-80}
+        class="absolute -inset-28 animate-fade-in bg-(image:--background-image) bg-cover bg-center md:-inset-10"
         style={{ "--background-image": `url("${CDN_BASE}/500.webp")` }}
       ></div>
     </div>
@@ -45,19 +45,19 @@ import { CDN_BASE } from "@lib/cdn";
         </span>
       </ErrorPageHeader>
       <ErrorPageDescription className="animate-fade-up animation-delay-1000">
-        The server could not complete the request. Try again, and if the problem persists, use
-        the <Link href="/contact">Contact</Link> page to report it.
+        The server could not complete the request. Try again, and if the problem
+        persists, use the <Link href="/contact">Contact</Link> page to report
+        it.
       </ErrorPageDescription>
 
       <ErrorPageContent>
-        <div
-          class="flex animate-fade-up flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-1150"
-        >
-          <p class="text-2xs font-semibold tracking-wider text-foreground uppercase">For agents</p>
+        <div class="flex animate-fade-up flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-1150">
+          <p class="text-2xs font-semibold tracking-wider text-foreground uppercase">
+            For agents
+          </p>
           <p>
-            Read <Link href="/llms.txt">/llms.txt</Link> for the published pages or <Link
-              href="/developers">/developers</Link
-            > for the interface.
+            Read <Link href="/llms.txt">/llms.txt</Link> for the published pages
+            or <Link href="/developers">/developers</Link> for the interface.
           </p>
         </div>
       </ErrorPageContent>

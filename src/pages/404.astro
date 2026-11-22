@@ -37,15 +37,13 @@ const [firstSuggestion, secondSuggestion] = suggestions;
     >
       <div
         aria-hidden="true"
-        data-parallax-mobile={-45}
-        class="absolute -inset-20 animate-fade-in bg-(image:--background-image) bg-cover bg-center md:inset-0"
+        data-parallax={-80}
+        class="absolute -inset-28 animate-fade-in bg-(image:--background-image) bg-cover bg-center md:-inset-10"
         style={{ "--background-image": `url("${CDN_BASE}/404.webp")` }}
       ></div>
     </div>
     <ErrorPage className="relative mb-0 min-h-auto bg-background md:mx-0 md:min-h-dvh md:w-160 md:max-w-none md:flex-none">
-      <ErrorPageEyebrow className="animate-fade-in">
-        Not found
-      </ErrorPageEyebrow>
+      <ErrorPageEyebrow className="animate-fade-in">Not found</ErrorPageEyebrow>
       <ErrorPageHeader className="flex-row items-end justify-between gap-4">
         <ErrorPageTitle className="animate-fade-in animation-delay-150">
           404<span class="sr-only"> Page not found</span>
@@ -55,26 +53,24 @@ const [firstSuggestion, secondSuggestion] = suggestions;
         </span>
       </ErrorPageHeader>
       <ErrorPageDescription className="animate-fade-up animation-delay-1000">
-        Nothing is published at <code
-          class="font-semibold break-all text-foreground">{pathname}</code
-        >. The page may have moved, or the link may be mistyped.
+        Nothing is published at{" "}
+        <code class="font-semibold break-all text-foreground">{pathname}</code>.
+        The page may have moved, or the link may be mistyped.
       </ErrorPageDescription>
 
       <ErrorPageContent>
-        {
-          firstSuggestion && (
-            <p class="animate-fade-up text-base animation-delay-1150">
-              Did you mean <Link href={firstSuggestion}>{firstSuggestion}</Link>
-              {secondSuggestion && (
-                <span>
-                  {" "}
-                  or <Link href={secondSuggestion}>{secondSuggestion}</Link>
-                </span>
-              )}
-              ?
-            </p>
-          )
-        }
+        {firstSuggestion && (
+          <p class="animate-fade-up text-base animation-delay-1150">
+            Did you mean <Link href={firstSuggestion}>{firstSuggestion}</Link>
+            {secondSuggestion && (
+              <span>
+                {" "}
+                or <Link href={secondSuggestion}>{secondSuggestion}</Link>
+              </span>
+            )}
+            ?
+          </p>
+        )}
 
         <button
           type="button"
@@ -85,21 +81,20 @@ const [firstSuggestion, secondSuggestion] = suggestions;
           Search pages
         </button>
 
-        <div
-          class="flex animate-fade-up flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-1450"
-        >
-          <p
-            class="text-2xs font-semibold tracking-wider text-foreground uppercase"
-          >
+        <div class="flex animate-fade-up flex-col gap-1 text-sm leading-relaxed text-muted-foreground animation-delay-1450">
+          <p class="text-2xs font-semibold tracking-wider text-foreground uppercase">
             For agents
           </p>
           <p>
-            This URL returns a 404. Read <Link href="/llms.txt">/llms.txt</Link> for
-            the published pages, <Link href="/sitemap.xml">/sitemap.xml</Link> for the
-            indexable ones, or <Link href="/developers">/developers</Link> for the interface.
-            Send <code class="text-foreground"
-              >Accept: application/problem+json</code
-            > for the problem document.
+            This URL returns a 404. Read <Link href="/llms.txt">/llms.txt</Link>{" "}
+            for the published pages,{" "}
+            <Link href="/sitemap.xml">/sitemap.xml</Link> for the indexable
+            ones, or <Link href="/developers">/developers</Link> for the
+            interface. Send{" "}
+            <code class="text-foreground">
+              Accept: application/problem+json
+            </code>{" "}
+            for the problem document.
           </p>
         </div>
       </ErrorPageContent>

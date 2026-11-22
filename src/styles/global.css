@@ -1092,15 +1092,7 @@ html.dark pre[data-language] {
   opacity: calc(var(--opacity-back) + var(--opacity-range) * var(--depth));
 }
 
-.parallax-active
-  :is(
-    [data-parallax],
-    [data-parallax-x],
-    [data-parallax-y],
-    [data-parallax-mobile],
-    [data-parallax-mobile-x],
-    [data-parallax-mobile-y]
-  ) {
+.parallax-active :is([data-parallax], [data-parallax-x], [data-parallax-y]) {
   will-change: transform;
 }
 

@@ -29,12 +29,12 @@ breakpoint or motion condition stops holding.
 - While a driver is animating it adds `parallax-active` to `<html>`, which turns
   on `will-change: transform` for parallax layers.
 
-The two selectors are not the same set. The pointer driver matches
-`[data-parallax], [data-parallax-x], [data-parallax-y]` anywhere in the document.
-The scroll driver matches only descendants of a `[data-parallax-scroll]` frame,
-plus the scroll-only `data-parallax-mobile*` names, so page content that carries
-`data-parallax` outside a scroll frame (such as the still-life page headers)
-moves on desktop and stays still on mobile.
+The drivers match the same attributes but different scopes: the pointer driver
+matches `[data-parallax], [data-parallax-x], [data-parallax-y]` anywhere in the
+document, while the scroll driver matches them only inside a
+`[data-parallax-scroll]` frame. Page content that carries `data-parallax`
+outside a scroll frame (such as the still-life page headers) moves on desktop
+and stays still on mobile.
 
 Each frame is independent: the driver reads `data-parallax-scroll-distance`,
 `-drift` and `-scale` off the frame itself and builds a separate animator, so a

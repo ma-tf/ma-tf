@@ -4,10 +4,8 @@ const DEFAULT_FACTOR = 100;
 const SCROLL_COUPLING = 0.3;
 const MOBILE_QUERY = "(max-width: 767px)";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-const POINTER_SELECTOR = "[data-parallax], [data-parallax-x], [data-parallax-y]";
+const LAYER_SELECTOR = "[data-parallax], [data-parallax-x], [data-parallax-y]";
 const SCROLL_FRAME_SELECTOR = "[data-parallax-scroll]";
-const SCROLL_LAYER_SELECTOR =
-  ":is([data-parallax], [data-parallax-x], [data-parallax-y], [data-parallax-mobile], [data-parallax-mobile-x], [data-parallax-mobile-y])";
 const ACTIVE_CLASS = "parallax-active";
 const PUSH_SELECTOR = "[data-parallax-push]";
 const PUSH_COUPLING = 0.3;
@@ -28,17 +26,11 @@ const sharedFactor: Factor = (element, axis) => {
   return raw ? Number(raw) / DEFAULT_FACTOR : 0;
 };
 
-const scrollFactor: Factor = (element, axis) => {
-  const { parallaxMobile, parallaxMobileX, parallaxMobileY } = element.dataset;
-  const raw = (axis === "x" ? parallaxMobileX : parallaxMobileY) ?? parallaxMobile;
-  return raw === undefined ? sharedFactor(element, axis) : Number(raw) / DEFAULT_FACTOR;
-};
-
-const collect = (elements: Iterable<HTMLElement>, factor: Factor): Layer[] =>
+const collect = (elements: Iterable<HTMLElement>): Layer[] =>
   Array.from(elements).map((element) => ({
     element,
-    xFactor: factor(element, "x"),
-    yFactor: factor(element, "y"),
+    xFactor: sharedFactor(element, "x"),
+    yFactor: sharedFactor(element, "y"),
     effect: null,
   }));
 
@@ -108,7 +100,7 @@ function createAnimator(layers: Layer[], scale = 1, easing = EASING) {
 }
 
 function startPointerParallax() {
-  const layers = collect(document.querySelectorAll<HTMLElement>(POINTER_SELECTOR), sharedFactor);
+  const layers = collect(document.querySelectorAll<HTMLElement>(LAYER_SELECTOR));
   if (layers.length === 0) return;
 
   const animator = createAnimator(layers);
@@ -143,7 +135,7 @@ const readScrollConfig = (frame: HTMLElement | null) => ({
 });
 
 const createRunner = (frame: HTMLElement) => {
-  const layers = collect(frame.querySelectorAll<HTMLElement>(SCROLL_LAYER_SELECTOR), scrollFactor);
+  const layers = collect(frame.querySelectorAll<HTMLElement>(LAYER_SELECTOR));
   const { distance, drift, scale } = readScrollConfig(frame);
   return {
     distance,
@@ -202,10 +194,7 @@ let started = false;
  * each frame reads its own `data-parallax-scroll-*` config. Factors are
  * percentages (default 100), so `data-parallax={30}` moves at 30%;
  * `data-parallax-x` and `data-parallax-y` override a single axis, and an axis
- * with no value stays still. The scroll driver also reads `data-parallax-mobile`
- * (and `-x`/`-y`), which the pointer driver ignores, so a layer can move on
- * touch layouts without drifting on desktop. Disabled under
- * `prefers-reduced-motion`.
+ * with no value stays still. Disabled under `prefers-reduced-motion`.
  */
 export function startParallax() {
   if (started) return;
