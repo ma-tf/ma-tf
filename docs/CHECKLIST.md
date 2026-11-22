@@ -23,7 +23,6 @@ are marked N/A.
 - [ ] Styling
 - [x] Desktop complete
 - [ ] Mobile complete
-- [ ] Index preview complete — N/A
 
 ## Projects — section only (no page route)
 
@@ -65,56 +64,48 @@ are marked N/A.
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [x] Index preview complete — N/A
 
 ## CV — `/cv`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [ ] Index preview complete — N/A
 
 ## Contact — `/contact`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [x] Index preview complete — N/A
 
 ## Developers — `/developers`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [x] Index preview complete — N/A
 
 ## Privacy — `/privacy`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [x] Index preview complete — N/A
 
 ## Tag — `/tags/[...tag]`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [ ] Index preview complete — N/A
 
 ## 404 — `/404`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [ ] Index preview complete — N/A
 
 ## 500 — `/500`
 
 - [x] Styling
 - [x] Desktop complete
 - [x] Mobile complete
-- [ ] Index preview complete — N/A
 
 ## Images
 
