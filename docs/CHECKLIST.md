@@ -15,13 +15,13 @@ are marked N/A.
 
 - [x] Styling
 - [x] Desktop complete
-- [ ] Mobile complete
-- [ ] Index preview complete
+- [x] Mobile complete
+- [x] Index preview complete
 
 ## Blog post — `/posts/[...slug]`
 
 - [ ] Styling
-- [ ] Desktop complete
+- [x] Desktop complete
 - [ ] Mobile complete
 - [ ] Index preview complete — N/A
 
@@ -34,9 +34,9 @@ are marked N/A.
 
 ## Photography — `/photography`
 
-- [x] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
+- [ ] Styling (add sfx)
+- [x] Desktop complete
+- [x] Mobile complete
 - [ ] Index preview complete
 
 ## Vignettes — `/vignettes/[slug]` (with `/vignettes` redirect)
@@ -55,9 +55,9 @@ are marked N/A.
 
 ## Music — `/music`
 
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
+- [x] Styling
+- [x] Desktop complete
+- [x] Mobile complete
 - [ ] Index preview complete
 
 ## About — `/about`
@@ -69,9 +69,9 @@ are marked N/A.
 
 ## CV — `/cv`
 
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
+- [x] Styling
+- [x] Desktop complete
+- [x] Mobile complete
 - [ ] Index preview complete — N/A
 
 ## Contact — `/contact`
@@ -97,23 +97,23 @@ are marked N/A.
 
 ## Tag — `/tags/[...tag]`
 
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
+- [x] Styling
+- [x] Desktop complete
+- [x] Mobile complete
 - [ ] Index preview complete — N/A
 
 ## 404 — `/404`
 
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
+- [x] Styling
+- [x] Desktop complete
+- [x] Mobile complete
 - [ ] Index preview complete — N/A
 
 ## 500 — `/500`
 
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
+- [x] Styling
+- [x] Desktop complete
+- [x] Mobile complete
 - [ ] Index preview complete — N/A
 
 ## Images
