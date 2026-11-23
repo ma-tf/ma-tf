@@ -1,3 +1,4 @@
+import type { AnimatedIconHandle } from "@components/icons/animated-icon";
 import type { ComponentProps } from "react";
 
 import { Rss as RssAnimated } from "@components/icons/rss";
@@ -6,6 +7,7 @@ import { Pill } from "@components/pill";
 import { CDN_BASE } from "@lib/cdn";
 import { CalendarIcon, ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
+import { useRef } from "react";
 
 function PostHeader({ children, className, ...props }: ComponentProps<"header">) {
   return (
@@ -46,6 +48,26 @@ function PostContent({ children, className, ...props }: ComponentProps<"div">) {
   );
 }
 
+function PostRssLink() {
+  const icon = useRef<AnimatedIconHandle>(null);
+
+  return (
+    <NavButton
+      href="/rss.xml"
+      variant="outline"
+      arrow={false}
+      aria-label="RSS feed"
+      title="RSS feed"
+      onMouseEnter={() => icon.current?.play()}
+      onMouseLeave={() => icon.current?.stop()}
+      onFocus={() => icon.current?.play()}
+      onBlur={() => icon.current?.stop()}
+    >
+      <RssAnimated ref={icon} trigger="none" size={12} weight="bold" aria-hidden="true" />
+    </NavButton>
+  );
+}
+
 export function Post({
   title,
   publicationDate,
@@ -80,15 +102,7 @@ export function Post({
           <NavButton href="/blog" variant="outline">
             Blog
           </NavButton>
-          <NavButton
-            href="/rss.xml"
-            variant="outline"
-            arrow={false}
-            aria-label="RSS feed"
-            title="RSS feed"
-          >
-            <RssAnimated size={12} weight="bold" aria-hidden="true" />
-          </NavButton>
+          <PostRssLink />
         </div>
         <PostTitle className="animation-delay-50">{title}</PostTitle>
         <div className="mb-4 flex animate-fade-up flex-wrap items-center gap-2 text-sm text-muted-foreground animation-delay-100">
