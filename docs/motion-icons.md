@@ -11,12 +11,14 @@ and is ours to retune.
   `resolveWeight` falls back to the regular geometry while the stroke width still
   follows the prop, so a `weight="bold"` call site on a regular-only file gets a
   bold stroke over regular paths.
-- Five call sites animate today: `MagnifyingGlass` in `CommandMenu` and in the
+- Six call sites animate today: `MagnifyingGlass` in `CommandMenu` and in the
   palette's `CommandInput`, `Sun` and `Moon` in `ModeToggle`, `ArrowClockwise` on
-  the ask failure's retry button, and `ArrowRight` on the ask submit.
-- Two icons are animated outside this runtime, because their hosts are React-free:
-  the CV link's `ReadCvLogo` and the motion control's `ArrowCounterClockwise` run
-  CSS keyframes in `global.css` instead. Both play on hover or `:focus-visible`.
+  the ask failure's retry button, `ArrowRight` on the ask submit, and `Rss` on
+  the blog's feed link.
+- A few icons are animated outside this runtime, because their hosts are
+  React-free: the CV and GitHub chips and the motion control's
+  `ArrowCounterClockwise` run CSS keyframes in `global.css` instead. All play on
+  hover or `:focus-visible`.
 - Two ways in. Where the icon sits inside a padded button, that button runs
   `trigger="none"` and plays the icon through its ref from `onMouseEnter`: the
   icon is 16px inside a 32px button, and an SVG's hit area is its painted

@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 import { getRawPosts } from "@features/blog/post-data";
 import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
+import { Rss as RssAnimated } from "@components/icons/rss";
 import { NavButton } from "@components/nav-button";
 import { Pill } from "@components/pill";
 import { proseComponents } from "@components/prose";
@@ -46,12 +47,17 @@ const { Content, remarkPluginFrontmatter } = await render(post);
       />
     </div>
     <PostHeader>
-      <NavButton
-        href="/blog"
-        variant="outline"
-        className="mb-4 animate-fade-up"
-        >Blog</NavButton
-      >
+      <div class="mb-4 flex animate-fade-up items-center gap-1">
+        <NavButton href="/blog" variant="outline">Blog</NavButton>
+        <a
+          href="/rss.xml"
+          aria-label="RSS feed"
+          title="RSS feed"
+          class="inline-flex size-4.5 items-center justify-center border border-foreground text-foreground transition-colors duration-150 hover:bg-foreground hover:text-background focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+        >
+          <RssAnimated client:idle size={12} weight="bold" aria-hidden="true" />
+        </a>
+      </div>
       <PostTitle className="animation-delay-50">{post.data.title}</PostTitle>
       <div
         class="mb-4 flex animate-fade-up animation-delay-100 flex-wrap items-center gap-2 text-sm text-muted-foreground"
