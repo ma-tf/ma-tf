@@ -16,10 +16,16 @@ const navButtonVariants = cva(
         true: "min-h-12 w-full justify-start pl-4 text-sm",
         false: "text-xs",
       },
+      arrow: {
+        true: "",
+        false:
+          "size-4.5 justify-center p-0 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+      },
     },
     defaultVariants: {
       variant: "solid",
       full: false,
+      arrow: true,
     },
   },
 );
@@ -29,19 +35,27 @@ export function NavButton({
   className,
   variant,
   full,
+  arrow,
   ...props
-}: ComponentProps<"a"> & VariantProps<typeof navButtonVariants>) {
+}: ComponentProps<"a"> &
+  VariantProps<typeof navButtonVariants> & {
+    arrow?: boolean;
+  }) {
   return (
-    <a className={cn(navButtonVariants({ variant, full, className }))} {...props}>
-      <span
-        className={cn(
-          "inline-flex items-center gap-1",
-          !full && "pr-2 transition-transform duration-150 group-hover:translate-x-4.5",
-        )}
-      >
-        <ArrowLeftIcon size={14} className={cn("shrink-0", !full && "-ml-5")} />
-        {children}
-      </span>
+    <a className={cn(navButtonVariants({ variant, full, arrow, className }))} {...props}>
+      {arrow ? (
+        <span
+          className={cn(
+            "inline-flex items-center gap-1",
+            !full && "pr-2 transition-transform duration-150 group-hover:translate-x-4.5",
+          )}
+        >
+          <ArrowLeftIcon size={14} className={cn("shrink-0", !full && "-ml-5")} />
+          {children}
+        </span>
+      ) : (
+        <span className="inline-flex items-center justify-center">{children}</span>
+      )}
     </a>
   );
 }

@@ -33,7 +33,8 @@ border instead of the fixed desktop bar.
 
 ## Blog post content
 
-`src/pages/posts/[...slug].astro` renders the MDX body through `PostContent`.
+`src/pages/posts/[...slug].astro` passes the post's data and the MDX body to
+`Post`, which owns the banner, header, meta, tags, content and signature.
 `remarkPostBirdBreak` inserts a `PostBirdBreak` component at the midpoint of the
 post's top-level blocks, never beside a heading; the page maps that name to the
 island through the MDX `components` prop. The bird sits inline between blocks

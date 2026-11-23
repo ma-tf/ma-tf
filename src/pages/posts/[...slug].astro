@@ -2,19 +2,8 @@
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 import { getRawPosts } from "@features/blog/post-data";
-import { ClockIcon, FileTextIcon, HashIcon } from "@phosphor-icons/react";
-import { Rss as RssAnimated } from "@components/icons/rss";
-import { NavButton } from "@components/nav-button";
-import { Pill } from "@components/pill";
 import { proseComponents } from "@components/prose";
-import {
-  Post,
-  PostContent,
-  PostDate,
-  PostHeader,
-  PostTitle,
-} from "@features/posts/post";
-import { CDN_BASE } from "@lib/cdn";
+import { Post } from "@features/posts/post";
 import PostBirdBreak from "@features/posts/post-bird-break.astro";
 
 export async function getStaticPaths() {
@@ -33,77 +22,15 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
-  <Post className="relative pt-6 md:pt-20">
-    <div
-      class="mb-8 h-30 w-full overflow-hidden border border-foreground bg-muted"
-    >
-      <img
-        src={`${CDN_BASE}/blog/sats2-540-crop.webp`}
-        alt="Two satellite dishes on a desert ridge beneath a hazy orange sky."
-        width="540"
-        height="127"
-        fetchpriority="high"
-        class="h-30 w-full object-cover"
-      />
-    </div>
-    <PostHeader>
-      <div class="mb-4 flex animate-fade-up items-center gap-1">
-        <NavButton href="/blog" variant="outline">Blog</NavButton>
-        <a
-          href="/rss.xml"
-          aria-label="RSS feed"
-          title="RSS feed"
-          class="inline-flex size-4.5 items-center justify-center border border-foreground text-foreground transition-colors duration-150 hover:bg-foreground hover:text-background focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
-        >
-          <RssAnimated client:idle size={12} weight="bold" aria-hidden="true" />
-        </a>
-      </div>
-      <PostTitle className="animation-delay-50">{post.data.title}</PostTitle>
-      <div
-        class="mb-4 flex animate-fade-up animation-delay-100 flex-wrap items-center gap-2 text-sm text-muted-foreground"
-      >
-        <PostDate dateTime={post.data.publicationDate.toISOString()}>
-          {post.data.publicationDate.toISOString().split("T")[0]}
-        </PostDate>
-        <span aria-hidden="true">·</span>
-        <span class="inline-flex items-center gap-1">
-          <FileTextIcon size={14} aria-hidden="true" />
-          {remarkPluginFrontmatter.words} words
-        </span>
-        <span aria-hidden="true">·</span>
-        <span class="inline-flex items-center gap-1">
-          <ClockIcon size={14} aria-hidden="true" />
-          {remarkPluginFrontmatter.minutesRead}
-        </span>
-      </div>
-      {
-        post.data.tags.length > 0 && (
-          <ul class="animate-fade-up animation-delay-150 flex flex-wrap gap-2">
-            {post.data.tags.map((tag) => (
-              <li>
-                <Pill href={`/blog/${tag}`}>
-                  <span class="inline-flex items-center gap-0 pr-2">
-                    <HashIcon size={14} className="shrink-0" />
-                    {tag}
-                  </span>
-                </Pill>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </PostHeader>
-    <PostContent>
-      <Content components={{ ...proseComponents, PostBirdBreak }} />
-    </PostContent>
-    <img
-      src={`${CDN_BASE}/blog/pencil-and-rubber-128.webp`}
-      alt=""
-      width="128"
-      height="82"
-      aria-hidden="true"
-      class="mt-12 ml-auto w-16 dark:invert"
-    />
+  <Post
+    client:idle
+    title={post.data.title}
+    publicationDate={post.data.publicationDate}
+    words={remarkPluginFrontmatter.words}
+    minutesRead={remarkPluginFrontmatter.minutesRead}
+    tags={post.data.tags}
+  >
+    <Content components={{ ...proseComponents, PostBirdBreak }} />
   </Post>
 </Layout>
 
