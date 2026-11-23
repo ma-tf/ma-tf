@@ -1,6 +1,7 @@
 ---
 import { Header } from "@components/header";
 import { siteIdentity } from "@features/seo/site-metadata";
+import { audioPlayerEnabled } from "@lib/feature-flags";
 import { siteNavLinks } from "@lib/site-nav";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
@@ -12,5 +13,6 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   email={siteIdentity.email}
   github={siteIdentity.github}
   linkedin={siteIdentity.linkedin}
+  audioEnabled={audioPlayerEnabled}
   client:load
 />

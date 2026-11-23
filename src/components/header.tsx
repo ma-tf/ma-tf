@@ -1,6 +1,7 @@
 import type { ComponentProps, CSSProperties, ReactNode } from "react";
 
 import { CommandMenu } from "@components/command-menu";
+import { HeaderAudio } from "@components/header-audio";
 import { ModeToggle } from "@components/ModeToggle";
 import { NavButton } from "@components/nav-button";
 import { CDN_BASE } from "@lib/cdn";
@@ -19,6 +20,7 @@ import { useEffect, useState } from "react";
 type HeaderProps = {
   currentPath: string;
   pages: { label: string; href: string }[];
+  audioEnabled: boolean;
   email: string;
   github: string;
   linkedin: string;
@@ -40,7 +42,7 @@ function HeaderBar({ className, children, ...props }: ComponentProps<"div">) {
     <div
       className={cn(
         "relative z-10 mx-auto flex h-7.5 w-full items-stretch justify-between md:h-4",
-        "before:pointer-events-none before:absolute before:-top-5.5 before:-left-1 before:-z-1 before:h-7.5 before:w-full before:drop-shadow-chrome before:content-(--chrome-mobile) md:before:-top-4 md:before:-left-69 md:before:h-auto md:before:w-auto md:before:content-(--chrome-top-left)",
+        "before:pointer-events-none before:absolute before:-top-5.5 before:-left-1 before:-z-1 before:h-7.5 before:w-full before:drop-shadow-chrome before:content-(--chrome-mobile) md:before:-top-4 md:before:h-auto md:before:w-auto md:before:content-(--chrome-top-left)",
         "after:pointer-events-none after:absolute after:-z-1 after:drop-shadow-chrome md:after:-top-1.5 md:after:-right-9.5 md:after:content-(--chrome-top-right) md:has-data-[mode=hidden]:after:-right-15.5",
         className,
       )}
@@ -186,8 +188,10 @@ function MobileHeaderMenu() {
   );
 }
 
-export function Header({ currentPath, pages, email, github, linkedin }: HeaderProps) {
+export function Header({ currentPath, pages, audioEnabled, email, github, linkedin }: HeaderProps) {
   const showCv = currentPath !== "/cv";
+  const chromeLeft = audioEnabled ? "md:before:-left-43.5" : "md:before:-left-69";
+  const chromeLeftCv = audioEnabled ? "md:before:-left-50.5" : "md:before:-left-76";
 
   return (
     <HeaderShell>
@@ -198,7 +202,7 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
             { "--chrome-mobile": `url("${CDN_BASE}/misc/mobiletopchrome.png")` } as CSSProperties
           }
         />
-        <HeaderBar className={cn(!showCv && "md:before:-left-76")}>
+        <HeaderBar className={cn(chromeLeft, !showCv && chromeLeftCv)}>
           <HeaderGroup>
             <HeaderControl>
               <HeaderChip href="/" aria-label="m4t.tf home">
@@ -233,6 +237,11 @@ export function Header({ currentPath, pages, email, github, linkedin }: HeaderPr
                 />
               </HeaderChip>
             </HeaderControl>
+            {audioEnabled && (
+              <HeaderControl className="w-auto">
+                <HeaderAudio />
+              </HeaderControl>
+            )}
           </HeaderGroup>
           <HeaderGroup className="pr-8 md:pr-0">
             <HeaderControl>

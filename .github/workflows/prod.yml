@@ -30,6 +30,7 @@ jobs:
         env:
           PUBLIC_PREVIEW_GRAPHICS: ${{ vars.PUBLIC_PREVIEW_GRAPHICS }}
           PUBLIC_ASK_ENABLED: ${{ vars.PUBLIC_ASK_ENABLED }}
+          PUBLIC_AUDIO_PLAYER_ENABLED: ${{ vars.PUBLIC_AUDIO_PLAYER_ENABLED }}
       - name: Check deploy secrets
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo "::error::NETLIFY_AUTH_TOKEN is not set"; exit 1; }

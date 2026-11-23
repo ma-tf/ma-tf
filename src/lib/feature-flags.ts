@@ -5,3 +5,5 @@ export const previews = {
 };
 
 export const askEnabled = flag("PUBLIC_ASK_ENABLED");
+
+export const audioPlayerEnabled = flag("PUBLIC_AUDIO_PLAYER_ENABLED");
