@@ -3,7 +3,7 @@ import { ArrowUpIcon, BracketsCurlyIcon } from "@phosphor-icons/react";
 import { exploreLinks } from "@lib/site-nav";
 import { CDN_BASE } from "@lib/cdn";
 
-const { show = "both" } = Astro.props;
+const { show = "both", currentPath } = Astro.props;
 const showDesktop = show === "desktop";
 const showMobile = show === "mobile";
 
@@ -29,7 +29,6 @@ const columns = [
   },
 ].filter((column) => column.links.length > 0);
 
-const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const chromeBottom = `${CDN_BASE}/misc/bottomleftchrome.png`;
 ---
 

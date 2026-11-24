@@ -28,12 +28,22 @@ const inventory: readonly PageEntry[] = [
 ];
 
 describe("buildSitemap", () => {
-  it("lists every inventory path with a trailing slash", () => {
+  it("lists every inventory path without a trailing slash", () => {
     const xml = buildSitemap(inventory, site);
 
     for (const entry of inventory) {
-      const expected = entry.path === "/" ? "https://m4t.tf/" : `https://m4t.tf${entry.path}/`;
+      const expected = entry.path === "/" ? "https://m4t.tf/" : `https://m4t.tf${entry.path}`;
       expect(xml).toContain(`<loc>${expected}</loc>`);
+    }
+  });
+
+  it("never emits a trailing slash except at the root", () => {
+    const xml = buildSitemap(inventory, site);
+    const locations = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+
+    for (const location of locations) {
+      if (location === "https://m4t.tf/") continue;
+      expect(location?.endsWith("/")).toBe(false);
     }
   });
 
@@ -56,6 +66,6 @@ describe("buildSitemap", () => {
       site,
     );
 
-    expect(xml).toContain("<loc>https://m4t.tf/blog/a&amp;b/</loc>");
+    expect(xml).toContain("<loc>https://m4t.tf/blog/a&amp;b</loc>");
   });
 });

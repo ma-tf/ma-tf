@@ -11,6 +11,10 @@ import { remarkReadingTime } from "./src/remark-reading-time.mjs";
 export default defineConfig({
   site: "https://m4t.tf",
   output: "static",
+  trailingSlash: "never",
+  build: {
+    format: "file",
+  },
   adapter: netlify({
     devFeatures: {
       environmentVariables: false,

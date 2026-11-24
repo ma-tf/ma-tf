@@ -24,17 +24,24 @@ const {
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://m4t.tf");
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-const markdownPath =
-	Astro.url.pathname === "/"
-		? "/index.md"
-		: `${Astro.url.pathname.replace(/\/+$/, "")}.md`;
+
+function pagePath(pathname: string): string {
+	const withoutIndex = pathname.replace(/\/index\.html$/, "/");
+	const withoutExtension = withoutIndex.replace(/\.html$/, "");
+	const trimmed = withoutExtension.replace(/\/+$/, "");
+
+	return trimmed === "" ? "/" : trimmed;
+}
+
+const pathname = pagePath(Astro.url.pathname);
+const canonicalUrl = new URL(pathname, siteUrl).href;
+const markdownPath = pathname === "/" ? "/index.md" : `${pathname}.md`;
 const markdownUrl = new URL(markdownPath, siteUrl).href;
 const ard = resourceByRel("ard");
 const agentSkills = resourceByRel("agent-skills");
 const ogImage = new URL(siteIdentity.ogImagePath, `${CDN_BASE}/`);
 const faqAnswers =
-	Astro.url.pathname === "/"
+	pathname === "/"
 		? (await getCollection("faq"))
 				.sort((a, b) => a.data.order - b.data.order)
 				.map((entry) => ({
@@ -42,17 +49,17 @@ const faqAnswers =
 					text: entry.body ?? "",
 				}))
 		: [];
-const jsonLd = siteJsonLd(ogImage.href, Astro.url.pathname, faqAnswers);
-const pageName = title ?? pageNameFor(Astro.url.pathname);
+const jsonLd = siteJsonLd(ogImage.href, pathname, faqAnswers);
+const pageName = title ?? pageNameFor(pathname);
 const pageTitle =
-	Astro.url.pathname === "/"
+	pathname === "/"
 		? siteIdentity.homeTitle
 		: pageName
 			? `${pageName} | ${siteIdentity.name}`
 			: `${siteIdentity.name} | ${siteIdentity.jobTitle}`;
 const pageDescription =
 	description ??
-	pageDescriptionFor(Astro.url.pathname) ??
+	pageDescriptionFor(pathname) ??
 	siteIdentity.description;
 ---
 
@@ -168,7 +175,7 @@ const pageDescription =
 			{ "md:overflow-hidden": hideOverflow },
 		]}
 	>
-		{showHeader && <Header />}
+		{showHeader && <Header currentPath={pathname} />}
 		<main class="flex flex-1 flex-col">
 			<slot />
 		</main>
@@ -180,6 +187,6 @@ const pageDescription =
 				</script>
 			)
 		}
-		{showFooter !== "none" && <Footer show={showFooter} />}
+		{showFooter !== "none" && <Footer currentPath={pathname} show={showFooter} />}
 	</body>
 </html>
