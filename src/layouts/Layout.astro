@@ -101,6 +101,7 @@ const pageDescription =
 	import { startGridSpotlight } from "@lib/grid-spotlight";
 	import { startHitsTracking } from "@lib/hits-tracking";
 	import { startHomeFragments } from "@lib/home-fragments";
+	import { startAfterHomeLoad } from "@lib/home-load";
 	import { startHomePreview } from "@lib/home-preview";
 	import { startHomeWires } from "@lib/home-wires";
 	import { startParallax } from "@lib/parallax";
@@ -112,7 +113,7 @@ const pageDescription =
 
 	startGridSpotlight();
 	startHitsTracking();
-	startHomeFragments();
+	startAfterHomeLoad(startHomeFragments);
 	startHomePreview();
 	startHomeWires();
 	startParallax();

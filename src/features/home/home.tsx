@@ -50,8 +50,9 @@ function HomeSectionTitle({
   children,
   className,
   "data-wash": dataWash,
+  flickerClassName,
   ...props
-}: ComponentProps<"a"> & { "data-wash"?: string }) {
+}: ComponentProps<"a"> & { "data-wash"?: string; flickerClassName?: string }) {
   return (
     <span
       className="group/title pointer-events-auto relative flex items-center focus-within:z-10 hover:z-10"
@@ -97,7 +98,9 @@ function HomeSectionTitle({
             aria-hidden="true"
             className="absolute top-1/2 -right-5 left-1 -mt-1.5 h-22 -translate-y-1/2 bg-muted/50 md:left-4.5 md:mt-1 md:h-28"
           />
-          <span className="relative inline">{children}</span>
+          <span className={cn("relative inline animate-fade-in", flickerClassName)}>
+            {children}
+          </span>
         </HomeSectionTitleLink>
       </span>
     </span>
@@ -128,42 +131,58 @@ export function HomePage() {
       >
         <HomeSectionRow className="-tilt-x-19 tilt-z-53">
           <HomeSectionDecorators />
-          <HomeSectionTitle data-wash="emerald" href="/blog">
+          <HomeSectionTitle flickerClassName="animation-delay-400" data-wash="emerald" href="/blog">
             Blog
           </HomeSectionTitle>
         </HomeSectionRow>
 
         <HomeSectionRow className="-translate-x-2 -tilt-x-11 tilt-z-19 md:translate-x-0">
           <HomeSectionDecorators />
-          <HomeSectionTitle data-wash="plum" href="/projects">
+          <HomeSectionTitle
+            flickerClassName="animation-delay-550"
+            data-wash="plum"
+            href="/projects"
+          >
             Projects
           </HomeSectionTitle>
         </HomeSectionRow>
 
         <HomeSectionRow className="-translate-x-3 -tilt-x-4 tilt-z-2 md:translate-x-0">
           <HomeSectionDecorators />
-          <HomeSectionTitle data-wash="ember" href="/photography">
+          <HomeSectionTitle
+            flickerClassName="animation-delay-700"
+            data-wash="ember"
+            href="/photography"
+          >
             Photography
           </HomeSectionTitle>
         </HomeSectionRow>
 
         <HomeSectionRow className="-translate-x-3 tilt-x-4 tilt-z-2 md:translate-x-0">
           <HomeSectionDecorators />
-          <HomeSectionTitle data-wash="blue" href="/vignettes">
+          <HomeSectionTitle
+            flickerClassName="animation-delay-850"
+            data-wash="blue"
+            href="/vignettes"
+          >
             Vignettes
           </HomeSectionTitle>
         </HomeSectionRow>
 
         <HomeSectionRow className="-translate-x-2 tilt-x-11 tilt-z-19 md:translate-x-0">
           <HomeSectionDecorators />
-          <HomeSectionTitle data-wash="gray" href="/graphics">
+          <HomeSectionTitle
+            flickerClassName="animation-delay-1000"
+            data-wash="gray"
+            href="/graphics"
+          >
             Graphics
           </HomeSectionTitle>
         </HomeSectionRow>
 
         <HomeSectionRow className="tilt-x-19 tilt-z-53">
           <HomeSectionDecorators />
-          <HomeSectionTitle data-wash="taupe" href="/music">
+          <HomeSectionTitle flickerClassName="animation-delay-1150" data-wash="taupe" href="/music">
             Music
           </HomeSectionTitle>
         </HomeSectionRow>

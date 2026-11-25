@@ -21,6 +21,11 @@ A decorative, seeded block of text that types in and fades out across the homepa
 cycling a section's copy while its title is hovered.
 _Avoid_: random text, lorem block
 
+**Load sequence**:
+The homepage entrance in which section title text flickers in one title after another,
+after which fragments start. Titles' backgrounds and decorations stay put.
+_Avoid_: intro, splash
+
 **Discovery resource**:
 A machine-readable artefact the site publishes at a fixed path.
 _Avoid_: endpoint, file, document

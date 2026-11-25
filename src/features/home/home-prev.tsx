@@ -108,9 +108,10 @@ function PrevBand({ children, className, ...props }: ComponentProps<"div">) {
 
 type PrevLedProps = ComponentProps<"span"> & {
   tone: keyof typeof prevLedColors;
+  flickerClassName?: string;
 };
 
-function PrevLed({ tone, className, ...props }: PrevLedProps) {
+function PrevLed({ tone, className, flickerClassName, ...props }: PrevLedProps) {
   return (
     <span
       aria-hidden="true"
@@ -121,11 +122,18 @@ function PrevLed({ tone, className, ...props }: PrevLedProps) {
       )}
       {...props}
     >
-      <span className={cn("size-1.5 rounded-full mix-blend-color-dodge", prevLedColors[tone])} />
+      <span
+        className={cn(
+          "size-1.5 rounded-full mix-blend-color-dodge",
+          prevLedColors[tone],
+          flickerClassName,
+        )}
+      />
       <span
         className={cn(
           "absolute -inset-1 rounded-full opacity-80 mix-blend-color-dodge blur-sm",
           prevLedColors[tone],
+          flickerClassName,
         )}
       />
     </span>
@@ -205,7 +213,11 @@ export function HomePrev({ className, ...props }: ComponentProps<"div">) {
             decoding="async"
             className="block max-w-none"
           />
-          <PrevLed tone="red" className="left-115.5 opacity-100" />
+          <PrevLed
+            tone="red"
+            className="left-115.5 opacity-100"
+            flickerClassName="animate-fade-in animation-delay-400"
+          />
           <PrevLed tone="green" className="left-118 opacity-0" />
           <WireLanding className="right-1 bottom-0" />
         </BottomPlate>

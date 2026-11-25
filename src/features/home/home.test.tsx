@@ -16,6 +16,16 @@ describe("HomePage decorators", () => {
     expect(html).toContain("data-home-wires-front");
   });
 
+  it("flickers only the title text and the red preview light", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html.match(/animate-fade-in/g)).toHaveLength(8);
+    for (const delay of [400, 550, 700, 850, 1000, 1150]) {
+      expect(html).toContain(`animation-delay-${delay}`);
+    }
+    expect(html).not.toMatch(/animate-fade-in[^"]*bg-muted\/50|bg-muted\/50[^"]*animate-fade-in/);
+  });
+
   it("lifts the bottom plate only for washes that carry an image", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
