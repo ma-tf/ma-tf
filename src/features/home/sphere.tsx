@@ -36,7 +36,7 @@ export function Sphere({
     >
       {variant === "spotlight"
         ? SPHERE_PATHS.map((_, i) => <use key={i} href={`#${sphereStrokeId(i)}`} />)
-        : SPHERE_PATHS.map((d, i) => <path key={i} id={sphereStrokeId(i)} d={d} />)}
+        : SPHERE_PATHS.map((_, i) => <path key={i} id={sphereStrokeId(i)} />)}
     </svg>
   );
 }

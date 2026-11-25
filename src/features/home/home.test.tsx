@@ -4,6 +4,16 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vite-plus/test";
 
 describe("HomePage decorators", () => {
+  it("leaves the base sphere paths to the client driver", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+    const base =
+      html.match(/<svg[^>]*data-sphere-grid[^>]*>(?:(?!<\/svg>)[\s\S])*<\/svg>/)?.[0] ?? "";
+
+    expect(base.match(/<path /g)).toHaveLength(280);
+    expect(base).not.toContain(" d=");
+    expect(html.match(/<use /g)).toHaveLength(280);
+  });
+
   it("names the site in a visually hidden level-one heading", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
