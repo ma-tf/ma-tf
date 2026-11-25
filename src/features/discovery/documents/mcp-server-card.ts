@@ -31,7 +31,7 @@ export function buildMcpServerCard() {
     capabilities: { tools: true, resources: true },
     tools: [
       {
-        name: "ask",
+        name: "ask_site",
         title: askToolTitle,
         description: askToolDescription,
         inputSchema: askInputJsonSchema,

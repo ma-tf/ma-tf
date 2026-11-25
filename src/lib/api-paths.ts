@@ -42,7 +42,7 @@ function apiRateLimitFor(pathname: string, request: Request): RateLimit | undefi
   if (pathname !== "/mcp") return apiPathLimits.get(pathname);
 
   return request.headers.get("Mcp-Method") === "tools/call" &&
-    decodeMcpName(request.headers.get("Mcp-Name")) === "ask"
+    decodeMcpName(request.headers.get("Mcp-Name")) === "ask_site"
     ? askRateLimit
     : undefined;
 }
@@ -54,7 +54,7 @@ function isLegacyAskCall(message: unknown): boolean {
   if (method !== "tools/call") return false;
   if (typeof params !== "object" || params === null || Array.isArray(params)) return false;
 
-  return (params as { name?: unknown }).name === "ask";
+  return (params as { name?: unknown }).name === "ask_site";
 }
 
 export async function apiRateLimitForRequest(

@@ -31,7 +31,7 @@ const machineReadableFiles = resources
 
 const rateLimitLines = askEnabled
   ? [
-      `\`POST /ask\` and the \`ask\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
+      `\`POST /ask\` and the \`ask_site\` tool on \`POST /mcp\` are metered at ${askRateLimit.quota} requests`,
       "per minute per client, sharing one budget, and return `429 Too Many Requests`",
       "with `Retry-After` past it. Metered responses carry `RateLimit`, `RateLimit-Policy`,",
       "`RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` headers.",
@@ -43,7 +43,7 @@ const mcpSectionLines = askEnabled
       "## MCP",
       "",
       `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
-      `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask\` tool.`,
+      `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask_site\` tool.`,
       "",
     ]
   : [];

@@ -73,7 +73,7 @@ describe("buildLlmsTxt", () => {
     const text = buildLlmsTxt();
 
     expect(text).toContain("`POST /mcp`");
-    expect(text).toContain("`POST /ask` and the `ask` tool on");
+    expect(text).toContain("`POST /ask` and the `ask_site` tool on");
   });
 
   it("keeps the MCP endpoint out of the machine-readable list", () => {
@@ -131,7 +131,7 @@ describe("buildDevelopersLlmsTxt", () => {
     const text = buildDevelopersLlmsTxt();
 
     expect(text).toContain("`POST /mcp`");
-    expect(text).toContain("`POST /ask` and the `ask` tool on");
+    expect(text).toContain("`POST /ask` and the `ask_site` tool on");
   });
 
   it("keeps the MCP endpoint out of the resource list", () => {

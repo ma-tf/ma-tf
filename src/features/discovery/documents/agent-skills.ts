@@ -55,7 +55,7 @@ const skills: readonly AgentSkill[] = [
       "m4t.tf is machine-readable. Every resource is an unauthenticated GET.",
       ...(askEnabled
         ? [
-            `Requests are not metered, except \`POST /ask\` and the \`ask\` tool on \`POST /mcp\`, which`,
+            `Requests are not metered, except \`POST /ask\` and the \`ask_site\` tool on \`POST /mcp\`, which`,
             `share one budget of ${askRateLimit.quota} requests per minute per client.`,
           ]
         : ["Requests are not metered."]),
@@ -75,7 +75,7 @@ const skills: readonly AgentSkill[] = [
             "## MCP",
             "",
             "An MCP server speaks Streamable HTTP at https://m4t.tf/mcp, pinned to revision",
-            "`2026-07-28`. It exposes the `ask` tool and the site's content, and is advertised",
+            "`2026-07-28`. It exposes the `ask_site` tool and the site's content, and is advertised",
             "as the ARD entry `urn:air:m4t.tf:server:mcp`.",
             "",
           ]

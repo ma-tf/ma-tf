@@ -35,7 +35,7 @@ const createServer: McpServerFactory = async () => {
   );
 
   server.registerTool(
-    "ask",
+    "ask_site",
     {
       title: askToolTitle,
       description: askToolDescription,

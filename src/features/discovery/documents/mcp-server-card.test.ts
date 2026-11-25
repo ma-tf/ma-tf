@@ -19,12 +19,12 @@ describe("buildMcpServerCard", () => {
     expect(card.protocolVersion).toBe("2026-07-28");
   });
 
-  it("describes the ask tool with its schema and annotations", () => {
+  it("describes the ask_site tool with its schema and annotations", () => {
     expect(card.tools).toHaveLength(1);
 
     const [tool] = card.tools;
 
-    expect(tool?.name).toBe("ask");
+    expect(tool?.name).toBe("ask_site");
     expect(tool?.inputSchema).toMatchObject({
       type: "object",
       properties: { query: { type: "object" } },

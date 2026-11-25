@@ -87,7 +87,7 @@ describe("discover-site-resources", () => {
 
   it("names the MCP endpoint and the widened metered surface", () => {
     expect(markdown).toContain("https://m4t.tf/mcp");
-    expect(markdown).toContain("`POST /ask` and the `ask` tool on `POST /mcp`");
+    expect(markdown).toContain("`POST /ask` and the `ask_site` tool on `POST /mcp`");
   });
 
   it("points at the ARD catalogue", () => {

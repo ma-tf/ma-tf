@@ -210,7 +210,7 @@ function callBody(args: unknown, overrides: Record<string, unknown> = {}): Recor
     jsonrpc: "2.0",
     id: 3,
     method: "tools/call",
-    params: { name: "ask", arguments: args, _meta: META },
+    params: { name: "ask_site", arguments: args, _meta: META },
     ...overrides,
   };
 }
@@ -435,7 +435,7 @@ describe("handleMcp", () => {
     expect(await response.text()).toBe("");
   });
 
-  it("lists exactly the ask tool with its schema, annotations and cache hints", async () => {
+  it("lists exactly the ask_site tool with its schema, annotations and cache hints", async () => {
     const response = await handleMcp(requestFor(listBody(), { "Mcp-Method": "tools/list" }));
 
     expect(response.status).toBe(200);
@@ -448,7 +448,7 @@ describe("handleMcp", () => {
 
     const [tool] = payload.result.tools;
 
-    expect(tool.name).toBe("ask");
+    expect(tool.name).toBe("ask_site");
     expect(tool.title).toBe("Ask m4t.tf");
     expect(tool.description).toEqual(expect.any(String));
     expect(tool.annotations).toEqual({ readOnlyHint: true, openWorldHint: false });
@@ -474,7 +474,7 @@ describe("handleMcp", () => {
     const response = await handleMcp(
       requestFor(callBody({ query: { text: "Who is Matt?" }, prefer: { mode: "summarize" } }), {
         "Mcp-Method": "tools/call",
-        "Mcp-Name": "ask",
+        "Mcp-Name": "ask_site",
       }),
     );
 
@@ -512,7 +512,7 @@ describe("handleMcp", () => {
           context: { "@type": "Conversation", text: "earlier" },
           meta: { version: "0.55" },
         }),
-        { "Mcp-Method": "tools/call", "Mcp-Name": "ask" },
+        { "Mcp-Method": "tools/call", "Mcp-Name": "ask_site" },
       ),
     );
 
@@ -536,7 +536,7 @@ describe("handleMcp", () => {
     const response = await handleMcp(
       requestFor(callBody({ query: { text: "Who is Matt?" } }), {
         "Mcp-Method": "tools/call",
-        "Mcp-Name": "ask",
+        "Mcp-Name": "ask_site",
       }),
     );
 
@@ -555,7 +555,7 @@ describe("handleMcp", () => {
     const response = await handleMcp(
       requestFor(callBody({ query: { text: "Who is Matt?" } }), {
         "Mcp-Method": "tools/call",
-        "Mcp-Name": "ask",
+        "Mcp-Name": "ask_site",
       }),
     );
 
@@ -569,7 +569,7 @@ describe("handleMcp", () => {
     const response = await handleMcp(
       requestFor(callBody({ query: { text: "Who is Matt?" }, prefer: { mode: "unknown" } }), {
         "Mcp-Method": "tools/call",
-        "Mcp-Name": "ask",
+        "Mcp-Name": "ask_site",
       }),
     );
 
@@ -589,7 +589,9 @@ describe("handleMcp", () => {
   });
 
   it("does not meter a tools/call for ask with no query text", async () => {
-    await handleMcp(requestFor(callBody({}), { "Mcp-Method": "tools/call", "Mcp-Name": "ask" }));
+    await handleMcp(
+      requestFor(callBody({}), { "Mcp-Method": "tools/call", "Mcp-Name": "ask_site" }),
+    );
 
     expect(askMock).not.toHaveBeenCalled();
   });
@@ -883,7 +885,7 @@ describe("handleMcp", () => {
       (
         await readLegacyMessage<{ result: { tools: ToolListing[] } }>(listResponse)
       ).result.tools.map((tool) => tool.name),
-    ).toEqual(["ask"]);
+    ).toEqual(["ask_site"]);
 
     const callResponse = await handleMcp(
       legacyRequestFor({
@@ -891,7 +893,7 @@ describe("handleMcp", () => {
         id: 3,
         method: "tools/call",
         params: {
-          name: "ask",
+          name: "ask_site",
           arguments: { query: { text: "Who is Matt?" }, prefer: { mode: "summarize" } },
         },
       }),

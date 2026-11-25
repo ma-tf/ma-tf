@@ -225,7 +225,7 @@ describe("onRequest", () => {
 
   it("meters the ask tool on /mcp", async () => {
     const response = await onRequest(
-      buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask" } }),
+      buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask_site" } }),
       next,
     );
 
@@ -254,7 +254,7 @@ describe("onRequest", () => {
     });
 
     const response = await onRequest(
-      buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask" } }),
+      buildContext("/mcp", { headers: { "Mcp-Method": "tools/call", "Mcp-Name": "ask_site" } }),
       next,
     );
 
@@ -267,7 +267,7 @@ describe("onRequest", () => {
   it("meters the ask tool when Mcp-Name uses the Base64 sentinel", async () => {
     const response = await onRequest(
       buildContext("/mcp", {
-        headers: { "Mcp-Method": "tools/call", "Mcp-Name": "=?base64?YXNr?=" },
+        headers: { "Mcp-Method": "tools/call", "Mcp-Name": "=?base64?YXNrX3NpdGU=?=" },
       }),
       next,
     );
@@ -294,7 +294,7 @@ describe("onRequest", () => {
           jsonrpc: "2.0",
           id: 3,
           method: "tools/call",
-          params: { name: "ask", arguments: { query: { text: "Who is Matt?" } } },
+          params: { name: "ask_site", arguments: { query: { text: "Who is Matt?" } } },
         },
       }),
       next,

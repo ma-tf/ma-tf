@@ -21,7 +21,7 @@ mounted on `/legacy`).
   at most two (`slice(-1)` plus the new one), earlier units drop off.
 - `endpoint`: `POST /ask` with `{ "query": { "text": "…" }, "prefer": { "mode": "summarize" } }`,
   or `"list"` for results without prose.
-- `mcp`: the same decision gate backs the `ask` tool on `/mcp`.
+- `mcp`: the same decision gate backs the `ask_site` tool on `/mcp`.
 
 ## How to get to it (user POV)
 
