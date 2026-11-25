@@ -43,7 +43,7 @@ const mcpSectionLines = askEnabled
       "## MCP",
       "",
       `- [MCP server](${siteUrl}${mcpPath}): Streamable HTTP, pinned to revision \`2026-07-28\`.`,
-      `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card listing the \`ask_site\` tool.`,
+      `- [MCP server card](${siteUrl}/.well-known/mcp/server-card.json): the card describing this MCP server.`,
       "",
     ]
   : [];
