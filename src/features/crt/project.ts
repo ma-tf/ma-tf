@@ -77,3 +77,37 @@ export function projector(matrix: Matrix, width: number, height: number): Projec
 export function crtProjector(width: number, height: number): Projector {
   return projector(crtMatrix(width), width, height);
 }
+
+export type Homography = readonly number[];
+
+export function crtHomography(width: number): Homography {
+  const matrix = crtMatrix(width);
+  return [0, 1, 3].flatMap((row) => [0, 1, 3].map((column) => at(matrix, row, column)));
+}
+
+function cofactor(h: Homography, row: number, column: number): number {
+  const rows = [0, 1, 2].filter((index) => index !== row);
+  const columns = [0, 1, 2].filter((index) => index !== column);
+  const [r0 = 0, r1 = 0] = rows;
+  const [c0 = 0, c1 = 0] = columns;
+  const minor =
+    (h[r0 * 3 + c0] ?? 0) * (h[r1 * 3 + c1] ?? 0) - (h[r0 * 3 + c1] ?? 0) * (h[r1 * 3 + c0] ?? 0);
+  return (row + column) % 2 === 0 ? minor : -minor;
+}
+
+export function invertHomography(h: Homography): Homography {
+  const determinant = [0, 1, 2].reduce(
+    (sum, column) => sum + (h[column] ?? 0) * cofactor(h, 0, column),
+    0,
+  );
+  return [0, 1, 2].flatMap((row) =>
+    [0, 1, 2].map((column) => cofactor(h, column, row) / determinant),
+  );
+}
+
+export function applyHomography(h: Homography, x: number, y: number, out: Placement) {
+  const w = (h[6] ?? 0) * x + (h[7] ?? 0) * y + (h[8] ?? 0) || 1;
+  out.x = ((h[0] ?? 0) * x + (h[1] ?? 0) * y + (h[2] ?? 0)) / w;
+  out.y = ((h[3] ?? 0) * x + (h[4] ?? 0) * y + (h[5] ?? 0)) / w;
+  out.scale = 1 / w;
+}

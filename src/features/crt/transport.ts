@@ -1,5 +1,6 @@
 import type { CrtReply, CrtRequest } from "@features/crt/protocol";
 
+import { createTriadGl } from "@features/crt/gl";
 import { isCrtReply } from "@features/crt/protocol";
 import { createRenderer } from "@features/crt/renderer";
 import { decodeFile, documentSurface, loadBitmap } from "@features/crt/surface";
@@ -48,6 +49,7 @@ function localTransport(): Transport {
     createSurface: documentSurface,
     decode: decodeFile,
     grain: () => loadBitmap(GRAIN_SRC),
+    createGl: () => createTriadGl(documentSurface),
   });
   return {
     send: (request) => void handle(request),

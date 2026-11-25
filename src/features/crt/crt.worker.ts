@@ -1,5 +1,6 @@
 import type { CrtReply, CrtRequest } from "@features/crt/protocol";
 
+import { createTriadGl } from "@features/crt/gl";
 import { createRenderer } from "@features/crt/renderer";
 import { decodeFile, loadBitmap, offscreenSurface } from "@features/crt/surface";
 import { GRAIN_SRC } from "@features/crt/triads";
@@ -16,6 +17,7 @@ const handle = createRenderer({
   createSurface: offscreenSurface,
   decode: decodeFile,
   grain: () => loadBitmap(GRAIN_SRC),
+  createGl: () => createTriadGl(offscreenSurface),
 });
 
 scope.addEventListener("message", (event) => {

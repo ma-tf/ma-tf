@@ -1,23 +1,15 @@
+import type { TriadGl } from "@features/crt/gl";
+import type { TriadGrid } from "@features/crt/layout";
 import type { Placement, Projector } from "@features/crt/project";
 import type { Canvas2D, CreateSurface, Surface } from "@features/crt/surface";
 
 import { glowPass } from "@features/crt/glow";
+import { sampleIndex, tone, triadCentre, triadGrid } from "@features/crt/layout";
 import { crtProjector } from "@features/crt/project";
 import { context2d, nextTask } from "@features/crt/surface";
 import { CDN_BASE } from "@lib/cdn";
 
 export const GRAIN_SRC = `${CDN_BASE}/graphics/grain.avif`;
-
-export type TriadGrid = {
-  cell: number;
-  pitch: number;
-  columns: number;
-  rows: number;
-  sampleColumns: number;
-  sampleRows: number;
-  width: number;
-  height: number;
-};
 
 type Pixels = ArrayLike<number>;
 
@@ -28,53 +20,6 @@ type Painter = {
   placement: Placement;
   project: Projector;
 };
-
-const clamp = (value: number) => Math.max(0, Math.min(255, value));
-
-export function tone(value: number, luma: number): number {
-  const saturated = clamp(luma + (value - luma) * 1.02);
-  const toned = Math.min(255, saturated * 1.05 + (saturated / 255) ** 4 * 70);
-  const gain = toned < 128 ? 1.35 : 1.2;
-  return clamp(128 + (toned - 128) * gain);
-}
-
-export function sampleIndex(x: number, y: number, grid: TriadGrid): number {
-  const column = Math.min(grid.sampleColumns - 1, Math.max(0, Math.round(x / grid.pitch)));
-  const row = Math.min(grid.sampleRows - 1, Math.max(0, Math.round(y / grid.pitch)));
-  return (row * grid.sampleColumns + column) * 4;
-}
-
-export const SOURCE_CELL = 6;
-
-export function triadGrid(
-  width: number,
-  height: number,
-  pixelScale: number,
-  cellSize = SOURCE_CELL,
-): TriadGrid {
-  const cell = cellSize * pixelScale;
-  const pitch = cell / 3;
-  const canvasWidth = Math.round(width * pixelScale);
-  const canvasHeight = Math.round(height * pixelScale);
-  return {
-    cell,
-    pitch,
-    columns: Math.ceil((canvasWidth - cell * 1.64) / cell),
-    rows: Math.ceil((canvasHeight - cell * 1.14) / cell),
-    sampleColumns: Math.ceil(canvasWidth / pitch),
-    sampleRows: Math.ceil(canvasHeight / pitch),
-    width: canvasWidth,
-    height: canvasHeight,
-  };
-}
-
-export function triadCentre(row: number, column: number, cell: number): { x: number; y: number } {
-  const stagger = row % 2 === 0 ? cell / 2 : 0;
-  return {
-    x: cell * 0.82 + column * cell + cell / 2 + stagger,
-    y: cell * 0.57 + row * cell + cell / 2,
-  };
-}
 
 function triadChannels(input: Pixels, x: number, y: number, grid: TriadGrid): Channels {
   const spread = grid.cell * 0.29;
@@ -113,15 +58,15 @@ function emitTriad(painter: Painter, x: number, y: number, cell: number, channel
   emitDot(painter, x, y + spread, radius, `rgb(0 0 ${blue})`);
 }
 
-function sampleSource(
+function drawSamples(
   source: CanvasImageSource,
   grain: ImageBitmap | undefined,
   grid: TriadGrid,
   createSurface: CreateSurface,
-): Pixels {
+): Surface | null {
   const scratch = createSurface(grid.sampleColumns, grid.sampleRows);
   const context = context2d(scratch, true);
-  if (!context) return [];
+  if (!context) return null;
   context.drawImage(source, 0, 0, grid.sampleColumns, grid.sampleRows);
   if (grain) {
     const rect = grainRect(grid.sampleColumns, grid.sampleRows, grain);
@@ -129,7 +74,12 @@ function sampleSource(
     context.drawImage(grain, rect.x, rect.y, rect.width, rect.height);
     context.globalCompositeOperation = "source-over";
   }
-  return context.getImageData(0, 0, grid.sampleColumns, grid.sampleRows).data;
+  return scratch;
+}
+
+function samplePixels(samples: Surface, grid: TriadGrid): Pixels {
+  const context = context2d(samples, true);
+  return context ? context.getImageData(0, 0, grid.sampleColumns, grid.sampleRows).data : [];
 }
 
 export type TriadOptions = {
@@ -141,6 +91,7 @@ export type TriadOptions = {
   cellSize: number;
   createSurface: CreateSurface;
   isStale: () => boolean;
+  gl?: TriadGl | null | undefined;
 };
 
 const SLICE_MS = 40;
@@ -181,15 +132,16 @@ async function paintRows(
   return paintRows(painter, input, grid, isStale, slice.next);
 }
 
-export async function paintTriads(target: Surface, options: TriadOptions): Promise<boolean> {
-  const grid = triadGrid(options.width, options.height, options.pixelScale, options.cellSize);
-  const input = sampleSource(options.source, options.grain, grid, options.createSurface);
-  await nextTask();
-  if (options.isStale()) return false;
+async function paintCanvas(
+  target: Surface,
+  input: Pixels,
+  grid: TriadGrid,
+  options: TriadOptions,
+): Promise<Surface | null> {
   target.width = grid.width;
   target.height = grid.height;
   const context = context2d(target);
-  if (!context) return false;
+  if (!context) return null;
   context.fillStyle = "#000";
   context.fillRect(0, 0, grid.width, grid.height);
   context.globalCompositeOperation = "lighter";
@@ -200,9 +152,20 @@ export async function paintTriads(target: Surface, options: TriadOptions): Promi
   };
   const painted = await paintRows(painter, input, grid, options.isStale);
   context.globalCompositeOperation = "source-over";
-  if (!painted) return false;
+  if (!painted) return null;
   await nextTask();
-  if (options.isStale()) return false;
+  if (options.isStale()) return null;
   glowPass(target, options.pixelScale, options.createSurface);
-  return true;
+  return target;
+}
+
+export async function paintTriads(target: Surface, options: TriadOptions): Promise<Surface | null> {
+  const grid = triadGrid(options.width, options.height, options.pixelScale, options.cellSize);
+  const samples = drawSamples(options.source, options.grain, grid, options.createSurface);
+  if (!samples) return null;
+  await nextTask();
+  if (options.isStale()) return null;
+  const lit = options.gl?.render(samples, grid, 3 * options.pixelScale);
+  if (lit) return options.isStale() ? null : lit;
+  return paintCanvas(target, samplePixels(samples, grid), grid, options);
 }

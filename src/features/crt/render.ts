@@ -1,8 +1,10 @@
+import type { TriadGl } from "@features/crt/gl";
 import type { CreateSurface, Surface } from "@features/crt/surface";
 
 import { applyEffects } from "@features/crt/effects";
+import { SOURCE_CELL } from "@features/crt/layout";
 import { context2d } from "@features/crt/surface";
-import { paintTriads, SOURCE_CELL } from "@features/crt/triads";
+import { paintTriads } from "@features/crt/triads";
 
 const COMPOSITION_SCALE = 3;
 const EXPORT_MAX_SIDE = 6000;
@@ -23,6 +25,7 @@ export type RenderInput = {
   density: Density;
   createSurface: CreateSurface;
   isStale: () => boolean;
+  gl?: TriadGl | null | undefined;
 };
 
 export function cellSize(compositionWidth: number, density: Density): number {
@@ -42,6 +45,7 @@ export async function renderCrt(target: Surface, input: RenderInput): Promise<bo
   const cell = cellSize(width, input.density);
   const flat = input.createSurface(1, 1);
   const painted = await paintTriads(flat, {
+    gl: input.gl,
     source: input.source,
     grain: input.grain,
     width,
@@ -57,7 +61,7 @@ export async function renderCrt(target: Surface, input: RenderInput): Promise<bo
   const context = context2d(target);
   if (!context) return false;
   context.imageSmoothingQuality = "high";
-  context.drawImage(flat, 0, 0, input.width, input.height);
+  context.drawImage(painted, 0, 0, input.width, input.height);
   applyEffects(context, input, input.unit);
   return true;
 }

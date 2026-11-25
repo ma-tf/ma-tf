@@ -1,3 +1,4 @@
+import type { TriadGl } from "@features/crt/gl";
 import type { JobKind } from "@features/crt/jobs";
 import type { CrtReply, CrtRequest, RenderSize } from "@features/crt/protocol";
 import type { Density, RenderInput } from "@features/crt/render";
@@ -14,6 +15,7 @@ export type RendererDeps = {
   grain: () => Promise<ImageBitmap | undefined>;
   render?: (target: Surface, input: RenderInput) => Promise<boolean>;
   toBlob?: (surface: Surface) => Promise<Blob | null>;
+  createGl?: () => TriadGl | null;
   density?: Density;
 };
 
@@ -27,6 +29,11 @@ export function createRenderer(deps: RendererDeps) {
   const toBlob = deps.toBlob ?? surfaceToBlob;
   const grain = deps.grain();
   let canvas: Surface | undefined;
+  let gl: TriadGl | null | undefined;
+  const glFor = () => {
+    gl ??= deps.createGl?.() ?? null;
+    return gl;
+  };
   let source: ImageBitmap | undefined;
 
   const draw = async (kind: JobKind, job: number, size: RenderSize, target: Surface) => {
@@ -38,6 +45,7 @@ export function createRenderer(deps: RendererDeps) {
       ...size,
       density: deps.density ?? DEFAULT_DENSITY,
       createSurface: deps.createSurface,
+      gl: glFor(),
       isStale: () => !jobs.isCurrent(kind, job),
     };
     return !input.isStale() && (await render(target, input)) && !input.isStale();

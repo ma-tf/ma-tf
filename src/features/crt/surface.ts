@@ -14,6 +14,20 @@ export function context2d(surface: Surface, readback = false): Canvas2D | null {
   return surface.getContext("2d", options);
 }
 
+const GL_OPTIONS: WebGLContextAttributes = {
+  alpha: false,
+  antialias: false,
+  depth: false,
+  stencil: false,
+  premultipliedAlpha: true,
+  preserveDrawingBuffer: true,
+};
+
+export function contextGl(surface: Surface): WebGL2RenderingContext | null {
+  if (isOffscreen(surface)) return surface.getContext("webgl2", GL_OPTIONS);
+  return surface.getContext("webgl2", GL_OPTIONS);
+}
+
 export const offscreenSurface: CreateSurface = (width, height) =>
   new OffscreenCanvas(width, height);
 

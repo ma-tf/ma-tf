@@ -132,6 +132,47 @@ describe("createRenderer", () => {
     expect(replies.at(-1)).toEqual({ type: "exported", job: 2, blob });
   });
 
+  it("creates the GL renderer once and hands it to every render", async () => {
+    const gl = { render: vi.fn(() => null) };
+    const createGl = vi.fn(() => gl);
+    const render = vi.fn(async (_target: Surface, _input: RenderInput) => true);
+    const handle = createRenderer({
+      post: () => {},
+      createSurface: surface,
+      decode: async (blob) => bitmap(blob.size, 2),
+      grain: async () => undefined,
+      render,
+      toBlob: async () => new Blob(["png"]),
+      createGl,
+    });
+    await handle({ type: "attach", canvas: surface() });
+    await handle({ type: "load", job: 1, file: file(4) });
+
+    await handle({ type: "render", job: 2, size });
+    await handle({ type: "export", job: 3, size });
+
+    expect(createGl).toHaveBeenCalledTimes(1);
+    expect(render.mock.calls.map(([, input]) => input.gl)).toEqual([gl, gl]);
+  });
+
+  it("renders without GL when WebGL2 is unavailable", async () => {
+    const render = vi.fn(async (_target: Surface, _input: RenderInput) => true);
+    const handle = createRenderer({
+      post: () => {},
+      createSurface: surface,
+      decode: async (blob) => bitmap(blob.size, 2),
+      grain: async () => undefined,
+      render,
+      createGl: () => null,
+    });
+    await handle({ type: "attach", canvas: surface() });
+    await handle({ type: "load", job: 1, file: file(4) });
+
+    await handle({ type: "render", job: 2, size });
+
+    expect(render.mock.calls[0]?.[1].gl).toBeNull();
+  });
+
   it("reports a failure against the job's kind", async () => {
     const { handle, replies } = setup(
       vi.fn(async () => {

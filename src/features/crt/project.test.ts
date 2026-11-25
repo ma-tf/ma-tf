@@ -1,4 +1,12 @@
-import { crtProjector, projector, tiltMatrix, type Placement } from "@features/crt/project";
+import {
+  applyHomography,
+  crtHomography,
+  crtProjector,
+  invertHomography,
+  projector,
+  tiltMatrix,
+  type Placement,
+} from "@features/crt/project";
 import { describe, expect, it } from "vite-plus/test";
 
 const place = (project: ReturnType<typeof projector>, x: number, y: number): Placement => {
@@ -48,5 +56,37 @@ describe("projector", () => {
     expect(bottomRight.y).toBeGreaterThan(400);
     expect(topLeft.x).toBeLessThan(0);
     expect(topLeft.y).toBeLessThan(0);
+  });
+});
+
+describe("homography", () => {
+  it("maps points back to where they came from through its inverse", () => {
+    const forward = crtHomography(800);
+    const inverse = invertHomography(forward);
+    const there = { x: 0, y: 0, scale: 1 };
+    const back = { x: 0, y: 0, scale: 1 };
+    for (const [x, y] of [
+      [0, 0],
+      [-400, -300],
+      [400, 300],
+      [123, -77],
+    ] as const) {
+      applyHomography(forward, x, y, there);
+      applyHomography(inverse, there.x, there.y, back);
+      expect(back.x).toBeCloseTo(x, 6);
+      expect(back.y).toBeCloseTo(y, 6);
+    }
+  });
+
+  it("projects like the dot projector", () => {
+    const forward = crtHomography(600);
+    const viaHomography = { x: 0, y: 0, scale: 1 };
+    const viaProjector = { x: 0, y: 0, scale: 1 };
+    applyHomography(forward, 600 - 300, 400 - 200, viaHomography);
+    crtProjector(600, 400)(600, 400, viaProjector);
+
+    expect(viaHomography.x + 300).toBeCloseTo(viaProjector.x, 6);
+    expect(viaHomography.y + 200).toBeCloseTo(viaProjector.y, 6);
+    expect(viaHomography.scale).toBeCloseTo(viaProjector.scale, 6);
   });
 });
