@@ -1,5 +1,5 @@
 {
-  "sourceHash": "4f425da370d7c934c407ac29f416eb78265ed05d92bc3aa329691a987a8c83f9",
+  "sourceHash": "c37b12a3981061c9cf9165b813d9bc9dc4b0546dd19195d606951c5eafd2ca11",
   "pages": [
     {
       "url": "https://m4t.tf/",
@@ -45,6 +45,11 @@
       "url": "https://m4t.tf/graphics",
       "title": "Graphics",
       "content": "---\ntitle: \"Graphics | Matt Fehrenbach\"\ndescription: \"Graphic design and visual work by Matt Fehrenbach.\"\ncanonical: https://m4t.tf/graphics\n---\n\n[![](/favicon.png)](/)\n\n[](/cv \"CV\")\n\n[](https://github.com/ma-tf \"GitHub\")\n\n[About](/about)[Contact](/contact)[Privacy](/privacy)[Developers](/developers)\n\ngraphics\n--------\n\nGraphics work coming soon.\n\nExplore[Blog](/blog)[Photography](/photography)[Graphics](/graphics)[Music](/music)[Vignettes](/vignettes)\n\nSite[About](/about)[Contact](/contact)[Privacy](/privacy)\n\nResources[Developers](/developers)\n\nBack to top"
+    },
+    {
+      "url": "https://m4t.tf/graphics/crt",
+      "title": "CRT",
+      "content": "---\ntitle: \"CRT | Matt Fehrenbach\"\ndescription: \"A cathode-ray screen effect by Matt Fehrenbach: upload an image to see it as broadcast phosphor dots on tilted glass, and save it as a PNG.\"\ncanonical: https://m4t.tf/graphics/crt\n---\n\n[![](/favicon.png)](/)\n\n[](/cv \"CV\")\n\n[](https://github.com/ma-tf \"GitHub\")\n\n[About](/about)[Contact](/contact)[Privacy](/privacy)[Developers](/developers)\n\nCRT\n===\n\nShows an image through a cathode-ray screen, as broadcast phosphor dots on tilted glass, and saves the result as a PNG.\n\nUpload an image\n\nDrop an image, or choose one\n\nChoose image\n\nExplore[Blog](/blog)[Photography](/photography)[Graphics](/graphics)[Music](/music)[Vignettes](/vignettes)\n\nSite[About](/about)[Contact](/contact)[Privacy](/privacy)\n\nResources[Developers](/developers)\n\nBack to top"
     },
     {
       "url": "https://m4t.tf/music",

@@ -36,7 +36,7 @@ describe("listResourceMetadata", () => {
   it("lists pages, guides and Agent Skills as metadata only", async () => {
     const resources = await listResourceMetadata();
 
-    expect(resources).toHaveLength(11 + 2 + 2 + 4 + 3);
+    expect(resources).toHaveLength(12 + 2 + 2 + 4 + 3);
     expect(new Set(resources.map((resource) => resource.uri)).size).toBe(resources.length);
 
     for (const resource of resources) {

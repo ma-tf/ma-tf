@@ -55,6 +55,12 @@ export const staticPages: readonly PageEntry[] = [
     description: "graphics and creative coding work",
     kind: "page",
   },
+  {
+    path: "/graphics/crt",
+    title: "CRT",
+    description: "a cathode-ray screen effect for uploaded images",
+    kind: "page",
+  },
   { path: "/music", title: "Music", description: "music-related projects and media", kind: "page" },
   {
     path: "/vignettes",
