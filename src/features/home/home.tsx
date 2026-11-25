@@ -116,12 +116,17 @@ function HomeSectionDecorators() {
   );
 }
 
+function HomeTitle() {
+  return <h1 className="sr-only">Matt Fehrenbach</h1>;
+}
+
 export function HomePage() {
   return (
     <div
       className="relative isolate wash-state flex flex-1 flex-col overflow-clip perspective-midrange"
       data-grid-spotlight
     >
+      <HomeTitle />
       <HomeGrid />
       <HomeWires />
       <HomeFragments />

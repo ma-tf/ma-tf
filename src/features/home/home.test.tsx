@@ -4,6 +4,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vite-plus/test";
 
 describe("HomePage decorators", () => {
+  it("names the site in a visually hidden level-one heading", () => {
+    const html = renderToStaticMarkup(<HomePage />);
+
+    expect(html).toMatch(/<h1 class="sr-only">Matt Fehrenbach<\/h1>/);
+  });
+
   it("keeps section numbers and indicators hidden without shifting titles", () => {
     const html = renderToStaticMarkup(<HomePage />);
 
