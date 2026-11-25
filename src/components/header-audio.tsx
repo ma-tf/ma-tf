@@ -195,13 +195,13 @@ export function HeaderAudio() {
       {audio}
       <div
         data-header-audio
-        className="flex h-full items-center justify-center gap-1 pr-1 md:justify-start md:gap-2 md:pr-2"
+        className="flex h-full items-center justify-center pr-1 md:justify-start md:pr-2"
       >
         <button
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause music" : "Play music"}
-          className="grid h-full w-6 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-auto md:px-1"
+          className="grid h-full w-5 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-auto md:px-1"
         >
           {playing ? (
             <PauseIcon size={12} weight="fill" aria-hidden="true" />
