@@ -1,4 +1,4 @@
-import { displaySize, exportSize } from "@features/crt/render";
+import { cellSize, displaySize, exportSize, flatWidth } from "@features/crt/render";
 import { describe, expect, it } from "vite-plus/test";
 
 describe("exportSize", () => {
@@ -32,5 +32,38 @@ describe("displaySize", () => {
       width: 750,
       height: 500,
     });
+  });
+});
+
+describe("cellSize", () => {
+  it("keeps the source density at one triad per two source pixels", () => {
+    expect(cellSize(15600, "source")).toBe(6);
+    expect(cellSize(600, "source")).toBe(6);
+  });
+
+  it("caps the fixed density at about 400 triads across", () => {
+    expect(cellSize(15600, "fixed")).toBe(39);
+    expect(15600 / cellSize(15600, "fixed")).toBe(400);
+  });
+
+  it("never makes fixed triads smaller than source triads", () => {
+    expect(cellSize(1200, "fixed")).toBe(6);
+  });
+});
+
+describe("flatWidth", () => {
+  it("renders at the output size when its triads are already resolved", () => {
+    expect(flatWidth(1056, 1200, 6)).toBe(1056);
+    expect(flatWidth(700, 15600, 39)).toBe(1600);
+  });
+
+  it("supersamples so each source triad spans at least four pixels", () => {
+    expect(flatWidth(326, 6750, 6)).toBe(4096);
+    expect(flatWidth(326, 3000, 6)).toBe(2000);
+  });
+
+  it("caps supersampling at 4096 pixels but never goes below the output", () => {
+    expect(flatWidth(700, 15600, 6)).toBe(4096);
+    expect(flatWidth(6000, 15600, 6)).toBe(6000);
   });
 });

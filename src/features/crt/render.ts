@@ -1,36 +1,65 @@
+import type { CreateSurface, Surface } from "@features/crt/surface";
+
 import { applyEffects } from "@features/crt/effects";
-import { paintTriads } from "@features/crt/triads";
+import { context2d } from "@features/crt/surface";
+import { paintTriads, SOURCE_CELL } from "@features/crt/triads";
 
 const COMPOSITION_SCALE = 3;
 const EXPORT_MAX_SIDE = 6000;
+const FIXED_COLUMNS = 400;
+const MIN_CELL_PIXELS = 4;
+const MAX_FLAT_WIDTH = 4096;
+
+export type Density = "source" | "fixed";
+
+export const DEFAULT_DENSITY: Density = "source";
 
 export type RenderInput = {
-  source: HTMLImageElement;
-  grain: HTMLImageElement | undefined;
+  source: ImageBitmap;
+  grain: ImageBitmap | undefined;
   width: number;
   height: number;
   unit: number;
+  density: Density;
+  createSurface: CreateSurface;
+  isStale: () => boolean;
 };
 
-export function renderCrt(target: HTMLCanvasElement, input: RenderInput) {
-  target.width = input.width;
-  target.height = input.height;
-  const context = target.getContext("2d");
-  if (!context) return;
-  const width = input.source.naturalWidth * COMPOSITION_SCALE;
-  const height = input.source.naturalHeight * COMPOSITION_SCALE;
-  const renderWidth = Math.max(input.width, Math.min(width, 4096));
-  const flat = document.createElement("canvas");
-  paintTriads(flat, {
+export function cellSize(compositionWidth: number, density: Density): number {
+  return density === "fixed"
+    ? Math.max(SOURCE_CELL, compositionWidth / FIXED_COLUMNS)
+    : SOURCE_CELL;
+}
+
+export function flatWidth(outputWidth: number, compositionWidth: number, cell: number): number {
+  const resolved = Math.min((compositionWidth * MIN_CELL_PIXELS) / cell, MAX_FLAT_WIDTH);
+  return Math.max(outputWidth, Math.round(resolved));
+}
+
+export async function renderCrt(target: Surface, input: RenderInput): Promise<boolean> {
+  const width = input.source.width * COMPOSITION_SCALE;
+  const height = input.source.height * COMPOSITION_SCALE;
+  const cell = cellSize(width, input.density);
+  const flat = input.createSurface(1, 1);
+  const painted = await paintTriads(flat, {
     source: input.source,
     grain: input.grain,
     width,
     height,
-    pixelScale: renderWidth / width,
+    pixelScale: flatWidth(input.width, width, cell) / width,
+    cellSize: cell,
+    createSurface: input.createSurface,
+    isStale: input.isStale,
   });
+  if (!painted || input.isStale()) return false;
+  target.width = input.width;
+  target.height = input.height;
+  const context = context2d(target);
+  if (!context) return false;
   context.imageSmoothingQuality = "high";
   context.drawImage(flat, 0, 0, input.width, input.height);
   applyEffects(context, input, input.unit);
+  return true;
 }
 
 export function exportSize(naturalWidth: number, naturalHeight: number) {

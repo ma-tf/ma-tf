@@ -1,6 +1,9 @@
 import type { Placement, Projector } from "@features/crt/project";
+import type { Canvas2D, CreateSurface, Surface } from "@features/crt/surface";
 
+import { glowPass } from "@features/crt/glow";
 import { crtProjector } from "@features/crt/project";
+import { context2d, nextTask } from "@features/crt/surface";
 import { CDN_BASE } from "@lib/cdn";
 
 export const GRAIN_SRC = `${CDN_BASE}/graphics/grain.avif`;
@@ -21,7 +24,7 @@ type Pixels = ArrayLike<number>;
 type Channels = { red: number; green: number; blue: number };
 
 type Painter = {
-  context: CanvasRenderingContext2D;
+  context: Canvas2D;
   placement: Placement;
   project: Projector;
 };
@@ -41,8 +44,15 @@ export function sampleIndex(x: number, y: number, grid: TriadGrid): number {
   return (row * grid.sampleColumns + column) * 4;
 }
 
-export function triadGrid(width: number, height: number, pixelScale: number): TriadGrid {
-  const cell = 6 * pixelScale;
+export const SOURCE_CELL = 6;
+
+export function triadGrid(
+  width: number,
+  height: number,
+  pixelScale: number,
+  cellSize = SOURCE_CELL,
+): TriadGrid {
+  const cell = cellSize * pixelScale;
   const pitch = cell / 3;
   const canvasWidth = Math.round(width * pixelScale);
   const canvasHeight = Math.round(height * pixelScale);
@@ -105,20 +115,16 @@ function emitTriad(painter: Painter, x: number, y: number, cell: number, channel
 
 function sampleSource(
   source: CanvasImageSource,
-  grain: HTMLImageElement | undefined,
+  grain: ImageBitmap | undefined,
   grid: TriadGrid,
+  createSurface: CreateSurface,
 ): Pixels {
-  const scratch = document.createElement("canvas");
-  scratch.width = grid.sampleColumns;
-  scratch.height = grid.sampleRows;
-  const context = scratch.getContext("2d", { willReadFrequently: true });
+  const scratch = createSurface(grid.sampleColumns, grid.sampleRows);
+  const context = context2d(scratch, true);
   if (!context) return [];
   context.drawImage(source, 0, 0, grid.sampleColumns, grid.sampleRows);
-  if (grain?.complete && grain.naturalWidth) {
-    const rect = grainRect(grid.sampleColumns, grid.sampleRows, {
-      width: grain.naturalWidth,
-      height: grain.naturalHeight,
-    });
+  if (grain) {
+    const rect = grainRect(grid.sampleColumns, grid.sampleRows, grain);
     context.globalCompositeOperation = "screen";
     context.drawImage(grain, rect.x, rect.y, rect.width, rect.height);
     context.globalCompositeOperation = "source-over";
@@ -126,37 +132,64 @@ function sampleSource(
   return context.getImageData(0, 0, grid.sampleColumns, grid.sampleRows).data;
 }
 
-export function glowPass(target: HTMLCanvasElement, pixelScale: number) {
-  const context = target.getContext("2d");
-  const glow = document.createElement("canvas");
-  glow.width = target.width;
-  glow.height = target.height;
-  const glowContext = glow.getContext("2d");
-  if (!context || !glowContext) return;
-  glowContext.filter = `contrast(1.9) blur(${3 * pixelScale}px)`;
-  glowContext.drawImage(target, 0, 0);
-  context.globalCompositeOperation = "screen";
-  context.globalAlpha = 0.9;
-  context.drawImage(glow, 0, 0);
-  context.globalCompositeOperation = "source-over";
-  context.globalAlpha = 1;
-}
-
 export type TriadOptions = {
   source: CanvasImageSource;
-  grain: HTMLImageElement | undefined;
+  grain: ImageBitmap | undefined;
   width: number;
   height: number;
   pixelScale: number;
+  cellSize: number;
+  createSurface: CreateSurface;
+  isStale: () => boolean;
 };
 
-export function paintTriads(target: HTMLCanvasElement, options: TriadOptions) {
-  const grid = triadGrid(options.width, options.height, options.pixelScale);
-  const input = sampleSource(options.source, options.grain, grid);
+const SLICE_MS = 40;
+
+function paintRow(painter: Painter, input: Pixels, grid: TriadGrid, row: number) {
+  for (let column = 0; column < grid.columns; column += 1) {
+    const centre = triadCentre(row, column, grid.cell);
+    emitTriad(
+      painter,
+      centre.x,
+      centre.y,
+      grid.cell,
+      triadChannels(input, centre.x, centre.y, grid),
+    );
+  }
+}
+
+function paintSlice(painter: Painter, input: Pixels, grid: TriadGrid, start: number) {
+  const sliceStart = performance.now();
+  for (let row = start; row < grid.rows; row += 1) {
+    paintRow(painter, input, grid, row);
+    if (performance.now() - sliceStart >= SLICE_MS) return { next: row + 1, sliced: true };
+  }
+  return { next: grid.rows, sliced: false };
+}
+
+async function paintRows(
+  painter: Painter,
+  input: Pixels,
+  grid: TriadGrid,
+  isStale: () => boolean,
+  start = 0,
+): Promise<boolean> {
+  const slice = paintSlice(painter, input, grid, start);
+  if (!slice.sliced) return true;
+  await nextTask();
+  if (isStale()) return false;
+  return paintRows(painter, input, grid, isStale, slice.next);
+}
+
+export async function paintTriads(target: Surface, options: TriadOptions): Promise<boolean> {
+  const grid = triadGrid(options.width, options.height, options.pixelScale, options.cellSize);
+  const input = sampleSource(options.source, options.grain, grid, options.createSurface);
+  await nextTask();
+  if (options.isStale()) return false;
   target.width = grid.width;
   target.height = grid.height;
-  const context = target.getContext("2d");
-  if (!context) return;
+  const context = context2d(target);
+  if (!context) return false;
   context.fillStyle = "#000";
   context.fillRect(0, 0, grid.width, grid.height);
   context.globalCompositeOperation = "lighter";
@@ -165,18 +198,11 @@ export function paintTriads(target: HTMLCanvasElement, options: TriadOptions) {
     placement: { x: 0, y: 0, scale: 1 },
     project: crtProjector(grid.width, grid.height),
   };
-  for (let row = 0; row < grid.rows; row += 1) {
-    for (let column = 0; column < grid.columns; column += 1) {
-      const centre = triadCentre(row, column, grid.cell);
-      emitTriad(
-        painter,
-        centre.x,
-        centre.y,
-        grid.cell,
-        triadChannels(input, centre.x, centre.y, grid),
-      );
-    }
-  }
+  const painted = await paintRows(painter, input, grid, options.isStale);
   context.globalCompositeOperation = "source-over";
-  glowPass(target, options.pixelScale);
+  if (!painted) return false;
+  await nextTask();
+  if (options.isStale()) return false;
+  glowPass(target, options.pixelScale, options.createSurface);
+  return true;
 }

@@ -1,13 +1,6 @@
 // @vitest-environment happy-dom
-import {
-  glowPass,
-  grainRect,
-  sampleIndex,
-  tone,
-  triadCentre,
-  triadGrid,
-} from "@features/crt/triads";
-import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+import { grainRect, sampleIndex, tone, triadCentre, triadGrid } from "@features/crt/triads";
+import { describe, expect, it } from "vite-plus/test";
 
 describe("tone", () => {
   it("clamps to the 0–255 range", () => {
@@ -68,36 +61,5 @@ describe("grainRect", () => {
       width: 200,
       height: 200,
     });
-  });
-});
-
-describe("glowPass", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it("blends a blurred copy back with screen at 0.9 alpha", () => {
-    const fakeContext = () => ({
-      filter: "none",
-      globalAlpha: 1,
-      globalCompositeOperation: "source-over",
-      drawImage: vi.fn(),
-    });
-    const targetContext = fakeContext();
-    const glowContext = fakeContext();
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockReturnValueOnce(targetContext as unknown as CanvasRenderingContext2D)
-      .mockReturnValueOnce(glowContext as unknown as CanvasRenderingContext2D);
-    const target = document.createElement("canvas");
-    target.width = 10;
-    target.height = 10;
-
-    glowPass(target, 2);
-
-    expect(glowContext.filter).toBe("contrast(1.9) blur(6px)");
-    expect(glowContext.drawImage).toHaveBeenCalledWith(target, 0, 0);
-    expect(targetContext.drawImage).toHaveBeenCalledTimes(1);
-    expect(targetContext.globalCompositeOperation).toBe("source-over");
-    expect(targetContext.globalAlpha).toBe(1);
   });
 });

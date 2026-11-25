@@ -1,3 +1,5 @@
+import type { Canvas2D } from "@features/crt/surface";
+
 export type Box = { width: number; height: number };
 
 type Stop = readonly [offset: number, colour: string];
@@ -27,12 +29,7 @@ function addStops(gradient: CanvasGradient, stops: readonly Stop[]) {
   for (const [offset, colour] of stops) gradient.addColorStop(offset, colour);
 }
 
-function fillLinear(
-  context: CanvasRenderingContext2D,
-  box: Box,
-  angle: number,
-  stops: readonly Stop[],
-) {
+function fillLinear(context: Canvas2D, box: Box, angle: number, stops: readonly Stop[]) {
   const line = gradientLine(angle, box);
   const gradient = context.createLinearGradient(line.x0, line.y0, line.x1, line.y1);
   addStops(gradient, stops);
@@ -40,12 +37,7 @@ function fillLinear(
   context.fillRect(0, 0, box.width, box.height);
 }
 
-function fillRadial(
-  context: CanvasRenderingContext2D,
-  box: Box,
-  ellipse: Ellipse,
-  stops: readonly Stop[],
-) {
+function fillRadial(context: Canvas2D, box: Box, ellipse: Ellipse, stops: readonly Stop[]) {
   const radiusX = ellipse.rx * box.width;
   const squash = (ellipse.ry * box.height) / radiusX;
   const gradient = context.createRadialGradient(0, 0, 0, 0, 0, radiusX);
@@ -63,7 +55,7 @@ function fillRadial(
   context.restore();
 }
 
-function clipCorners(context: CanvasRenderingContext2D, box: Box, radius: number) {
+function clipCorners(context: Canvas2D, box: Box, radius: number) {
   context.save();
   context.globalCompositeOperation = "destination-in";
   context.fillStyle = "#000";
@@ -73,7 +65,7 @@ function clipCorners(context: CanvasRenderingContext2D, box: Box, radius: number
   context.restore();
 }
 
-export function applyEffects(context: CanvasRenderingContext2D, box: Box, unit: number) {
+export function applyEffects(context: Canvas2D, box: Box, unit: number) {
   fillLinear(context, box, 112, [
     [0, "rgb(255 255 255 / 0.09)"],
     [0.34, CLEAR_WHITE],

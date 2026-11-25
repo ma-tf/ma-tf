@@ -92,6 +92,7 @@ export function CrtUpload({
 
 export function CrtScreen({
   canvasRef,
+  rendering,
   saving,
   onSave,
   onClear,
@@ -99,12 +100,13 @@ export function CrtScreen({
   ...props
 }: ComponentProps<typeof Card> & {
   canvasRef: RefObject<HTMLCanvasElement | null>;
+  rendering: boolean;
   saving: boolean;
   onSave: () => void;
   onClear: () => void;
 }) {
   return (
-    <Card className={className} {...props}>
+    <Card aria-busy={rendering} className={className} {...props}>
       <CardContent>
         <div className="flex justify-center">
           <canvas
@@ -142,10 +144,16 @@ export function Crt({ className, ...props }: ComponentProps<"section">) {
 }
 
 export function CrtWorkbench() {
-  const { canvasRef, loaded, load, clear, save, saving } = useCrt();
+  const { canvasRef, loaded, load, clear, save, saving, rendering } = useCrt();
 
   return loaded ? (
-    <CrtScreen canvasRef={canvasRef} saving={saving} onSave={save} onClear={clear} />
+    <CrtScreen
+      canvasRef={canvasRef}
+      rendering={rendering}
+      saving={saving}
+      onSave={save}
+      onClear={clear}
+    />
   ) : (
     <CrtUpload onFile={load} />
   );

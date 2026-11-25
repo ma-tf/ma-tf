@@ -7,7 +7,8 @@
     "scripts/linter-rules/modules.mjs",
     "scripts/linter-rules/tailwind.mjs",
     "scripts/linter-rules/types.mjs",
-    "src/features/faq/ask-tool.ts"
+    "src/features/faq/ask-tool.ts",
+    "src/features/crt/crt.worker.ts"
   ],
   "ignoreDependencies": ["cmdk", "is-agentic", "motion"],
   "ignorePatterns": [

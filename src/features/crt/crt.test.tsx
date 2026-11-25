@@ -26,9 +26,15 @@ function mount(onFile: (file: File) => void) {
   render(<CrtUpload onFile={onFile} />);
 }
 
-function screen(saving: boolean) {
+function screen(saving: boolean, rendering = false) {
   render(
-    <CrtScreen canvasRef={createRef()} saving={saving} onSave={() => {}} onClear={() => {}} />,
+    <CrtScreen
+      canvasRef={createRef()}
+      rendering={rendering}
+      saving={saving}
+      onSave={() => {}}
+      onClear={() => {}}
+    />,
   );
   return Array.from(container.querySelectorAll("button"), (button) => button.textContent);
 }
@@ -107,6 +113,13 @@ describe("CrtScreen", () => {
 
   it("offers Save PNG and Clear", () => {
     expect(screen(false)).toEqual(["Save PNG", "Clear"]);
+  });
+
+  it("marks the screen busy while it renders", () => {
+    screen(false, true);
+    expect(container.querySelector("[data-slot=card]")?.getAttribute("aria-busy")).toBe("true");
+    screen(false, false);
+    expect(container.querySelector("[data-slot=card]")?.getAttribute("aria-busy")).toBe("false");
   });
 
   it("labels the save button while saving", () => {

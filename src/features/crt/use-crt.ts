@@ -1,9 +1,20 @@
-import { displaySize, exportSize, renderCrt } from "@features/crt/render";
-import { GRAIN_SRC } from "@features/crt/triads";
-import { useCallback, useEffect, useRef, useState } from "react";
+import type { JobTracker } from "@features/crt/jobs";
+import type { CrtReply, CrtRequest, RenderSize } from "@features/crt/protocol";
+import type { Transport } from "@features/crt/transport";
+import type { RefObject } from "react";
+
+import { createJobTracker } from "@features/crt/jobs";
+import { replyKind, replyOutcome } from "@features/crt/protocol";
+import { displaySize, exportSize } from "@features/crt/render";
+import { createTransport } from "@features/crt/transport";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const RESIZE_DELAY = 150;
 const MAX_DENSITY = 2;
+
+type SourceSize = { width: number; height: number };
+
+type LoadedSource = SourceSize & { job: number };
 
 export function baseName(name: string): string {
   return name.replace(/\.[^.]+$/, "") || "image";
@@ -38,17 +49,6 @@ function preventDrop(event: DragEvent) {
   event.preventDefault();
 }
 
-function useGrain() {
-  const [grain, setGrain] = useState<HTMLImageElement>();
-  useEffect(() => {
-    const image = new Image();
-    image.crossOrigin = "anonymous";
-    image.onload = () => setGrain(image);
-    image.src = GRAIN_SRC;
-  }, []);
-  return grain;
-}
-
 function useResizeTick() {
   const [tick, setTick] = useState(0);
   useEffect(() => {
@@ -58,109 +58,164 @@ function useResizeTick() {
       timer = window.setTimeout(() => setTick((value) => value + 1), RESIZE_DELAY);
     };
     window.addEventListener("resize", onResize);
+    window.addEventListener("dragover", preventDrop);
+    window.addEventListener("drop", preventDrop);
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("dragover", preventDrop);
+      window.removeEventListener("drop", preventDrop);
     };
   }, []);
   return tick;
 }
 
-function useSource() {
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [fileName, setFileName] = useState("image");
-  const urlRef = useRef<string | null>(null);
-
-  const release = useCallback(() => {
-    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
-    urlRef.current = null;
-  }, []);
-
-  const load = useCallback(
-    (file: File) => {
-      release();
-      const url = URL.createObjectURL(file);
-      urlRef.current = url;
-      setFileName(baseName(file.name));
-      const next = new Image();
-      next.onload = () => {
-        if (urlRef.current === url) setImage(next);
-      };
-      next.src = url;
+function useJobs() {
+  const counter = useRef(0);
+  const [tracker] = useState(createJobTracker);
+  const next = useCallback(
+    (kind: "screen" | "export" | "reset") => {
+      counter.current += 1;
+      if (kind === "reset") tracker.reset(counter.current);
+      else tracker.begin(kind, counter.current);
+      return counter.current;
     },
-    [release],
+    [tracker],
   );
+  return { next, tracker };
+}
 
-  const clear = useCallback(() => {
-    release();
-    setImage(null);
-  }, [release]);
+type ReplyHandlers = {
+  setSource: (source: LoadedSource) => void;
+  settleRender: () => void;
+  setSaving: (saving: boolean) => void;
+  fileName: () => string;
+};
 
-  useEffect(() => release, [release]);
+function applyReply(reply: CrtReply, handlers: ReplyHandlers) {
+  const outcome = replyOutcome(reply);
+  if (outcome.source) handlers.setSource({ ...outcome.source, job: reply.job });
+  if (outcome.rendering === false) handlers.settleRender();
+  if (outcome.saving === false) handlers.setSaving(false);
+  if (outcome.blob) downloadBlob(outcome.blob, `${handlers.fileName()}-crt.png`);
+}
 
-  return { image, fileName, load, clear };
+function useTransport(tracker: JobTracker, handlers: ReplyHandlers) {
+  const transportRef = useRef<Transport | null>(null);
+  useEffect(() => {
+    const transport = createTransport();
+    transport.listen((reply) => {
+      if (tracker.isCurrent(replyKind(reply), reply.job)) applyReply(reply, handlers);
+    });
+    transportRef.current = transport;
+    return () => {
+      transport.dispose();
+      transportRef.current = null;
+    };
+  }, [tracker, handlers]);
+  return transportRef;
+}
+
+function fitCanvas(canvas: HTMLCanvasElement, source: SourceSize): RenderSize {
+  const display = displaySize(source.width, source.height, availableSpace(canvas));
+  const unit = density();
+  canvas.style.width = `${display.width}px`;
+  canvas.style.height = `${display.height}px`;
+  return {
+    width: Math.round(display.width * unit),
+    height: Math.round(display.height * unit),
+    unit,
+  };
+}
+
+function useRenderStatus(source: LoadedSource | null, tick: number) {
+  const requestedKeyRef = useRef<string | null>(null);
+  const [renderedKey, setRenderedKey] = useState<string | null>(null);
+  const renderKey = source ? `${source.job}:${tick}` : null;
+  const settle = useCallback(() => setRenderedKey(requestedKeyRef.current), []);
+  return {
+    renderKey,
+    requestedKeyRef,
+    settle,
+    rendering: renderKey !== null && renderKey !== renderedKey,
+  };
+}
+
+type ScreenSync = {
+  source: LoadedSource | null;
+  renderKey: string | null;
+  requestedKeyRef: RefObject<string | null>;
+  next: (kind: "screen") => number;
+  transportRef: RefObject<Transport | null>;
+};
+
+function useScreenSync({ source, renderKey, requestedKeyRef, next, transportRef }: ScreenSync) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const attachedRef = useRef<HTMLCanvasElement | null>(null);
+  const displayWidthRef = useRef(1);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const transport = transportRef.current;
+    if (!source || !canvas || !transport) return;
+    if (attachedRef.current !== canvas) transport.attach(canvas);
+    attachedRef.current = canvas;
+    const size = fitCanvas(canvas, source);
+    displayWidthRef.current = size.width / size.unit;
+    requestedKeyRef.current = renderKey;
+    transport.send({ type: "render", job: next("screen"), size });
+  }, [source, renderKey, requestedKeyRef, next, transportRef]);
+  return { canvasRef, displayWidthRef };
 }
 
 export function useCrt() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const displayWidthRef = useRef(1);
+  const fileNameRef = useRef("image");
+  const [source, setSource] = useState<LoadedSource | null>(null);
   const [saving, setSaving] = useState(false);
-  const grain = useGrain();
   const tick = useResizeTick();
-  const { image, fileName, load, clear } = useSource();
+  const { next, tracker } = useJobs();
+  const { renderKey, requestedKeyRef, settle, rendering } = useRenderStatus(source, tick);
+  const handlers = useMemo<ReplyHandlers>(
+    () => ({ setSource, settleRender: settle, setSaving, fileName: () => fileNameRef.current }),
+    [settle],
+  );
+  const transportRef = useTransport(tracker, handlers);
+  const { canvasRef, displayWidthRef } = useScreenSync({
+    source,
+    renderKey,
+    requestedKeyRef,
+    next,
+    transportRef,
+  });
 
-  useEffect(() => {
-    window.addEventListener("dragover", preventDrop);
-    window.addEventListener("drop", preventDrop);
-    return () => {
-      window.removeEventListener("dragover", preventDrop);
-      window.removeEventListener("drop", preventDrop);
-    };
-  }, []);
+  const send = useCallback(
+    (request: CrtRequest) => transportRef.current?.send(request),
+    [transportRef],
+  );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!image || !canvas) return;
-    const available = availableSpace(canvas);
-    const display = displaySize(image.naturalWidth, image.naturalHeight, available);
-    const unit = density();
-    displayWidthRef.current = display.width;
-    canvas.style.width = `${display.width}px`;
-    canvas.style.height = `${display.height}px`;
-    renderCrt(canvas, {
-      source: image,
-      grain,
-      width: Math.round(display.width * unit),
-      height: Math.round(display.height * unit),
-      unit,
-    });
-  }, [image, grain, tick]);
+  const load = useCallback(
+    (file: File) => {
+      fileNameRef.current = baseName(file.name);
+      send({ type: "load", job: next("reset"), file });
+    },
+    [next, send],
+  );
+
+  const clear = useCallback(() => {
+    send({ type: "clear", job: next("reset") });
+    setSource(null);
+    setSaving(false);
+  }, [next, send]);
 
   const save = useCallback(() => {
-    if (!image) return;
+    if (!source) return;
+    const size = exportSize(source.width, source.height);
     setSaving(true);
-    window.setTimeout(() => {
-      const size = exportSize(image.naturalWidth, image.naturalHeight);
-      const target = document.createElement("canvas");
-      renderCrt(target, {
-        source: image,
-        grain,
-        ...size,
-        unit: size.width / displayWidthRef.current,
-      });
-      target.toBlob((blob) => {
-        setSaving(false);
-        if (blob) downloadBlob(blob, `${fileName}-crt.png`);
-      }, "image/png");
-    }, 30);
-  }, [image, grain, fileName]);
+    send({
+      type: "export",
+      job: next("export"),
+      size: { ...size, unit: size.width / displayWidthRef.current },
+    });
+  }, [source, next, send, displayWidthRef]);
 
-  return {
-    canvasRef,
-    loaded: image !== null,
-    load,
-    clear,
-    save,
-    saving,
-  };
+  return { canvasRef, loaded: source !== null, load, clear, save, saving, rendering };
 }
