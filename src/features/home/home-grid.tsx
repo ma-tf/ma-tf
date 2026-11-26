@@ -49,7 +49,7 @@ export function HomeGrid() {
       <Wash color="blue" className="-inset-4" data-parallax={30}>
         <img
           src={TRANSPARENT_IMAGE}
-          data-src={`${CDN_BASE}/vignettes/bolex-dither-anon2.png`}
+          data-src={`${CDN_BASE}/misc/bolex-dither-anon3.png`}
           alt=""
           hidden
           loading="lazy"

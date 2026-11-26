@@ -352,7 +352,7 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
     aspect-ratio: 97 / 80;
   }
   &:has([data-wash="blue"]:is(:hover, :focus-within)) [data-prev-screen] {
-    aspect-ratio: 5 / 2;
+    aspect-ratio: 1 / 1;
   }
   &:has([data-wash="taupe"]:is(:hover, :focus-within)) [data-prev-screen] {
     aspect-ratio: 2213 / 1440;
