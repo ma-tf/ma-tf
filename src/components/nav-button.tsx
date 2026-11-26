@@ -35,7 +35,7 @@ export function NavButton({
   className,
   variant,
   full,
-  arrow,
+  arrow = true,
   ...props
 }: ComponentProps<"a"> &
   VariantProps<typeof navButtonVariants> & {
