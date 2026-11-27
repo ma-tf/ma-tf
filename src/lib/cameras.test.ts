@@ -34,6 +34,8 @@ type FakeAudio = {
   src: string;
   preload: string;
   currentTime: number;
+  playbackRate: number;
+  preservesPitch: boolean;
   play: () => Promise<void>;
 };
 
@@ -51,6 +53,8 @@ beforeEach(() => {
     src: string;
     preload = "";
     currentTime = 0;
+    playbackRate = 1;
+    preservesPitch = true;
     play = vi.fn(() => Promise.resolve());
 
     constructor(src: string) {
@@ -88,7 +92,7 @@ describe("startCameras", () => {
     button.click();
 
     const audio = onlyInstance();
-    expect(audio.src).toBe(`${CDN_BASE}/photograph/camera.ogg`);
+    expect(audio.src).toBe(`${CDN_BASE}/photography/camera.ogg`);
     expect(audio.preload).toBe("auto");
     expect(audio.play).toHaveBeenCalledOnce();
   });
@@ -104,6 +108,21 @@ describe("startCameras", () => {
 
     expect(onlyInstance().currentTime).toBe(0);
     expect(onlyInstance().play).toHaveBeenCalledTimes(2);
+  });
+
+  it("plays each camera at its own rate and pitch", () => {
+    const tuned = fakeButton(fakeImage());
+    tuned.dataset.playbackRate = "0.98";
+    const untuned = fakeButton(fakeImage());
+    const root = { querySelectorAll: () => [tuned, untuned] };
+    startCameras(root as unknown as ParentNode);
+
+    tuned.click();
+    expect(onlyInstance().playbackRate).toBe(0.98);
+    expect(onlyInstance().preservesPitch).toBe(false);
+
+    untuned.click();
+    expect(onlyInstance().playbackRate).toBe(1);
   });
 
   it("shares one audio element across the cameras", () => {

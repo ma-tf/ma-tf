@@ -73,6 +73,7 @@ export function PhotographyCameras({ className, ...props }: ComponentProps<"div"
       <button
         type="button"
         data-camera
+        data-playback-rate="0.96"
         aria-label="Shake the Canon EOS-1V"
         className="cursor-pointer"
       >
@@ -105,6 +106,7 @@ export function PhotographyCameras({ className, ...props }: ComponentProps<"div"
       <button
         type="button"
         data-camera
+        data-playback-rate="1.04"
         aria-label="Shake the Ricoh Mirai"
         className="cursor-pointer"
       >

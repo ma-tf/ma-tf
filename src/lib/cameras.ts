@@ -2,7 +2,7 @@ import { CDN_BASE } from "@lib/cdn";
 
 const CAMERA_SELECTOR = "[data-camera]";
 const SHAKE_CLASS = "animate-bird-shake";
-const AUDIO_SRC = `${CDN_BASE}/photograph/camera.ogg`;
+const AUDIO_SRC = `${CDN_BASE}/photography/camera.ogg`;
 
 export function startCameras(root: ParentNode = document) {
   const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>(CAMERA_SELECTOR));
@@ -10,10 +10,12 @@ export function startCameras(root: ParentNode = document) {
 
   const audio = new Audio(AUDIO_SRC);
   audio.preload = "auto";
+  audio.preservesPitch = false;
 
   for (const button of buttons) {
     button.addEventListener("click", () => {
       audio.currentTime = 0;
+      audio.playbackRate = Number(button.dataset.playbackRate ?? 1);
       void audio.play().catch(() => {});
 
       const image = button.querySelector("img");

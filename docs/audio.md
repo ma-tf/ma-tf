@@ -27,7 +27,7 @@ Quote paths that contain spaces, and close the quote.
 
 ## Shipped profile
 
-`blog/bird.ogg`, `misc/rock.ogg` and `photograph/camera.ogg` carry this encode's
+`blog/bird.ogg`, `misc/rock.ogg` and `photography/camera.ogg` carry this encode's
 signature: Ogg Vorbis, mono, 16 kHz, ~16 kbps nominal (~39 kbps effective), one
 to one and a half seconds, 6–7 KB each. A new effect that lands far off that
 shape is either too long or was encoded with different flags.
