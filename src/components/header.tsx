@@ -86,7 +86,7 @@ function HeaderControl({ className, children }: { className?: string; children: 
   return (
     <div
       className={cn(
-        "flex w-7.5 items-stretch justify-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground md:w-auto md:justify-normal dark:bg-white/15 dark:hover:bg-white/50",
+        "flex w-7.5 items-stretch justify-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground md:w-auto md:justify-normal dark:bg-white/15 dark:text-background/80 dark:hover:bg-white/50 dark:hover:text-background",
         className,
       )}
     >
@@ -105,7 +105,7 @@ function MotionControlButton() {
       data-mode="hidden"
       aria-label="Skip animations"
       title="Skip animations"
-      className="grid h-full cursor-pointer place-items-center px-1.5 text-muted-foreground transition-colors duration-150 hover:text-foreground"
+      className="grid h-full cursor-pointer place-items-center px-1.5 text-muted-foreground transition-colors duration-150 hover:text-foreground dark:text-background/80 dark:hover:text-background"
     >
       <FastForwardIcon
         size={12}
@@ -127,7 +127,7 @@ function MobileHeaderMenuSummary({ className, children, ...props }: ComponentPro
       type="button"
       aria-label="Menu"
       className={cn(
-        "absolute top-0 right-0 z-10 grid size-7.5 cursor-pointer list-none place-items-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground dark:bg-white/15 dark:hover:bg-white/50",
+        "absolute top-0 right-0 z-10 grid size-7.5 cursor-pointer list-none place-items-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground dark:bg-white/15 dark:text-background/80 dark:hover:bg-white/50 dark:hover:text-background",
         className,
       )}
       {...props}

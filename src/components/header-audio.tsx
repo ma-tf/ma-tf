@@ -181,8 +181,14 @@ function VolumeSlider({ volume, onChange }: { volume: number; onChange: (value: 
       className="relative flex h-4 w-10 cursor-pointer touch-none items-center md:w-16"
       style={{ "--volume": `${volume * 100}%` } as CSSProperties}
     >
-      <span aria-hidden="true" className="absolute inset-x-0 top-2 h-px bg-foreground/20" />
-      <span aria-hidden="true" className="absolute top-2 left-0 h-px w-(--volume) bg-foreground" />
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-2 h-px bg-foreground/20 dark:bg-background/20"
+      />
+      <span
+        aria-hidden="true"
+        className="absolute top-2 left-0 h-px w-(--volume) bg-foreground dark:bg-background"
+      />
     </div>
   );
 }
@@ -201,7 +207,7 @@ export function HeaderAudio() {
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause music" : "Play music"}
-          className="grid h-full w-5 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-auto md:px-1"
+          className="grid h-full w-5 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-auto md:px-1 dark:text-background/80 dark:hover:text-background"
         >
           {playing ? (
             <PauseIcon size={12} weight="fill" aria-hidden="true" />
