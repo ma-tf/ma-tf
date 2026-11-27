@@ -59,13 +59,6 @@ are marked N/A.
 - [x] Mobile complete
 - [ ] Index preview complete
 
-## CRT — `/graphics/crt`
-
-- [ ] Styling
-- [ ] Desktop complete
-- [ ] Mobile complete
-- [ ] Index preview complete — N/A (not on the home page)
-
 ## About — `/about`
 
 - [x] Styling

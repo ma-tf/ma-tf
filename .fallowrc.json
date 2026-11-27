@@ -8,7 +8,6 @@
     "scripts/linter-rules/tailwind.mjs",
     "scripts/linter-rules/types.mjs",
     "src/features/faq/ask-tool.ts",
-    "src/features/crt/crt.worker.ts",
     "src/features/discovery/static-headers.ts"
   ],
   "ignoreDependencies": ["cmdk", "is-agentic", "motion"],

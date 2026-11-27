@@ -119,11 +119,6 @@ describe("siteJsonLd", () => {
       { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
       { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog` },
     ]);
-
-    expect(nodeOfType(graphFor("/graphics/crt"), "BreadcrumbList")["itemListElement"]).toEqual([
-      { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
-      { "@type": "ListItem", position: 2, name: "Graphics", item: `${siteUrl}/graphics` },
-    ]);
   });
 });
 
