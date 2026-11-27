@@ -37,6 +37,7 @@ function Composer({ onSubmit }: { onSubmit: (question: string) => void }) {
         type="submit"
         aria-label="Ask"
         disabled={!draft.trim()}
+        data-sfx={draft.trim() ? "hover" : undefined}
         onMouseEnter={() => {
           if (draft.trim()) arrow.current?.play();
         }}

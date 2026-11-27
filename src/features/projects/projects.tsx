@@ -118,6 +118,7 @@ export function ProjectRowTopics({ children, className, ...props }: ComponentPro
 export function ProjectRowTopic({ children, className, ...props }: ComponentProps<"li">) {
   return (
     <li
+      data-sfx="hover"
       className={cn(
         "inline-flex cursor-default items-center border border-border px-1.5 py-0.5 text-2xs tracking-wider text-muted-foreground uppercase transition-[color,border-color,transform,translate] duration-150 ease-out hover:-translate-y-0.5 hover:border-foreground hover:text-foreground motion-reduce:hover:translate-none",
         className,

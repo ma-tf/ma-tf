@@ -4,6 +4,7 @@ import { CommandMenu } from "@components/command-menu";
 import { HeaderAudio } from "@components/header-audio";
 import { ModeToggle } from "@components/ModeToggle";
 import { NavButton } from "@components/nav-button";
+import { SfxToggle } from "@components/sfx-toggle";
 import { CDN_BASE } from "@lib/cdn";
 import { startMotionControl } from "@lib/motion-control";
 import {
@@ -43,7 +44,7 @@ function HeaderBar({ className, children, ...props }: ComponentProps<"div">) {
       className={cn(
         "relative z-10 mx-auto flex h-7.5 w-full items-stretch justify-between md:h-4",
         "before:pointer-events-none before:absolute before:-top-5.5 before:-left-1 before:-z-1 before:h-7.5 before:w-full before:drop-shadow-chrome before:content-(--chrome-mobile) md:before:-top-4 md:before:h-auto md:before:w-auto md:before:content-(--chrome-top-left)",
-        "after:pointer-events-none after:absolute after:-z-1 after:drop-shadow-chrome md:after:-top-1.5 md:after:-right-9.5 md:after:content-(--chrome-top-right) md:has-data-[mode=hidden]:after:-right-15.5",
+        "after:pointer-events-none after:absolute after:-z-1 after:drop-shadow-chrome md:after:-top-1.5 md:after:-right-3 md:after:content-(--chrome-top-right) md:has-data-[mode=hidden]:after:-right-9",
         className,
       )}
       style={
@@ -86,7 +87,7 @@ function HeaderControl({ className, children }: { className?: string; children: 
   return (
     <div
       className={cn(
-        "flex w-7.5 items-stretch justify-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground md:w-auto md:justify-normal dark:bg-white/15 dark:text-background/80 dark:hover:bg-white/50 dark:hover:text-background",
+        "flex w-6.5 items-stretch justify-center rounded-b-xs bg-background/15 text-muted-foreground inset-shadow-chip-bottom transition-colors duration-150 hover:bg-background/50 hover:text-foreground min-[360px]:w-7.5 md:w-auto md:justify-normal dark:bg-white/15 dark:text-background/80 dark:hover:bg-white/50 dark:hover:text-background",
         className,
       )}
     >
@@ -103,6 +104,7 @@ function MotionControlButton() {
       type="button"
       data-motion-control
       data-mode="hidden"
+      data-sfx="click"
       aria-label="Skip animations"
       title="Skip animations"
       className="grid h-full cursor-pointer place-items-center px-1.5 text-muted-foreground transition-colors duration-150 hover:text-foreground dark:text-background/80 dark:hover:text-background"
@@ -145,6 +147,7 @@ function MobileHeaderMenu() {
       <MobileHeaderMenuSummary
         aria-controls="mobile-menu"
         aria-expanded={open}
+        data-sfx="click"
         onClick={() => setOpen((value) => !value)}
       >
         {open ? (
@@ -190,8 +193,12 @@ function MobileHeaderMenu() {
 
 export function Header({ currentPath, pages, audioEnabled, email, github, linkedin }: HeaderProps) {
   const showCv = currentPath !== "/cv";
-  const chromeLeft = audioEnabled ? "md:before:-left-43.5" : "md:before:-left-69";
-  const chromeLeftCv = audioEnabled ? "md:before:-left-50.5" : "md:before:-left-76";
+  const chromeLeft = audioEnabled
+    ? "md:before:-left-41.5 md:has-data-[volume=hidden]:before:-left-57.5"
+    : "md:before:-left-70";
+  const chromeLeftCv = audioEnabled
+    ? "md:before:-left-48.5 md:has-data-[volume=hidden]:before:-left-64.5"
+    : "md:before:-left-77";
 
   return (
     <HeaderShell>
@@ -205,7 +212,7 @@ export function Header({ currentPath, pages, audioEnabled, email, github, linked
         <HeaderBar className={cn(chromeLeft, !showCv && chromeLeftCv)}>
           <HeaderGroup>
             <HeaderControl>
-              <HeaderChip href="/" aria-label="m4t.tf home">
+              <HeaderChip href="/" aria-label="m4t.tf home" data-sfx="hover">
                 <img
                   src="/favicon.png"
                   alt=""
@@ -217,7 +224,7 @@ export function Header({ currentPath, pages, audioEnabled, email, github, linked
             </HeaderControl>
             {showCv && (
               <HeaderControl>
-                <HeaderChip href="/cv" aria-label="CV" title="CV">
+                <HeaderChip href="/cv" aria-label="CV" title="CV" data-sfx="hover focus">
                   <ReadCvLogoIcon
                     size={12}
                     weight="bold"
@@ -228,7 +235,13 @@ export function Header({ currentPath, pages, audioEnabled, email, github, linked
               </HeaderControl>
             )}
             <HeaderControl>
-              <HeaderChip href={github} aria-label="GitHub" title="GitHub" rel="noreferrer">
+              <HeaderChip
+                href={github}
+                aria-label="GitHub"
+                title="GitHub"
+                rel="noreferrer"
+                data-sfx="hover focus"
+              >
                 <GithubLogoIcon
                   size={12}
                   weight="bold"
@@ -249,6 +262,9 @@ export function Header({ currentPath, pages, audioEnabled, email, github, linked
             </HeaderControl>
             <HeaderControl className="has-data-[mode=hidden]:hidden">
               <MotionControlButton />
+            </HeaderControl>
+            <HeaderControl>
+              <SfxToggle />
             </HeaderControl>
             <HeaderControl>
               <ModeToggle />

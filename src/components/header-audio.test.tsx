@@ -9,7 +9,8 @@ describe("Header audio", () => {
     expect(html).toContain('aria-label="Play music"');
     expect(html).toContain('aria-label="Music volume"');
     expect(html).toContain('role="slider"');
-    expect(html).toContain('aria-valuenow="70"');
+    expect(html).toContain('aria-label="Hide volume"');
+    expect(html).toContain('aria-valuenow="30"');
     expect(html).toContain('src="/demo-menu-loop.mp3"');
     expect(html).toContain('preload="metadata"');
   });

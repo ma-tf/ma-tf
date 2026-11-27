@@ -48,6 +48,7 @@ export function startMotionControl() {
   const setMode = (mode: MotionMode) => {
     for (const control of controls) {
       control.dataset.mode = mode;
+      control.dataset.sfx = mode === "reset" ? "click hover focus" : "click";
       if (mode === "hidden") continue;
       control.setAttribute("aria-label", LABELS[mode]);
       control.setAttribute("title", LABELS[mode]);

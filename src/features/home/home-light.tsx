@@ -31,7 +31,7 @@ export function HomeLight({
     <span
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute top-3.5 left-3.5 -mt-px -ml-px grid size-3 place-items-center opacity-0 transition-opacity duration-150 group-focus-within/title:opacity-100 group-hover/title:opacity-100 motion-reduce:transition-none",
+        "pointer-events-none absolute top-3.5 left-3.5 -mt-px -ml-px grid size-3 place-items-center opacity-0 transition-opacity duration-150 group-focus-within/title:opacity-100 group-focus-within/title:delay-(--open-delay) group-hover/title:opacity-100 group-hover/title:delay-(--open-delay) motion-reduce:transition-none",
         className,
       )}
       {...props}

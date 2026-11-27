@@ -19,6 +19,7 @@ function VignetteThumbnailButton({ children, className, ...props }: ComponentPro
 
   return (
     <a
+      data-sfx="hover focus"
       className={cn(
         "group block w-full min-w-0 cursor-pointer border-b border-foreground/20 px-4 py-3 text-left md:w-auto md:border-b-0 md:px-0 md:py-0",
         isActive && "bg-foreground text-background md:bg-transparent md:text-inherit",

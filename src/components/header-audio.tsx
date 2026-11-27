@@ -1,12 +1,13 @@
 import type { CSSProperties } from "react";
 
-import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
+import { CaretLeftIcon, CaretRightIcon, PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const AUDIO_SRC = "/demo-menu-loop.mp3";
-const DEFAULT_VOLUME = 0.7;
+const DEFAULT_VOLUME = 0.3;
 const PAUSED_KEY = "audio-paused";
 const VOLUME_KEY = "audio-volume";
+const VOLUME_HIDDEN_KEY = "audio-volume-hidden";
 
 function readPaused(): boolean {
   try {
@@ -43,6 +44,36 @@ function writeVolume(volume: number): void {
   } catch {
     return;
   }
+}
+
+function readVolumeHidden(): boolean {
+  try {
+    return window.localStorage.getItem(VOLUME_HIDDEN_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function writeVolumeHidden(hidden: boolean): void {
+  try {
+    if (hidden) window.localStorage.setItem(VOLUME_HIDDEN_KEY, "true");
+    else window.localStorage.removeItem(VOLUME_HIDDEN_KEY);
+  } catch {
+    return;
+  }
+}
+
+function useVolumeHidden() {
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => setHidden(readVolumeHidden()), []);
+
+  const toggleHidden = () => {
+    writeVolumeHidden(!hidden);
+    setHidden(!hidden);
+  };
+
+  return { hidden, toggleHidden };
 }
 
 function useLoopingAudio() {
@@ -195,12 +226,14 @@ function VolumeSlider({ volume, onChange }: { volume: number; onChange: (value: 
 
 export function HeaderAudio() {
   const { playing, volume, toggle, setVolume, audio } = useLoopingAudio();
+  const { hidden, toggleHidden } = useVolumeHidden();
 
   return (
     <>
       {audio}
       <div
         data-header-audio
+        data-volume={hidden ? "hidden" : "shown"}
         className="flex h-full items-center justify-center pr-1 md:justify-start md:pr-2"
       >
         <button
@@ -215,7 +248,22 @@ export function HeaderAudio() {
             <PlayIcon size={12} weight="fill" aria-hidden="true" />
           )}
         </button>
-        <VolumeSlider volume={volume} onChange={setVolume} />
+        {!hidden && <VolumeSlider volume={volume} onChange={setVolume} />}
+        <button
+          type="button"
+          onClick={toggleHidden}
+          data-sfx="click"
+          aria-label={hidden ? "Show volume" : "Hide volume"}
+          aria-expanded={!hidden}
+          title={hidden ? "Show volume" : "Hide volume"}
+          className="grid h-full w-4 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-3 dark:text-background/80 dark:hover:text-background"
+        >
+          {hidden ? (
+            <CaretRightIcon size={10} weight="bold" aria-hidden="true" />
+          ) : (
+            <CaretLeftIcon size={10} weight="bold" aria-hidden="true" />
+          )}
+        </button>
       </div>
     </>
   );

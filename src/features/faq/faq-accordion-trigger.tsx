@@ -11,6 +11,7 @@ export function FaqAccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
+        data-sfx="click"
         className={cn(
           "group/accordion-trigger relative flex flex-1 cursor-pointer items-start justify-between border border-transparent py-4 text-left text-sm font-medium transition-colors outline-none hover:text-foreground/70 hover:no-underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
           className,

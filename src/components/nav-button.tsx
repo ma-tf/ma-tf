@@ -42,7 +42,11 @@ export function NavButton({
     arrow?: boolean;
   }) {
   return (
-    <a className={cn(navButtonVariants({ variant, full, arrow, className }))} {...props}>
+    <a
+      className={cn(navButtonVariants({ variant, full, arrow, className }))}
+      data-sfx={arrow && !full ? "hover" : undefined}
+      {...props}
+    >
       {arrow ? (
         <span
           className={cn(

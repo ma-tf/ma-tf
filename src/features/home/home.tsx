@@ -57,6 +57,10 @@ function HomeSectionTitle({
     <span
       className="group/title pointer-events-auto relative flex items-center focus-within:z-10 hover:z-10"
       data-title
+      data-sfx="hover focus leave"
+      data-sfx-enter="up"
+      data-sfx-leave="down"
+      data-sfx-settle
       data-fragments-avoid
       data-parallax={10}
       data-wash={dataWash}
@@ -65,7 +69,7 @@ function HomeSectionTitle({
         aria-hidden="true"
         className="pointer-events-none absolute top-1/2 left-0 mt-1 -ml-11 h-42 w-59 -translate-y-1/2"
       />
-      <span className="flex items-center transition-transform duration-150 group-hover/title:translate-x-20 motion-reduce:transition-none">
+      <span className="flex items-center transition-transform duration-150 group-focus-within/title:translate-x-20 group-focus-within/title:delay-(--open-delay) group-hover/title:translate-x-20 group-hover/title:delay-(--open-delay) motion-reduce:transition-none">
         <HomeSectionTitleLink className={cn("relative pl-4 md:pl-12", className)} {...props}>
           <span
             aria-hidden="true"

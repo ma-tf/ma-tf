@@ -66,6 +66,7 @@ const chromeBottom = `${CDN_BASE}/misc/bottomleftchrome.png`;
               <a
                 href={link.href}
                 aria-current={isCurrent ? "page" : undefined}
+                data-sfx="hover"
                 class:list={[
                   "flex items-center gap-1 py-1 text-xs tracking-wider uppercase transition-colors duration-150 md:bg-background/15 md:hover:bg-background/50 md:inset-shadow-chip md:rounded-t-xs md:px-3 md:pb-0 md:pt-0.5 md:text-2xs md:dark:bg-white/15 md:dark:hover:bg-white/50 md:dark:text-background/80 md:dark:hover:text-background md:dark:aria-[current=page]:text-background",
                   "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground",
@@ -82,6 +83,7 @@ const chromeBottom = `${CDN_BASE}/misc/bottomleftchrome.png`;
     <button
       type="button"
       data-scroll-to-top
+      data-sfx="hover click"
       class="col-span-2 flex items-center justify-end gap-1 px-4 text-2xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-150 hover:text-foreground md:hidden"
     >
       Back to top

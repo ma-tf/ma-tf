@@ -1,3 +1,4 @@
+import { isSfxMuted } from "@lib/sfx";
 import { cn } from "cn";
 import { useRef } from "react";
 
@@ -16,7 +17,7 @@ export function PostBird({
   function handleClick() {
     if (!audioRef.current) audioRef.current = new Audio(audioSrc);
     audioRef.current.currentTime = 0;
-    void audioRef.current.play();
+    if (!isSfxMuted()) void audioRef.current.play();
 
     const image = imageRef.current;
     if (!image) return;

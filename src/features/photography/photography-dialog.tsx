@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { usePhotographyColumnItem } from "@features/photography/photography-column-item-context";
+import { useSfxOnChange } from "@hooks/use-sfx-on-change";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,7 @@ function LoadableImage({
       <button
         type="button"
         aria-label="Caption"
+        data-sfx="click"
         aria-pressed={pressed}
         onClick={onToggle}
         className="flex cursor-pointer items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -65,6 +67,7 @@ function Thumbnail() {
         alt={alt}
         loading="lazy"
         decoding="async"
+        data-sfx="hover"
         onLoad={() => setLoaded(true)}
         className="relative size-full cursor-pointer object-cover transition-transform duration-150 hover:scale-110"
       />
@@ -81,6 +84,7 @@ export function PhotographyDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [showCaption, setShowCaption] = useState(true);
+  useSfxOnChange(open);
   const {
     orientation,
     photo: { camera, film },

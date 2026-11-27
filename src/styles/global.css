@@ -333,6 +333,7 @@ html[data-motion="skipped"] [class*="animate-reveal"] {
   &:has([data-wash="ember"]:is(:hover, :focus-within)) [data-wash="ember"],
   &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-wash="plum"] {
     opacity: 1;
+    transition-delay: var(--open-delay, 0ms);
   }
   &:has([data-wash="emerald"]:is(:hover, :focus-within)) [data-prev-image="emerald"],
   &:has([data-wash="plum"]:is(:hover, :focus-within)) [data-prev-image="plum"],
@@ -424,6 +425,10 @@ html:is([data-motion="skipped"], [data-motion="revisit"])
 
 html[data-motion="skipped"] .animate-fade-in-scroll {
   animation: none;
+}
+
+html[data-switching] {
+  --open-delay: 150ms;
 }
 
 /* Motion control ------------------------------------------------- */

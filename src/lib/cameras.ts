@@ -1,4 +1,5 @@
 import { CDN_BASE } from "@lib/cdn";
+import { isSfxMuted } from "@lib/sfx";
 
 const CAMERA_SELECTOR = "[data-camera]";
 const SHAKE_CLASS = "animate-bird-shake";
@@ -16,7 +17,7 @@ export function startCameras(root: ParentNode = document) {
     button.addEventListener("click", () => {
       audio.currentTime = 0;
       audio.playbackRate = Number(button.dataset.playbackRate ?? 1);
-      void audio.play().catch(() => {});
+      if (!isSfxMuted()) void audio.play().catch(() => {});
 
       const image = button.querySelector("img");
       if (!image) return;

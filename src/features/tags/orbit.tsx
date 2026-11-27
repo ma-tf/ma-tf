@@ -1,10 +1,12 @@
 import type { CSSProperties, ComponentProps, ReactNode, RefObject } from "react";
 
 import { useOrbit } from "@features/tags/orbit-context";
+import { frontItemIndex } from "@features/tags/orbit-engine";
 import { OrbitScrollbar } from "@features/tags/orbit-scrollbar";
 import { useItemRefs } from "@features/tags/use-item-refs";
 import { useOrbitEngine } from "@features/tags/use-orbit-engine";
 import { useStageRef } from "@features/tags/use-stage-ref";
+import { playSfx } from "@lib/sfx";
 import { cn } from "cn";
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 
@@ -112,8 +114,12 @@ export function Orbit<T>({
 
   const { stageRef, radius } = useStageRef();
   const [rotation, setRotation] = useState(0);
+  const frontRef = useRef<number | null>(null);
 
   const render = (rotation: number) => {
+    const front = frontItemIndex(rotation, step, items.length);
+    if (frontRef.current !== null && front !== frontRef.current) playSfx();
+    frontRef.current = front;
     stageRef.current?.style.setProperty("--rotation", `${rotation}rad`);
     setRotation(rotation);
     onRotate?.(rotation);

@@ -19,6 +19,7 @@ export function BandcampEmbed({
         "aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0",
         className,
       )}
+      data-sfx="hover"
       src={`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`}
       allow="encrypted-media; fullscreen; autoplay; web-share;"
       title={title}
@@ -44,6 +45,7 @@ export function MixcloudEmbed({
 
   return (
     <div
+      data-sfx={loaded ? undefined : "hover"}
       className={cn(
         "group relative aspect-square w-full grayscale transition-[filter] duration-150 hover:grayscale-0",
         className,

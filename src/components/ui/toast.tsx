@@ -1,7 +1,6 @@
-import type { ReactNode } from "react";
-
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 import { Button } from "@components/ui/button";
+import { playSfx } from "@lib/sfx";
 import {
   CheckCircleIcon,
   InfoIcon,
@@ -11,6 +10,7 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 import { cn } from "cn";
+import { useEffect, useRef, type ReactNode } from "react";
 
 const toast = ToastPrimitive.createToastManager();
 
@@ -120,6 +120,7 @@ function ToastClose({
   return (
     <ToastPrimitive.Close
       data-slot="toast-close"
+      data-sfx="click"
       aria-label="Close toast"
       render={render}
       className={cn(
@@ -194,11 +195,22 @@ function ToastIcon({ type }: { type: string | undefined }) {
   );
 }
 
-function ToastList() {
-  const { toasts } = ToastPrimitive.useToastManager();
+function ToastItem({ toast: toastItem }: { toast: ToastPrimitive.Root.Props["toast"] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const ending = toastItem.transitionStatus === "ending";
 
-  return toasts.map((toastItem) => (
-    <Toast key={toastItem.id} toast={toastItem}>
+  useEffect(() => {
+    if (ending && ref.current?.dataset.swipeDirection) playSfx();
+  }, [ending]);
+
+  return (
+    <Toast
+      ref={ref}
+      toast={toastItem}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") playSfx();
+      }}
+    >
       <ToastContent>
         <ToastIcon type={toastItem.type} />
         <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -209,7 +221,23 @@ function ToastList() {
         <ToastClose />
       </ToastContent>
     </Toast>
-  ));
+  );
+}
+
+function ToastList() {
+  const { toasts } = ToastPrimitive.useToastManager();
+
+  return toasts.map((toastItem) => <ToastItem key={toastItem.id} toast={toastItem} />);
+}
+
+function ToastStack() {
+  const { toasts } = ToastPrimitive.useToastManager();
+
+  return (
+    <ToastViewport data-sfx={toasts.length > 1 ? "hover focus" : undefined}>
+      <ToastList />
+    </ToastViewport>
+  );
 }
 
 function Toaster({ children, toastManager = toast, ...props }: ToastPrimitive.Provider.Props) {
@@ -217,9 +245,7 @@ function Toaster({ children, toastManager = toast, ...props }: ToastPrimitive.Pr
     <ToastProvider toastManager={toastManager} {...props}>
       {children}
       <ToastPortal>
-        <ToastViewport>
-          <ToastList />
-        </ToastViewport>
+        <ToastStack />
       </ToastPortal>
     </ToastProvider>
   );

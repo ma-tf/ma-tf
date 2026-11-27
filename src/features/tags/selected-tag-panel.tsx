@@ -52,7 +52,7 @@ function TagPosts() {
             <span className="text-xs font-medium text-foreground/70 md:text-muted-foreground">{`:: ${key}`}</span>
             <ul className="flex min-w-0 flex-col gap-2">
               {posts.map((post) => (
-                <li key={post.slug} className="group relative min-w-0">
+                <li key={post.slug} data-sfx="hover" className="group relative min-w-0">
                   <a
                     href={`/posts/${post.slug}`}
                     className="flex min-h-11 items-center text-sm font-semibold md:block md:min-h-0 md:truncate md:text-xs"

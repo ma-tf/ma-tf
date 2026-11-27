@@ -103,9 +103,11 @@ const pageDescription =
 	import { startHomeFragments } from "@lib/home-fragments";
 	import { startAfterHomeLoad } from "@lib/home-load";
 	import { startHomePreview } from "@lib/home-preview";
+	import { startHomeSwitch } from "@lib/home-switch";
 	import { startHomeWires } from "@lib/home-wires";
 	import { startParallax } from "@lib/parallax";
 	import { startReveal } from "@lib/reveal";
+	import { startSfx } from "@lib/sfx";
 	import { startSphereGrid } from "@lib/sphere-grid";
 	// Droplet temporarily disabled — uncomment with the canvas in still-life-background.tsx.
 	// import { startStillLifeDripShader } from "@lib/still-life-drip-shader";
@@ -115,9 +117,11 @@ const pageDescription =
 	startHitsTracking();
 	startAfterHomeLoad(startHomeFragments);
 	startHomePreview();
+	startHomeSwitch();
 	startHomeWires();
 	startParallax();
 	startReveal();
+	startSfx();
 	startSphereGrid();
 	// startStillLifeDripShader();
 	startTypewriter();

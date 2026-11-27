@@ -58,6 +58,7 @@ function PostRssLink() {
       arrow={false}
       aria-label="RSS feed"
       title="RSS feed"
+      data-sfx="hover focus"
       onMouseEnter={() => icon.current?.play()}
       onMouseLeave={() => icon.current?.stop()}
       onFocus={() => icon.current?.play()}

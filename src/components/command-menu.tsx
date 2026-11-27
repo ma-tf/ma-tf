@@ -11,7 +11,9 @@ import {
   CommandList,
 } from "@components/ui/command";
 import { Toaster, toast } from "@components/ui/toast";
+import { useSfxOnChange } from "@hooks/use-sfx-on-change";
 import { COMMAND_MENU_OPEN_EVENT } from "@lib/command-menu";
+import { playSfx } from "@lib/sfx";
 import {
   EnvelopeSimpleIcon,
   FilePdfIcon,
@@ -36,6 +38,11 @@ type CommandMenuTriggerProps = {
   onOpen: () => void;
 };
 
+function showToast(options: Parameters<typeof toast.add>[0]) {
+  toast.add(options);
+  playSfx();
+}
+
 function CommandMenuTrigger({ onOpen }: CommandMenuTriggerProps) {
   const glass = useRef<AnimatedIconHandle>(null);
 
@@ -43,6 +50,7 @@ function CommandMenuTrigger({ onOpen }: CommandMenuTriggerProps) {
     <button
       type="button"
       onClick={onOpen}
+      data-sfx="hover"
       onMouseEnter={() => glass.current?.play()}
       onMouseLeave={() => glass.current?.stop()}
       aria-label="Open command palette"
@@ -56,6 +64,7 @@ function CommandMenuTrigger({ onOpen }: CommandMenuTriggerProps) {
 
 export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps) {
   const [open, setOpen] = useState(false);
+  useSfxOnChange(open);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -103,9 +112,9 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
 
     try {
       await navigator.clipboard.writeText(email);
-      toast.add({ title: emailToastTitle("Email copied"), type: "success" });
+      showToast({ title: emailToastTitle("Email copied"), type: "success" });
     } catch {
-      toast.add({ title: emailToastTitle("Couldn't copy email"), type: "error" });
+      showToast({ title: emailToastTitle("Couldn't copy email"), type: "error" });
     }
   };
 
@@ -114,9 +123,9 @@ export function CommandMenu({ pages, email, github, linkedin }: CommandMenuProps
 
     try {
       await navigator.clipboard.writeText(new URL("/rss.xml", window.location.origin).href);
-      toast.add({ title: "RSS link copied", type: "success" });
+      showToast({ title: "RSS link copied", type: "success" });
     } catch {
-      toast.add({ title: "Couldn't copy RSS link", type: "error" });
+      showToast({ title: "Couldn't copy RSS link", type: "error" });
     }
   };
 

@@ -59,6 +59,11 @@ function transitionCoasting(
   return { mode: "snapping", rotation, snapFrom: rotation, snapTo: nearest, snapStartTime: now };
 }
 
+export function frontItemIndex(rotation: number, step: number, count: number): number {
+  const idx = Math.round(-rotation / step);
+  return ((idx % count) + count) % count;
+}
+
 export function createOrbitEngine(config: {
   n: number;
   arcSize: number;
@@ -115,8 +120,7 @@ export function createOrbitEngine(config: {
     },
 
     getFrontIndex(): number {
-      const idx = Math.round(-state.rotation / step);
-      return ((idx % n) + n) % n;
+      return frontItemIndex(state.rotation, step, n);
     },
 
     destroy() {
