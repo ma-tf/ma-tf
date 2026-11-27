@@ -28,7 +28,9 @@ CSS and styling conventions for this project.
 - **Links are unadorned.** No underline, at rest or on hover — the colour
   carries the affordance, which is why links sit in steel rather than at body
   colour. The shadcn primitives in `src/components/ui/**` keep their own
-  treatments.
+  treatments. The one exception is the
+  Developers prose links, which are underlined because colour alone does not
+  separate them from the body text.
 - **Markdown inside a hydrated island needs the variant form.** Markdown links
   cannot take the `Link` component when the content is rendered as a child of a
   client island, so the FAQ answers style theirs from the wrapper with

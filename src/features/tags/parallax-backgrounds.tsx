@@ -12,6 +12,7 @@ export function ParallaxBackgrounds({ baseUrl }: { baseUrl: string }) {
           data-parallax={10}
           src={`${baseUrl}/blog/tags-bg-1.avif`}
           alt=""
+          fetchPriority="high"
           decoding="async"
           className="absolute top-0 left-0 max-w-none"
         />

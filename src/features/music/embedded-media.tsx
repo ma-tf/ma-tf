@@ -1,4 +1,6 @@
+import { PlayIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
+import { useState } from "react";
 
 export function BandcampEmbed({
   albumId,
@@ -38,6 +40,8 @@ export function MixcloudEmbed({
   artworkSrc: string;
   className?: string;
 }) {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <div
       className={cn(
@@ -52,12 +56,26 @@ export function MixcloudEmbed({
         height={1999}
         className="absolute aspect-square w-full object-cover"
       />
-      <iframe
-        className="pointer-events-none absolute aspect-square w-full opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
-        src={`https://player-widget.mixcloud.com/widget/iframe/?mini=false&hide_cover=false&hide_artwork=true&feed=${feed}`}
-        title={title}
-        allow="encrypted-media; fullscreen; autoplay; web-share;"
-      />
+      {loaded ? (
+        <iframe
+          className="absolute aspect-square w-full"
+          src={`https://player-widget.mixcloud.com/widget/iframe/?autoplay=1&mini=false&hide_cover=false&hide_artwork=true&feed=${feed}`}
+          title={title}
+          allow="encrypted-media; fullscreen; autoplay; web-share;"
+          ref={(frame) => frame?.focus()}
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setLoaded(true)}
+          aria-label={`Play ${title} on Mixcloud`}
+          className="absolute grid aspect-square w-full cursor-pointer place-items-center"
+        >
+          <span className="grid size-12 place-items-center rounded-full bg-background/80 text-foreground">
+            <PlayIcon size={20} weight="fill" aria-hidden="true" />
+          </span>
+        </button>
+      )}
     </div>
   );
 }

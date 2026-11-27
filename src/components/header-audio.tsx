@@ -207,7 +207,7 @@ export function HeaderAudio() {
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause music" : "Play music"}
-          className="grid h-full w-5 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-auto md:px-1 dark:text-background/80 dark:hover:text-background"
+          className="grid h-full w-6 cursor-pointer place-items-center text-muted-foreground transition-colors duration-150 hover:text-foreground md:w-auto md:px-1 dark:text-background/80 dark:hover:text-background"
         >
           {playing ? (
             <PauseIcon size={12} weight="fill" aria-hidden="true" />

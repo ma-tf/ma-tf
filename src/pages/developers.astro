@@ -44,7 +44,7 @@ import { CDN_BASE } from "@lib/cdn";
               <>
                 {" "}
                 An MCP server is also published at{" "}
-                <Link href={mcpPath}>/mcp</Link>
+                <Link href={mcpPath} className="underline underline-offset-2">/mcp</Link>
                 .
               </>
             )
@@ -129,8 +129,8 @@ import { CDN_BASE } from "@lib/cdn";
           class="text-base leading-relaxed md:mb-8 md:text-xs md:animate-fade-up md:animation-delay-4100"
         >
           The OpenAPI 3.1 document at{" "}
-          <Link href="/openapi.json">/openapi.json</Link> describes the whole interface, and{" "}
-          <Link href="/llms.txt">/llms.txt</Link> indexes everything the site publishes.
+          <Link href="/openapi.json" className="underline underline-offset-2">/openapi.json</Link> describes the whole interface, and{" "}
+          <Link href="/llms.txt" className="underline underline-offset-2">/llms.txt</Link> indexes everything the site publishes.
         </p>
       </DevelopersContent>
     </Developers>
