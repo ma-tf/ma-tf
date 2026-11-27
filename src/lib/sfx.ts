@@ -40,7 +40,7 @@ let voice: Voice | null = null;
 
 function fadeOut(current: Voice, audio: AudioContext) {
   const at = audio.currentTime;
-  current.gain.gain.setValueAtTime(VOLUME, at);
+  current.gain.gain.setValueAtTime(current.gain.gain.value, at);
   current.gain.gain.linearRampToValueAtTime(0, at + FADE_S);
   current.source.stop(at + FADE_S);
 }

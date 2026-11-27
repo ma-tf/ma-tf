@@ -20,6 +20,7 @@ export function SfxToggle() {
     <button
       type="button"
       onClick={toggle}
+      data-sfx="hover click"
       aria-label={label}
       title={label}
       className="grid h-full cursor-pointer place-items-center px-1.5 text-muted-foreground transition-colors duration-150 hover:text-foreground dark:text-background/80 dark:hover:text-background"
