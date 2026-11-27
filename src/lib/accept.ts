@@ -33,3 +33,12 @@ export function acceptsMediaType(
 
   return false;
 }
+
+export function prefersMarkdown(accept: string | null): boolean {
+  if (!accept) return false;
+
+  const markdownQuality = getAcceptedQuality(accept, "text/markdown");
+  const htmlQuality = getAcceptedQuality(accept, "text/html");
+
+  return markdownQuality > 0 && markdownQuality >= htmlQuality;
+}

@@ -13,11 +13,8 @@ its own opt-in, and the flags duplicated what the default could state once.
 
 The default is flipped: `output: "static"` in `astro.config.mjs`, so
 prerendering is the default and every per-page `prerender = true` flag is
-removed. Eight routes opt back out with `export const prerender = false`:
+removed. Seven routes opt back out with `export const prerender = false`:
 
-- `index.astro`: the homepage must negotiate `Accept: text/markdown`, which
-  prerendered output skips, so the homepage is served by the function and the
-  discovery middleware answers both its HTML and Markdown representations.
 - `ask.ts`: POST-only streaming endpoint with per-client metering
   (see ADR 013 and ADR 014).
 - `mcp.ts`: POST-only MCP handler with per-request host and origin validation.
@@ -33,8 +30,23 @@ removed. Eight routes opt back out with `export const prerender = false`:
 
 The dynamic `[...tag]`, `[...slug]`, `[slug]` and skill-shim routes keep their
 `getStaticPaths` functions, which static output still requires. The Netlify
-adapter stays: it now serves only the eight opt-outs. Tailwind, the remark
+adapter stays: it now serves only the on-demand routes. Tailwind, the remark
 plugins and the env schema are untouched.
+
+The homepage is prerendered although it answers `Accept: text/markdown`. It
+briefly opted out so the middleware could negotiate, which made a first visit
+with no cached copy wait for the function to start; one such request took 8.8 s
+to its first byte. Instead:
+
+- the `static-homepage` integration
+  (`src/features/discovery/static-homepage.ts`) writes `index.md` from the built
+  `index.html`;
+- the edge function `netlify/edge-functions/home-markdown.ts` rewrites `/` to
+  `/index.md` when a client prefers Markdown. Its `header` matcher keeps it off
+  requests that do not name `text/markdown`;
+- the same integration injects a prerendered `/_headers` route
+  (`static-headers.ts`), so the `Link` and `Vary` headers for both paths come
+  from `linkHeader` at build time.
 
 ## Consequences
 
@@ -52,9 +64,12 @@ plugins and the env schema are untouched.
 
 - Prerendered output bypasses the discovery middleware's negotiation, so the
   markdown and JSON representations of static pages are unavailable from the
-  static copy. This gap is already reported in `middleware-notes.md`; this ADR
-  records it without fixing it, except for the homepage, which opts out above.
+  static copy. This ADR records the gap without fixing it, except for the
+  homepage's Markdown, handled above.
+- The homepage no longer returns a 406 problem for an unsupported `Accept`.
+- Neither the edge function nor the `_headers` file takes effect under the dev
+  or preview servers; check them on a Netlify deploy.
 - A route that needs request-time behaviour must remember to opt out; without
   `prerender = false` static output bakes its build-time response.
-- The deploy still needs the SSR function for the eight opt-outs, so ADR 007's
+- The deploy still needs the SSR function for the on-demand routes, so ADR 007's
   single-filesystem constraint on the build output stands.

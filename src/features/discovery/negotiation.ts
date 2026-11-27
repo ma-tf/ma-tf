@@ -1,7 +1,7 @@
 import type { DiscoveryResource } from "@features/discovery/catalog";
 
 import { isJsonMediaType, resourceByPath } from "@features/discovery/catalog";
-import { acceptsMediaType, getAcceptedQuality } from "@lib/accept";
+import { acceptsMediaType, getAcceptedQuality, prefersMarkdown } from "@lib/accept";
 
 export type Representation =
   | { kind: "html" }
@@ -9,15 +9,6 @@ export type Representation =
   | { kind: "json-descriptor"; resource: DiscoveryResource }
   | { kind: "markdown-suffix"; target: URL }
   | { kind: "markdown-accept" };
-
-export function prefersMarkdown(accept: string | null): boolean {
-  if (!accept) return false;
-
-  const markdownQuality = getAcceptedQuality(accept, "text/markdown");
-  const htmlQuality = getAcceptedQuality(accept, "text/html");
-
-  return markdownQuality > 0 && markdownQuality >= htmlQuality;
-}
 
 export function prefersJson(accept: string | null): boolean {
   if (!accept) return false;

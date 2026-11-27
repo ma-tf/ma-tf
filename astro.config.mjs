@@ -5,6 +5,8 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 
+import { htmlToMarkdown } from "./src/features/discovery/html-markdown.ts";
+import { staticHomepage } from "./src/features/discovery/static-homepage.ts";
 import { remarkPostBirdBreak } from "./src/lib/remark-post-bird-break.ts";
 import { remarkReadingTime } from "./src/remark-reading-time.mjs";
 
@@ -34,7 +36,7 @@ export default defineConfig({
       defaultColor: false,
     },
   },
-  integrations: [react(), mdx()],
+  integrations: [react(), mdx(), staticHomepage(htmlToMarkdown)],
   vite: {
     plugins: [tailwindcss()],
     build: {

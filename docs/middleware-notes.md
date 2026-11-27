@@ -1,8 +1,10 @@
 # Middleware notes
 
-- The `Link` header applies to every non-API response, including prerendered and
-  error responses. Negotiation and problem wrapping do not; API paths bypass all
-  three.
+- The `Link` header applies to every non-API response the function serves,
+  including error responses. Prerendered files do not carry it: the built
+  `_headers` file declares it for `/` and `/index.md` (see
+  [ADR 026](adr/026-static-output-with-server-opt-outs.md)). Negotiation and
+  problem wrapping skip prerendered routes; API paths bypass all three.
 - `applyCacheHeaders` (`cache.ts:12`) stamps the cache policy on every non-API
   response after the `Link` header: a `200` `GET` or `HEAD` is cached at the
   Netlify CDN (`durable`, `s-maxage`, `stale-while-revalidate`) and varies by

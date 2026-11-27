@@ -4,8 +4,8 @@ import {
   appendVaryValue,
   prefersHtml,
   prefersJson,
-  prefersMarkdown,
 } from "@features/discovery/negotiation";
+import { prefersMarkdown } from "@lib/accept";
 
 type Problem = {
   type: string;
