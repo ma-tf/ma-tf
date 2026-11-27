@@ -1,0 +1,39 @@
+{
+  "mcpServers": {
+    "Astro-docs": {
+      "type": "http",
+      "url": "https://mcp.docs.astro.build/mcp"
+    },
+    "fallow": {
+      "command": "vpx",
+      "args": ["fallow-mcp"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "mux": {
+      "type": "http",
+      "url": "https://mcp.mux.com"
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "cloudflare-docs": {
+      "type": "http",
+      "url": "https://docs.mcp.cloudflare.com/mcp"
+    },
+    "netlify": {
+      "command": "npx",
+      "args": ["--force", "-y", "@netlify/mcp"]
+    },
+    "m4t-tf": {
+      "type": "http",
+      "url": "https://m4t.tf/mcp"
+    }
+  }
+}

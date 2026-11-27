@@ -23,13 +23,17 @@
         "type": "remote",
         "url": "https://mcp.mux.com",
       },
+      "chrome-devtools": {
+        "type": "local",
+        "command": ["vpx", "chrome-devtools-mcp@latest"],
+      },
       "cloudflare-docs": {
         "type": "remote",
         "url": "https://docs.mcp.cloudflare.com/mcp",
       },
       "netlify": {
         "type": "local",
-        "command": ["npx", "--force", "-y", "@netlify/mcp"],
+        "command": ["vpx", "@netlify/mcp"],
       },
       "m4t.tf": {
         "type": "remote",
